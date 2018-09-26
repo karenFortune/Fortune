@@ -1,0 +1,6 @@
+C:\Users\karen\Source\Repos\fortuneSystem3\Helpers\bin\Release\Helpers.dll
+C:\Users\karen\Source\Repos\fortuneSystem3\Helpers\bin\Release\Helpers.pdb
+C:\Users\karen\Source\Repos\fortuneSystem3\Helpers\obj\Release\Helpers.csprojAssemblyReference.cache
+C:\Users\karen\Source\Repos\fortuneSystem3\Helpers\obj\Release\Helpers.csproj.CoreCompileInputs.cache
+C:\Users\karen\Source\Repos\fortuneSystem3\Helpers\obj\Release\Helpers.dll
+C:\Users\karen\Source\Repos\fortuneSystem3\Helpers\obj\Release\Helpers.pdb
