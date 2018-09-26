@@ -1,0 +1,111 @@
+﻿@model IEnumerable<FortuneSystem.Models.Catalogos.CatClienteFinal>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    tr.highlighted td {
+        background: #b3e0ff;
+    }
+
+    table thead {
+        color: #fff;
+        background-color: #006bb3;
+    }
+
+    th {
+        color: #fff;
+        background-color: #006bb3;
+    }
+</style>
+<h2>Administraci&oacute;n de Cliente Final</h2>
+@{
+    if (TempData["clienteOK"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["clienteOK"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["clienteError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["clienteError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["clienteEditar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["clienteEditar"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["clienteEditarError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["clienteEditarError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["clienteEliminar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["clienteEliminar"])), 'success', 5, null);
+
+        </script>
+    }
+
+}
+<p>
+    <a href="@Url.Action("CrearClienteFinal")">
+        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nuevo Cliente Final
+        </button>
+    </a>
+</p>
+<br />
+<table class="table table-striped" id="tablaClientesFinal">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerFinal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreCliente)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerFinal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreCliente)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Editar", new { id = item.CustomerFinal }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Cliente Final" }) |
+                    @Html.ActionLink(" ", "Detalles", new { id = item.CustomerFinal }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Detalles Cliente Final" }) |
+                    @Html.ActionLink(" ", "Eliminar", new { id = item.CustomerFinal }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Cliente Final" })
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+<script>
+    $('#tablaClientesFinal tr').click(function (e) {
+        $('#tablaClientesFinal tr').removeClass('highlighted');
+        $(this).addClass('highlighted');
+    });
+</script>

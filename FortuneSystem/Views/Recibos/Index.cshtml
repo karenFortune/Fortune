@@ -1,0 +1,46 @@
+﻿@model IEnumerable<FortuneSystem.Models.Recibos.Recibo>
+@{
+    ViewBag.Title = "RECIBOS";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/base_m.css" rel="stylesheet" />
+<div class="panel panel-default panel-primary">
+    <div class="panel-heading">
+        <h4>Recibo de órdenes (PO)</h4>
+    </div>
+    <div style="margin:1.5em;">
+        <table class="table table-striped" id="tablaRecibos">
+            <thead class="bg-primary">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.id_pedido)</th>
+                    <th>@Html.DisplayNameFor(model => model.id_po)</th>
+                    <th>@Html.DisplayNameFor(model => model.fecha)</th>
+                    <th>@Html.DisplayNameFor(model => model.total)</th>
+                    <th></th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.id_pedido)</td>
+                        <td>@Html.DisplayFor(modelItem => item.id_po)</td>
+                        <td>@Html.DisplayFor(modelItem => item.fecha)</td>
+                        <td>@Html.DisplayFor(modelItem => item.total)</td>
+
+                        <td>@Html.ActionLink(" ", "Estilos", new { id = item.id_pedido }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Recibir PO" })</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+

@@ -1,0 +1,110 @@
+﻿@model IEnumerable<FortuneSystem.Models.Roles.CatRoles>
+
+@{
+    ViewBag.Title = "Roles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    tr.highlighted td {
+        background: #b3e0ff;
+    }
+
+    table thead {
+        color: #fff;
+        background-color: #006bb3;
+    }
+
+    th {
+        color: #fff;
+        background-color: #006bb3;
+    }
+</style>
+<h2>Administraci&oacute;n de Roles</h2>
+@{
+    if (TempData["rolesOK"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["rolesOK"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["rolesError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["rolesError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["rolesEditar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["rolesEditar"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["rolesEditarError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["rolesEditarError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["rolesEliminar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["rolesEliminar"])), 'success', 5, null);
+
+        </script>
+    }
+
+}
+<p>
+    <a href="@Url.Action("CrearRoles")">
+        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nuevo Rol
+        </button>
+    </a>
+</p>
+<br />
+<table class="table table-striped" id="tablaRoles">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rol)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rol)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Editar", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Rol" }) |
+                    @Html.ActionLink(" ", "Detalles", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Detalles Rol" }) |
+                    @Html.ActionLink(" ", "Eliminar", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Rol" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $('#tablaRoles tr').click(function (e) {
+        $('#tablaRoles tr').removeClass('highlighted');
+            $(this).addClass('highlighted');
+        });
+</script>

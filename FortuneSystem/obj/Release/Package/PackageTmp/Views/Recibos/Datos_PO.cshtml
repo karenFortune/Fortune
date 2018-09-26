@@ -1,0 +1,39 @@
+﻿@model FortuneSystem.Models.Recibos.Recibos
+@{
+    ViewBag.Title = "Datos_PO";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@{
+    string titulo = "Página principal";
+    int dia = DateTime.Now.Day;
+    int mes = DateTime.Now.Month;
+    int año = DateTime.Now.Year;
+    string cadena;
+    if (dia > 15)
+    {
+        cadena = "Estamos en la segunda parte del mes";
+    }
+    else
+    {
+        cadena = "Estamos en la primer parte del mes";
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        <h1>@titulo</h1>
+        <p>Fecha:@dia/@mes/@año</p>
+        <p>@cadena</p>
+        <p>@ViewData["venta"]</p>
+    </div>
+</body>
+</html>

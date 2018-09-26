@@ -1,0 +1,179 @@
+﻿@model IEnumerable<FortuneSystem.Models.Pedidos.OrdenesCompra>
+
+@{
+    ViewBag.Title = "RECEPCIÓN PO";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/base_m.css" rel="stylesheet" />
+<style>
+    tr.highlighted td {
+        background: #b3e0ff;
+    }
+
+    table thead {
+        color: #fff;
+        background-color: #006bb3;
+    }
+
+    th {
+        color: #fff;
+        background-color: #006bb3;
+    }
+
+    #nuevo-usuario {
+        margin-left: 30px;
+        margin-top: 1px;
+        width: 180px;
+        height: 40px;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+     #botones {
+        padding: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-left: 1250px;
+        margin-top: 1px;
+    }
+    .buttons-pdf {
+        background-color: red;
+        color: white;
+    }
+    .datatable, .no-footer {
+    width:auto !important;
+    }
+</style>
+@{
+    if (TempData["itemEditar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["itemEditar"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["itemEditarError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["itemEditarError"])), 'error', 5, null);
+
+        </script>
+    }
+}
+
+        </div>
+        <div class="container-fluid" style="margin-left:20em; margin-right:10em;">
+            <div class="panel panel-primary" id="listaPO">
+                <div class="panel-heading">
+                    <h2>Ordenes de Compra</h2>
+                </div>
+                <br />
+
+                <p>
+                    <a href="@Url.Action("CrearPO")">
+                        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nuevo PO
+                        </button>
+                    </a>
+                    <br />
+                    <br />
+                </p>
+
+                <p id="date_filter">
+
+                    <span id="date-label-from" class="date-label">
+                        &nbsp;&nbsp; Range Date:<select id="selectFechas">
+                            <option value="0">Select an option</option>
+                            <option value="3">Cancel Date</option>
+                            <option value="4">Orden Date</option>
+
+                        </select>&nbsp;&nbsp;From:
+                    </span><input class="date_range_filter date" type="text" id="datepicker_from" />
+                    <span id="date-label-to" class="date-label">&nbsp;&nbsp;To:<input class="date_range_filter date" type="text" id="datepicker_to" />
+
+                </p>
+
+                @*<p id="date_filter_fo">
+                     <span id="date-label-from_fo" class="date-label">From Range Date Orden: </span><input class="date_range_filter date" type="text" id="datepicker_from_fo" />
+                    <span id="date-label-to_fo" class="date-label">To:<input class="date_range_filter date" type="text" id="datepicker_to_fo" />
+            </p>*@
+
+
+                <div id="botones"></div>
+                <br />
+                <table align="center" class="table table-striped" id="tablaPO">
+                    <thead>
+                        <tr>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.PO)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.VPO)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CatClienteFinal.NombreCliente)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FechaCancel)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FechaOrden)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TotalUnidades)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IdStatus)
+                            </th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PO)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VPO)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CatClienteFinal.NombreCliente)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FechaCancel)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FechaOrden)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TotalUnidades)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CatStatus.Estado)
+                                </td>
+                                <td>
+                                    @Html.ActionLink(" ", "Detalles", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Detalles Estilos" }) |
+                                    @Html.ActionLink(" ", "Revision", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-check", @style = "color:black", @Title = "Revisar PO" }) |
+                                    @if (item.Historial == 1)
+                                    {
+                                        @Html.ActionLink(" ", "Revision", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-save-file", @style = "color:black", @Title = "Historial PO" })
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+<script>
+    $('#tablaPO tr').click(function (e) {
+        $('#tablaPO tr').removeClass('highlighted');
+        $(this).addClass('highlighted');
+    });
+</script>

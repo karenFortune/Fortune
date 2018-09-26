@@ -1,0 +1,117 @@
+﻿@model IEnumerable<FortuneSystem.Models.Catalogos.CatTela>
+
+@{
+    ViewBag.Title = "Tela";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    tr.highlighted td {
+        background: #b3e0ff;
+    }
+
+    table thead {
+        color: #fff;
+        background-color: #006bb3;
+    }
+
+    th {
+        color: #fff;
+        background-color: #006bb3;
+    }
+</style>
+<h2>Administraci&oacute;n de Telas</h2>
+@{
+    if (TempData["telaOK"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["telaOK"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["telaError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["telaError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["telaEditar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["telaEditar"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["rolesEditarError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["rolesEditarError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["telaEliminar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["telaEliminar"])), 'success', 5, null);
+
+        </script>
+    }
+
+}
+<p>
+    <a href="@Url.Action("CrearTela")">
+        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nueva Tela
+        </button>
+    </a>
+</p>
+<br />
+<table class="table table-striped" id="tablaTela">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id_Tela)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tela)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CodigoTela)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id_Tela)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tela)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CodigoTela)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Editar", new { id = item.Id_Tela }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Tela" }) |
+                    @Html.ActionLink(" ", "Detalles", new { id = item.Id_Tela }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Detalles Tela" }) |
+                    @Html.ActionLink(" ", "Eliminar", new { id = item.Id_Tela }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Tela" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $('#tablaTela tr').click(function (e) {
+        $('#tablaTela tr').removeClass('highlighted');
+        $(this).addClass('highlighted');
+    });
+</script>

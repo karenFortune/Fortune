@@ -1,0 +1,104 @@
+﻿@model IEnumerable<FortuneSystem.Models.Catalogos.CatTallaItem>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    tr.highlighted td {
+        background: #b3e0ff;
+    }
+
+    table thead {
+        color: #fff;
+        background-color: #006bb3;
+    }
+
+    th {
+        color: #fff;
+        background-color: #006bb3;
+    }
+</style>
+<h2>Administraci&oacute;n de Tallas</h2>
+@{
+    if (TempData["tallaOK"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["tallaOK"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["tallaError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["tallaError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["tallaEditar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["tallaEditar"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["tallaEditarError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["tallaEditarError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["tallaEliminar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["tallaEliminar"])), 'success', 5, null);
+
+        </script>
+    }
+
+}
+<p>
+    <a href="@Url.Action("CrearTalla")">
+        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nueva Talla
+        </button>
+    </a>
+</p>
+<br />
+<table class="table table-striped" id="tablaTalla">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Talla)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Talla)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Editar", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Talla" }) |
+                    @Html.ActionLink(" ", "Detalles", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Detalles Talla" }) |
+                    @Html.ActionLink(" ", "Eliminar", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Talla" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $('#tablaTalla tr').click(function (e) {
+        $('#tablaTalla tr').removeClass('highlighted');
+        $(this).addClass('highlighted');
+    });
+</script>

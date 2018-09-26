@@ -1,0 +1,38 @@
+﻿@model FortuneSystem.Models.Catalogos.CatClienteFinal
+
+@{
+    ViewBag.Title = "Eliminar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>¿Est&aacute; seguro de eliminar el cliente?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CustomerFinal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CustomerFinal)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NombreCliente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NombreCliente)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
+        @Html.ActionLink("Regresar", "Index")
+    </div>
+    }
+</div>

@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center">Administraci&oacute;n de Cat&aacute;logos</h2>
+<br />
+<br />
+<div class="row">
+    <div class="col-lg-4">
+        <a href="@Url.Action("Index", "colores")"> <img width="140" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/colores.png"> </a>
+            <h2 >Colores</h2>
+</div><!-- /.col-lg-4 -->
+    <div class="col-lg-4">
+        <a href="@Url.Action("Index", "tallas")"> <img width="140" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/size.png"></a>
+            <h2>Tallas</h2>
+</div><!-- /.col-lg-4 -->
+    <div class="col-lg-4">
+        <a href="@Url.Action("Index", "cliente")"> <img width="140" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/cliente.png"></a>
+            <h2>Clientes</h2>
+    </div><!-- /.col-lg-4 -->
+</div>
+<div class="row">
+    <div class="col-lg-4">
+        <a href="@Url.Action("Index", "clienteFinal")"> <img width="140" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/clientefinal.png"> </a>
+        <h2>Clientes Finales</h2>
+    </div><!-- /.col-lg-4 -->
+    <div class="col-lg-4">
+        <a href="@Url.Action("Index", "genero")"> <img width="200" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/genero.png"> </a>
+        <h2>G&eacute;nero</h2>
+    </div><!-- /.col-lg-4 -->
+    <div class="col-lg-4">
+        <a href="@Url.Action("Index", "tela")"> <img width="140" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/telas.png"> </a>
+        <h2>Telas</h2>
+    </div><!-- /.col-lg-4 -->
+</div>
+<div class="row">
+    <div class="col-lg-4">
+        <a href="@Url.Action("Index", "tipoCamiseta")"> <img width="220" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/tipoMangas.png"> </a>
+        <h2>Tipo de Camiseta</h2>
+    </div><!-- /.col-lg-4 -->
+    <!--<div class="col-lg-4">
+        <a href="@Url.Action("Index", "genero")"> <img width="140" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/noPhotoFound.png"> </a>
+        <h2>G&eacute;nero</h2>
+    </div>-->
+    <!-- /.col-lg-4 -->
+</div>

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<FortuneSystem.Models.Catalogos.CatGenero>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Administraci&oacute;n de G&eacute;nero</h2>
+
+<p>
+
+    <a href="@Url.Action("CrearGenero")">
+        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar G&eacute;nero
+        </button>
+    </a>
+</p>
+<table class="table table-striped" id="tablaGenero">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdGender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genero)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdGender)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genero)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Editar", new { id = item.IdGender }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Género" }) |
+                    @Html.ActionLink(" ", "Detalles", new { id = item.IdGender }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Consultar Género" }) |
+                    @Html.ActionLink(" ", "Eliminar", new { id = item.IdGender }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Género" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,135 @@
+﻿@model IEnumerable<FortuneSystem.Models.Usuarios.CatUsuario>
+
+@{
+    ViewBag.Title = "USUARIOS";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<style>
+    tr.highlighted td {
+        background: #b3e0ff;
+    }
+
+    table thead {
+        color: #fff;
+        background-color: #006bb3;
+    }
+
+    th {
+        color: #fff;
+        background-color: #006bb3;
+    }
+</style>
+<h2>Administraci&oacute;n de Usuarios</h2>
+@{
+    if (TempData["usuarioOK"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["usuarioOK"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["usuarioError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["usuarioError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["usuarioEditar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["usuarioEditar"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["usuarioEditarError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["usuarioEditarError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["usuarioEliminar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["usuarioEliminar"])), 'success', 5, null);
+
+        </script>
+    }
+    
+}
+<p>
+    <a href="@Url.Action("CrearUsuario")">
+        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nuevo Usuario
+        </button>
+    </a>
+</p>
+<br />
+<table class="table table-striped" id="tablaUsuarios">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NoEmpleado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombres)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apellidos)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cargo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contrasena)
+            </th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoEmpleado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombres)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Apellidos)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CatRoles.Rol)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Contrasena)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Usuario" }) |
+                    @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Consultar Usuario" }) |
+                    @Html.ActionLink(" ", "Eliminar", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Usuario" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $('#tablaUsuarios tr').click(function (e) {
+        $('#tablaUsuarios tr').removeClass('highlighted');
+        $(this).addClass('highlighted');
+    });
+</script>

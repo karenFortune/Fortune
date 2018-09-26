@@ -1,0 +1,56 @@
+﻿@model FortuneSystem.Models.DescripcionItem.DescripcionItem
+
+@{
+    ViewBag.Title = "CrearItems";
+    
+}
+
+<h2>Registrar Items</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-row">
+        <div class="form-group col-sm-4">
+            @Html.LabelFor(model => model.EstiloItem, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.EstiloItem, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.EstiloItem, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-sm-4">
+             @Html.LabelFor(model => model.IdColor, htmlAttributes: new { @class = "control-label" })
+             @Html.EditorFor(model => model.IdColor, new { htmlAttributes = new { @class = "form-control" } })
+             @Html.ValidationMessageFor(model => model.IdColor, "", new { @class = "text-danger" })
+         </div>
+
+         <div class="form-group col-sm-4">
+            @Html.LabelFor(model => model.Cantidad, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.Cantidad, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Cantidad, "", new { @class = "text-danger" })
+        </div>
+
+         <div class="form-group col-sm-4">
+             @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label" })
+             @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control" } })
+             @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
+             
+         </div>
+
+    </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="+ Agregar Items" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

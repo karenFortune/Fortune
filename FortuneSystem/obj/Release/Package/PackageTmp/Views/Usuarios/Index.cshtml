@@ -1,0 +1,72 @@
+﻿@model IEnumerable<FortuneSystem.Models.Usuarios.CatUsuario>
+
+@{
+    ViewBag.Title = "USUARIOS";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<h2>Administraci&oacute;n de Usuarios</h2>
+
+<p>
+    <a href="@Url.Action("CrearUsuario")">
+        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Usuarios
+        </button>
+    </a>
+</p>
+<table class="table table-striped" id="tablaUsuarios">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NoEmpleado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombres)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apellidos)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cargo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contrasena)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoEmpleado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombres)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Apellidos)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CatRoles.Rol)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Contrasena)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Usuario" }) |
+                    @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Consultar Usuario" }) |
+                    @Html.ActionLink(" ", "Eliminar", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Usuario" })
+                </td>
+            </tr>
+        }
+    </tbody>    
+</table>

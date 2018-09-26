@@ -1,0 +1,34 @@
+﻿@model FortuneSystem.Models.Catalogos.CatClienteFinal
+
+@{
+    ViewBag.Title = "Detalles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Detalles</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CustomerFinal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CustomerFinal)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Editar", new { id = Model.CustomerFinal }) |
+    @Html.ActionLink("Regresar", "Index")
+</p>

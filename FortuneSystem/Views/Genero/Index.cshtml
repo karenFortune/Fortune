@@ -1,0 +1,117 @@
+﻿@model IEnumerable<FortuneSystem.Models.Catalogos.CatGenero>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    tr.highlighted td {
+        background: #b3e0ff;
+    }
+
+    table thead {
+        color: #fff;
+        background-color: #006bb3;
+    }
+
+    th {
+        color: #fff;
+        background-color: #006bb3;
+    }
+</style>
+<h2>Administraci&oacute;n de G&eacute;nero</h2>
+@{
+    if (TempData["generoOK"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["generoOK"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["generoError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["generoError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["generoEditar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["generoEditar"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["generoEditarError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["generoEditarError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["generoEliminar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["generoEliminar"])), 'success', 5, null);
+
+        </script>
+    }
+
+}
+<p>
+
+    <a href="@Url.Action("CrearGenero")">
+        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nuevo G&eacute;nero
+        </button>
+    </a>
+</p>
+<br />
+<table class="table table-striped" id="tablaGenero">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdGender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genero)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GeneroCode)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdGender)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genero)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GeneroCode)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Editar", new { id = item.IdGender }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Género" }) |
+                    @Html.ActionLink(" ", "Detalles", new { id = item.IdGender }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Consultar Género" }) |
+                    @Html.ActionLink(" ", "Eliminar", new { id = item.IdGender }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Género" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $('#tablaGenero tr').click(function (e) {
+        $('#tablaGenero tr').removeClass('highlighted');
+        $(this).addClass('highlighted');
+    });
+</script>

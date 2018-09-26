@@ -1,0 +1,42 @@
+﻿@model FortuneSystem.Models.Catalogos.CatColores
+
+@{
+    ViewBag.Title = "Detalles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Detalles</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IdColor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdColor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CodigoColor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CodigoColor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DescripcionColor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DescripcionColor)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Editar", new { id = Model.IdColor }) |
+    @Html.ActionLink("Regresar", "Index")
+</p>

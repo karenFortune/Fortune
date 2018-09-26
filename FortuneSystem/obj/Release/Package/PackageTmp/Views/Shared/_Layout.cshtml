@@ -1,0 +1,172 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - FORTUNE</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/jqueryui")
+    <link href="~/Content/DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/DataTables-1.10.18/css/jquery.dataTables.css" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
+    
+
+</head>
+<body>
+
+
+
+    <nav class="main-menu">
+        <p class="text-small text-center menu">MEN&Uacute;</p>
+
+        <ul>
+            <li><a href="@Url.Action("Index","home")"><i class="glyphicon glyphicon-home fa_menu"></i> <span class="nav-text">Inicio</span></a></li>
+            <p class="text-small menu-title text-center"></p>
+
+
+            <li class="has-subnav"><a href="@Url.Action("Index", "usuarios")"> <i class="glyphicon glyphicon-user fa_menu"></i> <span class="nav-text">Usuarios</span></a></li>
+
+
+            <li class="has-subnav"><a href="@Url.Action("Index", "catalogos")"> <i class="glyphicon glyphicon-book fa_menu"></i> <span class="nav-text">Cat&aacute;logos</span></a></li>
+            <li class="has-subnav"><a href="@Url.Action("Index", "roles")"> <i class="glyphicon glyphicon-cog fa_menu"></i> <span class="nav-text">Roles</span></a></li>
+            <li class="has-subnav"><a href="@Url.Action("CrearPO", "pedidos")"> <i class="glyphicon  glyphicon-list-alt fa_menu"></i> <span class="nav-text">Recepci&oacute;n PO</span></a></li>
+            <li class="has-subnav"><a href="@Url.Action("Datos", "recibos")"> <i class="glyphicon glyphicon-download-alt fa_menu"></i> <span class="nav-text">Recibos</span></a></li>
+
+
+        </ul>
+
+        <ul class="logout">
+            <li>
+                <a href="@Url.Action("Login","Login")">
+                    <i class="glyphicon glyphicon-log-out fa_menu"></i> <span class="nav-text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Fortune Fashions Baja</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryui")
+
+
+    <script src="~/Content/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
+    <script src="~/Content/DataTables/DataTables-1.10.18/js/jquery.dataTables.js"></script>
+    <script src="~/Content/resources/js/general/btn_siguiente_anterior.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <!-- Required jQuery and jQuery UI Javascript references -->
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.12.1.min.js")"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#tablaUsuarios').dataTable({
+                responsive: true,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                }
+            });
+            $('#tablaRoles').dataTable({
+                responsive: true,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                }
+            });
+            $('#tablaClientes').dataTable({
+                responsive: true,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                }
+            });
+            $('#tablaClientesFinal').dataTable({
+                responsive: true,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                }
+            });
+            $('#tablaColores').dataTable({
+                responsive: true,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                }
+            });
+            $('#tablaGenero').dataTable({
+                responsive: true,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                }
+            });
+            $('#tablaPedido').dataTable({
+                responsive: true,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                }
+            });
+            $('#tablaTalla').dataTable({
+                responsive: true,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                }
+            });
+
+            $('#selectCargo').select2({
+                selectOnClose: true
+            });
+
+            $('#selectCliente').select2({
+                selectOnClose: true
+            });
+
+            $('#selectClienteFinal').select2({
+                selectOnClose: true
+            });
+
+ 
+  });
+
+
+
+
+        $(function () {
+            // This will make every element with the class "date-picker" into a DatePicker element
+
+            $.datepicker.regional['es'] = {
+                closeText: 'Cerrar',
+                prevText: '<Ant',
+                nextText: 'Sig>',
+                currentText: 'Hoy',
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+                    'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+                dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+                weekHeader: 'Sm',
+                dateFormat: 'yy-mm-dd',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ''
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+
+            $('#FechaOrden').datepicker();
+
+            $('#FechaCancel').datepicker();
+
+        })
+
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

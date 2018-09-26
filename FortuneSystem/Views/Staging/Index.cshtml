@@ -1,0 +1,528 @@
+﻿@model IEnumerable<FortuneSystem.Models.Recibos.Recibo>
+@{
+    ViewBag.Title = "STAGING";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript" src="~/Content/jquery.js"></script>
+<link href="~/Content/base_m.css" rel="stylesheet" />
+<script src="~/Content/alertifyjs/alertify.min.js"></script>
+<link href="~/Content/alertifyjs/css/alertify.min.css" rel="stylesheet" />
+<link href="~/Content/alertifyjs/css/themes/default.min.css" />
+
+<script>
+    var doc, left, top;
+    $(document).ready(function () {
+        load_ordenes();
+    });
+    $(document).on("input", ".numeric", function () {
+        this.value = this.value.replace(/\D/g, '');
+    });
+    $(document).on("input", ".validacion", function () {
+        var c = this.selectionStart,
+            r = /[^a-zA-Z0-9áéíóúÁÉÍÓÚ .()!@@/#%-]/,
+            v = $(this).val();
+        if (r.test(v)) {
+            $(this).val(v.replace(r, ''));
+            c--;
+        }
+        this.setSelectionRange(c, c);
+    });
+    $(document).on("input", "#caja_color", function () {
+       $('#caja_color').autocomplete({
+            source: '@Url.Action("Autocomplete")'
+        });
+    });
+    $(function () { $("#modal_imprimir_stag").draggable();  });
+
+    function load_ordenes() {
+        var tempScrollTop = $(window).scrollTop();
+        $.ajax({
+            url: "/Staging/obtener_ordenes" ,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (result){
+                var html = '';
+               $.each(result, function (key, item) {
+                    html += '<tr><td>' + item.id_po + '</td><td>' + item.fecha + '</td><td>' + item.total + '</td>';
+                    html += '<td><button type="button" onclick="buscar_estilos_stag(' + item.id_pedido + ')" class = "btn btn-default glyphicon glyphicon-search" style = "color:black" ></button></td>';
+                    html += '</tr>';
+                });
+                $(".tbody_ordenes").html(html);
+                $(window).scrollTop(tempScrollTop);
+            },
+            error: function (errormessage) {alert(errormessage.responseText);}
+        });
+    }
+    function buscar_estilos_stag(ID) {
+        var tempScrollTop = $(window).scrollTop();
+        $("#loading").css('display','inline');
+        buscar_stag(ID);
+        $.ajax({
+            url: "/Staging/obtener_estilos/"+ID,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (jsonData) {
+                    var lista_estilo = jsonData.Data.estilos;
+                    var po = jsonData.Data.po;
+                    $("#div_estilos_po").html("<h4>Estilos orden: " + po + "</h4>");
+                    var cancel = jsonData.Data.cancel_date;
+                    $("#div_estilos_cancel_date").html("<h4>Cancelación: " + cancel + "</h4>");
+                    var unidades = jsonData.Data.total_u;
+                    $("#div_estilos_total_units").html("<h4>Unidades: " + unidades + "</h4>");
+                    var html = '';
+                    $.each(lista_estilo, function (key, item) {
+                        if (item.totales_recibidos >= item.cantidad) { html += '<tr>'; } else { html += '<tr class="estilo_pendiente_entregar">'; }
+                        html += '<td>' + item.id_estilo + '</td>';
+                        html += '<td>' + item.estilo + '</td>';
+                        html += '<td>' + item.id_color + '</td>';
+                        html += '<td>' + item.color + '</td>';
+                        html += '<td>' + item.cantidad + '</td>';
+                        html += '<td>' + item.totales_recibidos + '</td>';
+                        html += '<td>' + item.precio + '</td>';
+                        html += '<td>' + item.total_precio + '</td>';
+                        html += '<td>' + item.genero + '</td>';
+                        html += '<td><a href="#" onclick="recibos_anteriores(' + item.id_po_summary + ')" class = "btn btn-default glyphicon glyphicon-search" style = "color:black; padding:0px 5px 0px 5px;" ></a></td>';
+                        html += '</tr>';
+                    });
+                $('.tbody').html(html);
+                $('#div_estilos_staging_recibos').css('visibility', 'visible');
+                $('#div_recibos').css('visibility', 'hidden');
+                $("#etiqueta_staging").css("visibility", "hidden");
+                $("#columas_formularios").css("visibility", "hidden");
+                $(window).scrollTop(tempScrollTop);
+                $("#loading").css('display', 'none');
+            },
+            error: function (errormessage) { alert(errormessage.responseText); }
+        });
+    }
+    function buscar_stag(ID) {
+        var tempScrollTop = $(window).scrollTop();
+        $.ajax({
+            url: "/Staging/obtener_stag/" + ID,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (result) {
+                //s.id_staging,s.fecha,u.Nombres,u.Apellidos,c.TALLA,s.pais,s.color,s.porcentaje
+                var html = '';
+                var po = '';
+                $.each(result, function (key, item) { po = item.po; });
+                html += '<div class="panel-heading" id="cabecera_stag" ><h4>Historial staging ' + po + '</h4></div>';
+                if (!$.trim(result)) {
+                    $('#div_staging').html(html+"No existen registros de staging para esta orden");
+                }else {
+                    html += '<div class="caja_250_scroll"> <table class="table table-sm table-striped table-hover " ><thead class="bg-primary"> <tr>';
+                    html += '<td>Fecha</td><td>Usuario</td><td>Talla</td><td>Estilo</td><td>País</td><td>Color</td><td>Porcentaje</td><td>Total</td><td></td></tr></thead>';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td>' + item.fecha + '</td>';
+                        html += '<td>' + item.nombre_usuario + '</td>';
+                        html += '<td>' + item.talla + '</td>';
+                        html += '<td>' + item.estilo + '</td>';
+                        html += '<td>' + item.pais + '</td>';
+                        html += '<td>' + item.color + '</td>';
+                        html += '<td>' + item.porcentaje + '</td>';
+                        html += '<td>' + item.total + '</td>';
+                        html += '<td><a href="#" onclick="abrir_imprimir_stag(' + item.id_staging + ')" data-toggle="modal" data-target="#modal_para_imprimir_stag" class = "btn btn-default glyphicon glyphicon-print" style = "color:black; padding:0px 5px 0px 5px;" ></a></td>';
+                        html += '</tr>';
+                    });
+                    html += '</table></div>';
+                    $('#div_staging').html(html);
+                    $(window).scrollTop(tempScrollTop);
+                }
+
+            },
+            error: function (errormessage) { alert(errormessage.responseText); }
+        });
+    }
+    function recibos_anteriores(ID) {
+        var tempScrollTop = $(window).scrollTop();
+        $("#loading").css('display', 'inline');
+        $("#etiqueta_staging").css("visibility", "hidden");
+        $("#columas_formularios").css("visibility", "hidden");
+        $.ajax({
+            url: "/Staging/recibos_anteriores/" + ID,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (jsonData) {
+                var listatallasyestilos = jsonData.Data.listaTallasyEstilos;
+                var listatallas = jsonData.Data.listaTallas;
+                var po = jsonData.Data.po;
+                var estilo = jsonData.Data.estilo;
+                $("#cabecera_recibos_anteriores").html("<h4>Recibos orden " + po + "  Estilo " + estilo + "</h4>");
+                if (!$.trim(jsonData)) {
+                    $('#tabla_recibos_anteriores').html("No se encontraron registros de recibos para esta orden");
+                } else {
+                    var html = '', html2 = '', html3 = '';
+                    var contadorTallas = 0;
+                    var totales_talla = new Array();
+                    var tallasConct = '';
+                    html += '<table  class="table table-striped table-hover" ><thead class="bg-primary"> <tr> <th> </th>';
+                    $.each(listatallas, function (key, i) {//IMPRIMIR TALLAS EN CABECERAS
+                        html += '<th>' + i.talla + '</th>';
+                        contadorTallas++;
+                    });
+                    html += '<th>Total</th>';
+                    html += '<th>Packing</th>';
+                    html += '<th>Fecha</th>';
+                    html += '<th>Origen</th>';
+                    html += '<th>% Material</th>';
+                    html += '<th>Notas</th>';
+                    html += '<th>Recibió</th><th></th>';
+                    html += '</tr></thead>';
+                    var total_recibo = 0, total_orden = 0;
+                    $.each(listatallasyestilos, function (key, item) {
+                        if (item.staging == "0") { html += '<tr class="estilo_pendiente_entregar"><td>Cantidad</td>'; } else { html += '<tr><td>Cantidad</td>'; }
+                        //html += '<tr><td>Cantidad</td>';
+                        $.each(item.ListaTallas, function (key, i) {//IMPRIME LA LISTA DE RECIBIDAS QUE ESTA EN LA LISTA RECIBO
+                            html += '<td>' + i.cantidad + '</td>';
+                        });
+                        html += '<td>' + item.total + '</td>';
+                        total_recibo += item.total;//TOTAL POR RECIBO
+                        html += '<td>' + item.packing + '</td>';
+                        html += '<td>' + item.fecha + '</td>';
+                        html += '<td>' + item.origen + '</td>';
+                        html += '<td>' + item.material + '</td>';
+                        html += '<td>' + item.notas + '</td>';
+                        html += '<td>' + item.usuario_recibio + '</td>';
+                        if (item.staging == "0") {
+                            html += '<td><a href="#" onclick="obtener_tallas(' + item.id_recibo + ')" class = "btn btn-default glyphicon glyphicon-search" style = "color:black; padding:0px 5px 0px 5px;" ></a></td>';
+                        } else {
+                            html += '<td></td>';
+                        }
+                        html += '</tr>';
+                    });
+                    $.each(listatallas, function (key, i) {
+                        total_orden += i.totales;//OBTENER EL TOTAL DE LA ORDEN
+                    });
+                    html += '<tr><td>Restantes</td>';
+                    var i;
+                    for (i = 0; i < contadorTallas; i++) {
+                        totales_talla[i] = 0;
+                    }
+                    $.each(listatallasyestilos, function (key, item) {
+                        contadorTallas = 0;
+                        $.each(item.ListaTallas, function (key, i) {
+                            totales_talla[contadorTallas] += i.cantidad;
+                            contadorTallas++;
+                        });
+                    });
+                    contadorTallas = 0;
+                    $.each(listatallas, function (key, i) {
+                        html += '<td>' + (i.totales - totales_talla[contadorTallas]) + '</td>';
+                        contadorTallas++;
+                    });
+                    html += '<td>' + (total_orden - total_recibo) + '</td>';//IMPRIME EL TOTAL RESTANTE TOTAL
+                    restantes = total_orden - total_recibo;
+                    html += '</tr></table><br/>';
+                    $('#tabla_recibos_anteriores').html(html);
+                    $('#div_recibos').css('visibility', 'visible');
+                    $(window).scrollTop(tempScrollTop);
+                    $("#loading").css('display', 'none');
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+
+    }
+    var cajas_string = '';
+    function registrar_stag(event) {
+        cajas_string = ''
+        var error = 0;
+        //REVISO LA CAJA DE TALLAS
+        if ($("#caja_talla").val() == "0") {
+            error++;
+            $("#caja_talla").css('border', '2px solid #e03f3f');
+        } else {
+            $("#caja_talla").css('border', '1px solid #cccccc');
+        }
+        //REVISO LOS DEMÁS CAMPOS (SON 3...)
+        $(".vacios").each(function () {
+            var id = $(this).attr('id');
+            if ($(this).val() == '') {
+                $("#" + id).css('border', '2px solid #e03f3f');
+                error++;
+            } else {
+                $("#" + id).css('border', '1px solid #cccccc');
+            }
+        });
+        //REVISO LA TABLA tabla_cantidades_cajas
+        $('#tabla_cantidades_cajas tr').each(function () {
+            $(this).find("input").each(function () {
+                $(this).closest('td').find("input").each(function () {
+                    //alert(this.value);
+                    if (this.value == '') {
+                        $(this).closest('td').find("input").css('border', '2px solid #e03f3f');
+                        error++;
+                    } else {
+                        cajas_string += '*' + this.value;
+                        $(this).closest('td').find("input").css('border', '1px solid #cccccc');
+                    }
+                });
+            });
+        });
+
+        if (error == 0) {
+            guardar_stag();
+            alertify.success('Información registrada con éxito');
+        } else {
+            event.preventDefault();
+            alertify.alert('¡Error!', 'Favor de revisar los campos vacíos.');
+            return false;
+        }
+
+    }
+    function guardar_stag() {
+        var tempScrollTop = $(window).scrollTop();
+        var porcentaje = $("#caja_porcentaje").val();
+        var talla = $("#caja_talla").val();
+        var color = $("#caja_color").val();
+        var pais = $("#caja_pais").val();
+
+        var actionData = "{'porcentaje':'" + porcentaje + "','talla':'" + talla + "','color':'" + color + "','pais':'" + pais + "','cajas':'" + cajas_string + "'}";
+        $.ajax({
+            url: '/Staging/Guardar_stag/',
+            data: actionData,
+            contentType: 'application/json',
+            dataType: 'json',
+            type: 'post',
+            success: function (jsonData) {
+                var pedido = jsonData.Data.pedido;
+                var recibo = jsonData.Data.recibo;
+                var summary = jsonData.Data.summary;
+                buscar_estilos_stag(pedido);
+                buscar_stag(pedido);
+                recibos_anteriores(summary);
+                $("#etiqueta_staging").css("visibility", "hidden");
+                $("#columas_formularios").css("visibility", "hidden");
+                $(window).scrollTop(tempScrollTop);
+            }
+        });
+    }
+    function obtener_tallas(ID) {
+        var tempScrollTop = $(window).scrollTop();
+        $("#loading").css('display', 'inline');
+        $.ajax({
+            url: "/Staging/Obtener_tallas_recibo/" + ID,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (result) {
+                var tag = '';
+                $.each(result, function (key, item) {
+                    tag = '<h4> PO: ' + item.po + ', ' + item.estilo + '</h4>';
+                });
+                $('#etiqueta_staging').html(tag);
+                var informacion_talla = '<div class="form-group"><label for="caja_talla">Talla</label> ' +
+                    '<select id="caja_talla" class="form-control"> <option value="0">Seleccionar talla</option>';
+                $.each(result, function (key, item) {
+                    informacion_talla += '<option value="' + item.id_size + '">' + item.talla + '</option>';
+                });
+                informacion_talla += '</select></div>';
+                informacion_talla += '<div class="form-group"> <label for="caja_pais">País</label> <input type="text" class="form-control validacion vacios"   width="30" id="caja_pais" placeholder="País"> </div>' +
+                    '<div class="form-group"><label for="caja_color">Color</label><input type="text" class="form-control validacion vacios"   width="30" id="caja_color"  placeholder="Color"> </div>' +
+                    '<div class="form-group"><label for="caja_porcentaje">Porcentaje %</label><input type="text" class="form-control validacion vacios"   width="30" id="caja_porcentaje" placeholder="Porcentaje"> </div>';
+                informacion_talla += '';
+                $('#staging_form').html(informacion_talla);
+                var cajas = '';
+                cajas += '';
+                cajas += '<table id="tabla_cantidades_cajas" class="data-Talla table   table-hover" style="" ><tr> <th>Cantidad por caja</th><th></th></tr>';
+                cajas += '<tr><td><input   ondrop="return false;" onpaste="return false;"  width="5" class="numeric form-control " id="cantidad" /></td><td><button type="button" class="btn btn-light deleteTalla">Eliminar</button></td></tr>';
+                cajas += '</table>';
+                $('#cajas_form').html(cajas);
+                $('#staging_form2').html('<button type="button" id="boton_agregar_row" class="btn btn-success btn-sm classAdd" style="margin-top: .5em !important; margin-bottom:.5em !important;">Agregar caja</button> <br/>' +
+                    ' <button type="button" id="boton_registrar_staging" onclick="registrar_stag(event);" class="btn btn-primary " style="margin-top: .5em !important;"><b>Registrar</b></button>');
+                $("#etiqueta_staging").css("visibility", "visible");
+                $("#columas_formularios").css("visibility", "visible");
+                $(window).scrollTop(tempScrollTop);
+                $("#loading").css('display', 'none');
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+
+    function abrir_imprimir_stag(ID) {
+        var tempScrollTop = $(window).scrollTop();
+        $("#modal_imprimir_stag").css('display', 'inline');
+        $("#modal_imprimir_stag").css('top', tempScrollTop + 200);
+
+        /*var tempScrollTop = $(window).scrollTop();
+        $.ajax({
+            url: "/Staging/obtener_datos_imprimir_stag/" + ID,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '<div class="form-row align-items-center">';
+                $.each(result, function (key, item) {
+                    //tag = '<h4> PO: ' + item.po + ', ' + item.estilo + '</h4>';
+                    html += '<div class="col-sm-3 my-1"><label for="caja_packing">Número</label>' +
+                        '<input type="text" readonly class="form-control nuevo_recibo validacion " width="30" id="caja_packing" placeholder="Packing"></div>';
+
+                    html += '<div class="col-sm-3 my-1"> <label for="caja_origen">Origen</label>' +
+                        '  <input type="text" class="form-control   nuevo_recibo validacion"  width="30" id="caja_origen" placeholder="Origen"></div>';
+
+                    html += '  <div class="col-sm-3 my-1"><label for="caja_material">Material</label>' +
+                        '   <input type="text" class="form-control  nuevo_recibo validacion"  width="50" id="caja_material" placeholder="Material"></div>';
+                    html += '  <div class="col-sm-3 my-1"><label for="caja_notas">Notas</label>' +
+                        '  <input type="text" class="form-control " id="caja_notas validacion"  width="500" placeholder="Notas"></div>';
+
+
+                });
+                html+=' <button type="button" id="boton_imprimir_stag" onclick="" class="btn btn-primary btn-sm" style="margin: 5em 1em 0.5em 1em !important;"><b>Imprimir</b></button>';
+                $('#formulario_nuevo_recibo').html(html);
+
+
+                $(window).scrollTop(tempScrollTop);
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });*/
+
+
+
+
+    }
+    function cerrar_modal_imprimir(ID) {
+        $("#modal_imprimir_stag").css('display', 'none');
+    }
+
+
+    $(document).on("click", ".classAdd", function () {
+        var rowCount = $('.data-Talla').length + 1;
+        var tallasdiv = '<tr class="data-Talla">' +
+            '<td><input   ondrop="return false;" onpaste="return false;"  width="5" class="numeric form-control " id="" /></td></td>' +
+            '<td><button type="button" class="btn btn-light deleteTalla">Eliminar</button></td></tr>';
+        $('#tabla_cantidades_cajas').append(tallasdiv);
+    });
+    $(document).on("click", ".deleteTalla", function () {
+        $(this).closest("tr").remove();
+    });
+
+   
+</script>
+<style>
+    .ui-dialog > .ui-widget-header {
+        background: #3479bf;
+        color: white;
+    }
+</style>
+
+<div id="dialog-error-message" title="Aviso"></div>
+
+
+<!---------TABLA DE ORDENES--------------------------->
+<div id="div_ordenes">
+    <h3 class="card-title">Staging</h3>
+    <div class="panel panel-default panel-primary">
+        <div class="panel-heading"><h4>Ordenes: staging</h4></div>
+        <div class="caja_250_scroll" style="margin:1.5em; width:97% ">
+            <table class="table table-striped" id="tablaRecibos">
+                <thead class="bg-primary">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.id_pedido)</th>
+                        <th>@Html.DisplayNameFor(model => model.id_po)</th>
+                        <th>@Html.DisplayNameFor(model => model.fecha)</th>
+                        <th>@Html.DisplayNameFor(model => model.total)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.id_pedido)</td>
+                            <td>@Html.DisplayFor(modelItem => item.id_po)</td>
+                            <td>@Html.DisplayFor(modelItem => item.fecha)</td>
+                            <td>@Html.DisplayFor(modelItem => item.total)</td>
+                            <td><button type="button" onclick="buscar_estilos_stag( @item.id_pedido )" class="btn btn-default glyphicon glyphicon-search" style="color:black; padding:0px 5px 0px 5px;"></button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="div_estilos_staging_recibos" style="visibility:hidden;">
+    <!-------TABLA DE STAGING------------------------->
+    <div class="panel panel-default panel-primary" id="div_staging">
+
+    </div>
+    <!-------TABLA DE ESTILOS------------------------->
+    <div class="panel panel-default panel-primary" id="div_estilos_orden">
+        <div class="panel-heading">
+            <div id="Datos" class="row">
+                <div class="col-md-4" id="div_estilos_po"></div>
+                <div class="col-md-4" id="div_estilos_cancel_date"></div>
+                <div class="col-md-4" id="div_estilos_total_units"></div>
+            </div>
+        </div>
+        <div id="div_tabla_estilos" class="caja_250_scroll">
+            <table class="table table-sm table-striped table-hover ">
+                <thead class="bg-primary">
+                    <tr>
+                        <th>Id estilo</th>
+                        <th>Estilo</th>
+                        <th>Código color</th>
+                        <th>Color</th>
+                        <th>Cantidad</th>
+                        <th>Recibidos</th>
+                        <th>Precio</th>
+                        <th>Precio total</th>
+                        <th>Género</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="tbody"></tbody>
+            </table>
+        </div>
+    </div>
+    <!------------RECIBOS----------------------------->
+    <div id="div_recibos" style="visibility:hidden;">
+        <div class="panel panel-default panel-primary caja_250_scroll">
+            <div class="panel-heading" id="cabecera_recibos_anteriores"></div>
+            <div id="tabla_recibos_anteriores" style="width: 100%; margin-top:0;"></div>
+        </div>
+    </div>
+    <!-----------STAGING(?) FORMULARIOS--------------->
+    <div id="etiqueta_staging"></div>
+    <div id="columas_formularios" class="row">
+        <form>
+            <div id="staging_form" class="col-sm-4"></div>
+            <div id="cajas_form" class="col-sm-4"></div>
+            <div id="staging_form2" class="col-sm-4"></div>
+        </form>
+    </div>
+</div>
+
+<div id="modal_imprimir_stag" class="modal_prueba">
+    <div class="row">
+        <div id="titulo_modal_imprimir" class="titulo_modal">Revisar información antes de imprimir</div>
+        <div class="boton_cerrar_modal" onclick="cerrar_modal_imprimir()">x</div>
+    </div>
+    <div id="contenido_modal">
+
+    </div>
+</div>
+
+<div id="loading" class="load">
+    <!-- <div style="position:absolute; top:40%; left:45%; width:128px; height:128px; background: url('../../Content/img/gif/loader1.gif')"></div>
+    <div style="position:absolute; top:40%; left:45%; width:201px; height:201px; background: url('../../Content/img/gif/loader2.gif')"></div>-->
+    <div id="spinner" class="imagen_loading" style=""></div>
+</div>
+
+
+
+    <script>
+
+    </script>

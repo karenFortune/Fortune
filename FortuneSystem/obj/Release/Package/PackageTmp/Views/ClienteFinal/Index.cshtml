@@ -1,0 +1,47 @@
+﻿@model IEnumerable<FortuneSystem.Models.Catalogos.CatClienteFinal>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Administraci&oacute;n de Cliente Final</h2>
+<p>
+    <a href="@Url.Action("CrearClienteFinal")">
+        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Cliente Final
+        </button>
+    </a>
+</p>
+<table class="table table-striped" id="tablaClientesFinal">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerFinal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerFinal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Editar", new { id = item.CustomerFinal }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Cliente Final" }) |
+                    @Html.ActionLink(" ", "Detalles", new { id = item.CustomerFinal }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Detalles Cliente Final" }) |
+                    @Html.ActionLink(" ", "Eliminar", new { id = item.CustomerFinal }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Cliente Final" })
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
