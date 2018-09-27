@@ -38,7 +38,7 @@ namespace FortuneSystem.Models.Login
             comando.Connection = conn.AbrirConexion();
             comando.CommandText = "SpLogin";
             comando.CommandType = CommandType.StoredProcedure;
-            comando.Parameters.AddWithValue("@Usuario", usuario.Nombres);
+            comando.Parameters.AddWithValue("@Usuario", usuario.NoEmpleado);
             comando.Parameters.AddWithValue("@Password", usuario.Contrasena);
 
             leer = comando.ExecuteReader();

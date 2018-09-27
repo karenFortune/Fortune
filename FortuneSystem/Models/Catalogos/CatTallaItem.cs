@@ -8,10 +8,10 @@ namespace FortuneSystem.Models.Catalogos
 {
     public class CatTallaItem
     {
-        [Display(Name = "No. Talla")]
+        [Display(Name = "SIZE#")]
         public int Id { get; set; }
-        [Required(ErrorMessage = "Ingrese la Talla.")]
-        [Display(Name = "Talla")]
+        [Required(ErrorMessage = "Please enter the size.")]
+        [Display(Name = "SIZE")]
         public string Talla { get; set; }
     }
 }

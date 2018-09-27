@@ -8,15 +8,15 @@ namespace FortuneSystem.Models.Catalogos
 {
     public class CatColores
     {
-        [Display(Name = "Id Color")]
+        [Display(Name = "COLOR#")]
         public int IdColor { get; set; }
 
-        [Required(ErrorMessage = "Ingrese el código del color.")]
-        [Display(Name = "Código Color")]
+        [Required(ErrorMessage = "Please enter the color code.")]
+        [Display(Name = "COLOR CODE")]
         public string CodigoColor { get; set; }
 
-        [Required(ErrorMessage = "Ingrese la descripción del color.")]
-        [Display(Name = "Descripción")]
+        [Required(ErrorMessage = "Please enter the color description.")]
+        [Display(Name = "DESCRIPTION")]
         public string DescripcionColor { get; set; }
     }
 }

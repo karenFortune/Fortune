@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<FortuneSystem.Models.Catalogos.CatClienteFinal>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "List Customer Order";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
@@ -66,7 +66,7 @@
 <p>
     <a href="@Url.Action("CrearClienteFinal")">
         <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nuevo Cliente Final
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add New Customer Order
         </button>
     </a>
 </p>
@@ -94,9 +94,9 @@
                     @Html.DisplayFor(modelItem => item.NombreCliente)
                 </td>
                 <td>
-                    @Html.ActionLink(" ", "Editar", new { id = item.CustomerFinal }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Cliente Final" }) |
-                    @Html.ActionLink(" ", "Detalles", new { id = item.CustomerFinal }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Detalles Cliente Final" }) |
-                    @Html.ActionLink(" ", "Eliminar", new { id = item.CustomerFinal }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Cliente Final" })
+                    @Html.ActionLink(" ", "Editar", new { id = item.CustomerFinal }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Edit Customer Order" }) |
+                    @Html.ActionLink(" ", "Detalles", new { id = item.CustomerFinal }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details Customer Order" }) |
+                    @Html.ActionLink(" ", "Eliminar", new { id = item.CustomerFinal }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Delete Customer Order" })
                 </td>
             </tr>
         }

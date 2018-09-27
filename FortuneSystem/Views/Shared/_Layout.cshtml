@@ -85,6 +85,7 @@
     <!-- Required jQuery and jQuery UI Javascript references -->
     <script src="@Url.Content("~/Scripts/jquery-ui-1.12.1.min.js")"></script>
     <script type="text/javascript">
+        var tablaPO;
         $(document).ready(function () {
             $('#tablaUsuarios').dataTable({
                 responsive: true,
@@ -143,7 +144,7 @@
             $("#tablaPO").removeClass('dataTable no-footer');
 
             var table = $('#tablaPO').DataTable();
-          
+           
             var buttons = new $.fn.dataTable.Buttons(table, {
                 buttons: [
                     {
@@ -362,12 +363,11 @@
         
             
         })
-        var tipo;
-        $(document).on('change', '#selectFechas', function (event) {        
-            tipo = $("#selectFechas option:selected").val();
-        });
+
+       
+     
         $(function () {
- 
+
             var oTable = $('#tablaPO').dataTable();
 
             $("#datepicker_from").datepicker({
@@ -395,11 +395,18 @@
                 maxDateFilter = new Date(this.value).getTime();
                 oTable.fnDraw();
                 });
+            var tipo;
+            $(document).on('change', '#selectFechas', function (event) {
+                tipo = $("#selectFechas option:selected").val();
+                $("#datepicker_from").val('');
+                $("#datepicker_to").val('');
+                oTable.fnDraw();
+            });
 
             // Date range filter
             minDateFilter = "";
-          maxDateFilter = "";
-   
+            maxDateFilter = "";
+
             $.fn.dataTableExt.afnFiltering.push(
                 function (oSettings, aData, iDataIndex) {
                     if (typeof aData._date == 'undefined') {
@@ -420,10 +427,12 @@
 
                     return true;
                 }
-                
+
             );
 
         });
+
+        
         
 
 

@@ -28,7 +28,7 @@ namespace FortuneSystem.Models.Catalogos
                 CatClienteFinal clientesFinal = new CatClienteFinal()
                 {
                     CustomerFinal = Convert.ToInt32(leer["CUSTOMER_FINAL"]),
-                    NombreCliente = leer["NAME"].ToString()
+                    NombreCliente = leer["NAME_FINAL"].ToString()
                 };
 
                 listClientesFinal.Add(clientesFinal);
@@ -74,7 +74,7 @@ namespace FortuneSystem.Models.Catalogos
             {
 
                 clientesFinal.CustomerFinal = Convert.ToInt32(leer["CUSTOMER_FINAL"]);
-                clientesFinal.NombreCliente = leer["NAME"].ToString();
+                clientesFinal.NombreCliente = leer["NAME_FINAL"].ToString();
 
             }
             return clientesFinal;

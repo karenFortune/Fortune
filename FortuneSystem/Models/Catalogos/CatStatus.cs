@@ -9,11 +9,11 @@ namespace FortuneSystem.Models.Catalogos
 {
     public class CatStatus
     {
-        [Display(Name = "No. Estado")]
+        [Display(Name = "STATUS#")]
         public int IdStatus { get; set; }
 
-        [Required(ErrorMessage = "Ingrese el nombre del estado.")]
-        [Display(Name = "Estado")]
+        [Required(ErrorMessage = "Please enter the status name.")]
+        [Display(Name = "STATUS")]
         [Column("ESTADO")]
         public string Estado { get; set; }
 

@@ -48,7 +48,7 @@ namespace FortuneSystem.Models.Pedidos
                 };
                 CatClienteFinal clienteFinal = new CatClienteFinal()
                 {
-                    NombreCliente = leer["NAME"].ToString()
+                    NombreCliente = leer["NAME_FINAL"].ToString()
                 };
 
                 pedidos.Historial = objRevision.ObtenerPedidoRevisiones(pedidos.IdPedido);
@@ -61,6 +61,84 @@ namespace FortuneSystem.Models.Pedidos
             }
             leer.Close();
             conn.CerrarConexion();
+
+            return listPedidos;
+        }
+
+        //Muestra la lista de PO
+        public IEnumerable<OrdenesCompra> ListaRevisionesPO(int idEstilo)
+        {
+
+            int resultado=2;
+            int temp = idEstilo;
+            
+            List<OrdenesCompra> listPedidos = new List<OrdenesCompra>();
+           
+           
+              
+                while (resultado != 0)
+                {
+            Conexion conex = new Conexion();
+            SqlCommand com = new SqlCommand();
+            SqlDataReader leerF = null;
+                com.Connection = conex.AbrirConexion();
+                com.CommandText = "Listar_Pedidos_Revisiones";
+                com.CommandType = CommandType.StoredProcedure;
+                com.Parameters.AddWithValue("@Id", temp);
+                leerF = com.ExecuteReader();
+                resultado = objRevision.ObtenerNoPedidoRevisiones(temp);
+                while (leerF.Read())
+                {
+                   
+                    OrdenesCompra pedidos = new OrdenesCompra()
+                    {
+                        IdPedido = Convert.ToInt32(leerF["ID_PEDIDO"]),
+                        PO = leerF["PO"].ToString(),
+                        VPO = Convert.ToInt32(leerF["VPO"]),
+                        Cliente = Convert.ToInt32(leerF["CUSTOMER"]),
+                        ClienteFinal = Convert.ToInt32(leerF["CUSTOMER_FINAL"]),
+                        FechaCancel = Convert.ToDateTime(leerF["DATE_CANCEL"]),
+                        FechaOrden = Convert.ToDateTime(leerF["DATE_ORDER"]),
+                        TotalUnidades = Convert.ToInt32(leerF["TOTAL_UNITS"]),
+                        IdStatus = Convert.ToInt32(leerF["ID_STATUS"]),
+
+                    };
+
+                    Revision revision = new Revision()
+                    {
+                        Id = Convert.ToInt32(leerF["ID"]),
+                        IdPedido = Convert.ToInt32(leerF["ID_PEDIDO"]),
+                        IdRevisionPO = Convert.ToInt32(leerF["ID_REVISION_PO"]),
+                        FechaRevision = Convert.ToDateTime(leerF["FECHA_REVISION"])
+                    };
+
+                    CatClienteFinal clienteFinal = new CatClienteFinal()
+                    {
+                        NombreCliente = leerF["NAME_FINAL"].ToString()
+                    };
+
+                    CatCliente cliente = new CatCliente()
+                    {
+                        Nombre = leerF["NAME"].ToString()
+                    };
+
+                    temp = revision.IdPedido;
+
+                    pedidos.Revision = revision;
+                    pedidos.CatCliente = cliente;
+                    pedidos.CatClienteFinal = clienteFinal;
+
+                    listPedidos.Add(pedidos);
+                }
+                leerF.Close();
+                conex.CerrarConexion();
+
+
+            }
+            
+         
+        
+           
 
             return listPedidos;
         }
@@ -101,7 +179,7 @@ namespace FortuneSystem.Models.Pedidos
                 };
                 CatClienteFinal clienteFinal = new CatClienteFinal()
                 {
-                    NombreCliente = leerF["NAME"].ToString()
+                    NombreCliente = leerF["NAME_FINAL"].ToString()
                 };
 
                 pedidos.CatStatus = status;
@@ -209,8 +287,41 @@ namespace FortuneSystem.Models.Pedidos
             }
             finally { conex.CerrarConexion(); }
             return 0;
-        }      
+        }
 
-       
+        public void ActualizarEstadoPO(int id)
+        {
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
+            Conexion conex = new Conexion();
+            try
+            {
+                cmd.Connection = conex.AbrirConexion();
+                cmd.CommandText = "UPDATE PEDIDO SET ID_STATUS =5 WHERE ID_PEDIDO='" + id + "'";
+                cmd.CommandType = CommandType.Text;
+                reader = cmd.ExecuteReader();
+                          conex.CerrarConexion();
+            }
+            finally { conex.CerrarConexion(); }
+         
+        }
+
+        public void ActualizarEstadoPOCancelado(int id)
+        {
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
+            Conexion conex = new Conexion();
+            try
+            {
+                cmd.Connection = conex.AbrirConexion();
+                cmd.CommandText = "UPDATE PEDIDO SET ID_STATUS =6 WHERE ID_PEDIDO='" + id + "'";
+                cmd.CommandType = CommandType.Text;
+                reader = cmd.ExecuteReader();
+                conex.CerrarConexion();
+            }
+            finally { conex.CerrarConexion(); }
+
+        }
+
     }
 }

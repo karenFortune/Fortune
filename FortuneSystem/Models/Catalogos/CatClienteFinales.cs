@@ -8,10 +8,10 @@ namespace FortuneSystem.Models.Catalogos
 {
     public class CatClienteFinal
     {
-        [Display(Name = "No. Cliente Final")]
+        [Display(Name = "CUSTOMER ORDER#")]
         public int CustomerFinal { get; set; }
-        [Required(ErrorMessage = "Ingrese el nombre del Cliente Final.")]
-        [Display(Name = "Cliente Final")]
+        [Required(ErrorMessage = "Please enter the customer's order name.")]
+        [Display(Name = "CUSTOMER ORDER")]
         public string NombreCliente{ get; set; }
     }
 }

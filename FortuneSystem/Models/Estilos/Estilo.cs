@@ -13,23 +13,23 @@ namespace FortuneSystem.Models.Estilos
 {
     public class Estilo
     {
-        [Display(Name = "ID")]
+        [Display(Name = "ID#")]
         public string id_po_summary { get; set; }
-        [Display(Name = "ID ESTILO")]
+        [Display(Name = "ITEM ID")]
         public string id_estilo { get; set; }
-        [Display(Name = "ESTILO")]
+        [Display(Name = "ITEM")]
         public string estilo { get; set; }
-        [Display(Name = "CODIGO COLOR")]
+        [Display(Name = "COLOR CODE")]
         public string id_color { get; set; }
         [Display(Name = "COLOR")]
         public string color { get; set; }
-        [Display(Name = "CANTIDAD")]
+        [Display(Name = "QUANTITY")]
         public double cantidad { get; set; }
-        [Display(Name = "PRECIO")]
+        [Display(Name = "PRICE")]
         public double precio { get; set; }
-        [Display(Name = "PRECIO TOTAL")]
+        [Display(Name = "TOTAL PRICE")]
         public double total_precio { get; set; }
-        [Display(Name = "GÉNERO")]
+        [Display(Name = "GENDER")]
         public string genero { get; set; }
         public string stag { get; set; }
         public int totales { get; set; }
