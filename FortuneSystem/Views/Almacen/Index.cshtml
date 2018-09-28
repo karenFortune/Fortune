@@ -1,0 +1,61 @@
+﻿@model IEnumerable<FortuneSystem.Models.Almacen.Inventario>
+@{
+    ViewBag.Title = "STOREHOUSE";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Storehouse</h2>
+
+
+<table class="table table-striped table-sm" >
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.id_inventario)</th>
+        <th>@Html.DisplayNameFor(model => model.sucursal)</th>
+        <th>@Html.DisplayNameFor(model => model.po)</th>
+        <th>@Html.DisplayNameFor(model => model.pais)</th>
+        <th>@Html.DisplayNameFor(model => model.fabricante)</th>
+        <th>@Html.DisplayNameFor(model => model.mill_po)</th>
+        <th>@Html.DisplayNameFor(model => model.amt_item)</th>
+        <th>@Html.DisplayNameFor(model => model.categoria_inventario)</th>
+        <th>@Html.DisplayNameFor(model => model.color)</th>
+        <th>@Html.DisplayNameFor(model => model.body_type)</th>
+        <th>@Html.DisplayNameFor(model => model.genero)</th>
+        <th>@Html.DisplayNameFor(model => model.fabric_type)</th>
+        <th>@Html.DisplayNameFor(model => model.fabric_percent)</th>
+        <th>@Html.DisplayNameFor(model => model.total)</th>
+        <th>@Html.DisplayNameFor(model => model.size)</th>
+        <th>@Html.DisplayNameFor(model => model.customer)</th>
+        <th>@Html.DisplayNameFor(model => model.final_customer)</th>
+        <th>@Html.DisplayNameFor(model => model.minimo)</th>
+        <th>@Html.DisplayNameFor(model => model.notas)</th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>@Html.DisplayFor(modelItem => item.id_inventario)</td>
+        <td>@Html.DisplayFor(modelItem => item.sucursal)</td>
+        <td>@Html.DisplayFor(modelItem => item.po)</td>
+        <td>@Html.DisplayFor(modelItem => item.pais)</td>
+        <td>@Html.DisplayFor(modelItem => item.fabricante)</td>
+        <td>@Html.DisplayFor(modelItem => item.mill_po)</td>
+        <td>@Html.DisplayFor(modelItem => item.amt_item)</td>
+        <td>@Html.DisplayFor(modelItem => item.categoria_inventario)</td>
+        <td>@Html.DisplayFor(modelItem => item.color)</td>
+        <td>@Html.DisplayFor(modelItem => item.body_type)</td>
+        <td>@Html.DisplayFor(modelItem => item.genero)</td>
+        <td>@Html.DisplayFor(modelItem => item.fabric_type)</td>
+        <td>@Html.DisplayFor(modelItem => item.fabric_percent)</td>
+        <td>@Html.DisplayFor(modelItem => item.total)</td>
+        <td>@Html.DisplayFor(modelItem => item.size)</td>
+        <td>@Html.DisplayFor(modelItem => item.customer)</td>
+        <td>@Html.DisplayFor(modelItem => item.final_customer)</td>
+        <td>@Html.DisplayFor(modelItem => item.minimo)</td>
+        <td>@Html.DisplayFor(modelItem => item.notas)</td>
+        <td>
+           @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+        </td>
+    </tr>
+}
+
+</table>
