@@ -207,125 +207,6 @@
 
 
 
-            $('#selectCargo').select2({
-
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-
-            });
-
-            $('#selectCliente').select2({
-
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
-
-            $("#selectClienteFinal").select2({
-
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
-
-            $('#selectEstado').select2({
-
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
-
-            $('#selectGenero').select2({
-                placeholder: "Seleccione un género",
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
-
-            $('#selectTela').select2({
-                placeholder: "Seleccione un tipo de tela",
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
-
-            $("#selectTipoCamiseta").select2({
-                placeholder: "Seleccione un tipo de camiseta",
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
-
-            $("#selectFechas").select2({
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
 
 
 
@@ -333,7 +214,127 @@
         });
 
 
+        $('#selectCargo').select2({
 
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+
+        });
+
+
+
+        $('#selectEstado').select2({
+
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
+
+        $('#selectGenero').select2({
+            placeholder: "Seleccione un género",
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
+
+        $('#selectTela').select2({
+            placeholder: "Seleccione un tipo de tela",
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
+
+        $("#selectTipoCamiseta").select2({
+            placeholder: "Seleccione un tipo de camiseta",
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
+
+        $("#selectFechas").select2({
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
+
+        $('#selectCliente').select2({
+
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
+
+        $("#selectClienteFinal").select2({
+
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
 
         $(function () {
             $.datepicker.regional['es'] = {
@@ -398,9 +399,6 @@
             var tipo;
             $(document).on('change', '#selectFechas', function (event) {
                 tipo = $("#selectFechas option:selected").val();
-                $("#datepicker_from").val('');
-                $("#datepicker_to").val('');
-                oTable.fnDraw();
             });
 
             // Date range filter
