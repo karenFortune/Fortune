@@ -17,7 +17,7 @@ namespace FortuneSystem.Models.POSummary
     public class POSummary
     {
 
-        [Display(Name = "Id")]
+        [Display(Name = "ID")]
         public int IdItems { get; set; }
 
         [Required(ErrorMessage = "Ingrese el estilo del Item.")]

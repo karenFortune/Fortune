@@ -85,6 +85,7 @@
     <!-- Required jQuery and jQuery UI Javascript references -->
     <script src="@Url.Content("~/Scripts/jquery-ui-1.12.1.min.js")"></script>
     <script type="text/javascript">
+        var tablaPO;
         $(document).ready(function () {
             $('#tablaUsuarios').dataTable({
                 responsive: true,
@@ -143,7 +144,7 @@
             $("#tablaPO").removeClass('dataTable no-footer');
 
             var table = $('#tablaPO').DataTable();
-          
+           
             var buttons = new $.fn.dataTable.Buttons(table, {
                 buttons: [
                     {
@@ -206,125 +207,6 @@
 
 
 
-            $('#selectCargo').select2({
-
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-
-            });
-
-            $('#selectCliente').select2({
-
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
-
-            $("#selectClienteFinal").select2({
-
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
-
-            $('#selectEstado').select2({
-
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
-
-            $('#selectGenero').select2({
-                placeholder: "Seleccione un género",
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
-
-            $('#selectTela').select2({
-                placeholder: "Seleccione un tipo de tela",
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
-
-            $("#selectTipoCamiseta").select2({
-                placeholder: "Seleccione un tipo de camiseta",
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
-
-            $("#selectFechas").select2({
-                language: {
-
-                    noResults: function () {
-
-                        return "No hay resultado";
-                    },
-                    searching: function () {
-
-                        return "Buscando..";
-                    }
-                }
-            });
 
 
 
@@ -332,7 +214,127 @@
         });
 
 
+        $('#selectCargo').select2({
 
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+
+        });
+
+
+
+        $('#selectEstado').select2({
+
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
+
+        $('#selectGenero').select2({
+            placeholder: "Seleccione un género",
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
+
+        $('#selectTela').select2({
+            placeholder: "Seleccione un tipo de tela",
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
+
+        $("#selectTipoCamiseta").select2({
+            placeholder: "Seleccione un tipo de camiseta",
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
+
+        $("#selectFechas").select2({
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
+
+        $('#selectCliente').select2({
+
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
+
+        $("#selectClienteFinal").select2({
+
+            language: {
+
+                noResults: function () {
+
+                    return "No hay resultado";
+                },
+                searching: function () {
+
+                    return "Buscando..";
+                }
+            }
+        });
 
         $(function () {
             $.datepicker.regional['es'] = {
@@ -362,12 +364,11 @@
         
             
         })
-        var tipo;
-        $(document).on('change', '#selectFechas', function (event) {        
-            tipo = $("#selectFechas option:selected").val();
-        });
+
+       
+     
         $(function () {
- 
+
             var oTable = $('#tablaPO').dataTable();
 
             $("#datepicker_from").datepicker({
@@ -395,11 +396,15 @@
                 maxDateFilter = new Date(this.value).getTime();
                 oTable.fnDraw();
                 });
+            var tipo;
+            $(document).on('change', '#selectFechas', function (event) {
+                tipo = $("#selectFechas option:selected").val();
+            });
 
             // Date range filter
             minDateFilter = "";
-          maxDateFilter = "";
-   
+            maxDateFilter = "";
+
             $.fn.dataTableExt.afnFiltering.push(
                 function (oSettings, aData, iDataIndex) {
                     if (typeof aData._date == 'undefined') {
@@ -420,10 +425,12 @@
 
                     return true;
                 }
-                
+
             );
 
         });
+
+        
         
 
 

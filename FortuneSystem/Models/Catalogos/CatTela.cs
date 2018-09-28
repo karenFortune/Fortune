@@ -8,11 +8,11 @@ namespace FortuneSystem.Models.Catalogos
 {
     public class CatTela
     {
-        [Display(Name = "No. Tela")]
+        [Display(Name = "FABRIC#")]
         public int Id_Tela { get; set; }
-        [Display(Name = "Tela")]
+        [Display(Name = "FABRIC")]
         public string Tela { get; set; }
-        [Display(Name = "Código Tela")]
+        [Display(Name = "FABRIC CODE")]
         public string CodigoTela { get; set; }
     }
 }

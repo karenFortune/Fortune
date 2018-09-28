@@ -9,11 +9,11 @@ namespace FortuneSystem.Models.Catalogos
 {
     public class CatCliente
     {
-        [Display(Name = "No. Cliente")] 
+        [Display(Name = "CUSTOMER#")] 
         public int Customer { get; set; }
 
-        [Required(ErrorMessage = "Ingrese el nombre del Cliente.")]
-        [Display(Name = "Cliente")]
+        [Required(ErrorMessage = "Please enter the customer's name.")]
+        [Display(Name = "CUSTOMER")]
         [Column("NAME")]
         public string Nombre { get; set; }
     }

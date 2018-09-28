@@ -57,9 +57,7 @@
                     @Html.DisplayFor(modelItem => item.Total)
                 </td>
                 <td>
-                    <a href="#" class="btn btn-default glyphicon glyphicon-edit btnEdit" data-value="@item.IdItems" title="Editar Estilo"></a>
-                    @* @Html.ActionLink(" ", "EditarEstilo", "Pedidos", new { id = item.IdItems }, new { data_target = "#myModal", data_toggle = "modal", @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Estilo" }) |*@
-                    @Html.ActionLink(" ", "Listado_Tallas_Estilo", new { id = item.IdItems }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Consultar Tallas" }) |
+                    <a href="#" class="btn btn-default glyphicon glyphicon-edit btnEdit" data-value="@item.IdItems" title="Editar Estilo"></a> |
                     @Html.ActionLink(" ", "Eliminar", new { id = item.IdItems }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Estilo" })
                 </td>
             </tr>

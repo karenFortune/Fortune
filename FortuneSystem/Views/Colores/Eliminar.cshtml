@@ -1,7 +1,7 @@
 ﻿@model FortuneSystem.Models.Catalogos.CatColores
 
 @{
-    ViewBag.Title = "Eliminar";
+    ViewBag.Title = "Delete Color";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -40,8 +40,8 @@
         @Html.AntiForgeryToken()
 
     <div class="form-actions no-color">
-        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
-        @Html.ActionLink("Regresar", "Index")
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        @Html.ActionLink("Back to List", "Index")
     </div>
     }
 </div>

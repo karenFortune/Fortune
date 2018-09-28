@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<FortuneSystem.Models.Catalogos.CatColores>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "List Colors";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
@@ -66,7 +66,7 @@
 <p>
     <a href="@Url.Action("CrearColor")">
         <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nuevo Color
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add New Color
         </button>
     </a>
 </p>
@@ -100,9 +100,9 @@
                     @Html.DisplayFor(modelItem => item.DescripcionColor)
                 </td>
                 <td>
-                    @Html.ActionLink(" ", "Editar", new { id = item.IdColor }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Color" }) |
-                    @Html.ActionLink(" ", "Detalles", new { id = item.IdColor }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Detalles Color" }) |
-                    @Html.ActionLink(" ", "Eliminar", new { id = item.IdColor }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Color" })
+                    @Html.ActionLink(" ", "Editar", new { id = item.IdColor }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Edit Color" }) |
+                    @Html.ActionLink(" ", "Detalles", new { id = item.IdColor }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details Color" }) |
+                    @Html.ActionLink(" ", "Eliminar", new { id = item.IdColor }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Delete Color" })
                 </td>
             </tr>
         }

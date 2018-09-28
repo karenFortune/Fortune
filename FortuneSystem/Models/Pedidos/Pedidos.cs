@@ -1,5 +1,6 @@
 ﻿using FortuneSystem.Models.Catalogos;
 using FortuneSystem.Models.POSummary;
+using FortuneSystem.Models.Revisiones;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,12 +14,12 @@ namespace FortuneSystem.Models.Pedidos
     public class OrdenesCompra
     {
 
-        [Display(Name = "Id PO")]
+        [Display(Name = "#")]
         public int IdPedido { get; set; }
 
         //[Required(ErrorMessage = "Ingrese el número de referencia de la orden.")]
         //[RegularExpression("/[^A-Z\u00f1\u00d1\u0020\0-9]/g", ErrorMessage = "El Orden Ref. debe contener sólo números y letras.")]
-        [Display(Name = "Orden Ref.")]
+        [Display(Name = "ORDEN REF")]
         public string PO { get; set; }
 
         [Required(ErrorMessage = "Ingrese el número de PO.")]
@@ -26,7 +27,7 @@ namespace FortuneSystem.Models.Pedidos
         public int VPO { get; set; }
 
         [Required(ErrorMessage = "Ingrese el nombre del Cliente.")]
-        [Display(Name = "Cliente")]
+        [Display(Name = "CUSTOMER")]
         [ForeignKey("CUSTOMER")]
         [Column("CUSTOMER")]
         public int Cliente { get; set; }
@@ -35,7 +36,7 @@ namespace FortuneSystem.Models.Pedidos
         public List<CatCliente> LCliente { get; set; }
 
         [Required(ErrorMessage = "Ingrese el nombre del Cliente Orden.")]
-        [Display(Name = "Cliente Orden")]
+        [Display(Name = "ORDEN CUSTOMER")]
         [ForeignKey("CUSTOMER_FINAL")]
         [Column("CUSTOMER_FINAL")]
         public int ClienteFinal { get; set; }
@@ -44,7 +45,7 @@ namespace FortuneSystem.Models.Pedidos
         public List<CatClienteFinal> LClienteFinal { get; set; }
 
         [Required(ErrorMessage = "Seleccione un estado del PO")]
-        [Display(Name = "Estado")]
+        [Display(Name = "STATUS")]
         [ForeignKey("ID_STATUS")]
         [Column("ID_STATUS")]
         public int IdStatus { get; set; }
@@ -56,17 +57,17 @@ namespace FortuneSystem.Models.Pedidos
         
         [RegularExpression("^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$", ErrorMessage = "Formato de fecha incorrecta.")]
         [DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}")]
-        [Display(Name = "Fecha Cancelación")]
+        [Display(Name = "CANCEL DATE")]
         public DateTime FechaCancel { get; set; }
 
         [Required(ErrorMessage = "Ingrese la fecha de registro.")]
         [RegularExpression("^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$", ErrorMessage = "Formato de fecha incorrecta.")]
-        [Display(Name = "Fecha Registro")]
+        [Display(Name = "REGISTRATION DATE")]
         [DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}")]
         public DateTime FechaOrden { get; set; }
 
         [Required(ErrorMessage = "Ingrese el total de unidades.")]
-        [Display(Name = "Total Unidades")]
+        [Display(Name = "TOTAL UNITS")]
         public int TotalUnidades { get; set; }
 
         public List<CatCliente> ListaClientes { get; set; }
@@ -78,6 +79,8 @@ namespace FortuneSystem.Models.Pedidos
         public List<CatGenero> ListarTallasPorGenero { get; set; }
 
         public int Historial { get; set; }
+
+        public virtual Revision Revision { get; set; }
        
 
 

@@ -8,16 +8,16 @@ namespace FortuneSystem.Models.Catalogos
 {
     public class CatGenero
     {
-        [Display(Name = "No. Género")]
+        [Display(Name = "GENDER#")]
         public int IdGender { get; set; }
 
-        [Required(ErrorMessage = "Ingrese el Género")]
-        [Display(Name = "Género")]
+        [Required(ErrorMessage = "Please enter the gender")]
+        [Display(Name = "GENDER")]
         public string Genero { get; set; }
 
         public virtual CatTallaItem CatTallaItem { get; set; }
 
-        [Display(Name = "Código Género")]
+        [Display(Name = "GENDER CODE")]
         public string GeneroCode { get; set; }
 
     }

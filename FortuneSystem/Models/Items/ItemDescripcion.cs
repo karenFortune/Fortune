@@ -9,9 +9,9 @@ namespace FortuneSystem.Models.Items
     public class ItemDescripcion
     {
         public int ItemId { get; set; }
-        [Display(Name = "Estilo")]
+        [Display(Name = "ITEM")]
         public string ItemEstilo { get; set; }
-        [Display(Name = "Descripción")]
+        [Display(Name = "DESCRIPTION")]
         public string Descripcion { get; set; }
     }
 }

@@ -31,18 +31,18 @@ namespace FortuneSystem.Controllers
         public ActionResult Login(CatUsuario usuario)
         {
             LoginData objData = new LoginData();
-
+            string empleado= usuario.NoEmpleado.ToString(); 
             string actionName="";
             string nameController="";
             if (ModelState.IsValid == false)
             {
-                objData.IsValid(usuario.Nombres, usuario.Contrasena, usuario);
+                objData.IsValid(empleado, usuario.Contrasena, usuario);
 
                 if (usuario.Cargo == 1)
                 {
                     actionName = "Index";
-                    nameController = "Usuarios";
-                   
+                    nameController = "Usuarios"; //
+
                 }
                 else if (usuario.Cargo == 5)
                 {
@@ -57,7 +57,7 @@ namespace FortuneSystem.Controllers
 
             if (ModelState.IsValid)
             {
-                if(objData.IsValid(usuario.Nombres, usuario.Contrasena,usuario))
+                if(objData.IsValid(empleado, usuario.Contrasena,usuario))
                 {
                     //FormsAuthentication.SetAuthCookie(usuario.Nombres, usuario.Contrasena);
                     return RedirectToAction("Index", "Home");

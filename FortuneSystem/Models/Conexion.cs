@@ -10,13 +10,15 @@ namespace FortuneSystem.Models
     public class Conexion
     {
         private SqlConnection conn = new SqlConnection("Server=tcp:fortunesp.database.windows.net,1433;Initial Catalog=FortuneTest;Persist Security Info=False;User ID=AdminFB;Password=Admin@2018;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
-
+        //private SqlConnection conn = new SqlConnection("Server=W_KAREN;Database=FortuneTest;Integrated Security =true");
         public SqlConnection AbrirConexion()
         {
+            
             if (conn.State == ConnectionState.Closed)
             {
-                conn.Open();
-               
+                
+                    conn.Open();
+             
             }
             return conn;
         }
@@ -26,6 +28,8 @@ namespace FortuneSystem.Models
             if(conn.State == ConnectionState.Closed)
             {
                 conn.Close();
+              
+                
             }
             return conn;
         }

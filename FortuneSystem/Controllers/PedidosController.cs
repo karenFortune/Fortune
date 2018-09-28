@@ -38,7 +38,8 @@ namespace FortuneSystem.Controllers
             List<OrdenesCompra> listaPedidos= new List<OrdenesCompra>();
              listaPedidos = objPedido.ListaOrdenCompra().ToList();
              return View(listaPedidos);
-         }
+         }      
+     
 
         /*  [ChildActionOnly]
           public ActionResult StudentList()
@@ -47,11 +48,11 @@ namespace FortuneSystem.Controllers
               return PartialView(lista);
           }*/
 
-       /* public ActionResult Lista_Pedido_Por_Fecha(DateTime? fechaCancel, DateTime? fechaOrden)
-        {
-            List<OrdenesCompra> lista = objPedido.ListaOrdenCompra(fechaCancel, fechaOrden).ToList();
-            return PartialView(lista);
-        }*/
+        /* public ActionResult Lista_Pedido_Por_Fecha(DateTime? fechaCancel, DateTime? fechaOrden)
+         {
+             List<OrdenesCompra> lista = objPedido.ListaOrdenCompra(fechaCancel, fechaOrden).ToList();
+             return PartialView(lista);
+         }*/
 
         [HttpPost]
         public JsonResult Lista_Estilos_PO(int? id)
@@ -79,6 +80,14 @@ namespace FortuneSystem.Controllers
             List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilo(id).ToList();
 
             return PartialView(listaTallas);
+        }
+
+        public ActionResult HistorialPedidos(int id)
+        {
+            List<OrdenesCompra> listaPedidosRev = new List<OrdenesCompra>();
+            listaPedidosRev = objPedido.ListaRevisionesPO(id).ToList();
+
+            return View(listaPedidosRev);
         }
 
         [HttpPost]
@@ -144,12 +153,32 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpGet]
+        public ActionResult DetallesRev(int? id)
+        {
+            if (id == null)
+            {
+                return View();
+            }
+
+            OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
+            pedido.CatCliente = objCliente.ConsultarListaClientes(pedido.Cliente);
+            pedido.CatClienteFinal = objClienteFinal.ConsultarListaClientesFinal(pedido.ClienteFinal);
+            pedido.IdPedido = Convert.ToInt32(id);
+
+            if (pedido == null)
+            {
+                return View();
+            }
+            return View(pedido);
+        }
+
+        [HttpGet]
         public int ObtenerPORevision(int? id)
         {
             OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
             SeleccionarClientes(pedido);
             SeleccionarClienteFinal(pedido);
-            int revisiones = objRevision.ObtenerNumeroRevisiones(id);
+            /*int revisiones = objRevision.ObtenerNumeroRevisiones(id);
             int identificador = 0;
             string rev;
             if (revisiones == 0 && pedido.IdStatus != 3)
@@ -161,14 +190,17 @@ namespace FortuneSystem.Controllers
             {
                 identificador = revisiones + 1;
                 rev = pedido.PO + "-REV" + identificador;
-            }
-            
-            pedido.PO = rev.Replace(" ", "");
+            }pedido.PO = rev.Replace(" ", "");*/
+
+
             pedido.IdPedido = Convert.ToInt32(id);
             pedido.FechaOrden = DateTime.Today;
             Session["id_pedido"] = id;
             ObtenerEstadoRevisado(pedido);
-          // objPedido.AgregarPO(pedido);
+            objPedido.AgregarPO(pedido);
+
+            //Cambia estado pedido original a 5
+            objPedido.ActualizarEstadoPO(Convert.ToInt32(Session["id_pedido"]));
 
             //Registrar en Revisado el Pedido Nuevo 
             int PedidosId = objPedido.Obtener_Utlimo_po();
@@ -176,7 +208,7 @@ namespace FortuneSystem.Controllers
             int PedidoNuevo = Convert.ToInt32(Session["idPedidoNuevo"]);
             if (PedidoNuevo != 0)
             {
-                Revisiones revisionPO = new Revisiones()
+                Revision revisionPO = new Revision()
                 {
                     IdPedido = Convert.ToInt32(Session["id_pedido"]),
                     IdRevisionPO = Convert.ToInt32(Session["idPedidoNuevo"]),
@@ -184,7 +216,7 @@ namespace FortuneSystem.Controllers
                     IdStatus = pedido.IdStatus
 
                 };
-                //objRevision.AgregarRevisionesPO(revisionPO);
+                objRevision.AgregarRevisionesPO(revisionPO);
             }
             //Obtener los estilos por ID Pedido Anterior
             List<POSummary> listaItems = objItems.ListaEstilosPorPO(Convert.ToInt32(Session["id_pedido"])).ToList();
@@ -203,7 +235,7 @@ namespace FortuneSystem.Controllers
                 Session["id_estilo"] = estilos.IdItems;
                 int? idEstilo = Convert.ToInt32(Convert.ToInt32(Session["id_estilo"]));
                 estilos.PedidosId = Convert.ToInt32(Session["idPedidoNuevo"]);
-                //objItems.AgregarItems(estilos);
+                objItems.AgregarItems(estilos);
 
                 //Obtener la lista de tallas del item
                 List<ItemTalla> listaTallas = objTallas.ListaTallasPorSummary(idEstilo).ToList();
@@ -218,8 +250,7 @@ namespace FortuneSystem.Controllers
                     tallas.Ejemplos = itemT.Ejemplos;
                     tallas.IdSummary = objItems.Obtener_Utlimo_Item();
 
-
-                    //objTallas.RegistroTallas(tallas);
+                    objTallas.RegistroTallas(tallas);
                 }
                 
             }
@@ -264,6 +295,13 @@ namespace FortuneSystem.Controllers
 
            // List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilo(id).ToList();
             return View(pedido);
+        }
+
+        public ActionResult CancelarPO(int id)
+        {
+            objPedido.ActualizarEstadoPOCancelado(id);
+            TempData["cancelarPO"] = "Se cancelo correctamente la orden de compra.";
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -499,7 +537,7 @@ namespace FortuneSystem.Controllers
             ViewBag.listEstados = new SelectList(listaEstados, "IdStatus", "Estado", pedido.IdStatus);
             foreach (var item in listaEstados)
             {
-                if (item.IdStatus == 3)
+                if (item.IdStatus == 1)
                 {
                     pedido.IdStatus = item.IdStatus;
                 }
