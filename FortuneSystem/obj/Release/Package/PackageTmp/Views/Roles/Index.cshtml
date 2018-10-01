@@ -1,20 +1,77 @@
 ﻿@model IEnumerable<FortuneSystem.Models.Roles.CatRoles>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Roles";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    tr.highlighted td {
+        background: #b3e0ff;
+    }
 
+    table thead {
+        color: #fff;
+        background-color: #006bb3;
+    }
+
+    th {
+        color: #fff;
+        background-color: #006bb3;
+    }
+</style>
 <h2>Administraci&oacute;n de Roles</h2>
+@{
+    if (TempData["rolesOK"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["rolesOK"])), 'success', 5, null);
 
+        </script>
+    }
+    if (TempData["rolesError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["rolesError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["rolesEditar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["rolesEditar"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["rolesEditarError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["rolesEditarError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["rolesEliminar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["rolesEliminar"])), 'success', 5, null);
+
+        </script>
+    }
+
+}
 <p>
     <a href="@Url.Action("CrearRoles")">
         <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Rol
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nuevo Rol
         </button>
     </a>
 </p>
-<table  class="table table-striped" id="tablaRoles">
+<br />
+<table class="table table-striped" id="tablaRoles">
     <thead>
         <tr>
             <th>
@@ -45,3 +102,9 @@
         }
     </tbody>
 </table>
+<script>
+    $('#tablaRoles tr').click(function (e) {
+        $('#tablaRoles tr').removeClass('highlighted');
+            $(this).addClass('highlighted');
+        });
+</script>

@@ -134,6 +134,8 @@ namespace FortuneSystem.Controllers.Catalogos
             return Json(listaTallas, JsonRequestBehavior.AllowGet);
         }
 
+      
+
 
     }
 }

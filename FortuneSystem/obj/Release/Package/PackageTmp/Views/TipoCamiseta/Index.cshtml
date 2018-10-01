@@ -1,0 +1,123 @@
+﻿@model IEnumerable<FortuneSystem.Models.Catalogos.CatTipoCamiseta>
+
+@{
+    ViewBag.Title = "Tipo de Camiseta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    tr.highlighted td {
+        background: #b3e0ff;
+    }
+
+    table thead {
+        color: #fff;
+        background-color: #006bb3;
+    }
+
+    th {
+        color: #fff;
+        background-color: #006bb3;
+    }
+</style>
+<h2>Administraci&oacute;n de Tipo de Camisetas</h2>
+@{
+    if (TempData["camisetaOK"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["camisetaOK"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["camisetaError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["camisetaError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["camisetaEditar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["camisetaEditar"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["camisetaEditarError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["camisetaEditarError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["camisetaEliminar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["camisetaEliminar"])), 'success', 5, null);
+
+        </script>
+    }
+
+}
+<p>
+    <a href="@Url.Action("CrearCamiseta")">
+        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nuevo Tipo de Camiseta
+        </button>
+    </a>
+</p>
+<br />
+<table class="table table-striped" id="tablaTipoCamiseta">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdTipo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoProducto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DescripcionTipo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoGrupo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdTipo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoProducto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DescripcionTipo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoGrupo)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Editar", new { id = item.IdTipo }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Tipo Camiseta" }) |
+                    @Html.ActionLink(" ", "Detalles", new { id = item.IdTipo }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Detalles Tipo Camiseta" }) |
+                    @Html.ActionLink(" ", "Eliminar", new { id = item.IdTipo }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Tipo Camiseta" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $('#tablaTipoCamiseta tr').click(function (e) {
+        $('#tablaTipoCamiseta tr').removeClass('highlighted');
+        $(this).addClass('highlighted');
+    });
+</script>

@@ -60,6 +60,37 @@ namespace FortuneSystem.Models.Item
             return listTallas;
         }
 
+        //Muestra la lista de tallas de Staging por estilo
+        public IEnumerable<ItemTalla> ListaTallasStagingPorEstilo(int? id)
+        {
+            Conexion conn = new Conexion();
+            SqlCommand comando = new SqlCommand();
+            SqlDataReader leer = null;
+            List<ItemTalla> listTallas = new List<ItemTalla>();
+            comando.Connection = conn.AbrirConexion();
+            comando.CommandText = "Lista_Tallas_Staging_Por_Estilo";
+            comando.CommandType = CommandType.StoredProcedure;
+            comando.Parameters.AddWithValue("@Id", id);
+            leer = comando.ExecuteReader();
+
+            while (leer.Read())
+            {
+                ItemTalla tallas = new ItemTalla()
+                {
+                    Talla = leer["TALLA"].ToString(),
+                    Cantidad = Convert.ToInt32(leer["CANTIDAD"]),
+                    Estilo = leer["ITEM_STYLE"].ToString()
+
+                };
+
+                listTallas.Add(tallas);
+            }
+            leer.Close();
+            conn.CerrarConexion();
+
+            return listTallas;
+        }
+
         //Muestra la lista de tallas por summary
         public IEnumerable<ItemTalla> ListaTallasPorSummary(int? id)
         {

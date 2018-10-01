@@ -104,6 +104,20 @@ namespace FortuneSystem.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult Lista_Tallas_Staging_Estilo(int? id)
+        {
+            List<ItemTalla> listaTallas = objTallas.ListaTallasStagingPorEstilo(id).ToList();
+            string estilo = "";
+            foreach (var item in listaTallas)
+            {
+                estilo = item.Estilo;
+
+            }
+            var result = Json(new { listaTalla = listaTallas, estilos = estilo });
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public ActionResult CrearPO()
@@ -196,11 +210,11 @@ namespace FortuneSystem.Controllers
             pedido.IdPedido = Convert.ToInt32(id);
             pedido.FechaOrden = DateTime.Today;
             Session["id_pedido"] = id;
-            ObtenerEstadoRevisado(pedido);
+           // ObtenerEstadoRevisado(pedido);
             objPedido.AgregarPO(pedido);
 
             //Cambia estado pedido original a 5
-            objPedido.ActualizarEstadoPO(Convert.ToInt32(Session["id_pedido"]));
+           objPedido.ActualizarEstadoPO(Convert.ToInt32(Session["id_pedido"]));
 
             //Registrar en Revisado el Pedido Nuevo 
             int PedidosId = objPedido.Obtener_Utlimo_po();
@@ -261,6 +275,7 @@ namespace FortuneSystem.Controllers
         public ActionResult Revision(int? id)
         {
             int idPedido = ObtenerPORevision(id);
+            Session["idPedidoRevision"]= idPedido;
             POSummary summary = new POSummary();
             ListaGenero(summary);
             ListaTela(summary);
@@ -394,14 +409,15 @@ namespace FortuneSystem.Controllers
             {
                 TempData["itemEditarError"] = "No se pudo modificar el estilo, intentelo más tarde.";
             }
-            return View(items);
+          return View(items);
         }
+
 
         [HttpPost]     
         public ActionResult RegistrarPO([Bind] OrdenesCompra ordenCompra,string po, int VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades)
         {
             ListaEstados(ordenCompra);                          
-           // objPedido.AgregarPO(ordenCompra);           
+            objPedido.AgregarPO(ordenCompra);           
             
             return View(ordenCompra);
         }

@@ -83,6 +83,29 @@
 
         </script>
     }
+    <script type="text/javascript">
+        function confirmar() {
+            var confirm = alertify.confirm('Confirmacion', '¿Desea revisar el  Estilo?', null, null).set('labels', { ok: 'Aceptar', cancel: 'Cancelar' });
+
+            confirm.set({ transition: 'slide' });
+
+            confirm.set('onok', function () {
+                $("#crearTallas").hide();
+                $('#nuevoItem').prop("disabled", false);
+                limpiarFormItems();
+                alertify.success('Has confirmado');
+            });
+
+            confirm.set('oncancel', function () {
+                alertify.notify('Se finalizo el registro de la orden de compra.', 'success', 5, null);
+
+                setTimeout("redireccionarPagina()", 800);
+
+            });
+        }
+
+    </script>
+
 }
 
         </div>
@@ -116,87 +139,101 @@
         </p>
 
         @*<p id="date_filter_fo">
-                     <span id="date-label-from_fo" class="date-label">From Range Date Orden: </span><input class="date_range_filter date" type="text" id="datepicker_from_fo" />
-                    <span id="date-label-to_fo" class="date-label">To:<input class="date_range_filter date" type="text" id="datepicker_to_fo" />
-            </p>*@
+                 <span id="date-label-from_fo" class="date-label">From Range Date Orden: </span><input class="date_range_filter date" type="text" id="datepicker_from_fo" />
+                <span id="date-label-to_fo" class="date-label">To:<input class="date_range_filter date" type="text" id="datepicker_to_fo" />
+        </p>*@
 
 
         <div id="botones"></div>
         <br />
-        <table align="center" class="table table-striped" id="tablaPO">
-            <thead>
-                <tr>
-
-                    <th>
-                        @Html.DisplayNameFor(model => model.PO)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.VPO)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CatClienteFinal.NombreCliente)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.FechaCancel)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.FechaOrden)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.TotalUnidades)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.IdStatus)
-                    </th>
-                    <th>ACTIONS</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+        <div id="div_tabla_estilos" style="width: 100%; height:300px; overflow:auto; ">
+            <table align="center" class="table table-striped" id="tablaPO">
+                <thead>
                     <tr>
 
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PO)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.VPO)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CatClienteFinal.NombreCliente)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FechaCancel)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FechaOrden)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TotalUnidades)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CatStatus.Estado)
-                        </td>
-                        <td>
-                            @Html.ActionLink(" ", "Detalles", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details Style" }) |
-                            @Html.ActionLink(" ", "Revision", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-check", @style = "color:black", @Title = "Check PO" }) |
-                            @Html.ActionLink(" ", "CancelarPO", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-ban-circle", @style = "color:black", @Title = "Cancel PO" }) |
-                            @if (item.Historial == 1)
-                            {
-                                @Html.ActionLink(" ", "HistorialPedidos", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-share", @style = "color:black", @Title = "Record PO" })
-                            }
-                        </td>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PO)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.VPO)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CatClienteFinal.NombreCliente)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FechaCancel)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FechaOrden)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TotalUnidades)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IdStatus)
+                        </th>
+                        <th>ACTIONS</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PO)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.VPO)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CatClienteFinal.NombreCliente)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FechaCancel)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FechaOrden)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalUnidades)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CatStatus.Estado)
+                            </td>
+                            <td>
+                                @Html.ActionLink(" ", "Detalles", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details Style" }) |
+                                @Html.ActionLink(" ", "Revision", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-check", @style = "color:black", @Title = "Check PO", onclick = "event.preventDefault();ConfirmRev(this)" }) |
+                                @Html.ActionLink(" ", "CancelarPO", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-ban-circle", @style = "color:black", @Title = "Cancel PO", onclick = "event.preventDefault();ConfirmCancel(this)" }) |
+                                @if (item.Historial == 1)
+                                {
+                                    @Html.ActionLink(" ", "HistorialPedidos", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-share", @style = "color:black", @Title = "Record PO" })
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 <script>
     $('#tablaPO tr').click(function (e) {
         $('#tablaPO tr').removeClass('highlighted');
         $(this).addClass('highlighted');
     });
-
+    function ConfirmRev(a) {
+        alertify.confirm("Are you sure you want to perform a review?", function (result) {
+            location.href = a;
+        }).set({
+            title: "Confirmation" });
+    }
+    function ConfirmCancel(a) {
+        alertify.confirm("Are you sure you want to cancel PO ?", function (result) {
+            location.href = a;
+        }).set({
+            title: "Confirmation"
+        });
+    }
+    
 
 </script>

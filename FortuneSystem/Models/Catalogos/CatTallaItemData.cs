@@ -125,6 +125,43 @@ namespace FortuneSystem.Models.Catalogos
             comando.ExecuteNonQuery();
             conn.CerrarConexion();
         }
+        //Permite obtener el id de un talla
+        public int ObtenerIdTalla(string talla)
+        {
+            int idTalla = 0;
+            Conexion conex = new Conexion();
+            SqlCommand coman = new SqlCommand();
+            SqlDataReader leerF = null;
+            coman.Connection = conex.AbrirConexion();
+            coman.CommandText = "select ID from CAT_ITEM_SIZE WHERE TALLA='" + talla + "'";
+            leerF = coman.ExecuteReader();
+            while (leerF.Read())
+            {
+                idTalla += Convert.ToInt32(leerF["ID"]);
+            }
+            leerF.Close();
+            conex.CerrarConexion();
+            return idTalla;
+        }
+
+        //Permite eliminar la informacion de una talla por estilo
+        public void EliminarTallasIdEstilo(int idEstilo, int idTalla)
+        {
+
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
+            Conexion conex = new Conexion();
+            try
+            {
+                cmd.Connection = conex.AbrirConexion();
+                cmd.CommandText = "DELETE FROM ITEM_SIZE WHERE ID_SUMMARY='" + idEstilo + "' AND TALLA_ITEM='" + idTalla + "' ";
+                cmd.CommandType = CommandType.Text;
+                reader = cmd.ExecuteReader();
+                conex.CerrarConexion();
+            }
+            finally { conex.CerrarConexion(); }
+
+        }
 
 
     }

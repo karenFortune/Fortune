@@ -18,12 +18,12 @@
     <script src="~/Scripts/bootstrap.js"></script>
 }
 <script type="text/javascript">
+   
 
 
     $(document).ready(function () {
 
-
-      
+   
         $(document).on("click", ".classAdd", function () {
             var rowCount = $('.data-Talla').length + 1;
             var tallasdiv = '<tr class="data-Talla">' +
@@ -37,9 +37,19 @@
             $('#tablaTallas').append(tallasdiv);
         });
 
+
         $(document).on("click", ".deleteTalla", function () {
+            debugger
+            var $row = $(this).closest("tr");    // Find the row
+            var $text = $row.find(".talla").val(); // Find the text
+
+            // Let's test it out
+            alert($text);
+            eliminarTallas($text);
             $(this).closest("tr").remove();
+
         });
+
 
         $('#selectGenero').select2({
             placeholder: "Seleccione un género",
@@ -177,6 +187,7 @@
             $("#nuevoColor").prop("disabled", false);
         }
 
+    
 
         $('#nuevoColor').click(function (e) {
         var colorEstilo = $("#CatColores_CodigoColor").val();
@@ -280,12 +291,12 @@
                     select: function (event, ui) {
                         event.preventDefault();
                         this.value = ui.item.label;
-                       
+
                     },
                     focus: function (event, ui) {
                         event.preventDefault();
                         this.value = ui.item.label;
-                        
+
                     }
                 });
 
@@ -295,8 +306,10 @@
         });
         var colorDesc = $("#CatColores_DescripcionColor").val();
         var colorEstilo = $("#CatColores_CodigoColor").val();
+            var talla
 
-        $(function () {    
+
+        $(function () {
     var id = $("#IdItems").val();
     $.ajax('@Url.Action("Lista_Tallas_Por_Estilos", "POSummary")', {
         data: { idEstilos: id },
@@ -313,12 +326,12 @@
                 '</tr>' +
                 '</thead><tbody>';
             $.each(result, function (key, item) {
-                html += '<tr>';         
+                html += '<tr>';
                 html += '<td><input type="text" id="f-talla" class="form-control talla" autocomplete="off" value="' + item.Talla + '"/></td>';
                 html += '<td><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 " value="' + item.Cantidad + '"/></td>';
                 html += '<td><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 " value="' + item.Ejemplos + '"/></td>';
                 html += '<td><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 "  value="' + item.Extras + '"/></td>';
-                html += '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Eliminar</button></td>';
+                html += '<td><button type="button" id="btnDelete"  class="deleteTalla btn btn btn-danger btn-xs" value="4">Eliminar</button></td>';
                 html += '</tr>';
 
             });
@@ -331,15 +344,29 @@
     }).done(function (data) {
 
     });
-  
-});
 
+});
+        $(function () {
+
+        });
 
         var exists = false;
 
 
     });
 
+    function eliminarTallas(talla) {
+                             debugger      
+            var idEstilo = $("#IdItems").val();
+           var idEstilo = $("#IdItems").val();
+           $.ajax('@Url.Action("EliminarTallaPorEstilo", "POSummary")', {
+            data: { estilo: idEstilo, talla: talla },
+            method: 'post'
+        }).done(function (data) {        });
+                  alertify.set('notifier', 'position', 'top-right');
+            alertify.notify('Se elimino correctamente la talla.', 'success', 10, null);
+    }
+         
     function buscarTipoCamiseta(tipoProd) {
         $('#selectTipoCamiseta option').each(function (i, e) {
             if (this.value == tipoProd) {
@@ -384,7 +411,6 @@
     }
 
 
-
     function InputToUpper(obj) {
         if (obj.value != "") {
             obj.value = obj.value.toUpperCase();
@@ -392,7 +418,15 @@
     }
 
     $(document).ready(function () {
-        $('#nuevaTalla').on('click', function () {
+        $('#modificarEstilo').bind('click', submit_click);
+
+        function submit_click(event) {
+            debugger
+            obtenerTallas();
+
+
+        }
+       function obtenerTallas() {
             var r = 0; var c = 0; var i = 0; var cadena = new Array(4);
             cadena[0] = ''; cadena[1] = ''; cadena[2] = ''; cadena[3] = '';
             var nFilas = $("#tablaTallas tbody>tr").length;
@@ -429,7 +463,7 @@
             });
 
             enviarListaTalla(cadena, error);
-        });
+        }
     });
 
     function redireccionarPagina() {
@@ -462,9 +496,10 @@
                 }
             });
         }
+        
 
     }
-
+  
     function limpiarFormItems() {
         $('#ItemDescripcion_ItemEstilo').val('');
         $('#ItemDescripcion_Descripcion').val('');
@@ -491,126 +526,127 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
+    <div class="form-horizontal">
 
-    @Html.HiddenFor(model => model.IdItems)
-    @Html.HiddenFor(model => model.IdColor)
-    @Html.HiddenFor(model => model.PedidosId)
-    
+        @Html.HiddenFor(model => model.IdItems)
+        @Html.HiddenFor(model => model.IdColor)
+        @Html.HiddenFor(model => model.PedidosId)
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>Editar Estilo</h4>
+            </div>
+            <div class="container-fluid">
+                <div class="form-row ">
+                    <div class="form-group col-md-5">
+                        @Html.LabelFor(model => model.ItemDescripcion.ItemEstilo, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.ItemDescripcion.ItemEstilo, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
+                        @Html.ValidationMessageFor(model => model.ItemDescripcion.ItemEstilo, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-5">
+                        @Html.LabelFor(model => model.ItemDescripcion.Descripcion, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.ItemDescripcion.Descripcion, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
+                        @Html.ValidationMessageFor(model => model.ItemDescripcion.Descripcion, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        <br />
+                        <button type="button" class="btn btn-success" id="nuevoEstilo" data-toggle="modal">
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Estilo
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        @Html.LabelFor(model => model.CatColores.CodigoColor, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.CatColores.CodigoColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
+                        @Html.ValidationMessageFor(model => model.CatColores.CodigoColor, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="form-group col-md-5">
+                        @Html.LabelFor(model => model.CatColores.DescripcionColor, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.CatColores.DescripcionColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
+                        @Html.ValidationMessageFor(model => model.CatColores.DescripcionColor, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        <br />
+
+                        <button type="button" class="btn btn-success" id="nuevoColor" data-toggle="modal">
+                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Color
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="container-fluid">
+                <div class="form-row">
+                    <div class="form-group col-sm-5">
+                        @Html.LabelFor(model => model.Cantidad, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Cantidad, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
+                        @Html.ValidationMessageFor(model => model.Cantidad, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group col-sm-5">
+                        @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
+                        @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="form-row">
+                    <div class="form-group col-sm-4 estilo">
+                        @Html.LabelFor(model => model.IdGenero, htmlAttributes: new { @class = "control-label " }) <br />
+                        @Html.DropDownList("Genero", (SelectList)ViewBag.listGenero, new { @class = "form-control nuevo_item", @id = "selectGenero", @name = "state", @style = "width: 80%;" })
+                        @Html.ValidationMessageFor(model => model.IdGenero, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="form-group col-sm-4">
+                        @Html.LabelFor(model => model.IdTela, htmlAttributes: new { @class = "control-label " }) <br />
+                        @Html.DropDownList("Tela", (SelectList)ViewBag.listTela, new { @class = "form-control nuevo_item", @id = "selectTela", @name = "state", @style = "width: 80%;" })
+                        @Html.ValidationMessageFor(model => model.IdTela, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-sm-4">
+                        @Html.LabelFor(model => model.TipoCamiseta, htmlAttributes: new { @class = "control-label " }) <br />
+                        @Html.DropDownList("DescripcionTipo", (SelectList)ViewBag.listTipoCamiseta, new { @class = "form-control nuevo_item", @id = "selectTipoCamiseta", @name = "state", @style = "width: 80%;" })
+                        @Html.ValidationMessageFor(model => model.TipoCamiseta, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    @*style="visibility:hidden;"*@
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h4>Editar Estilo</h4>
+            <h4>Editar Talla</h4>
         </div>
         <div class="container-fluid">
-            <div class="form-row ">
-                <div class="form-group col-md-5">
-                    @Html.LabelFor(model => model.ItemDescripcion.ItemEstilo, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.ItemDescripcion.ItemEstilo, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
-                    @Html.ValidationMessageFor(model => model.ItemDescripcion.ItemEstilo, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group col-md-5">
-                    @Html.LabelFor(model => model.ItemDescripcion.Descripcion, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.ItemDescripcion.Descripcion, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
-                    @Html.ValidationMessageFor(model => model.ItemDescripcion.Descripcion, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group col-md-3">
-                    <br />
-                    <button type="button" class="btn btn-success" id="nuevoEstilo" data-toggle="modal">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Estilo
-                    </button>
-                </div>
-            </div>
+            <br />
+
+            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">+ Otra Talla</button>
+            <div id="listaTalla"></div>
+            @*<button type="button" id="nuevaTalla" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Modificar Tallas</button>*@
+            <br />
+            <br />
         </div>
-
-        <div class="container-fluid">
-            <div class="form-row">
-                <div class="form-group col-md-5">
-                    @Html.LabelFor(model => model.CatColores.CodigoColor, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.CatColores.CodigoColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
-                    @Html.ValidationMessageFor(model => model.CatColores.CodigoColor, "", new { @class = "text-danger" })
-
-                </div>
-                <div class="form-group col-md-5">
-                    @Html.LabelFor(model => model.CatColores.DescripcionColor, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.CatColores.DescripcionColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
-                    @Html.ValidationMessageFor(model => model.CatColores.DescripcionColor, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group col-md-3">
-                    <br />
-
-                    <button type="button" class="btn btn-success" id="nuevoColor" data-toggle="modal">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Color
-                    </button>
-
-                </div>
-            </div>
-        </div>
-
-
-        <div class="container-fluid">
-            <div class="form-row">
-                <div class="form-group col-sm-5">
-                    @Html.LabelFor(model => model.Cantidad, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Cantidad, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
-                    @Html.ValidationMessageFor(model => model.Cantidad, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="form-group col-sm-5">
-                    @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
-                    @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
-
-                </div>
-
-            </div>
-        </div>
-        <div class="container-fluid">
-            <div class="form-row">
-                <div class="form-group col-sm-4 estilo">
-                    @Html.LabelFor(model => model.IdGenero, htmlAttributes: new { @class = "control-label " }) <br />
-                    @Html.DropDownList("Genero", (SelectList)ViewBag.listGenero, new { @class = "form-control nuevo_item", @id = "selectGenero", @name = "state", @style = "width: 80%;" })
-                    @Html.ValidationMessageFor(model => model.IdGenero, "", new { @class = "text-danger" })
-
-                </div>
-                <div class="form-group col-sm-4">
-                    @Html.LabelFor(model => model.IdTela, htmlAttributes: new { @class = "control-label " }) <br />
-                    @Html.DropDownList("Tela", (SelectList)ViewBag.listTela, new { @class = "form-control nuevo_item", @id = "selectTela", @name = "state", @style = "width: 80%;" })
-                    @Html.ValidationMessageFor(model => model.IdTela, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group col-sm-4">
-                    @Html.LabelFor(model => model.TipoCamiseta, htmlAttributes: new { @class = "control-label " }) <br />
-                    @Html.DropDownList("DescripcionTipo", (SelectList)ViewBag.listTipoCamiseta, new { @class = "form-control nuevo_item", @id = "selectTipoCamiseta", @name = "state", @style = "width: 80%;" })
-                    @Html.ValidationMessageFor(model => model.TipoCamiseta, "", new { @class = "text-danger" })
-                </div>
-
-            </div>
-            <div class="form-group">
-                <br />
-                <div class="text-center margin-bottom col-sm-12">
-                    <button type="submit" class="btn btn-success" data-toggle="modal">
-                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Modificar Estilo
-                    </button>
-                </div>
-            </div>
-        </div>
-
     </div>
-
-</div>
+    <div class="form-group">
+        <br />
+        <div class="text-center margin-bottom col-sm-12">
+            <button type="submit" id="modificarEstilo" class="btn btn-success" data-toggle="modal">
+                <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Modificar Estilo
+            </button>
+        </div>
+    </div>
 }
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h4>Editar Talla</h4>
-    </div>
-    <div class="container-fluid">
-        <br />
-
-        <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">+ Otra Talla</button>
-        <div id="listaTalla"></div>
-        <button type="button" id="nuevaTalla" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Modificar Tallas</button>
-        <br />
-        <br />
-    </div>
-</div>
-
 

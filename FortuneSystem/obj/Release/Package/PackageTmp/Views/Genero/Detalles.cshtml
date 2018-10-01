@@ -1,11 +1,11 @@
 ﻿@model FortuneSystem.Models.Catalogos.CatGenero
 
 @{
-    ViewBag.Title = "Detalles";
+    ViewBag.Title = "Details Gender";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Detalles</h2>
+<h2>Details</h2>
 
 <div>
     <hr />
@@ -25,10 +25,17 @@
         <dd>
             @Html.DisplayFor(model => model.Genero)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GeneroCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GeneroCode)
+        </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Editar", "Editar", new { id = Model.IdGender }) |
-    @Html.ActionLink("Regresar", "Index")
+    @Html.ActionLink("Edit", "Editar", new { id = Model.IdGender }) |
+    @Html.ActionLink("Back to List", "Index")
 </p>

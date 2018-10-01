@@ -5,16 +5,73 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
+<style>
+    tr.highlighted td {
+        background: #b3e0ff;
+    }
 
+    table thead {
+        color: #fff;
+        background-color: #006bb3;
+    }
+
+    th {
+        color: #fff;
+        background-color: #006bb3;
+    }
+</style>
 <h2>Administraci&oacute;n de Usuarios</h2>
+@{
+    if (TempData["usuarioOK"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["usuarioOK"])), 'success', 5, null);
 
+        </script>
+    }
+    if (TempData["usuarioError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["usuarioError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["usuarioEditar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["usuarioEditar"])), 'success', 5, null);
+
+        </script>
+    }
+    if (TempData["usuarioEditarError"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["usuarioEditarError"])), 'error', 5, null);
+
+        </script>
+    }
+    if (TempData["usuarioEliminar"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["usuarioEliminar"])), 'success', 5, null);
+
+        </script>
+    }
+    
+}
 <p>
     <a href="@Url.Action("CrearUsuario")">
         <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Usuarios
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nuevo Usuario
         </button>
     </a>
 </p>
+<br />
 <table class="table table-striped" id="tablaUsuarios">
     <thead>
         <tr>
@@ -36,7 +93,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Contrasena)
             </th>
-            <th></th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -68,5 +125,11 @@
                 </td>
             </tr>
         }
-    </tbody>    
+    </tbody>
 </table>
+<script>
+    $('#tablaUsuarios tr').click(function (e) {
+        $('#tablaUsuarios tr').removeClass('highlighted');
+        $(this).addClass('highlighted');
+    });
+</script>

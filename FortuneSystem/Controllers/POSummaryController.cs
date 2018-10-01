@@ -61,13 +61,13 @@ namespace FortuneSystem.Controllers
         [HttpGet]
         public ActionResult RegistrarNuevoEstilo()
         {
-
+            
 
             POSummary summary = new POSummary();
             ListaGenero(summary);
             ListaTela(summary);
             ListaTipoCamiseta(summary);
-
+            summary.PedidosId = Convert.ToInt32(Session["idPedidoRevision"]);
 
             if (summary == null)
             {
@@ -111,7 +111,16 @@ namespace FortuneSystem.Controllers
         {
             int PedidosId = objPedido.Obtener_Utlimo_po();
             descItem.PedidosId = PedidosId;                           
-           // objItems.AgregarItems(descItem);           
+            objItems.AgregarItems(descItem);           
+
+            return View(descItem);
+        }
+
+        [HttpGet]
+        public ActionResult RegistrarItemsRev([Bind] POSummary descItem, string EstiloItem, string IdColor, int Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta)
+        {
+            descItem.PedidosId = Convert.ToInt32(Session["idPedidoRevision"]);
+            objItems.AgregarItems(descItem);
 
             return View(descItem);
         }
@@ -246,6 +255,17 @@ namespace FortuneSystem.Controllers
                 }         
             }
             return Json("0", JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpPost]
+        public void EliminarTallaPorEstilo(string estilo, string talla)
+        {
+
+            int idTalla = objTallas.ObtenerIdTalla(talla);
+            int idEstilo = Int32.Parse(estilo);
+            objTallas.EliminarTallasIdEstilo(idEstilo, idTalla);
+
 
         }
 

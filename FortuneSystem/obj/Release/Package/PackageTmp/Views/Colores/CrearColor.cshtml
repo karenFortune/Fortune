@@ -1,11 +1,11 @@
 ﻿@model FortuneSystem.Models.Catalogos.CatColores
 
 @{
-    ViewBag.Title = "CrearColor";
+    ViewBag.Title = "Create Color";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Agregar Colores</h2>
+<h2>Add Colors</h2>
 
 
 @using (Html.BeginForm()) 
@@ -33,14 +33,14 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Registrar" class="btn btn-success" />
+                <input type="submit" value="Register" class="btn btn-success" />
             </div>
         </div>
     </div>
 }
 
     <div>
-        @Html.ActionLink("Regresar", "Index")
+        @Html.ActionLink("Back to List", "Index")
     </div>
 
 @section Scripts {
