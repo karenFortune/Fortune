@@ -247,6 +247,12 @@
     <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="Rotativa.AspNetCore, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Rotativa.AspNetCore.1.0.6\lib\netstandard2.0\Rotativa.AspNetCore.dll</HintPath>
     </Reference>
@@ -479,6 +485,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="ARTE.cs">
+      <DependentUpon>FortunespDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\ArteController.cs" />
     <Compile Include="Controllers\CatalogosController.cs" />
     <Compile Include="Controllers\Catalogos\CatStatusController.cs" />
     <Compile Include="Controllers\Catalogos\ClienteController.cs" />
@@ -488,24 +498,38 @@
     <Compile Include="Controllers\Catalogos\TallasController.cs" />
     <Compile Include="Controllers\Catalogos\TelaController.cs" />
     <Compile Include="Controllers\Catalogos\TipoCamisetaController.cs" />
-    <Compile Include="Controllers\EstilosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\PedidosController.cs" />
     <Compile Include="Controllers\POSummaryController.cs" />
+    <Compile Include="Controllers\PrintShopController.cs" />
     <Compile Include="Controllers\QRCodeController.cs" />
     <Compile Include="Controllers\QRCodeTagHelper.cs" />
-    <Compile Include="Controllers\RecibosController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SharedController.cs" />
-    <Compile Include="Controllers\SizesController.cs" />
-    <Compile Include="Controllers\StagingController.cs" />
-    <Compile Include="Controllers\TallasEstilosController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
+    <Compile Include="FortunespDB.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FortunespDB.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FortunespDB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FortunespDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FortunespDB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FortunespDB.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="IMAGEN_ARTE.cs">
+      <DependentUpon>FortunespDB.tt</DependentUpon>
     </Compile>
     <Compile Include="LoginModel.Context.cs">
       <AutoGen>True</AutoGen>
@@ -523,6 +547,8 @@
       <DependentUpon>LoginModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\AplicationDbContext.cs" />
+    <Compile Include="Models\Arte\Arte.cs" />
+    <Compile Include="Models\Arte\ArteData.cs" />
     <Compile Include="Models\Catalogos\CatCliente.cs" />
     <Compile Include="Models\Catalogos\CatClienteData.cs" />
     <Compile Include="Models\Catalogos\CatClienteFinales.cs" />
@@ -540,7 +566,7 @@
     <Compile Include="Models\Catalogos\CatTipoCamiseta.cs" />
     <Compile Include="Models\Catalogos\CatTipoCamisetaData.cs" />
     <Compile Include="Models\Conexion.cs" />
-    <Compile Include="Models\Estilos\DatosEstilos.cs" />
+    <Compile Include="Models\MyDbContext.cs" />
     <Compile Include="Models\Estilos\Estilo.cs" />
     <Compile Include="Models\Items\ItemDescripcion.cs" />
     <Compile Include="Models\Items\ItemDescripcionData.cs" />
@@ -554,25 +580,19 @@
     <Compile Include="Models\Pedidos\Pedidos.cs" />
     <Compile Include="Models\Pedidos\PedidosData.cs" />
     <Compile Include="Models\Pedidos\ResumenPO.cs" />
+    <Compile Include="Models\PrintShop\PrintShop.cs" />
+    <Compile Include="Models\PrintShop\PrintShopData.cs" />
     <Compile Include="Models\QRCodeModel.cs" />
     <Compile Include="Models\QRCodeTagHelper.cs" />
-    <Compile Include="Models\Recibos\DatosRecibos.cs" />
-    <Compile Include="Models\Recibos\Recibo.cs" />
     <Compile Include="Models\Revisiones\Revisiones.cs" />
     <Compile Include="Models\Revisiones\RevisionesData.cs" />
     <Compile Include="Models\Roles\CatRoles.cs" />
     <Compile Include="Models\Roles\CatRolesData.cs" />
-    <Compile Include="Models\Sizes\DatosSizes.cs" />
-    <Compile Include="Models\Sizes\Size.cs" />
-    <Compile Include="Models\Staging\DatosStaging.cs" />
-    <Compile Include="Models\Staging\Staging.cs" />
-    <Compile Include="Models\TallasEstilos\DatosTallasEstilos.cs" />
-    <Compile Include="Models\TallasEstilos\TallaEstilo.cs" />
     <Compile Include="Models\Usuarios\CatUsuario.cs" />
     <Compile Include="Models\Usuarios\CatUsuarioData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Usuario.cs">
-      <DependentUpon>LoginModel.tt</DependentUpon>
+    <Compile Include="UPC.cs">
+      <DependentUpon>FortunespDB.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -605,6 +625,8 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\cssGeneral\estiloArte.css" />
+    <Content Include="Content\cssGeneral\estiloRadioButton.css" />
     <Content Include="Content\DataTables\AutoFill-2.3.0\css\autoFill.bootstrap.css" />
     <Content Include="Content\DataTables\AutoFill-2.3.0\css\autoFill.bootstrap.min.css" />
     <Content Include="Content\DataTables\AutoFill-2.3.0\css\autoFill.bootstrap4.css" />
@@ -970,6 +992,10 @@
     <Content Include="Content\img\cliente.png" />
     <Content Include="Content\img\colores.png" />
     <Content Include="Content\img\genero.png" />
+    <Content Include="Content\img\gif\loader1.gif" />
+    <Content Include="Content\img\gif\loader2.gif" />
+    <Content Include="Content\img\gif\loader3.gif" />
+    <Content Include="Content\img\noImagen.png" />
     <Content Include="Content\img\noPhotoFound.png" />
     <Content Include="Content\img\size.png" />
     <Content Include="Content\img\telas.png" />
@@ -1322,6 +1348,7 @@
     <Content Include="Content\jquery-validation-1.17.0\test\test.js" />
     <Content Include="Content\jquery.js" />
     <Content Include="Content\menu.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="Content\resources\js\general\btn_siguiente_anterior.js" />
     <Content Include="Content\resources\js\general\validarFormPO.js" />
     <Content Include="Content\select2-4.0.5\.gitignore" />
@@ -1579,6 +1606,16 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="FortunespDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>FortunespDB.edmx</DependentUpon>
+      <LastGenOutput>FortunespDB.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="FortunespDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>FortunespDB.edmx</DependentUpon>
+      <LastGenOutput>FortunespDB.cs</LastGenOutput>
+    </Content>
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="LoginModel.Context.tt">
@@ -1755,11 +1792,22 @@
     <Content Include="Content\font-awesome-4.7.0\scss\_screen-reader.scss" />
     <Content Include="Content\font-awesome-4.7.0\scss\_stacked.scss" />
     <Content Include="Content\font-awesome-4.7.0\scss\_variables.scss" />
+    <Content Include="Content\img\gif\Thumbs.db" />
+    <EntityDeploy Include="FortunespDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>FortunespDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="FortunespDB.edmx.diagram">
+      <DependentUpon>FortunespDB.edmx</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\FortuneSystem - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\general\agregarNuevoColoryEstilo.js" />
     <Content Include="Scripts\general\AgregarTallas.js" />
     <Content Include="Scripts\general\autocomplete.js" />
+    <Content Include="Scripts\general\calculosPrintShop.js" />
+    <Content Include="Scripts\general\obtenerListado.js" />
     <Content Include="Scripts\general\obtenerListaTallasPorGenero.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -1869,11 +1917,17 @@
     <Content Include="Views\QRCode\Generate.cshtml" />
     <Content Include="Views\QRCode\Read.cshtml" />
     <Content Include="Views\POSummary\RegistrarNuevoEstilo.cshtml" />
+    <Content Include="Views\Pedidos\HistorialPedidos.cshtml" />
+    <Content Include="Views\Pedidos\DetallesRev.cshtml" />
+    <Content Include="Views\PrintShop\Index.cshtml" />
+    <Content Include="Views\PrintShop\Detalles.cshtml" />
+    <Content Include="Views\Arte\Create.cshtml" />
+    <Content Include="Views\Arte\ListaImgArte.cshtml" />
+    <Content Include="Views\Arte\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\Shared\" />
-    <Folder Include="Views\QRCodeTagHelper\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

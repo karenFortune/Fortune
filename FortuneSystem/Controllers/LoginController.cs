@@ -15,7 +15,7 @@ namespace FortuneSystem.Controllers
     public class LoginController : Controller
     {
 
-
+        CatUsuarioData objUsr = new CatUsuarioData();
         // GET: Login
         public ActionResult Index()
         {
@@ -41,6 +41,8 @@ namespace FortuneSystem.Controllers
                 if (usuario.Cargo == 1)
                 {
                     actionName = "Index";
+                    int noEmpleado = objUsr.Obtener_Datos_Usuarios(empleado);
+                    Session["id_Empleado"] = noEmpleado;
                     nameController = "Usuarios"; //
 
                 }

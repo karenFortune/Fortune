@@ -1,0 +1,135 @@
+﻿@model IEnumerable<FortuneSystem.IMAGEN_ARTE>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+
+<script>
+    $(function () {
+        $('img').on('click', function () {
+            $('.enlargeImageModalSource').attr('src', $(this).attr('src'));
+            $('#enlargeImageModal').modal('show');
+        });
+    });
+
+</script>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>
+            ART INVENTORY
+        </h4>
+
+    </div>
+    <br />
+    <table id="tablaArteInventario" class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Estilo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.imgArte)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.imgPNL)
+                </th>
+                <th>ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Estilo)
+                    </td>
+                    <td>
+                        <img width="70" height="70" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = item.IdImgArte})" />
+                    </td>
+                    <td>
+                        <img width="70" height="70" src="@Url.Action("ConvertirImagenPNL", "Arte", new {pnlCodigo= item.IdImgArte})" />
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-default glyphicon glyphicon-search btnEdit" data-value="@item.IdImgArte" title="Editar Estilo"></a> |
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>
+            ADD ART
+        </h4>
+    </div>
+    <br />
+    <div id="ContenedorModal"></div>
+    <br />
+</div>
+
+
+<div class="modal fade" id="enlargeImageModal" tabindex="-1" role="dialog" aria-labelledby="enlargeImageModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">ART</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <img class="enlargeImageModalSource center" style="width: 80%;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Estilo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="ContenedorModal"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger
+        $(".btnEdit").click(function () {
+            var id = $(this).data("value");
+            $("#ContenedorModal").load("/Arte/ListaImgArte/" + id, function () {
+               // $("#IdItems").val(id);
+               
+            });
+           /* $.ajax({
+                url: "/Arte/ListaImgArte/" + id,
+                contentType: "application/json;charset=UTF-8",
+                success: function () {
+                },
+                error: function (errormessage) { alert(errormessage.responseText); }
+
+            });*/
+        });
+    });
+
+    
+
+</script>

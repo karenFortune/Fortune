@@ -1,5 +1,6 @@
 ﻿using FortuneSystem.Models.Catalogos;
 using FortuneSystem.Models.POSummary;
+using FortuneSystem.Models.PrintShop;
 using FortuneSystem.Models.Revisiones;
 using System;
 using System.Collections.Generic;
@@ -81,6 +82,8 @@ namespace FortuneSystem.Models.Pedidos
         public int Historial { get; set; }
 
         public virtual Revision Revision { get; set; }
+
+        public virtual PrintShopC PrintShopC { get; set; }
        
 
 

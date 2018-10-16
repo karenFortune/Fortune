@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<FortuneSystem.Models.Usuarios.CatUsuario>
 
 @{
-    ViewBag.Title = "USUARIOS";
+    ViewBag.Title = "USERS";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
@@ -20,7 +20,9 @@
         background-color: #006bb3;
     }
 </style>
-<h2>Administraci&oacute;n de Usuarios</h2>
+<h2>
+    User administration
+</h2>
 @{
     if (TempData["usuarioOK"] != null)
     {
@@ -67,7 +69,7 @@
 <p>
     <a href="@Url.Action("CrearUsuario")">
         <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nuevo Usuario
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add New User
         </button>
     </a>
 </p>
@@ -119,9 +121,9 @@
                     @Html.DisplayFor(modelItem => item.Contrasena)
                 </td>
                 <td>
-                    @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Usuario" }) |
-                    @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Consultar Usuario" }) |
-                    @Html.ActionLink(" ", "Eliminar", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Usuario" })
+                    @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Edit User" }) |
+                    @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details User" }) |
+                    @Html.ActionLink(" ", "Eliminar", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Delete User" })
                 </td>
             </tr>
         }

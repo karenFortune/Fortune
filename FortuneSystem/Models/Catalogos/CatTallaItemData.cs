@@ -63,6 +63,7 @@ namespace FortuneSystem.Models.Catalogos
         }
 
 
+
         //Permite crear una nueva talla
         public void AgregarTallas(CatTallaItem tallas)
         {
@@ -74,6 +75,67 @@ namespace FortuneSystem.Models.Catalogos
 
             comando.ExecuteNonQuery();
             conn.CerrarConexion();
+
+        }
+
+        public IEnumerable<CatTallaItem> Lista_tallas_Estilo_Arte(int? idEstilo)
+        {
+            Conexion con = new Conexion();
+            SqlCommand com = new SqlCommand();
+            SqlDataReader leer = null;
+            //string listaStag="";
+            List<CatTallaItem> Lista = new List<CatTallaItem>();
+            com.Connection = con.AbrirConexion();
+            com.CommandText = "SELECT S.TALLA FROM ITEM_SIZE IZ " +
+                "INNER JOIN CAT_ITEM_SIZE S ON IZ.TALLA_ITEM=S.ID " +
+                "WHERE ID_SUMMARY='" + idEstilo + "'  order by S.TALLA asc ";
+            leer = com.ExecuteReader();
+            while (leer.Read())
+            {
+
+                CatTallaItem catTalla = new CatTallaItem()
+                {
+                    
+                    Talla = leer["TALLA"].ToString()
+                };
+
+                Lista.Add(catTalla);
+            }
+            leer.Close();
+            con.CerrarConexion();
+            return Lista;
+
+
+        }
+
+        public IEnumerable<UPC> Lista_tallas_upc(int? idSummary)
+        {
+            Conexion con = new Conexion();
+            SqlCommand com = new SqlCommand();
+            SqlDataReader leer = null;
+            //string listaStag="";
+            List<UPC> Lista = new List<UPC>();
+            com.Connection = con.AbrirConexion();
+            com.CommandText = "select S.TALLA, UPC from UPC U  " +
+                "INNER JOIN CAT_ITEM_SIZE S ON U.IdTalla=S.ID " +
+                "where IdSummary='" + idSummary + "'  order by S.TALLA asc ";
+            leer = com.ExecuteReader();
+            while (leer.Read())
+            {
+
+                UPC catTalla = new UPC()
+                {
+
+                    Talla = leer["TALLA"].ToString(),
+                    UPC1 = Convert.ToInt64(leer["UPC"])
+                };
+
+                Lista.Add(catTalla);
+            }
+            leer.Close();
+            con.CerrarConexion();
+            return Lista;
+
 
         }
 

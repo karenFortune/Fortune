@@ -3,6 +3,7 @@ using FortuneSystem.Models.Item;
 using FortuneSystem.Models.Items;
 using FortuneSystem.Models.Pedidos;
 using FortuneSystem.Models.POSummary;
+using FortuneSystem.Models.PrintShop;
 using FortuneSystem.Models.Revisiones;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,8 @@ namespace FortuneSystem.Controllers
         CatTipoCamisetaData objTipoC = new CatTipoCamisetaData();
         ItemTallaData objTallas = new ItemTallaData();
         RevisionesData objRevision = new RevisionesData();
-        ItemDescripcionData objEst = new ItemDescripcionData(); 
+        ItemDescripcionData objEst = new ItemDescripcionData();
+        PrintShopData objPrint = new PrintShopData();
         public int estado;
         public int IdPO;
         public int pedidos;
@@ -94,13 +96,23 @@ namespace FortuneSystem.Controllers
         public JsonResult Lista_Tallas_Estilo(int? id)
         {
             List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilo(id).ToList();
+            List<ItemTalla> listaTallasStaging = objTallas.ListaTallasStagingPorEstilo(id).ToList();
+            List<int> listaTallasTBatch = objPrint.ListaTotalTallasBatchEstilo(id).ToList();
+            List<int> listaTallasPBatch = objPrint.ListaTotalPrintedTallasBatchEstilo(id).ToList();
+            List<int> listaTallasMPBatch = objPrint.ListaTotalMPTallasBatchEstilo(id).ToList();
+            List<int> listaTallasDBatch = objPrint.ListaTotalDefTallasBatchEstilo(id).ToList();
             string estilo = "";
             foreach (var item in listaTallas)
             {
                 estilo = item.Estilo;
 
             }
-            var result = Json(new { listaTalla = listaTallas, estilos = estilo });
+            var result = Json(new { listaTalla = listaTallas, estilos = estilo, listTallaStaging = listaTallasStaging,
+                                    listaTallasTotalBatch = listaTallasTBatch,
+                                    listaTallasTotalPBatch = listaTallasPBatch,
+                                    listaTallasTotalMBatch = listaTallasMPBatch,
+                                    listaTallasTotalDBatch = listaTallasDBatch
+            });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -115,6 +127,30 @@ namespace FortuneSystem.Controllers
 
             }
             var result = Json(new { listaTalla = listaTallas, estilos = estilo });
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        
+        [HttpPost]
+        public JsonResult Lista_Tallas_PrintShop_Estilo(int? id)
+        {
+            List<PrintShopC> listaTallas = objPrint.ListaTallasPrintShop(id).ToList();
+            List<PrintShopC> listaTallasEstilo = objPrint.ObtenerTallas(id).ToList();
+            List<int> listaTallasTBatch = objPrint.ListaTotalTallasBatchEstilo(id).ToList();
+            var result = Json(new { listaTalla = listaTallas, listaEstiloTallas = listaTallasEstilo, listaPrint = listaTallasTBatch });
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult Lista_Tallas_Total_PrintShop_Estilo(int? id)
+        {
+            List<PrintShopC> listaTallas = objPrint.ListaTallasTotalPrintShop(id).ToList();
+            /*string estilo = "";
+            foreach (var item in listaTallas)
+            {
+                estilo = item.Estilo;
+
+            }*/
+            var result = Json(new { listaTalla = listaTallas/*, estilos = estilo*/ });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -417,8 +453,9 @@ namespace FortuneSystem.Controllers
         public ActionResult RegistrarPO([Bind] OrdenesCompra ordenCompra,string po, int VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades)
         {
             ListaEstados(ordenCompra);                          
-            objPedido.AgregarPO(ordenCompra);           
-            
+            objPedido.AgregarPO(ordenCompra);    
+            Session["idPedido"]= objPedido.Obtener_Utlimo_po();
+
             return View(ordenCompra);
         }
 

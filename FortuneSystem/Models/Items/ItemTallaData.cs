@@ -25,6 +25,21 @@ namespace FortuneSystem.Models.Item
             finally { conn.CerrarConexion(); }
         }
 
+        public void RegistroTallasUPC(UPC tallas)
+        {
+            Conexion conn = new Conexion();
+            SqlCommand comando = new SqlCommand();
+
+            comando.Connection = conn.AbrirConexion();
+            try
+            {
+                comando.CommandText = "INSERT INTO  UPC (IdTalla,IdSummary,UPC) " +
+                    " VALUES((SELECT ID FROM CAT_ITEM_SIZE WHERE TALLA ='" + tallas.Talla + "'),'" + tallas.IdSummary + "','" + tallas.UPC1 + "')";
+                comando.ExecuteNonQuery();
+            }
+            finally { conn.CerrarConexion(); }
+        }
+
 
 
         //Muestra la lista de tallas por estilo
@@ -90,7 +105,6 @@ namespace FortuneSystem.Models.Item
 
             return listTallas;
         }
-
         //Muestra la lista de tallas por summary
         public IEnumerable<ItemTalla> ListaTallasPorSummary(int? id)
         {

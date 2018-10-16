@@ -13,10 +13,10 @@ namespace FortuneSystem
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class DB_Entities : DbContext
+    public partial class Fortune : DbContext
     {
-        public DB_Entities()
-            : base("name=DB_Entities")
+        public Fortune()
+            : base("name=Fortune")
         {
         }
     
@@ -25,6 +25,8 @@ namespace FortuneSystem
             throw new UnintentionalCodeFirstException();
         }
     
-       // public virtual DbSet<Usuario> Usuarios { get; set; }
+        public virtual DbSet<ARTE> ARTEs { get; set; }
+        public virtual DbSet<IMAGEN_ARTE> IMAGEN_ARTE { get; set; }
+        public virtual DbSet<UPC> UPCs { get; set; }
     }
 }

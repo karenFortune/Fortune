@@ -7,7 +7,7 @@ using System.Web;
 
 namespace FortuneSystem.Models
 {
-    public class AplicationDbContext : DbContext
+    public class AplicationDbContext : MyDbContext
     {
         public DbSet<CatUsuario> Usuarios {get; set;}
 
