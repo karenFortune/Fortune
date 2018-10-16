@@ -99,7 +99,7 @@ namespace FortuneSystem.Controllers
         public JsonResult Actualizar_Lista_Tallas_Batch(List<string> ListTalla, int TurnoID, int EstiloID, int IdBatch)
         {
             PrintShopC tallaItem = new PrintShopC();
-            int noEmpleado = 1;//Convert.ToInt32(Session["id_Empleado"]);
+            int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
             tallaItem.Usuario = noEmpleado;
             tallaItem.TipoTurno =TurnoID;
             tallaItem.IdSummary = EstiloID;

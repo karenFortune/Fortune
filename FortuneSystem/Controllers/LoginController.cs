@@ -37,19 +37,57 @@ namespace FortuneSystem.Controllers
             if (ModelState.IsValid == false)
             {
                 objData.IsValid(empleado, usuario.Contrasena, usuario);
-
+                usuario.Nombres = objUsr.Obtener_Nombre_Usuario(empleado);
+                Session["nombre"] = usuario.Nombres;
+                int noEmpleado = objUsr.Obtener_Datos_Usuarios(empleado);
+                Session["id_Empleado"] = noEmpleado;
+                Session["idCargo"] = usuario.Cargo;
                 if (usuario.Cargo == 1)
                 {
-                    actionName = "Index";
-                    int noEmpleado = objUsr.Obtener_Datos_Usuarios(empleado);
-                    Session["id_Empleado"] = noEmpleado;
-                    nameController = "Usuarios"; //
+                    actionName = "Index";                                  
+                   nameController = "Usuarios";
+
+                }
+                else if (usuario.Cargo == 4)
+                {
+                    actionName = "Index";                   
+                    nameController = "Recibos";
 
                 }
                 else if (usuario.Cargo == 5)
                 {
                     actionName = "Index";
-                    nameController = "Home";
+                    nameController = "PrintShop";
+
+                }
+                else if (usuario.Cargo == 6)
+                {
+                    actionName = "Index";
+                    nameController = "Shipping";
+
+                }
+                else if (usuario.Cargo == 7)
+                {
+                    actionName = "Index";
+                    nameController = "Staging";
+
+                }
+                else if (usuario.Cargo == 8)
+                {
+                    actionName = "Index";
+                    nameController = "PNL";
+
+                }
+                else if (usuario.Cargo == 9)
+                {
+                    actionName = "Index";
+                    nameController = "Packing";
+
+                }
+                else if (usuario.Cargo == 12)
+                {
+                    actionName = "Index";
+                    nameController = "Arte";
 
                 }
 

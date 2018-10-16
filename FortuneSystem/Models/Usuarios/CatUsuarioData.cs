@@ -147,6 +147,28 @@ namespace FortuneSystem.Models.Usuarios
             return 0;
         }
 
+        // Obtenernombre de un usuario 
+        public string Obtener_Nombre_Usuario(string noEmpleado)
+        {
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
+            Conexion conex = new Conexion();
+            try
+            {
+                cmd.Connection = conex.AbrirConexion();
+                cmd.CommandText = "SELECT Id,CONCAT( Nombres,' ', Apellidos) AS Nombre  FROM Usuarios WHERE NoEmpleado='" + noEmpleado + "'";
+                cmd.CommandType = CommandType.Text;
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    return reader["Nombre"].ToString();
+                }
+                conex.CerrarConexion();
+            }
+            finally { conex.CerrarConexion(); }
+            return "";
+        }
+
 
     }
 }

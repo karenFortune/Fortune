@@ -90,6 +90,13 @@ li.has-subnav:hover ul, li.has-subnav.active ul{
 	left:0;
 	bottom:0;
 }
+
+.main-menu > ul.user {
+    position: absolute;
+    left: 0;
+    bottom: 100px;
+    float: right;
+}
 .no-touch .scrollable.hover {
 	overflow-y:hidden;
 }

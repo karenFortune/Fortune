@@ -54,7 +54,7 @@
                         <img width="70" height="70" src="@Url.Action("ConvertirImagenPNL", "Arte", new {pnlCodigo= item.IdImgArte})" />
                     </td>
                     <td>
-                        <a href="#" class="btn btn-default glyphicon glyphicon-search btnEdit" data-value="@item.IdImgArte" title="Editar Estilo"></a> |
+                        <a href="#" class="btn btn-default glyphicon glyphicon-search btnEdit" data-value="@item.IdImgArte" title="List Art"></a>
                     </td>
 
                 </tr>
@@ -67,7 +67,7 @@
 <div class="panel panel-primary">
     <div class="panel-heading">
         <h4>
-            ADD ART
+            LIST ART
         </h4>
     </div>
     <br />
@@ -93,22 +93,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Estilo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <div id="ContenedorModal"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -116,17 +101,9 @@
         $(".btnEdit").click(function () {
             var id = $(this).data("value");
             $("#ContenedorModal").load("/Arte/ListaImgArte/" + id, function () {
-               // $("#IdItems").val(id);
-               
+                            
             });
-           /* $.ajax({
-                url: "/Arte/ListaImgArte/" + id,
-                contentType: "application/json;charset=UTF-8",
-                success: function () {
-                },
-                error: function (errormessage) { alert(errormessage.responseText); }
-
-            });*/
+          
         });
     });
 
