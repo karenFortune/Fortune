@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="FortuneTestModelStoreContainer" CdmEntityContainer="Fortune">
+    <EntitySetMapping Name="ARTEs">
+      <EntityTypeMapping TypeName="FortuneTestModel.ARTE">
+        <MappingFragment StoreEntitySet="ARTE">
+          <ScalarProperty Name="IdArte" ColumnName="IdArte" />
+          <ScalarProperty Name="IdImgArte" ColumnName="IdImgArte" />
+          <ScalarProperty Name="IdSummary" ColumnName="IdSummary" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="IMAGEN_ARTE">
+      <EntityTypeMapping TypeName="FortuneTestModel.IMAGEN_ARTE">
+        <MappingFragment StoreEntitySet="IMAGEN_ARTE">
+          <ScalarProperty Name="IdImgArte" ColumnName="IdImgArte" />
+          <ScalarProperty Name="IdEstilo" ColumnName="IdEstilo" />
+          <ScalarProperty Name="StatusArte" ColumnName="StatusArte" />
+          <ScalarProperty Name="StatusPNL" ColumnName="StatusPNL" />
+          <ScalarProperty Name="imgArte" ColumnName="imgArte" />
+          <ScalarProperty Name="imgPNL" ColumnName="imgPNL" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UPCs">
+      <EntityTypeMapping TypeName="FortuneTestModel.UPC">
+        <MappingFragment StoreEntitySet="UPC">
+          <ScalarProperty Name="IdSummary" ColumnName="IdSummary" />
+          <ScalarProperty Name="UPC1" ColumnName="UPC" />
+          <ScalarProperty Name="IdTalla" ColumnName="IdTalla" />
+          <ScalarProperty Name="IdUPC" ColumnName="IdUPC" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

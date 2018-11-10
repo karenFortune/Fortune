@@ -1,0 +1,1007 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="FortuneTestModelStoreContainer" CdmEntityContainer="FortuneEntities">
+    <EntitySetMapping Name="body_types">
+      <EntityTypeMapping TypeName="FortuneTestModel.body_types">
+        <MappingFragment StoreEntitySet="body_types">
+          <ScalarProperty Name="id_body_type" ColumnName="id_body_type" />
+          <ScalarProperty Name="body_type" ColumnName="body_type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CAT_BRAND_CODES">
+      <EntityTypeMapping TypeName="FortuneTestModel.CAT_BRAND_CODES">
+        <MappingFragment StoreEntitySet="CAT_BRAND_CODES">
+          <ScalarProperty Name="ID_BRAND" ColumnName="ID_BRAND" />
+          <ScalarProperty Name="BRAND" ColumnName="BRAND" />
+          <ScalarProperty Name="STYLE" ColumnName="STYLE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CAT_COLORES">
+      <EntityTypeMapping TypeName="FortuneTestModel.CAT_COLORES">
+        <MappingFragment StoreEntitySet="CAT_COLORES">
+          <ScalarProperty Name="ID_COLOR" ColumnName="ID_COLOR" />
+          <ScalarProperty Name="CODIGO_COLOR" ColumnName="CODIGO_COLOR" />
+          <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CAT_CUSTOMER">
+      <EntityTypeMapping TypeName="FortuneTestModel.CAT_CUSTOMER">
+        <MappingFragment StoreEntitySet="CAT_CUSTOMER">
+          <ScalarProperty Name="CUSTOMER" ColumnName="CUSTOMER" />
+          <ScalarProperty Name="NAME" ColumnName="NAME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CAT_CUSTOMER_PO">
+      <EntityTypeMapping TypeName="FortuneTestModel.CAT_CUSTOMER_PO">
+        <MappingFragment StoreEntitySet="CAT_CUSTOMER_PO">
+          <ScalarProperty Name="CUSTOMER_FINAL" ColumnName="CUSTOMER_FINAL" />
+          <ScalarProperty Name="NAME_FINAL" ColumnName="NAME_FINAL" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CAT_FABRIC_CODES">
+      <EntityTypeMapping TypeName="FortuneTestModel.CAT_FABRIC_CODES">
+        <MappingFragment StoreEntitySet="CAT_FABRIC_CODES">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="FABRIC" ColumnName="FABRIC" />
+          <ScalarProperty Name="CODE" ColumnName="CODE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CAT_GENDER">
+      <EntityTypeMapping TypeName="FortuneTestModel.CAT_GENDER">
+        <MappingFragment StoreEntitySet="CAT_GENDER">
+          <ScalarProperty Name="ID_GENDER" ColumnName="ID_GENDER" />
+          <ScalarProperty Name="GENERO" ColumnName="GENERO" />
+          <ScalarProperty Name="GENERO_CODE" ColumnName="GENERO_CODE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CAT_GENERO_TALLA">
+      <EntityTypeMapping TypeName="FortuneTestModel.CAT_GENERO_TALLA">
+        <MappingFragment StoreEntitySet="CAT_GENERO_TALLA">
+          <ScalarProperty Name="ID_GEN_TALLA" ColumnName="ID_GEN_TALLA" />
+          <ScalarProperty Name="ID_GENERO" ColumnName="ID_GENERO" />
+          <ScalarProperty Name="ID_TALLA" ColumnName="ID_TALLA" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CAT_ITEM_SIZE">
+      <EntityTypeMapping TypeName="FortuneTestModel.CAT_ITEM_SIZE">
+        <MappingFragment StoreEntitySet="CAT_ITEM_SIZE">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="TALLA" ColumnName="TALLA" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CAT_PRODUCT_TYPE_CODES">
+      <EntityTypeMapping TypeName="FortuneTestModel.CAT_PRODUCT_TYPE_CODES">
+        <MappingFragment StoreEntitySet="CAT_PRODUCT_TYPE_CODES">
+          <ScalarProperty Name="ID_TYPE_CODE" ColumnName="ID_TYPE_CODE" />
+          <ScalarProperty Name="PRODUCT_TYPE_CODE" ColumnName="PRODUCT_TYPE_CODE" />
+          <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+          <ScalarProperty Name="GROUP_TYPE" ColumnName="GROUP_TYPE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CAT_STATUS">
+      <EntityTypeMapping TypeName="FortuneTestModel.CAT_STATUS">
+        <MappingFragment StoreEntitySet="CAT_STATUS">
+          <ScalarProperty Name="ID_STATUS" ColumnName="ID_STATUS" />
+          <ScalarProperty Name="ESTADO" ColumnName="ESTADO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="categorias_inventarios">
+      <EntityTypeMapping TypeName="FortuneTestModel.categorias_inventarios">
+        <MappingFragment StoreEntitySet="categorias_inventarios">
+          <ScalarProperty Name="id_categoria" ColumnName="id_categoria" />
+          <ScalarProperty Name="categoria" ColumnName="categoria" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="estilos_fabrica">
+      <EntityTypeMapping TypeName="FortuneTestModel.estilos_fabrica">
+        <MappingFragment StoreEntitySet="estilos_fabrica">
+          <ScalarProperty Name="id_estilo" ColumnName="id_estilo" />
+          <ScalarProperty Name="amt_item" ColumnName="amt_item" />
+          <ScalarProperty Name="color" ColumnName="color" />
+          <ScalarProperty Name="size" ColumnName="size" />
+          <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+          <ScalarProperty Name="master_group" ColumnName="master_group" />
+          <ScalarProperty Name="groups" ColumnName="groups" />
+          <ScalarProperty Name="product_type" ColumnName="product_type" />
+          <ScalarProperty Name="fabric_type" ColumnName="fabric_type" />
+          <ScalarProperty Name="fiber" ColumnName="fiber" />
+          <ScalarProperty Name="yarn" ColumnName="yarn" />
+          <ScalarProperty Name="division" ColumnName="division" />
+          <ScalarProperty Name="pack_type" ColumnName="pack_type" />
+          <ScalarProperty Name="gender" ColumnName="gender" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="fabric_percents">
+      <EntityTypeMapping TypeName="FortuneTestModel.fabric_percents">
+        <MappingFragment StoreEntitySet="fabric_percents">
+          <ScalarProperty Name="id_fabric_percent" ColumnName="id_fabric_percent" />
+          <ScalarProperty Name="fabric_percent" ColumnName="fabric_percent" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="fabricantes">
+      <EntityTypeMapping TypeName="FortuneTestModel.fabricante">
+        <MappingFragment StoreEntitySet="fabricantes">
+          <ScalarProperty Name="id_fabricante" ColumnName="id_fabricante" />
+          <ScalarProperty Name="fabricante1" ColumnName="fabricante" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="family_trims">
+      <EntityTypeMapping TypeName="FortuneTestModel.family_trims">
+        <MappingFragment StoreEntitySet="family_trims">
+          <ScalarProperty Name="id_family_trim" ColumnName="id_family_trim" />
+          <ScalarProperty Name="family_trim" ColumnName="family_trim" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="IMAGEN_ARTE">
+      <EntityTypeMapping TypeName="FortuneTestModel.IMAGEN_ARTE">
+        <MappingFragment StoreEntitySet="IMAGEN_ARTE">
+          <ScalarProperty Name="Id_Img_Arte" ColumnName="Id_Img_Arte" />
+          <ScalarProperty Name="Id_Summary" ColumnName="Id_Summary" />
+          <ScalarProperty Name="img_Arte" ColumnName="img_Arte" />
+          <ScalarProperty Name="img_PNL" ColumnName="img_PNL" />
+          <ScalarProperty Name="Id_UPC" ColumnName="Id_UPC" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="inventarios">
+      <EntityTypeMapping TypeName="FortuneTestModel.inventario">
+        <MappingFragment StoreEntitySet="inventario">
+          <ScalarProperty Name="id_inventario" ColumnName="id_inventario" />
+          <ScalarProperty Name="id_sucursal" ColumnName="id_sucursal" />
+          <ScalarProperty Name="id_pedido" ColumnName="id_pedido" />
+          <ScalarProperty Name="id_pais" ColumnName="id_pais" />
+          <ScalarProperty Name="id_fabricante" ColumnName="id_fabricante" />
+          <ScalarProperty Name="mill_po" ColumnName="mill_po" />
+          <ScalarProperty Name="amt_item" ColumnName="amt_item" />
+          <ScalarProperty Name="id_categoria_inventario" ColumnName="id_categoria_inventario" />
+          <ScalarProperty Name="id_color" ColumnName="id_color" />
+          <ScalarProperty Name="id_body_type" ColumnName="id_body_type" />
+          <ScalarProperty Name="id_genero" ColumnName="id_genero" />
+          <ScalarProperty Name="id_fabric_type" ColumnName="id_fabric_type" />
+          <ScalarProperty Name="id_location" ColumnName="id_location" />
+          <ScalarProperty Name="total" ColumnName="total" />
+          <ScalarProperty Name="id_size" ColumnName="id_size" />
+          <ScalarProperty Name="id_customer" ColumnName="id_customer" />
+          <ScalarProperty Name="id_customer_final" ColumnName="id_customer_final" />
+          <ScalarProperty Name="minimo" ColumnName="minimo" />
+          <ScalarProperty Name="notas" ColumnName="notas" />
+          <ScalarProperty Name="id_fabric_percent" ColumnName="id_fabric_percent" />
+          <ScalarProperty Name="stock" ColumnName="stock" />
+          <ScalarProperty Name="date_comment" ColumnName="date_comment" />
+          <ScalarProperty Name="comment" ColumnName="comment" />
+          <ScalarProperty Name="id_family_trim" ColumnName="id_family_trim" />
+          <ScalarProperty Name="id_unit" ColumnName="id_unit" />
+          <ScalarProperty Name="id_trim" ColumnName="id_trim" />
+          <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ITEM_DESCRIPTION">
+      <EntityTypeMapping TypeName="FortuneTestModel.ITEM_DESCRIPTION">
+        <MappingFragment StoreEntitySet="ITEM_DESCRIPTION">
+          <ScalarProperty Name="ITEM_ID" ColumnName="ITEM_ID" />
+          <ScalarProperty Name="ITEM_STYLE" ColumnName="ITEM_STYLE" />
+          <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ITEM_SIZE">
+      <EntityTypeMapping TypeName="FortuneTestModel.ITEM_SIZE">
+        <MappingFragment StoreEntitySet="ITEM_SIZE">
+          <ScalarProperty Name="ID_TALLA" ColumnName="ID_TALLA" />
+          <ScalarProperty Name="TALLA_ITEM" ColumnName="TALLA_ITEM" />
+          <ScalarProperty Name="CANTIDAD" ColumnName="CANTIDAD" />
+          <ScalarProperty Name="EXTRAS" ColumnName="EXTRAS" />
+          <ScalarProperty Name="EJEMPLOS" ColumnName="EJEMPLOS" />
+          <ScalarProperty Name="ID_SUMMARY" ColumnName="ID_SUMMARY" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="lugares">
+      <EntityTypeMapping TypeName="FortuneTestModel.lugare">
+        <MappingFragment StoreEntitySet="lugares">
+          <ScalarProperty Name="id_lugar" ColumnName="id_lugar" />
+          <ScalarProperty Name="lugar" ColumnName="lugar" />
+          <ScalarProperty Name="tipo_lugar" ColumnName="tipo_lugar" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="paises">
+      <EntityTypeMapping TypeName="FortuneTestModel.pais">
+        <MappingFragment StoreEntitySet="paises">
+          <ScalarProperty Name="id_pais" ColumnName="id_pais" />
+          <ScalarProperty Name="pais1" ColumnName="pais" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PEDIDOes">
+      <EntityTypeMapping TypeName="FortuneTestModel.PEDIDO">
+        <MappingFragment StoreEntitySet="PEDIDO">
+          <ScalarProperty Name="ID_PEDIDO" ColumnName="ID_PEDIDO" />
+          <ScalarProperty Name="PO" ColumnName="PO" />
+          <ScalarProperty Name="VPO" ColumnName="VPO" />
+          <ScalarProperty Name="CUSTOMER" ColumnName="CUSTOMER" />
+          <ScalarProperty Name="CUSTOMER_FINAL" ColumnName="CUSTOMER_FINAL" />
+          <ScalarProperty Name="DATE_CANCEL" ColumnName="DATE_CANCEL" />
+          <ScalarProperty Name="DATE_ORDER" ColumnName="DATE_ORDER" />
+          <ScalarProperty Name="TOTAL_UNITS" ColumnName="TOTAL_UNITS" />
+          <ScalarProperty Name="ID_STATUS" ColumnName="ID_STATUS" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PO_SUMMARY">
+      <EntityTypeMapping TypeName="FortuneTestModel.PO_SUMMARY">
+        <MappingFragment StoreEntitySet="PO_SUMMARY">
+          <ScalarProperty Name="ID_PO_SUMMARY" ColumnName="ID_PO_SUMMARY" />
+          <ScalarProperty Name="ITEM_ID" ColumnName="ITEM_ID" />
+          <ScalarProperty Name="ID_COLOR" ColumnName="ID_COLOR" />
+          <ScalarProperty Name="QTY" ColumnName="QTY" />
+          <ScalarProperty Name="PRICE" ColumnName="PRICE" />
+          <ScalarProperty Name="ID_PEDIDOS" ColumnName="ID_PEDIDOS" />
+          <ScalarProperty Name="ID_GENDER" ColumnName="ID_GENDER" />
+          <ScalarProperty Name="ID_TELA" ColumnName="ID_TELA" />
+          <ScalarProperty Name="ID_PRODUCT_TYPE" ColumnName="ID_PRODUCT_TYPE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PRINTSHOPs">
+      <EntityTypeMapping TypeName="FortuneTestModel.PRINTSHOP">
+        <MappingFragment StoreEntitySet="PRINTSHOP">
+          <ScalarProperty Name="ID_PRINTSHOP" ColumnName="ID_PRINTSHOP" />
+          <ScalarProperty Name="ID_SUMMARY" ColumnName="ID_SUMMARY" />
+          <ScalarProperty Name="ID_BATCH" ColumnName="ID_BATCH" />
+          <ScalarProperty Name="ID_TALLA" ColumnName="ID_TALLA" />
+          <ScalarProperty Name="PRINTED" ColumnName="PRINTED" />
+          <ScalarProperty Name="MISPRINT" ColumnName="MISPRINT" />
+          <ScalarProperty Name="DEFECT" ColumnName="DEFECT" />
+          <ScalarProperty Name="MAQUINA" ColumnName="MAQUINA" />
+          <ScalarProperty Name="TURNO" ColumnName="TURNO" />
+          <ScalarProperty Name="TOTAL" ColumnName="TOTAL" />
+          <ScalarProperty Name="ID_USUARIO" ColumnName="ID_USUARIO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="proveedores">
+      <EntityTypeMapping TypeName="FortuneTestModel.proveedore">
+        <MappingFragment StoreEntitySet="proveedores">
+          <ScalarProperty Name="id_proveedor" ColumnName="id_proveedor" />
+          <ScalarProperty Name="proveedor" ColumnName="proveedor" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="recibos">
+      <EntityTypeMapping TypeName="FortuneTestModel.recibo">
+        <MappingFragment StoreEntitySet="recibos">
+          <ScalarProperty Name="id_recibo" ColumnName="id_recibo" />
+          <ScalarProperty Name="po" ColumnName="po" />
+          <ScalarProperty Name="fecha" ColumnName="fecha" />
+          <ScalarProperty Name="total" ColumnName="total" />
+          <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
+          <ScalarProperty Name="id_sucursal" ColumnName="id_sucursal" />
+          <ScalarProperty Name="id_origen" ColumnName="id_origen" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="recibos_cajas">
+      <EntityTypeMapping TypeName="FortuneTestModel.recibos_cajas">
+        <MappingFragment StoreEntitySet="recibos_cajas">
+          <ScalarProperty Name="id_recibo_caja" ColumnName="id_recibo_caja" />
+          <ScalarProperty Name="id_recibo_item" ColumnName="id_recibo_item" />
+          <ScalarProperty Name="id_recibo" ColumnName="id_recibo" />
+          <ScalarProperty Name="total_cajas" ColumnName="total_cajas" />
+          <ScalarProperty Name="cantidad_caja" ColumnName="cantidad_caja" />
+          <ScalarProperty Name="id_talla" ColumnName="id_talla" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="REVISIONES_PO">
+      <EntityTypeMapping TypeName="FortuneTestModel.REVISIONES_PO">
+        <MappingFragment StoreEntitySet="REVISIONES_PO">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="ID_PEDIDO" ColumnName="ID_PEDIDO" />
+          <ScalarProperty Name="ID_REVISION_PO" ColumnName="ID_REVISION_PO" />
+          <ScalarProperty Name="FECHA_REVISION" ColumnName="FECHA_REVISION" />
+          <ScalarProperty Name="ID_STATUS" ColumnName="ID_STATUS" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Roles">
+      <EntityTypeMapping TypeName="FortuneTestModel.Role">
+        <MappingFragment StoreEntitySet="Roles">
+          <ScalarProperty Name="id_Rol" ColumnName="id_Rol" />
+          <ScalarProperty Name="rol" ColumnName="rol" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="salidas">
+      <EntityTypeMapping TypeName="FortuneTestModel.salida">
+        <MappingFragment StoreEntitySet="salidas">
+          <ScalarProperty Name="id_salida" ColumnName="id_salida" />
+          <ScalarProperty Name="fecha" ColumnName="fecha" />
+          <ScalarProperty Name="total" ColumnName="total" />
+          <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
+          <ScalarProperty Name="id_origen" ColumnName="id_origen" />
+          <ScalarProperty Name="id_destino" ColumnName="id_destino" />
+          <ScalarProperty Name="estado_aprobacion" ColumnName="estado_aprobacion" />
+          <ScalarProperty Name="estado_entrega" ColumnName="estado_entrega" />
+          <ScalarProperty Name="sello" ColumnName="sello" />
+          <ScalarProperty Name="responsable" ColumnName="responsable" />
+          <ScalarProperty Name="id_envio" ColumnName="id_envio" />
+          <ScalarProperty Name="fecha_solicitud" ColumnName="fecha_solicitud" />
+          <ScalarProperty Name="driver" ColumnName="driver" />
+          <ScalarProperty Name="pallet" ColumnName="pallet" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="salidas_items">
+      <EntityTypeMapping TypeName="FortuneTestModel.salidas_items">
+        <MappingFragment StoreEntitySet="salidas_items">
+          <ScalarProperty Name="id_salida" ColumnName="id_salida" />
+          <ScalarProperty Name="id_salida_item" ColumnName="id_salida_item" />
+          <ScalarProperty Name="id_inventario" ColumnName="id_inventario" />
+          <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sellos">
+      <EntityTypeMapping TypeName="FortuneTestModel.sello">
+        <MappingFragment StoreEntitySet="sellos">
+          <ScalarProperty Name="id_sello" ColumnName="id_sello" />
+          <ScalarProperty Name="inicio" ColumnName="inicio" />
+          <ScalarProperty Name="final" ColumnName="final" />
+          <ScalarProperty Name="usado" ColumnName="usado" />
+          <ScalarProperty Name="fecha_registro" ColumnName="fecha_registro" />
+          <ScalarProperty Name="id_sucursal" ColumnName="id_sucursal" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sucursales">
+      <EntityTypeMapping TypeName="FortuneTestModel.sucursale">
+        <MappingFragment StoreEntitySet="sucursales">
+          <ScalarProperty Name="id_sucursal" ColumnName="id_sucursal" />
+          <ScalarProperty Name="sucursal" ColumnName="sucursal" />
+          <ScalarProperty Name="direccion" ColumnName="direccion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="trims">
+      <EntityTypeMapping TypeName="FortuneTestModel.trim">
+        <MappingFragment StoreEntitySet="trims">
+          <ScalarProperty Name="id_trim" ColumnName="id_trim" />
+          <ScalarProperty Name="trim1" ColumnName="trim" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ubicaciones">
+      <EntityTypeMapping TypeName="FortuneTestModel.ubicacione">
+        <MappingFragment StoreEntitySet="ubicaciones">
+          <ScalarProperty Name="id_ubicacion" ColumnName="id_ubicacion" />
+          <ScalarProperty Name="ubicacion" ColumnName="ubicacion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="units">
+      <EntityTypeMapping TypeName="FortuneTestModel.unit">
+        <MappingFragment StoreEntitySet="units">
+          <ScalarProperty Name="id_unit" ColumnName="id_unit" />
+          <ScalarProperty Name="unit1" ColumnName="unit" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UPC_ARTE">
+      <EntityTypeMapping TypeName="FortuneTestModel.UPC_ARTE">
+        <MappingFragment StoreEntitySet="UPC_ARTE">
+          <ScalarProperty Name="Id_UPC" ColumnName="Id_UPC" />
+          <ScalarProperty Name="UPC" ColumnName="UPC" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Usuarios">
+      <EntityTypeMapping TypeName="FortuneTestModel.Usuario">
+        <MappingFragment StoreEntitySet="Usuarios">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="NoEmpleado" ColumnName="NoEmpleado" />
+          <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+          <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+          <ScalarProperty Name="Cargo" ColumnName="Cargo" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+          <ScalarProperty Name="id_sucursal" ColumnName="id_sucursal" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="yarns">
+      <EntityTypeMapping TypeName="FortuneTestModel.yarn">
+        <MappingFragment StoreEntitySet="yarns">
+          <ScalarProperty Name="id_yarn" ColumnName="id_yarn" />
+          <ScalarProperty Name="yarn1" ColumnName="yarn" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ITEM_SIZE_STAGING">
+      <EntityTypeMapping TypeName="FortuneTestModel.ITEM_SIZE_STAGING">
+        <MappingFragment StoreEntitySet="ITEM_SIZE_STAGING">
+          <ScalarProperty Name="ID_TALLA" ColumnName="ID_TALLA" />
+          <ScalarProperty Name="TALLA_ITEM" ColumnName="TALLA_ITEM" />
+          <ScalarProperty Name="CANTIDAD" ColumnName="CANTIDAD" />
+          <ScalarProperty Name="ID_SUMMARY" ColumnName="ID_SUMMARY" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="recibos_items">
+      <EntityTypeMapping TypeName="FortuneTestModel.recibos_items">
+        <MappingFragment StoreEntitySet="recibos_items">
+          <ScalarProperty Name="id_recibo_item" ColumnName="id_recibo_item" />
+          <ScalarProperty Name="id_recibo" ColumnName="id_recibo" />
+          <ScalarProperty Name="id_inventario" ColumnName="id_inventario" />
+          <ScalarProperty Name="amt_item" ColumnName="amt_item" />
+          <ScalarProperty Name="total" ColumnName="total" />
+          <ScalarProperty Name="mill_po" ColumnName="mill_po" />
+          <ScalarProperty Name="id_estilo" ColumnName="id_estilo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="database_firewall_rules">
+      <EntityTypeMapping TypeName="FortuneTestModel.database_firewall_rules">
+        <MappingFragment StoreEntitySet="database_firewall_rules">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="start_ip_address" ColumnName="start_ip_address" />
+          <ScalarProperty Name="end_ip_address" ColumnName="end_ip_address" />
+          <ScalarProperty Name="create_date" ColumnName="create_date" />
+          <ScalarProperty Name="modify_date" ColumnName="modify_date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="Actualizar_Camiseta" FunctionName="FortuneTestModel.Store.Actualizar_Camiseta" />
+    <FunctionImportMapping FunctionImportName="Actualizar_Cliente" FunctionName="FortuneTestModel.Store.Actualizar_Cliente" />
+    <FunctionImportMapping FunctionImportName="Actualizar_ClienteFinal" FunctionName="FortuneTestModel.Store.Actualizar_ClienteFinal" />
+    <FunctionImportMapping FunctionImportName="Actualizar_Colores" FunctionName="FortuneTestModel.Store.Actualizar_Colores" />
+    <FunctionImportMapping FunctionImportName="Actualizar_Estilos" FunctionName="FortuneTestModel.Store.Actualizar_Estilos" />
+    <FunctionImportMapping FunctionImportName="Actualizar_Genero" FunctionName="FortuneTestModel.Store.Actualizar_Genero" />
+    <FunctionImportMapping FunctionImportName="Actualizar_Roles" FunctionName="FortuneTestModel.Store.Actualizar_Roles" />
+    <FunctionImportMapping FunctionImportName="Actualizar_Talla" FunctionName="FortuneTestModel.Store.Actualizar_Talla" />
+    <FunctionImportMapping FunctionImportName="Actualizar_Tallas_Estilo" FunctionName="FortuneTestModel.Store.Actualizar_Tallas_Estilo" />
+    <FunctionImportMapping FunctionImportName="Actualizar_Tela" FunctionName="FortuneTestModel.Store.Actualizar_Tela" />
+    <FunctionImportMapping FunctionImportName="Actualizar_Usuarios" FunctionName="FortuneTestModel.Store.Actualizar_Usuarios" />
+    <FunctionImportMapping FunctionImportName="ActualizarBatchPrintShop" FunctionName="FortuneTestModel.Store.ActualizarBatchPrintShop" />
+    <FunctionImportMapping FunctionImportName="Agregar_Item_Desc" FunctionName="FortuneTestModel.Store.Agregar_Item_Desc" />
+    <FunctionImportMapping FunctionImportName="Agregar_Talla_Item" FunctionName="FortuneTestModel.Store.Agregar_Talla_Item" />
+    <FunctionImportMapping FunctionImportName="AgregarCliente" FunctionName="FortuneTestModel.Store.AgregarCliente" />
+    <FunctionImportMapping FunctionImportName="AgregarClienteFinal" FunctionName="FortuneTestModel.Store.AgregarClienteFinal" />
+    <FunctionImportMapping FunctionImportName="AgregarColor" FunctionName="FortuneTestModel.Store.AgregarColor" />
+    <FunctionImportMapping FunctionImportName="AgregarGeneros" FunctionName="FortuneTestModel.Store.AgregarGeneros" />
+    <FunctionImportMapping FunctionImportName="AgregarItem" FunctionName="FortuneTestModel.Store.AgregarItem" />
+    <FunctionImportMapping FunctionImportName="AgregarPedido" FunctionName="FortuneTestModel.Store.AgregarPedido" />
+    <FunctionImportMapping FunctionImportName="AgregarPedidoSummary" FunctionName="FortuneTestModel.Store.AgregarPedidoSummary" />
+    <FunctionImportMapping FunctionImportName="AgregarPrintShop" FunctionName="FortuneTestModel.Store.AgregarPrintShop" />
+    <FunctionImportMapping FunctionImportName="AgregarRevisionPO" FunctionName="FortuneTestModel.Store.AgregarRevisionPO" />
+    <FunctionImportMapping FunctionImportName="AgregarRoles" FunctionName="FortuneTestModel.Store.AgregarRoles" />
+    <FunctionImportMapping FunctionImportName="AgregarTalla" FunctionName="FortuneTestModel.Store.AgregarTalla" />
+    <FunctionImportMapping FunctionImportName="AgregarTela" FunctionName="FortuneTestModel.Store.AgregarTela" />
+    <FunctionImportMapping FunctionImportName="AgregarTipoCamiseta" FunctionName="FortuneTestModel.Store.AgregarTipoCamiseta" />
+    <FunctionImportMapping FunctionImportName="AgregarUsuarios" FunctionName="FortuneTestModel.Store.AgregarUsuarios" />
+    <FunctionImportMapping FunctionImportName="EditarPedidos" FunctionName="FortuneTestModel.Store.EditarPedidos" />
+    <FunctionImportMapping FunctionImportName="Eliminar_Item" FunctionName="FortuneTestModel.Store.Eliminar_Item" />
+    <FunctionImportMapping FunctionImportName="Eliminar_Pedido" FunctionName="FortuneTestModel.Store.Eliminar_Pedido" />
+    <FunctionImportMapping FunctionImportName="EliminarCamiseta" FunctionName="FortuneTestModel.Store.EliminarCamiseta" />
+    <FunctionImportMapping FunctionImportName="EliminarClientes" FunctionName="FortuneTestModel.Store.EliminarClientes" />
+    <FunctionImportMapping FunctionImportName="EliminarClientesFinal" FunctionName="FortuneTestModel.Store.EliminarClientesFinal" />
+    <FunctionImportMapping FunctionImportName="EliminarColores" FunctionName="FortuneTestModel.Store.EliminarColores" />
+    <FunctionImportMapping FunctionImportName="EliminarGenero" FunctionName="FortuneTestModel.Store.EliminarGenero" />
+    <FunctionImportMapping FunctionImportName="EliminarRoles" FunctionName="FortuneTestModel.Store.EliminarRoles" />
+    <FunctionImportMapping FunctionImportName="EliminarTalla" FunctionName="FortuneTestModel.Store.EliminarTalla" />
+    <FunctionImportMapping FunctionImportName="EliminarTela" FunctionName="FortuneTestModel.Store.EliminarTela" />
+    <FunctionImportMapping FunctionImportName="EliminarUsuarios" FunctionName="FortuneTestModel.Store.EliminarUsuarios" />
+    <FunctionImportMapping FunctionImportName="Lista_Batch" FunctionName="FortuneTestModel.Store.Lista_Batch">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Lista_Batch_Result">
+          <ScalarProperty Name="ID_PRINTSHOP" ColumnName="ID_PRINTSHOP" />
+          <ScalarProperty Name="ID_SUMMARY" ColumnName="ID_SUMMARY" />
+          <ScalarProperty Name="ID_BATCH" ColumnName="ID_BATCH" />
+          <ScalarProperty Name="TALLA" ColumnName="TALLA" />
+          <ScalarProperty Name="ID_TALLA" ColumnName="ID_TALLA" />
+          <ScalarProperty Name="PRINTED" ColumnName="PRINTED" />
+          <ScalarProperty Name="MISPRINT" ColumnName="MISPRINT" />
+          <ScalarProperty Name="DEFECT" ColumnName="DEFECT" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Lista_Estilos_Por_Id" FunctionName="FortuneTestModel.Store.Lista_Estilos_Por_Id">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Lista_Estilos_Por_Id_Result">
+          <ScalarProperty Name="ID_PO_SUMMARY" ColumnName="ID_PO_SUMMARY" />
+          <ScalarProperty Name="ITEM_ID" ColumnName="ITEM_ID" />
+          <ScalarProperty Name="ID_COLOR" ColumnName="ID_COLOR" />
+          <ScalarProperty Name="QTY" ColumnName="QTY" />
+          <ScalarProperty Name="PRICE" ColumnName="PRICE" />
+          <ScalarProperty Name="ID_PEDIDOS" ColumnName="ID_PEDIDOS" />
+          <ScalarProperty Name="ID_GENDER" ColumnName="ID_GENDER" />
+          <ScalarProperty Name="ID_TELA" ColumnName="ID_TELA" />
+          <ScalarProperty Name="ID_PRODUCT_TYPE" ColumnName="ID_PRODUCT_TYPE" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Lista_Pedido_Por_Id" FunctionName="FortuneTestModel.Store.Lista_Pedido_Por_Id">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Lista_Pedido_Por_Id_Result">
+          <ScalarProperty Name="ID_PEDIDO" ColumnName="ID_PEDIDO" />
+          <ScalarProperty Name="PO" ColumnName="PO" />
+          <ScalarProperty Name="VPO" ColumnName="VPO" />
+          <ScalarProperty Name="CUSTOMER" ColumnName="CUSTOMER" />
+          <ScalarProperty Name="CUSTOMER_FINAL" ColumnName="CUSTOMER_FINAL" />
+          <ScalarProperty Name="DATE_CANCEL" ColumnName="DATE_CANCEL" />
+          <ScalarProperty Name="DATE_ORDER" ColumnName="DATE_ORDER" />
+          <ScalarProperty Name="TOTAL_UNITS" ColumnName="TOTAL_UNITS" />
+          <ScalarProperty Name="ID_STATUS" ColumnName="ID_STATUS" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Lista_PrintShop" FunctionName="FortuneTestModel.Store.Lista_PrintShop">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Lista_PrintShop_Result">
+          <ScalarProperty Name="ID_PRINTSHOP" ColumnName="ID_PRINTSHOP" />
+          <ScalarProperty Name="ID_SUMMARY" ColumnName="ID_SUMMARY" />
+          <ScalarProperty Name="TALLA" ColumnName="TALLA" />
+          <ScalarProperty Name="ID_TALLA" ColumnName="ID_TALLA" />
+          <ScalarProperty Name="PRINTED" ColumnName="PRINTED" />
+          <ScalarProperty Name="MISPRINT" ColumnName="MISPRINT" />
+          <ScalarProperty Name="DEFECT" ColumnName="DEFECT" />
+          <ScalarProperty Name="ITEM_STYLE" ColumnName="ITEM_STYLE" />
+          <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Lista_Tallas_Por_Estilo" FunctionName="FortuneTestModel.Store.Lista_Tallas_Por_Estilo">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Lista_Tallas_Por_Estilo_Result">
+          <ScalarProperty Name="ID_TALLA" ColumnName="ID_TALLA" />
+          <ScalarProperty Name="TALLA" ColumnName="TALLA" />
+          <ScalarProperty Name="TALLA_ITEM" ColumnName="TALLA_ITEM" />
+          <ScalarProperty Name="CANTIDAD" ColumnName="CANTIDAD" />
+          <ScalarProperty Name="EXTRAS" ColumnName="EXTRAS" />
+          <ScalarProperty Name="EJEMPLOS" ColumnName="EJEMPLOS" />
+          <ScalarProperty Name="ITEM_STYLE" ColumnName="ITEM_STYLE" />
+          <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+          <ScalarProperty Name="ID_SUMMARY" ColumnName="ID_SUMMARY" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Lista_Tallas_Por_Summary" FunctionName="FortuneTestModel.Store.Lista_Tallas_Por_Summary">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Lista_Tallas_Por_Summary_Result">
+          <ScalarProperty Name="TALLA" ColumnName="TALLA" />
+          <ScalarProperty Name="CANTIDAD" ColumnName="CANTIDAD" />
+          <ScalarProperty Name="EXTRAS" ColumnName="EXTRAS" />
+          <ScalarProperty Name="EJEMPLOS" ColumnName="EJEMPLOS" />
+          <ScalarProperty Name="ID_SUMMARY" ColumnName="ID_SUMMARY" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Lista_Tallas_Staging_Por_Estilo" FunctionName="FortuneTestModel.Store.Lista_Tallas_Staging_Por_Estilo">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Lista_Tallas_Staging_Por_Estilo_Result">
+          <ScalarProperty Name="ID_TALLA" ColumnName="ID_TALLA" />
+          <ScalarProperty Name="TALLA" ColumnName="TALLA" />
+          <ScalarProperty Name="TALLA_ITEM" ColumnName="TALLA_ITEM" />
+          <ScalarProperty Name="CANTIDAD" ColumnName="CANTIDAD" />
+          <ScalarProperty Name="ITEM_STYLE" ColumnName="ITEM_STYLE" />
+          <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+          <ScalarProperty Name="ID_SUMMARY" ColumnName="ID_SUMMARY" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Lista_Total_PrintShop" FunctionName="FortuneTestModel.Store.Lista_Total_PrintShop">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Lista_Total_PrintShop_Result">
+          <ScalarProperty Name="ID_PRINTSHOP" ColumnName="ID_PRINTSHOP" />
+          <ScalarProperty Name="ID_BATCH" ColumnName="ID_BATCH" />
+          <ScalarProperty Name="ID_SUMMARY" ColumnName="ID_SUMMARY" />
+          <ScalarProperty Name="ID_TALLA" ColumnName="ID_TALLA" />
+          <ScalarProperty Name="TOTAL" ColumnName="TOTAL" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Lista_Usuario_Por_Id" FunctionName="FortuneTestModel.Store.Lista_Usuario_Por_Id">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Lista_Usuario_Por_Id_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="NoEmpleado" ColumnName="NoEmpleado" />
+          <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+          <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+          <ScalarProperty Name="Cargo" ColumnName="Cargo" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+          <ScalarProperty Name="id_sucursal" ColumnName="id_sucursal" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Camiseta_Por_Id" FunctionName="FortuneTestModel.Store.Listar_Camiseta_Por_Id">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Camiseta_Por_Id_Result">
+          <ScalarProperty Name="ID_TYPE_CODE" ColumnName="ID_TYPE_CODE" />
+          <ScalarProperty Name="PRODUCT_TYPE_CODE" ColumnName="PRODUCT_TYPE_CODE" />
+          <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+          <ScalarProperty Name="GROUP_TYPE" ColumnName="GROUP_TYPE" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Cliente_Por_Id" FunctionName="FortuneTestModel.Store.Listar_Cliente_Por_Id">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Cliente_Por_Id_Result">
+          <ScalarProperty Name="CUSTOMER" ColumnName="CUSTOMER" />
+          <ScalarProperty Name="NAME" ColumnName="NAME" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_ClienteFinal_Por_Id" FunctionName="FortuneTestModel.Store.Listar_ClienteFinal_Por_Id">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_ClienteFinal_Por_Id_Result">
+          <ScalarProperty Name="CUSTOMER_FINAL" ColumnName="CUSTOMER_FINAL" />
+          <ScalarProperty Name="NAME_FINAL" ColumnName="NAME_FINAL" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Clientes" FunctionName="FortuneTestModel.Store.Listar_Clientes">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Clientes_Result">
+          <ScalarProperty Name="CUSTOMER" ColumnName="CUSTOMER" />
+          <ScalarProperty Name="NAME" ColumnName="NAME" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_ClientesFinal" FunctionName="FortuneTestModel.Store.Listar_ClientesFinal">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_ClientesFinal_Result">
+          <ScalarProperty Name="CUSTOMER_FINAL" ColumnName="CUSTOMER_FINAL" />
+          <ScalarProperty Name="NAME_FINAL" ColumnName="NAME_FINAL" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Color" FunctionName="FortuneTestModel.Store.Listar_Color">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Color_Result">
+          <ScalarProperty Name="ID_COLOR" ColumnName="ID_COLOR" />
+          <ScalarProperty Name="CODIGO_COLOR" ColumnName="CODIGO_COLOR" />
+          <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Color_Por_Id" FunctionName="FortuneTestModel.Store.Listar_Color_Por_Id">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Color_Por_Id_Result">
+          <ScalarProperty Name="ID_COLOR" ColumnName="ID_COLOR" />
+          <ScalarProperty Name="CODIGO_COLOR" ColumnName="CODIGO_COLOR" />
+          <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Customer" FunctionName="FortuneTestModel.Store.Listar_Customer">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Customer_Result">
+          <ScalarProperty Name="CUSTOMER" ColumnName="CUSTOMER" />
+          <ScalarProperty Name="NAME" ColumnName="NAME" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Customer_Final" FunctionName="FortuneTestModel.Store.Listar_Customer_Final">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Customer_Final_Result">
+          <ScalarProperty Name="CUSTOMER_FINAL" ColumnName="CUSTOMER_FINAL" />
+          <ScalarProperty Name="NAME_FINAL" ColumnName="NAME_FINAL" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Estados" FunctionName="FortuneTestModel.Store.Listar_Estados">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Estados_Result">
+          <ScalarProperty Name="ID_STATUS" ColumnName="ID_STATUS" />
+          <ScalarProperty Name="ESTADO" ColumnName="ESTADO" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_EstiloDesc_Por_Id" FunctionName="FortuneTestModel.Store.Listar_EstiloDesc_Por_Id">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_EstiloDesc_Por_Id_Result">
+          <ScalarProperty Name="ITEM_ID" ColumnName="ITEM_ID" />
+          <ScalarProperty Name="ITEM_STYLE" ColumnName="ITEM_STYLE" />
+          <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Estilos_Por_Pedido" FunctionName="FortuneTestModel.Store.Listar_Estilos_Por_Pedido">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Estilos_Por_Pedido_Result">
+          <ScalarProperty Name="ID_PO_SUMMARY" ColumnName="ID_PO_SUMMARY" />
+          <ScalarProperty Name="ITEM_STYLE" ColumnName="ITEM_STYLE" />
+          <ScalarProperty Name="CODIGO_COLOR" ColumnName="CODIGO_COLOR" />
+          <ScalarProperty Name="GENERO_CODE" ColumnName="GENERO_CODE" />
+          <ScalarProperty Name="PRODUCT_TYPE_CODE" ColumnName="PRODUCT_TYPE_CODE" />
+          <ScalarProperty Name="QTY" ColumnName="QTY" />
+          <ScalarProperty Name="PRICE" ColumnName="PRICE" />
+          <ScalarProperty Name="ID_TELA" ColumnName="ID_TELA" />
+          <ScalarProperty Name="ID_PEDIDOS" ColumnName="ID_PEDIDOS" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Genero" FunctionName="FortuneTestModel.Store.Listar_Genero">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Genero_Result">
+          <ScalarProperty Name="ID_GENDER" ColumnName="ID_GENDER" />
+          <ScalarProperty Name="GENERO" ColumnName="GENERO" />
+          <ScalarProperty Name="GENERO_CODE" ColumnName="GENERO_CODE" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Genero_Por_Id" FunctionName="FortuneTestModel.Store.Listar_Genero_Por_Id">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Genero_Por_Id_Result">
+          <ScalarProperty Name="ID_GENDER" ColumnName="ID_GENDER" />
+          <ScalarProperty Name="GENERO" ColumnName="GENERO" />
+          <ScalarProperty Name="GENERO_CODE" ColumnName="GENERO_CODE" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Item_Desc" FunctionName="FortuneTestModel.Store.Listar_Item_Desc">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Item_Desc_Result">
+          <ScalarProperty Name="ITEM_ID" ColumnName="ITEM_ID" />
+          <ScalarProperty Name="ITEM_STYLE" ColumnName="ITEM_STYLE" />
+          <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Item_Por_Pedido" FunctionName="FortuneTestModel.Store.Listar_Item_Por_Pedido">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Item_Por_Pedido_Result">
+          <ScalarProperty Name="ID_PO_SUMMARY" ColumnName="ID_PO_SUMMARY" />
+          <ScalarProperty Name="ITEM_STYLE" ColumnName="ITEM_STYLE" />
+          <ScalarProperty Name="DESCRIPCION_ITEM" ColumnName="DESCRIPCION_ITEM" />
+          <ScalarProperty Name="CODIGO_COLOR" ColumnName="CODIGO_COLOR" />
+          <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+          <ScalarProperty Name="QTY" ColumnName="QTY" />
+          <ScalarProperty Name="PRICE" ColumnName="PRICE" />
+          <ScalarProperty Name="TOTAL" ColumnName="TOTAL" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Items" FunctionName="FortuneTestModel.Store.Listar_Items">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Items_Result">
+          <ScalarProperty Name="ITEM_ID" ColumnName="ITEM_ID" />
+          <ScalarProperty Name="ITEM_STYLE" ColumnName="ITEM_STYLE" />
+          <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Pedidos" FunctionName="FortuneTestModel.Store.Listar_Pedidos">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Pedidos_Result">
+          <ScalarProperty Name="ID_PEDIDO" ColumnName="ID_PEDIDO" />
+          <ScalarProperty Name="PO" ColumnName="PO" />
+          <ScalarProperty Name="VPO" ColumnName="VPO" />
+          <ScalarProperty Name="CUSTOMER" ColumnName="CUSTOMER" />
+          <ScalarProperty Name="CUSTOMER_FINAL" ColumnName="CUSTOMER_FINAL" />
+          <ScalarProperty Name="DATE_CANCEL" ColumnName="DATE_CANCEL" />
+          <ScalarProperty Name="DATE_ORDER" ColumnName="DATE_ORDER" />
+          <ScalarProperty Name="TOTAL_UNITS" ColumnName="TOTAL_UNITS" />
+          <ScalarProperty Name="ID_STATUS" ColumnName="ID_STATUS" />
+          <ScalarProperty Name="ID_STATUS1" ColumnName="ID_STATUS1" />
+          <ScalarProperty Name="ESTADO" ColumnName="ESTADO" />
+          <ScalarProperty Name="CUSTOMER_FINAL1" ColumnName="CUSTOMER_FINAL1" />
+          <ScalarProperty Name="NAME_FINAL" ColumnName="NAME_FINAL" />
+          <ScalarProperty Name="CUSTOMER1" ColumnName="CUSTOMER1" />
+          <ScalarProperty Name="NAME" ColumnName="NAME" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Pedidos_Por_Fechas" FunctionName="FortuneTestModel.Store.Listar_Pedidos_Por_Fechas">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Pedidos_Por_Fechas_Result">
+          <ScalarProperty Name="ID_PEDIDO" ColumnName="ID_PEDIDO" />
+          <ScalarProperty Name="PO" ColumnName="PO" />
+          <ScalarProperty Name="VPO" ColumnName="VPO" />
+          <ScalarProperty Name="CUSTOMER" ColumnName="CUSTOMER" />
+          <ScalarProperty Name="CUSTOMER_FINAL" ColumnName="CUSTOMER_FINAL" />
+          <ScalarProperty Name="DATE_CANCEL" ColumnName="DATE_CANCEL" />
+          <ScalarProperty Name="DATE_ORDER" ColumnName="DATE_ORDER" />
+          <ScalarProperty Name="TOTAL_UNITS" ColumnName="TOTAL_UNITS" />
+          <ScalarProperty Name="ID_STATUS" ColumnName="ID_STATUS" />
+          <ScalarProperty Name="ID_STATUS1" ColumnName="ID_STATUS1" />
+          <ScalarProperty Name="ESTADO" ColumnName="ESTADO" />
+          <ScalarProperty Name="CUSTOMER_FINAL1" ColumnName="CUSTOMER_FINAL1" />
+          <ScalarProperty Name="NAME_FINAL" ColumnName="NAME_FINAL" />
+          <ScalarProperty Name="CUSTOMER1" ColumnName="CUSTOMER1" />
+          <ScalarProperty Name="NAME" ColumnName="NAME" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Pedidos_Revisiones" FunctionName="FortuneTestModel.Store.Listar_Pedidos_Revisiones">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Pedidos_Revisiones_Result">
+          <ScalarProperty Name="ID_PEDIDO" ColumnName="ID_PEDIDO" />
+          <ScalarProperty Name="PO" ColumnName="PO" />
+          <ScalarProperty Name="VPO" ColumnName="VPO" />
+          <ScalarProperty Name="CUSTOMER" ColumnName="CUSTOMER" />
+          <ScalarProperty Name="CUSTOMER_FINAL" ColumnName="CUSTOMER_FINAL" />
+          <ScalarProperty Name="DATE_CANCEL" ColumnName="DATE_CANCEL" />
+          <ScalarProperty Name="DATE_ORDER" ColumnName="DATE_ORDER" />
+          <ScalarProperty Name="TOTAL_UNITS" ColumnName="TOTAL_UNITS" />
+          <ScalarProperty Name="ID_STATUS" ColumnName="ID_STATUS" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="ID_PEDIDO1" ColumnName="ID_PEDIDO1" />
+          <ScalarProperty Name="ID_REVISION_PO" ColumnName="ID_REVISION_PO" />
+          <ScalarProperty Name="FECHA_REVISION" ColumnName="FECHA_REVISION" />
+          <ScalarProperty Name="ID_STATUS1" ColumnName="ID_STATUS1" />
+          <ScalarProperty Name="CUSTOMER_FINAL1" ColumnName="CUSTOMER_FINAL1" />
+          <ScalarProperty Name="NAME_FINAL" ColumnName="NAME_FINAL" />
+          <ScalarProperty Name="CUSTOMER1" ColumnName="CUSTOMER1" />
+          <ScalarProperty Name="NAME" ColumnName="NAME" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Roles" FunctionName="FortuneTestModel.Store.Listar_Roles">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Roles_Result">
+          <ScalarProperty Name="id_Rol" ColumnName="id_Rol" />
+          <ScalarProperty Name="rol" ColumnName="rol" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Roles_Por_Id" FunctionName="FortuneTestModel.Store.Listar_Roles_Por_Id">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Roles_Por_Id_Result">
+          <ScalarProperty Name="id_Rol" ColumnName="id_Rol" />
+          <ScalarProperty Name="rol" ColumnName="rol" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Talla_Por_Id" FunctionName="FortuneTestModel.Store.Listar_Talla_Por_Id">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Talla_Por_Id_Result">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="TALLA" ColumnName="TALLA" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Tallas" FunctionName="FortuneTestModel.Store.Listar_Tallas">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Tallas_Result">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="TALLA" ColumnName="TALLA" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Tallas_Por_Genero" FunctionName="FortuneTestModel.Store.Listar_Tallas_Por_Genero">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Tallas_Por_Genero_Result">
+          <ScalarProperty Name="ID_GENDER" ColumnName="ID_GENDER" />
+          <ScalarProperty Name="GENERO" ColumnName="GENERO" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="TALLA" ColumnName="TALLA" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Tela" FunctionName="FortuneTestModel.Store.Listar_Tela">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Tela_Result">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="FABRIC" ColumnName="FABRIC" />
+          <ScalarProperty Name="CODE" ColumnName="CODE" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Tela_Por_Id" FunctionName="FortuneTestModel.Store.Listar_Tela_Por_Id">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Tela_Por_Id_Result">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="FABRIC" ColumnName="FABRIC" />
+          <ScalarProperty Name="CODE" ColumnName="CODE" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Tipo_Camiseta" FunctionName="FortuneTestModel.Store.Listar_Tipo_Camiseta">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Tipo_Camiseta_Result">
+          <ScalarProperty Name="ID_TYPE_CODE" ColumnName="ID_TYPE_CODE" />
+          <ScalarProperty Name="PRODUCT_TYPE_CODE" ColumnName="PRODUCT_TYPE_CODE" />
+          <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+          <ScalarProperty Name="GROUP_TYPE" ColumnName="GROUP_TYPE" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Listar_Usuarios" FunctionName="FortuneTestModel.Store.Listar_Usuarios">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.Listar_Usuarios_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="NoEmpleado" ColumnName="NoEmpleado" />
+          <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+          <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+          <ScalarProperty Name="Cargo" ColumnName="Cargo" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+          <ScalarProperty Name="id_sucursal" ColumnName="id_sucursal" />
+          <ScalarProperty Name="id_Rol" ColumnName="id_Rol" />
+          <ScalarProperty Name="rol" ColumnName="rol" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="ListarDetallePedido" FunctionName="FortuneTestModel.Store.ListarDetallePedido">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.ListarDetallePedido_Result">
+          <ScalarProperty Name="C_" ColumnName="#" />
+          <ScalarProperty Name="PO" ColumnName="PO" />
+          <ScalarProperty Name="PURSHASE_ORDER" ColumnName="PURSHASE_ORDER" />
+          <ScalarProperty Name="CLIENT" ColumnName="CLIENT" />
+          <ScalarProperty Name="CUSTOMER" ColumnName="CUSTOMER" />
+          <ScalarProperty Name="DATE_CANCEL" ColumnName="DATE_CANCEL" />
+          <ScalarProperty Name="DATE_ORDER" ColumnName="DATE_ORDER" />
+          <ScalarProperty Name="TOTAL_UNITS" ColumnName="TOTAL_UNITS" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="ListarItems" FunctionName="FortuneTestModel.Store.ListarItems">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.ListarItems_Result">
+          <ScalarProperty Name="C_" ColumnName="#" />
+          <ScalarProperty Name="ITEM" ColumnName="ITEM" />
+          <ScalarProperty Name="ITEM_DESCRIPTION" ColumnName="ITEM_DESCRIPTION" />
+          <ScalarProperty Name="COLOR" ColumnName="COLOR" />
+          <ScalarProperty Name="COLOR_DESCRIPTION" ColumnName="COLOR_DESCRIPTION" />
+          <ScalarProperty Name="QTY" ColumnName="QTY" />
+          <ScalarProperty Name="PRICE" ColumnName="PRICE" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="ListarPedidos" FunctionName="FortuneTestModel.Store.ListarPedidos">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.ListarPedidos_Result">
+          <ScalarProperty Name="C_" ColumnName="#" />
+          <ScalarProperty Name="PO" ColumnName="PO" />
+          <ScalarProperty Name="PURSHASE_ORDER" ColumnName="PURSHASE_ORDER" />
+          <ScalarProperty Name="CLIENT" ColumnName="CLIENT" />
+          <ScalarProperty Name="CUSTOMER" ColumnName="CUSTOMER" />
+          <ScalarProperty Name="DATE_CANCEL" ColumnName="DATE_CANCEL" />
+          <ScalarProperty Name="DATE_ORDER" ColumnName="DATE_ORDER" />
+          <ScalarProperty Name="ITEMS" ColumnName="ITEMS" />
+          <ScalarProperty Name="TOTAL_UNITS" ColumnName="TOTAL_UNITS" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="RegresaCliente" FunctionName="FortuneTestModel.Store.RegresaCliente" />
+    <FunctionImportMapping FunctionImportName="RegresaClienteFinal" FunctionName="FortuneTestModel.Store.RegresaClienteFinal" />
+    <FunctionImportMapping FunctionImportName="SpLogin" FunctionName="FortuneTestModel.Store.SpLogin">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="FortuneTestModel.SpLogin_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="NoEmpleado" ColumnName="NoEmpleado" />
+          <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+          <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+          <ScalarProperty Name="Cargo" ColumnName="Cargo" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+          <ScalarProperty Name="id_sucursal" ColumnName="id_sucursal" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Ultimo_PO" FunctionName="FortuneTestModel.Store.Ultimo_PO" />
+    <FunctionImportMapping FunctionImportName="VerificarColor" FunctionName="FortuneTestModel.Store.VerificarColor" />
+    <FunctionImportMapping FunctionImportName="VerificarItem" FunctionName="FortuneTestModel.Store.VerificarItem" />
+  </EntityContainerMapping>
+</Mapping>

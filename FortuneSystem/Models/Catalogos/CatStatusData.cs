@@ -18,24 +18,28 @@ namespace FortuneSystem.Models.Catalogos
         public IEnumerable<CatStatus> ListarEstados()
         {
             List<CatStatus> listEstados = new List<CatStatus>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "Listar_Estados";
-            comando.CommandType = CommandType.StoredProcedure;
-            leer = comando.ExecuteReader();
-
-            while (leer.Read())
+            try
             {
-                CatStatus estados = new CatStatus()
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Listar_Estados";
+                comando.CommandType = CommandType.StoredProcedure;
+                leer = comando.ExecuteReader();
+                while (leer.Read())
                 {
-                    IdStatus = Convert.ToInt32(leer["ID_STATUS"]),
-                    Estado = leer["ESTADO"].ToString()
-                };
-
-                listEstados.Add(estados);
+                    CatStatus estados = new CatStatus()
+                    {
+                        IdStatus = Convert.ToInt32(leer["ID_STATUS"]),
+                        Estado = leer["ESTADO"].ToString()
+                    };
+                    listEstados.Add(estados);
+                }
+                leer.Close();
             }
-            leer.Close();
-            conn.CerrarConexion();
-
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
             return listEstados;
         }
 

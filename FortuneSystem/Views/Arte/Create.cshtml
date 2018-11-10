@@ -328,45 +328,19 @@
             <div class="form-group">
                 <div class="col-sm-1">
                 </div>
-                @if (Model.imgArte == null)
-                {
+                <div class="col-sm-5">
+                    @Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-md-4" })
 
-
-                    <div class="col-sm-5">
-                        @Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="file-upload col-md-10">
-                            <div class="file-select">
-                                <div class="file-select-button" id="fileName">Browser File</div>
-                                <div class="file-select-name" id="noFile">No file chosen...</div>
-                                @Html.TextBoxFor(model => model.FileArte, new { type = "file", id = "chooseFile" })
-
-                            </div>
-
-                        </div>
-                        <img id="imgSalida" width="70" height="70" />
-                    </div>
-                }
-                else
-                {
-                    <div class="col-sm-5">
-                        @Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-md-4" })
-
-                        <img id="imgSalida" width="100" height="100" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = Model.IdImgArte})" />
-                    </div>
-
-
-                }
+                    <img id="imgSalida" width="70" height="70" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = Model.IdImgArte})" />
+                </div>
                 <div class="col-md-10">
-
                     <br />
                     <div class="col-md-10">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         @Html.LabelFor(model => model.StatusArte, htmlAttributes: new { @class = "control-label " })
-                        @Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.APPROVED, new { @class = "form-radio", Checked = "checked" }) APPROVED
-                        @Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.REVIEWED, new { @class = "form-radio" }) REVIEWED
-                        @Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.PENDING, new { @class = "form-radio" }) PENDING
-
-
+                        @Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.APPROVED, new { @class = "form-radio", Checked = "checked", disabled = "disabled" }) APPROVED
+                        @Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.REVIEWED, new { @class = "form-radio", disabled = "disabled" }) REVIEWED
+                        @Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.PENDING, new { @class = "form-radio", disabled = "disabled" }) PENDING
                     </div>
                 </div>
             </div>
@@ -377,31 +351,13 @@
             <div class="form-group">
                 <div class="col-sm-1">
                 </div>
-                @if (Model.imgPNL == null)
-                {
-                    <div class="col-sm-5">
-                        @Html.LabelFor(model => model.imgPNL, htmlAttributes: new { @class = "control-label col-md-4" })
-                        <div class="filePnl-upload col-md-10">
-                            <div class="file-select">
-                                <div class="file-select-button" id="filePNLName">Browser File</div>
-                                <div class="file-select-name" id="noFilePNL">No file chosen...</div>
-                                @Html.TextBoxFor(model => model.FilePNL, new { type = "file", id = "chooseFilePNL" })
-                            </div>
-                            <br />
+                <div class="col-sm-5">
+                    @Html.LabelFor(model => model.imgPNL, htmlAttributes: new { @class = "control-label col-md-4" })
 
-                        </div>
-                        <img id="imgSalidaPNL" width="70" height="70" />
-                    </div>
-                }
-                else
-                {
-                    <div class="col-sm-5">
-                        @Html.LabelFor(model => model.imgPNL, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <img id="imgSalidaPNL" width="70" height="70" src="@Url.Action("ConvertirImagenPNL", "Arte", new {pnlCodigo = Model.IdImgArte})" />
+                </div>
 
-                        <img id="imgSalidaPNL" width="70" height="70" src="@Url.Action("ConvertirImagenPNL", "Arte", new {pnlCodigo = Model.IdImgArte})" />
-                    </div>
 
-                }
             </div>
         </div>
         <div class="form-group">
@@ -455,15 +411,15 @@
             </div>
         }
         <hr />
-        @if (Model.imgArte == null && Model.imgPNL == null)
+        @*@if (Model.imgArte == null && Model.imgPNL == null)
         {
             <div class="form-group">
                  <div class="col-md-offset-2 col-md-10">
                     <input type = "submit" value="Register" id="btnRegister" class="btn btn-success" />
-                </div>        
+                </div>
            </div>
-        }
-</div>
+        }*@
+    </div>
 
 
 </div>

@@ -11,9 +11,7 @@ namespace FortuneSystem.Models.Login
 {
     public class LoginData
     {
-        private Conexion conn = new Conexion();
-        private SqlCommand comando = new SqlCommand();
-        private SqlDataReader leer;
+       
 
         //instancia a la capa de datos de empleado
 
@@ -34,22 +32,33 @@ namespace FortuneSystem.Models.Login
 
         public void IniciarSesion(CatUsuario usuario)
         {
-           
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "SpLogin";
-            comando.CommandType = CommandType.StoredProcedure;
-            comando.Parameters.AddWithValue("@Usuario", usuario.NoEmpleado);
-            comando.Parameters.AddWithValue("@Password", usuario.Contrasena);
+             Conexion conn = new Conexion();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer;
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "SpLogin";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Usuario", usuario.NoEmpleado);
+                comando.Parameters.AddWithValue("@Password", usuario.Contrasena);
 
-            leer = comando.ExecuteReader();
-            comando.ExecuteNonQuery();
+                leer = comando.ExecuteReader();
+                comando.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }  
 
         }
 
         public bool IsValid (string _username, string _password, CatUsuario usuario)
         {
-    
-           
+            Conexion conn = new Conexion();
+            SqlCommand comando = new SqlCommand();
+            SqlDataReader leer;
             comando.Connection = conn.AbrirConexion();
             comando.CommandText = "SpLogin";
             comando.CommandType = CommandType.StoredProcedure;

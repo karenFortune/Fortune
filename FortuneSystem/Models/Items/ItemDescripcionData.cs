@@ -9,32 +9,37 @@ namespace FortuneSystem.Models.Items
 {
     public class ItemDescripcionData
     {
-
-        private Conexion conn = new Conexion();
-        private SqlCommand comando = new SqlCommand();
-        private SqlDataReader leerFilas = null;
-
-
         //Muestra la lista de Items
         public IEnumerable<ItemDescripcion> ListaItems()
         {
+            Conexion conn = new Conexion();
             List<ItemDescripcion> listItems = new List<ItemDescripcion>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "Listar_Item_Desc";
-            comando.CommandType = CommandType.StoredProcedure;
-            leerFilas = comando.ExecuteReader();
-
-            while (leerFilas.Read())
+            try
             {
-                ItemDescripcion items = new ItemDescripcion();
-                items.ItemId = Convert.ToInt32(leerFilas["ITEM_ID"]);
-                items.ItemEstilo = leerFilas["ITEM_STYLE"].ToString();
-                items.Descripcion = leerFilas["DESCRIPTION"].ToString();
-                listItems.Add(items);
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leerFilas = null;               
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Listar_Item_Desc";
+                comando.CommandType = CommandType.StoredProcedure;
+                leerFilas = comando.ExecuteReader();
 
+                while (leerFilas.Read())
+                {
+                    ItemDescripcion items = new ItemDescripcion();
+                    items.ItemId = Convert.ToInt32(leerFilas["ITEM_ID"]);
+                    items.ItemEstilo = leerFilas["ITEM_STYLE"].ToString();
+                    items.Descripcion = leerFilas["DESCRIPTION"].ToString();
+                    listItems.Add(items);
+
+                }
+                leerFilas.Close();
             }
-            leerFilas.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }     
+               
 
             return listItems;
         }
@@ -43,40 +48,60 @@ namespace FortuneSystem.Models.Items
         //Permite crear un nuevo Item descripcion
         public void AgregarItemDescripcion(ItemDescripcion itemDesc)
         {
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "Agregar_Item_Desc";
-            comando.CommandType = CommandType.StoredProcedure;
+            Conexion conn = new Conexion();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
 
-            comando.Parameters.AddWithValue("@Style", itemDesc.ItemEstilo);
-            comando.Parameters.AddWithValue("@Descripcion", itemDesc.Descripcion);
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Agregar_Item_Desc";
+                comando.CommandType = CommandType.StoredProcedure;
 
-            comando.ExecuteNonQuery();
-            conn.CerrarConexion();
+                comando.Parameters.AddWithValue("@Style", itemDesc.ItemEstilo);
+                comando.Parameters.AddWithValue("@Descripcion", itemDesc.Descripcion);
+
+                comando.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }         
 
         }
 
         //Permite consultar los detalles de un Item Desc
         public ItemDescripcion ConsultarListaItemDesc(int? id)
         {
+
             Conexion conex = new Conexion();
-            SqlCommand coma = new SqlCommand();
-            SqlDataReader leer = null;
-        ItemDescripcion itemDesc = new ItemDescripcion();
-
-            coma.Connection = conex.AbrirConexion();
-            coma.CommandText = "Listar_EstiloDesc_Por_Id";
-            coma.CommandType = CommandType.StoredProcedure;
-            coma.Parameters.AddWithValue("@Id", id);
-
-            leer = coma.ExecuteReader();
-            while (leer.Read())
+            ItemDescripcion itemDesc = new ItemDescripcion();
+            try
             {
-                string descripcion = leer["DESCRIPTION"].ToString();
-                itemDesc.ItemId = Convert.ToInt32(leer["ITEM_ID"]);
-                itemDesc.ItemEstilo = leer["ITEM_STYLE"].ToString();
-                itemDesc.Descripcion = descripcion.TrimEnd(' '); 
+                SqlCommand coma = new SqlCommand();
+                SqlDataReader leer = null;               
 
+                coma.Connection = conex.AbrirConexion();
+                coma.CommandText = "Listar_EstiloDesc_Por_Id";
+                coma.CommandType = CommandType.StoredProcedure;
+                coma.Parameters.AddWithValue("@Id", id);
+
+                leer = coma.ExecuteReader();
+                while (leer.Read())
+                {
+                    string descripcion = leer["DESCRIPTION"].ToString();
+                    itemDesc.ItemId = Convert.ToInt32(leer["ITEM_ID"]);
+                    itemDesc.ItemEstilo = leer["ITEM_STYLE"].ToString();
+                    itemDesc.Descripcion = descripcion.TrimEnd(' ');
+
+                }
             }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+    
             return itemDesc;
 
         }
@@ -85,34 +110,52 @@ namespace FortuneSystem.Models.Items
         {
             int idEstilo = 0;
             Conexion conex = new Conexion();
-            SqlCommand coman = new SqlCommand();
-            SqlDataReader leerF = null;
-            coman.Connection = conex.AbrirConexion();
-            coman.CommandText = "SELECT ITEM_ID FROM ITEM_DESCRIPTION " +
-                                 "WHERE ITEM_STYLE='" + estilo + "' ";
-            leerF = coman.ExecuteReader();
-            while (leerF.Read())
+            try
             {
-                idEstilo += Convert.ToInt32(leerF["ITEM_ID"]);
+                SqlCommand coman = new SqlCommand();
+                SqlDataReader leerF = null;
+                coman.Connection = conex.AbrirConexion();
+                coman.CommandText = "SELECT ITEM_ID FROM ITEM_DESCRIPTION " +
+                                     "WHERE ITEM_STYLE='" + estilo + "' ";
+                leerF = coman.ExecuteReader();
+                while (leerF.Read())
+                {
+                    idEstilo += Convert.ToInt32(leerF["ITEM_ID"]);
+                }
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+            
             return idEstilo;
         }
 
 
         public string Verificar_Item_CD(string cadena)
         {
+            Conexion conn = new Conexion();
             string texto = null;
-            cadena = cadena.TrimEnd();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "VerificarItem";
-            comando.CommandType = CommandType.StoredProcedure;
-            comando.Parameters.AddWithValue("@Cadena", cadena);
-            texto = (string)comando.ExecuteScalar();
-            comando.Parameters.Clear();
-            conn.CerrarConexion();
-            if (texto != null) texto = texto.TrimEnd();
+            try
+            {
+                SqlCommand comando = new SqlCommand();                     
+                cadena = cadena.TrimEnd();
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "VerificarItem";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Cadena", cadena);
+                texto = (string)comando.ExecuteScalar();
+                comando.Parameters.Clear();
+                if (texto != null) texto = texto.TrimEnd();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }          
+            
             return texto;
         }
     }

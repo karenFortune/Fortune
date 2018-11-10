@@ -18,8 +18,17 @@
         color: #fff;
         background-color: #006bb3;
     }
+
+    #nuevo-color {
+        margin-left: 50px;
+        margin-top: 1px;
+        width: 145px;
+        height: 40px;
+        border: none;
+        font-size: 15px;
+        font-weight: 600;
+    }
 </style>
-<h2>Administraci&oacute;n de Colores</h2>
 @{
     if (TempData["colorOK"] != null)
     {
@@ -63,51 +72,60 @@
     }
 
 }
-<p>
-    <a href="@Url.Action("CrearColor")">
-        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add New Color
-        </button>
-    </a>
-</p>
-<br />
-<table class="table table-striped" id="tablaColores">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdColor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CodigoColor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DescripcionColor)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IdColor)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CodigoColor)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DescripcionColor)
-                </td>
-                <td>
-                    @Html.ActionLink(" ", "Editar", new { id = item.IdColor }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Edit Color" }) |
-                    @Html.ActionLink(" ", "Detalles", new { id = item.IdColor }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details Color" }) |
-                    @Html.ActionLink(" ", "Eliminar", new { id = item.IdColor }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Delete Color" })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <div class="panel panel-primary" id="consultaPO">
+            <div class="panel-heading">
+                <h3>
+                    Administration of Colors
+                </h3>
+            </div>
+            <br />
+            <p>
+                <a href="@Url.Action("CrearColor")">
+                    <button type="button" class="btn btn-primary" id="nuevo-color" data-toggle="modal">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add New Color
+                    </button>
+                </a>
+            </p>
+            <br />
+            <table class="table table-striped" id="tablaColores">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IdColor)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CodigoColor)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DescripcionColor)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdColor)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CodigoColor)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DescripcionColor)
+                            </td>
+                            <td>
+                                @Html.ActionLink(" ", "Editar", new { id = item.IdColor }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Edit Color" }) |
+                                @Html.ActionLink(" ", "Detalles", new { id = item.IdColor }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details Color" }) |
+                                @Html.ActionLink(" ", "Eliminar", new { id = item.IdColor }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Delete Color" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
 <script>
 
     $(document).ready(function () {

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<FortuneSystem.Models.Pedidos.OrdenesCompra>
 
 @{
-    ViewBag.Title = "RECEPCIÓN PO";
+    ViewBag.Title = "RECEPTION PO";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link href="~/Content/base_m.css" rel="stylesheet" />
@@ -109,7 +109,7 @@
 }
 
         </div>
-<div class="container-fluid" style="margin-left:20em; margin-right:10em;">
+<div class="container-fluid" style="margin-left:20em; margin-right:10em; ">
     <div class="panel panel-primary" id="listaPO">
         <div class="panel-heading">
             <h2>Purchase Orders</h2>
@@ -146,7 +146,7 @@
 
         <div id="botones"></div>
         <br />
-        <div id="div_tabla_estilos" style="width: 100%; height:300px; overflow:auto; ">
+        <div id="div_tabla_estilos" style="width: 100%; height:670px; overflow:auto; ">
             <table align="center" class="table table-striped" id="tablaPO">
                 <thead>
                     <tr>
@@ -168,10 +168,7 @@
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.TotalUnidades)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.IdStatus)
-                        </th>
+                        </th>                        
                         <th>ACTIONS</th>
                     </tr>
                 </thead>
@@ -197,10 +194,7 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.TotalUnidades)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.CatStatus.Estado)
-                            </td>
+                            </td>                            
                             <td>
                                 @Html.ActionLink(" ", "Detalles", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details Style" }) |
                                 @Html.ActionLink(" ", "Revision", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-check", @style = "color:black", @Title = "Check PO", onclick = "event.preventDefault();ConfirmRev(this)" }) |

@@ -3,12 +3,26 @@
 @{
     ViewBag.Title = "Login";
 }
+<link rel="stylesheet" href="~/Content/alertifyjs/css/alertify.min.css" />
+<link rel="stylesheet" href="~/Content/alertifyjs/css/themes/default.min.css" />
+<script src="~/Content/alertifyjs/alertify.min.js"></script>
 
 @Styles.Render("~/Content/css")
 @Scripts.Render("~/bundles/modernizr")
+
 @using (Html.BeginForm())
 {
-    <h2 class="text-center">Acceso a Usuarios</h2>
+    <h2 class="text-center">Sing In</h2>
+  
+        if (TempData["loginError"] != null)
+        {
+            <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["loginError"])), 'error', 5, null);
+
+            </script>
+        }
+  
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
@@ -24,6 +38,7 @@
                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                                                 <!--<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">-->
                                                 @Html.EditorFor(model => model.NoEmpleado, new { htmlAttributes = new { @type = "number", @class = "form-control", @placeholder = "Employee number" } })
+                                                @Html.ValidationMessageFor(model => model.NoEmpleado, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -35,6 +50,7 @@
                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                                 <!--<input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">-->
                                                 @Html.EditorFor(model => model.Contrasena, new { htmlAttributes = new { @type = "password", @class = "form-control", @placeholder = "Password" } })
+                                                @Html.ValidationMessageFor(model => model.Contrasena, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -42,7 +58,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-5 col-sm-offset-3">
-                                            <input type="submit" name="login-submit" id="login" class="form-control btn btn-success btn-block" value="Log in">
+                                            <input type="submit" name="login-submit" id="login" class="form-control btn btn-success btn-block" value="Login">
                                         </div>
                                     </div>
                                 </div>

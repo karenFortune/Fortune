@@ -36,6 +36,7 @@ namespace FortuneSystem.Models.Usuarios
                 usuarios.Cargo = Convert.ToInt32(leerFilas["Cargo"]);
                 usuarios.Email = leerFilas["Email"].ToString();
                 usuarios.Contrasena = leerFilas["Contrasena"].ToString();
+                usuarios.NombreCompleto = usuarios.Nombres + " " + usuarios.Apellidos;
                 roles.Rol= leerFilas["rol"].ToString();
                 usuarios.CatRoles = roles;
                 listUsuarios.Add(usuarios);
@@ -157,6 +158,28 @@ namespace FortuneSystem.Models.Usuarios
             {
                 cmd.Connection = conex.AbrirConexion();
                 cmd.CommandText = "SELECT Id,CONCAT( Nombres,' ', Apellidos) AS Nombre  FROM Usuarios WHERE NoEmpleado='" + noEmpleado + "'";
+                cmd.CommandType = CommandType.Text;
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    return reader["Nombre"].ToString();
+                }
+                conex.CerrarConexion();
+            }
+            finally { conex.CerrarConexion(); }
+            return "";
+        }
+
+        // Obtenernombre de un usuario 
+        public string Obtener_Nombre_Usuario_PorID(int idEmpleado)
+        {
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
+            Conexion conex = new Conexion();
+            try
+            {
+                cmd.Connection = conex.AbrirConexion();
+                cmd.CommandText = "SELECT CONCAT( Nombres,' ', Apellidos) AS Nombre  FROM Usuarios WHERE Id='" + idEmpleado + "'";
                 cmd.CommandType = CommandType.Text;
                 reader = cmd.ExecuteReader();
                 while (reader.Read())

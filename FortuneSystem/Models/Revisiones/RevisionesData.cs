@@ -9,45 +9,57 @@ namespace FortuneSystem.Models.Revisiones
 {
     public class RevisionesData
     {
-        private Conexion conn = new Conexion();
-        private SqlCommand comando = new SqlCommand();
-        private SqlDataReader leer = null;
+        
         //Permite crear revisiones de un PO
         public void AgregarRevisionesPO(Revision revision)
         {
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "AgregarRevisionPO";
-            comando.CommandType = CommandType.StoredProcedure;
+            Conexion conn = new Conexion();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "AgregarRevisionPO";
+                comando.CommandType = CommandType.StoredProcedure;
 
-            comando.Parameters.AddWithValue("@idPedido", revision.IdPedido);
-            comando.Parameters.AddWithValue("@idPedidoRevision", revision.IdRevisionPO);
-            comando.Parameters.AddWithValue("@dateRevision", revision.FechaRevision);
-            comando.Parameters.AddWithValue("@idStatus", revision.IdStatus);
+                comando.Parameters.AddWithValue("@idPedido", revision.IdPedido);
+                comando.Parameters.AddWithValue("@idPedidoRevision", revision.IdRevisionPO);
+                comando.Parameters.AddWithValue("@dateRevision", revision.FechaRevision);
+                comando.Parameters.AddWithValue("@idStatus", revision.IdStatus);
 
-            comando.ExecuteNonQuery();
-            conn.CerrarConexion();
+                comando.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }          
 
         }
-
-
 
         public int ObtenerNumeroRevisiones(int? id)
         {
             int rev = 0;
             Conexion conex = new Conexion();
-            SqlCommand coman = new SqlCommand();
-            SqlDataReader leerF = null;
-            coman.Connection = conex.AbrirConexion();
-            coman.CommandText = "select COUNT(R.ID_PEDIDO) AS REVISIONES from REVISIONES_PO R " +
-                    "INNER JOIN PEDIDO PE ON PE.ID_PEDIDO=R.ID_PEDIDO " +
-                    "WHERE R.ID_PEDIDO='" + id + "' ";
-            leerF = coman.ExecuteReader();
-            while (leerF.Read())
+            try
             {
-                rev += Convert.ToInt32(leerF["REVISIONES"]);
+                SqlCommand coman = new SqlCommand();
+                SqlDataReader leerF = null;
+                coman.Connection = conex.AbrirConexion();
+                coman.CommandText = "select COUNT(R.ID_PEDIDO) AS REVISIONES from REVISIONES_PO R " +
+                        "INNER JOIN PEDIDO PE ON PE.ID_PEDIDO=R.ID_PEDIDO " +
+                        "WHERE R.ID_PEDIDO='" + id + "' ";
+                leerF = coman.ExecuteReader();
+                while (leerF.Read())
+                {
+                    rev += Convert.ToInt32(leerF["REVISIONES"]);
+                }
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }           
             return rev;
         }
 
@@ -56,19 +68,26 @@ namespace FortuneSystem.Models.Revisiones
         {
             int rev = 0;
             Conexion conex = new Conexion();
-            SqlCommand coman = new SqlCommand();
-            SqlDataReader leerF = null;
-            coman.Connection = conex.AbrirConexion();
-            coman.CommandText = "select COUNT(R.ID_REVISION_PO) AS REVISIONES from REVISIONES_PO R " +
-                    "INNER JOIN PEDIDO PE ON PE.ID_PEDIDO=R.ID_REVISION_PO " +
-                    "WHERE R.ID_REVISION_PO='" + id + "' ";
-            leerF = coman.ExecuteReader();
-            while (leerF.Read())
+            try
             {
-                rev += Convert.ToInt32(leerF["REVISIONES"]);
+                SqlCommand coman = new SqlCommand();
+                SqlDataReader leerF = null;
+                coman.Connection = conex.AbrirConexion();
+                coman.CommandText = "select COUNT(R.ID_REVISION_PO) AS REVISIONES from REVISIONES_PO R " +
+                        "INNER JOIN PEDIDO PE ON PE.ID_PEDIDO=R.ID_REVISION_PO " +
+                        "WHERE R.ID_REVISION_PO='" + id + "' ";
+                leerF = coman.ExecuteReader();
+                while (leerF.Read())
+                {
+                    rev += Convert.ToInt32(leerF["REVISIONES"]);
+                }
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }           
             return rev;
         }
 
@@ -76,18 +95,25 @@ namespace FortuneSystem.Models.Revisiones
         {
             int rev = 0;
             Conexion conex = new Conexion();
-            SqlCommand coman = new SqlCommand();
-            SqlDataReader leerF = null;
-            coman.Connection = conex.AbrirConexion();
-            coman.CommandText = "SELECT count(R.ID_PEDIDO)  AS REVISIONES FROM PEDIDO P INNER JOIN REVISIONES_PO AS R ON  P.ID_PEDIDO=R.ID_PEDIDO " +
-                    "WHERE R.ID_REVISION_PO='" + id + "' ";
-            leerF = coman.ExecuteReader();
-            while (leerF.Read())
+            try
             {
-                rev += Convert.ToInt32(leerF["REVISIONES"]);
+                SqlCommand coman = new SqlCommand();
+                SqlDataReader leerF = null;
+                coman.Connection = conex.AbrirConexion();
+                coman.CommandText = "SELECT count(R.ID_PEDIDO)  AS REVISIONES FROM PEDIDO P INNER JOIN REVISIONES_PO AS R ON  P.ID_PEDIDO=R.ID_PEDIDO " +
+                        "WHERE R.ID_REVISION_PO='" + id + "' ";
+                leerF = coman.ExecuteReader();
+                while (leerF.Read())
+                {
+                    rev += Convert.ToInt32(leerF["REVISIONES"]);
+                }
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }          
             return rev;
         }
 

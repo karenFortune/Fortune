@@ -1,11 +1,11 @@
 ﻿@model FortuneSystem.Models.Usuarios.CatUsuario
 
 @{
-    ViewBag.Title = "Editar";
+    ViewBag.Title = "Edit Users";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Editar Usuario</h2>
+<h2>Edit User</h2>
 
 
 @using (Html.BeginForm())
@@ -67,14 +67,14 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Guardar" class="btn btn-success" />
+                <input type="submit" value="Save" class="btn btn-success" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Regresar", "Index")
+    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

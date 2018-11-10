@@ -253,6 +253,9 @@
     <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="Rotativa, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rotativa.1.7.3\lib\net461\Rotativa.dll</HintPath>
+    </Reference>
     <Reference Include="Rotativa.AspNetCore, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Rotativa.AspNetCore.1.0.6\lib\netstandard2.0\Rotativa.AspNetCore.dll</HintPath>
     </Reference>
@@ -502,7 +505,11 @@
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\PackingController.cs" />
+    <Compile Include="Controllers\ReportPDFController.cs" />
+    <Compile Include="Controllers\PDFController.cs" />
     <Compile Include="Controllers\PedidosController.cs" />
+    <Compile Include="Controllers\PNLController.cs" />
     <Compile Include="Controllers\POSummaryController.cs" />
     <Compile Include="Controllers\PrintShopController.cs" />
     <Compile Include="Controllers\QRCodeController.cs" />
@@ -577,9 +584,15 @@
     <Compile Include="Models\Items\ItemTallaData.cs" />
     <Compile Include="Models\Login\LoginData.cs" />
     <Compile Include="Models\OrderModel\OrderModel.cs" />
+    <Compile Include="Models\Packing\Packing.cs" />
+    <Compile Include="Models\Packing\PackingData.cs" />
+    <Compile Include="Models\Packing\PackingSize.cs" />
+    <Compile Include="Models\Packing\PackingTypeSize.cs" />
     <Compile Include="Models\Pedidos\Pedidos.cs" />
     <Compile Include="Models\Pedidos\PedidosData.cs" />
     <Compile Include="Models\Pedidos\ResumenPO.cs" />
+    <Compile Include="Models\PNL\pnl.cs" />
+    <Compile Include="Models\PNL\PnlData.cs" />
     <Compile Include="Models\PrintShop\PrintShop.cs" />
     <Compile Include="Models\PrintShop\PrintShopData.cs" />
     <Compile Include="Models\QRCodeModel.cs" />
@@ -626,6 +639,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\cssGeneral\estiloArte.css" />
+    <Content Include="Content\cssGeneral\estiloRadioButtonPrintS.css" />
     <Content Include="Content\cssGeneral\estiloRadioButton.css" />
     <Content Include="Content\DataTables\AutoFill-2.3.0\css\autoFill.bootstrap.css" />
     <Content Include="Content\DataTables\AutoFill-2.3.0\css\autoFill.bootstrap.min.css" />
@@ -1628,6 +1642,10 @@
       <DependentUpon>LoginModel.edmx</DependentUpon>
       <LastGenOutput>LoginModel.cs</LastGenOutput>
     </Content>
+    <Content Include="Rotativa\help-wkhtmltoimage.txt" />
+    <Content Include="Rotativa\help-wkhtmltopdf.txt" />
+    <Content Include="Rotativa\wkhtmltoimage.exe" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -1800,13 +1818,21 @@
     <Content Include="FortunespDB.edmx.diagram">
       <DependentUpon>FortunespDB.edmx</DependentUpon>
     </Content>
+    <Content Include="App_Browsers\qt.browser" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FortuneSystem - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\general\actualizarPallet.js" />
     <Content Include="Scripts\general\agregarNuevoColoryEstilo.js" />
+    <Content Include="Scripts\general\agregarPallet.js" />
     <Content Include="Scripts\general\AgregarTallas.js" />
+    <Content Include="Scripts\general\AgregarTallasPacking.js" />
+    <Content Include="Scripts\general\AgregarTallasPackingPPK.js" />
     <Content Include="Scripts\general\autocomplete.js" />
     <Content Include="Scripts\general\calculosPrintShop.js" />
+    <Content Include="Scripts\general\obtenerListadoPacking.js" />
+    <Content Include="Scripts\general\obtenerListadoPackingHT.js" />
+    <Content Include="Scripts\general\obtenerListadoPnl.js" />
     <Content Include="Scripts\general\obtenerListado.js" />
     <Content Include="Scripts\general\obtenerListaTallasPorGenero.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -1924,10 +1950,18 @@
     <Content Include="Views\Arte\Create.cshtml" />
     <Content Include="Views\Arte\ListaImgArte.cshtml" />
     <Content Include="Views\Arte\Index.cshtml" />
+    <Content Include="Views\Shared\Header.cshtml" />
+    <Content Include="Views\PNL\Detalles.cshtml" />
+    <Content Include="Views\PNL\Index.cshtml" />
+    <Content Include="Views\Packing\Detalles.cshtml" />
+    <Content Include="Views\Packing\Index.cshtml" />
+    <Content Include="Views\Arte\FileUpload.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\imagenesArte\" />
     <Folder Include="Models\Shared\" />
+    <Folder Include="Views\ReportPDF\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

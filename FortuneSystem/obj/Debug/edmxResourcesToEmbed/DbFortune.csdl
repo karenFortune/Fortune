@@ -1,0 +1,1494 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FortuneTestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="body_types">
+    <Key>
+      <PropertyRef Name="id_body_type" />
+    </Key>
+    <Property Name="id_body_type" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="body_type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="CAT_BRAND_CODES">
+    <Key>
+      <PropertyRef Name="ID_BRAND" />
+    </Key>
+    <Property Name="ID_BRAND" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BRAND" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="STYLE" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="CAT_COLORES">
+    <Key>
+      <PropertyRef Name="ID_COLOR" />
+    </Key>
+    <Property Name="ID_COLOR" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CODIGO_COLOR" Type="String" MaxLength="15" FixedLength="true" Unicode="false" />
+    <Property Name="DESCRIPCION" Type="String" MaxLength="50" FixedLength="true" Unicode="false" />
+  </EntityType>
+  <EntityType Name="CAT_CUSTOMER">
+    <Key>
+      <PropertyRef Name="CUSTOMER" />
+    </Key>
+    <Property Name="CUSTOMER" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NAME" Type="String" MaxLength="30" FixedLength="true" Unicode="false" />
+    <NavigationProperty Name="PEDIDOes" Relationship="Self.FK__PEDIDO__CUSTOMER__04E4BC85" FromRole="CAT_CUSTOMER" ToRole="PEDIDO" />
+  </EntityType>
+  <EntityType Name="CAT_CUSTOMER_PO">
+    <Key>
+      <PropertyRef Name="CUSTOMER_FINAL" />
+    </Key>
+    <Property Name="CUSTOMER_FINAL" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NAME_FINAL" Type="String" MaxLength="100" FixedLength="true" Unicode="false" />
+    <NavigationProperty Name="PEDIDOes" Relationship="Self.FK__PEDIDO__CUSTOMER__05D8E0BE" FromRole="CAT_CUSTOMER_PO" ToRole="PEDIDO" />
+    <NavigationProperty Name="PEDIDOes1" Relationship="Self.FK__PEDIDO__CUSTOMER__114A936A" FromRole="CAT_CUSTOMER_PO" ToRole="PEDIDO" />
+  </EntityType>
+  <EntityType Name="CAT_FABRIC_CODES">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FABRIC" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CODE" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="PO_SUMMARY" Relationship="Self.FK__PO_SUMMAR__ID_TE__3B40CD36" FromRole="CAT_FABRIC_CODES" ToRole="PO_SUMMARY" />
+  </EntityType>
+  <EntityType Name="CAT_GENDER">
+    <Key>
+      <PropertyRef Name="ID_GENDER" />
+    </Key>
+    <Property Name="ID_GENDER" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GENERO" Type="String" MaxLength="50" FixedLength="true" Unicode="false" />
+    <Property Name="GENERO_CODE" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="CAT_GENERO_TALLA" Relationship="Self.FK__CAT_GENER__ID_GE__236943A5" FromRole="CAT_GENDER" ToRole="CAT_GENERO_TALLA" />
+    <NavigationProperty Name="PO_SUMMARY" Relationship="Self.FK__PO_SUMMAR__ID_GE__160F4887" FromRole="CAT_GENDER" ToRole="PO_SUMMARY" />
+  </EntityType>
+  <EntityType Name="CAT_GENERO_TALLA">
+    <Key>
+      <PropertyRef Name="ID_GEN_TALLA" />
+    </Key>
+    <Property Name="ID_GEN_TALLA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ID_GENERO" Type="Int32" />
+    <Property Name="ID_TALLA" Type="Int32" />
+    <NavigationProperty Name="CAT_GENDER" Relationship="Self.FK__CAT_GENER__ID_GE__236943A5" FromRole="CAT_GENERO_TALLA" ToRole="CAT_GENDER" />
+    <NavigationProperty Name="CAT_ITEM_SIZE" Relationship="Self.FK__CAT_GENER__ID_TA__245D67DE" FromRole="CAT_GENERO_TALLA" ToRole="CAT_ITEM_SIZE" />
+  </EntityType>
+  <EntityType Name="CAT_ITEM_SIZE">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TALLA" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="CAT_GENERO_TALLA" Relationship="Self.FK__CAT_GENER__ID_TA__245D67DE" FromRole="CAT_ITEM_SIZE" ToRole="CAT_GENERO_TALLA" />
+    <NavigationProperty Name="ITEM_SIZE" Relationship="Self.FK__ITEM_SIZE__TALLA__3587F3E0" FromRole="CAT_ITEM_SIZE" ToRole="ITEM_SIZE" />
+    <NavigationProperty Name="PRINTSHOPs" Relationship="Self.FK__PRINTSHOP__ID_TA__16CE6296" FromRole="CAT_ITEM_SIZE" ToRole="PRINTSHOP" />
+  </EntityType>
+  <EntityType Name="CAT_PRODUCT_TYPE_CODES">
+    <Key>
+      <PropertyRef Name="ID_TYPE_CODE" />
+    </Key>
+    <Property Name="ID_TYPE_CODE" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PRODUCT_TYPE_CODE" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="DESCRIPTION" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="GROUP_TYPE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="PO_SUMMARY" Relationship="Self.FK__PO_SUMMAR__ID_PR__3C34F16F" FromRole="CAT_PRODUCT_TYPE_CODES" ToRole="PO_SUMMARY" />
+  </EntityType>
+  <EntityType Name="CAT_STATUS">
+    <Key>
+      <PropertyRef Name="ID_STATUS" />
+    </Key>
+    <Property Name="ID_STATUS" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ESTADO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="PEDIDOes" Relationship="Self.FK__PEDIDO__ID_STATU__151B244E" FromRole="CAT_STATUS" ToRole="PEDIDO" />
+    <NavigationProperty Name="REVISIONES_PO" Relationship="Self.FK__REVISIONE__ID_ST__46B27FE2" FromRole="CAT_STATUS" ToRole="REVISIONES_PO" />
+  </EntityType>
+  <EntityType Name="categorias_inventarios">
+    <Key>
+      <PropertyRef Name="id_categoria" />
+    </Key>
+    <Property Name="id_categoria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="categoria" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="estilos_fabrica">
+    <Key>
+      <PropertyRef Name="id_estilo" />
+    </Key>
+    <Property Name="id_estilo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="amt_item" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="size" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="master_group" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="groups" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="product_type" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="fabric_type" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="fiber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="yarn" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="division" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="pack_type" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="gender" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="fabric_percents">
+    <Key>
+      <PropertyRef Name="id_fabric_percent" />
+    </Key>
+    <Property Name="id_fabric_percent" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="fabric_percent" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="fabricante">
+    <Key>
+      <PropertyRef Name="id_fabricante" />
+    </Key>
+    <Property Name="id_fabricante" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="fabricante1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="family_trims">
+    <Key>
+      <PropertyRef Name="id_family_trim" />
+    </Key>
+    <Property Name="id_family_trim" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="family_trim" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="IMAGEN_ARTE">
+    <Key>
+      <PropertyRef Name="Id_Img_Arte" />
+    </Key>
+    <Property Name="Id_Img_Arte" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Id_Summary" Type="Int32" />
+    <Property Name="img_Arte" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="img_PNL" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="Id_UPC" Type="Int32" />
+    <NavigationProperty Name="PO_SUMMARY" Relationship="Self.FK__IMAGEN_AR__Id_Su__22401542" FromRole="IMAGEN_ARTE" ToRole="PO_SUMMARY" />
+    <NavigationProperty Name="UPC_ARTE" Relationship="Self.FK__IMAGEN_AR__Id_UP__2334397B" FromRole="IMAGEN_ARTE" ToRole="UPC_ARTE" />
+  </EntityType>
+  <EntityType Name="inventario">
+    <Key>
+      <PropertyRef Name="id_inventario" />
+    </Key>
+    <Property Name="id_inventario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_sucursal" Type="Int32" />
+    <Property Name="id_pedido" Type="Int32" />
+    <Property Name="id_pais" Type="Int32" />
+    <Property Name="id_fabricante" Type="Int32" />
+    <Property Name="mill_po" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="amt_item" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="id_categoria_inventario" Type="Int32" />
+    <Property Name="id_color" Type="Int32" />
+    <Property Name="id_body_type" Type="Int32" />
+    <Property Name="id_genero" Type="Int32" />
+    <Property Name="id_fabric_type" Type="Int32" />
+    <Property Name="id_location" Type="Int32" />
+    <Property Name="total" Type="Int32" />
+    <Property Name="id_size" Type="Int32" />
+    <Property Name="id_customer" Type="Int32" />
+    <Property Name="id_customer_final" Type="Int32" />
+    <Property Name="minimo" Type="Int32" />
+    <Property Name="notas" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="id_fabric_percent" Type="Int32" />
+    <Property Name="stock" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="date_comment" Type="DateTime" Precision="3" />
+    <Property Name="comment" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="id_family_trim" Type="Int32" />
+    <Property Name="id_unit" Type="Int32" />
+    <Property Name="id_trim" Type="Int32" />
+    <Property Name="descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="ITEM_DESCRIPTION">
+    <Key>
+      <PropertyRef Name="ITEM_ID" />
+    </Key>
+    <Property Name="ITEM_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ITEM_STYLE" Type="String" MaxLength="15" FixedLength="true" Unicode="false" />
+    <Property Name="DESCRIPTION" Type="String" MaxLength="50" FixedLength="true" Unicode="false" />
+  </EntityType>
+  <EntityType Name="ITEM_SIZE">
+    <Key>
+      <PropertyRef Name="ID_TALLA" />
+    </Key>
+    <Property Name="ID_TALLA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TALLA_ITEM" Type="Int32" />
+    <Property Name="CANTIDAD" Type="Int32" />
+    <Property Name="EXTRAS" Type="Int32" />
+    <Property Name="EJEMPLOS" Type="Int32" />
+    <Property Name="ID_SUMMARY" Type="Int32" />
+    <NavigationProperty Name="CAT_ITEM_SIZE" Relationship="Self.FK__ITEM_SIZE__TALLA__3587F3E0" FromRole="ITEM_SIZE" ToRole="CAT_ITEM_SIZE" />
+    <NavigationProperty Name="PO_SUMMARY" Relationship="Self.FK__ITEM_SIZE__ID_SU__367C1819" FromRole="ITEM_SIZE" ToRole="PO_SUMMARY" />
+  </EntityType>
+  <EntityType Name="lugare">
+    <Key>
+      <PropertyRef Name="id_lugar" />
+    </Key>
+    <Property Name="id_lugar" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="lugar" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="tipo_lugar" Type="Int32" />
+  </EntityType>
+  <EntityType Name="pais">
+    <Key>
+      <PropertyRef Name="id_pais" />
+    </Key>
+    <Property Name="id_pais" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="pais1" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="PEDIDO">
+    <Key>
+      <PropertyRef Name="ID_PEDIDO" />
+    </Key>
+    <Property Name="ID_PEDIDO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PO" Type="String" MaxLength="30" FixedLength="true" Unicode="false" />
+    <Property Name="VPO" Type="Int32" />
+    <Property Name="CUSTOMER" Type="Int32" Nullable="false" />
+    <Property Name="CUSTOMER_FINAL" Type="Int32" Nullable="false" />
+    <Property Name="DATE_CANCEL" Type="DateTime" Precision="0" />
+    <Property Name="DATE_ORDER" Type="DateTime" Precision="0" />
+    <Property Name="TOTAL_UNITS" Type="Int32" />
+    <Property Name="ID_STATUS" Type="Int32" />
+    <NavigationProperty Name="CAT_CUSTOMER" Relationship="Self.FK__PEDIDO__CUSTOMER__04E4BC85" FromRole="PEDIDO" ToRole="CAT_CUSTOMER" />
+    <NavigationProperty Name="CAT_CUSTOMER_PO" Relationship="Self.FK__PEDIDO__CUSTOMER__05D8E0BE" FromRole="PEDIDO" ToRole="CAT_CUSTOMER_PO" />
+    <NavigationProperty Name="CAT_CUSTOMER_PO1" Relationship="Self.FK__PEDIDO__CUSTOMER__114A936A" FromRole="PEDIDO" ToRole="CAT_CUSTOMER_PO" />
+    <NavigationProperty Name="CAT_STATUS" Relationship="Self.FK__PEDIDO__ID_STATU__151B244E" FromRole="PEDIDO" ToRole="CAT_STATUS" />
+    <NavigationProperty Name="REVISIONES_PO" Relationship="Self.FK__REVISIONE__ID_PE__5224328E" FromRole="PEDIDO" ToRole="REVISIONES_PO" />
+    <NavigationProperty Name="REVISIONES_PO1" Relationship="Self.FK__REVISIONE__ID_RE__47A6A41B" FromRole="PEDIDO" ToRole="REVISIONES_PO" />
+  </EntityType>
+  <EntityType Name="PO_SUMMARY">
+    <Key>
+      <PropertyRef Name="ID_PO_SUMMARY" />
+    </Key>
+    <Property Name="ID_PO_SUMMARY" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ITEM_ID" Type="Int32" Nullable="false" />
+    <Property Name="ID_COLOR" Type="Int32" Nullable="false" />
+    <Property Name="QTY" Type="Int32" />
+    <Property Name="PRICE" Type="Double" />
+    <Property Name="ID_PEDIDOS" Type="Int32" Nullable="false" />
+    <Property Name="ID_GENDER" Type="Int32" />
+    <Property Name="ID_TELA" Type="Int32" />
+    <Property Name="ID_PRODUCT_TYPE" Type="Int32" />
+    <NavigationProperty Name="CAT_FABRIC_CODES" Relationship="Self.FK__PO_SUMMAR__ID_TE__3B40CD36" FromRole="PO_SUMMARY" ToRole="CAT_FABRIC_CODES" />
+    <NavigationProperty Name="CAT_GENDER" Relationship="Self.FK__PO_SUMMAR__ID_GE__160F4887" FromRole="PO_SUMMARY" ToRole="CAT_GENDER" />
+    <NavigationProperty Name="CAT_PRODUCT_TYPE_CODES" Relationship="Self.FK__PO_SUMMAR__ID_PR__3C34F16F" FromRole="PO_SUMMARY" ToRole="CAT_PRODUCT_TYPE_CODES" />
+    <NavigationProperty Name="IMAGEN_ARTE" Relationship="Self.FK__IMAGEN_AR__Id_Su__22401542" FromRole="PO_SUMMARY" ToRole="IMAGEN_ARTE" />
+    <NavigationProperty Name="ITEM_SIZE" Relationship="Self.FK__ITEM_SIZE__ID_SU__367C1819" FromRole="PO_SUMMARY" ToRole="ITEM_SIZE" />
+    <NavigationProperty Name="PRINTSHOPs" Relationship="Self.FK__PRINTSHOP__ID_SU__14E61A24" FromRole="PO_SUMMARY" ToRole="PRINTSHOP" />
+  </EntityType>
+  <EntityType Name="PRINTSHOP">
+    <Key>
+      <PropertyRef Name="ID_PRINTSHOP" />
+    </Key>
+    <Property Name="ID_PRINTSHOP" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ID_SUMMARY" Type="Int32" />
+    <Property Name="ID_BATCH" Type="Int32" />
+    <Property Name="ID_TALLA" Type="Int32" />
+    <Property Name="PRINTED" Type="Int32" />
+    <Property Name="MISPRINT" Type="Int32" />
+    <Property Name="DEFECT" Type="Int32" />
+    <Property Name="MAQUINA" Type="Int32" />
+    <Property Name="TURNO" Type="Int32" />
+    <Property Name="TOTAL" Type="Int32" />
+    <Property Name="ID_USUARIO" Type="Int32" />
+    <NavigationProperty Name="CAT_ITEM_SIZE" Relationship="Self.FK__PRINTSHOP__ID_TA__16CE6296" FromRole="PRINTSHOP" ToRole="CAT_ITEM_SIZE" />
+    <NavigationProperty Name="PO_SUMMARY" Relationship="Self.FK__PRINTSHOP__ID_SU__14E61A24" FromRole="PRINTSHOP" ToRole="PO_SUMMARY" />
+    <NavigationProperty Name="Usuario" Relationship="Self.FK__PRINTSHOP__ID_US__1C873BEC" FromRole="PRINTSHOP" ToRole="Usuarios" />
+  </EntityType>
+  <EntityType Name="proveedore">
+    <Key>
+      <PropertyRef Name="id_proveedor" />
+    </Key>
+    <Property Name="id_proveedor" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="proveedor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="recibo">
+    <Key>
+      <PropertyRef Name="id_recibo" />
+    </Key>
+    <Property Name="id_recibo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="po" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="fecha" Type="DateTime" Precision="3" />
+    <Property Name="total" Type="Int32" />
+    <Property Name="id_usuario" Type="Int32" />
+    <Property Name="id_sucursal" Type="Int32" />
+    <Property Name="id_origen" Type="Int32" />
+  </EntityType>
+  <EntityType Name="recibos_cajas">
+    <Key>
+      <PropertyRef Name="id_recibo_caja" />
+    </Key>
+    <Property Name="id_recibo_caja" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_recibo_item" Type="Int32" />
+    <Property Name="id_recibo" Type="Int32" />
+    <Property Name="total_cajas" Type="Int32" />
+    <Property Name="cantidad_caja" Type="Int32" />
+    <Property Name="id_talla" Type="Int32" />
+  </EntityType>
+  <EntityType Name="REVISIONES_PO">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ID_PEDIDO" Type="Int32" Nullable="false" />
+    <Property Name="ID_REVISION_PO" Type="Int32" Nullable="false" />
+    <Property Name="FECHA_REVISION" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="ID_STATUS" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="CAT_STATUS" Relationship="Self.FK__REVISIONE__ID_ST__46B27FE2" FromRole="REVISIONES_PO" ToRole="CAT_STATUS" />
+    <NavigationProperty Name="PEDIDO" Relationship="Self.FK__REVISIONE__ID_PE__5224328E" FromRole="REVISIONES_PO" ToRole="PEDIDO" />
+    <NavigationProperty Name="PEDIDO1" Relationship="Self.FK__REVISIONE__ID_RE__47A6A41B" FromRole="REVISIONES_PO" ToRole="PEDIDO" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="id_Rol" />
+    </Key>
+    <Property Name="id_Rol" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="rol" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Usuarios" Relationship="Self.FK__Usuarios__Cargo__02FC7413" FromRole="Roles" ToRole="Usuarios" />
+    <NavigationProperty Name="Usuarios1" Relationship="Self.FK__Usuarios__Cargo__3D5E1FD2" FromRole="Roles" ToRole="Usuarios" />
+  </EntityType>
+  <EntityType Name="salida">
+    <Key>
+      <PropertyRef Name="id_salida" />
+    </Key>
+    <Property Name="id_salida" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="fecha" Type="DateTime" Precision="3" />
+    <Property Name="total" Type="Int32" />
+    <Property Name="id_usuario" Type="Int32" />
+    <Property Name="id_origen" Type="Int32" />
+    <Property Name="id_destino" Type="Int32" />
+    <Property Name="estado_aprobacion" Type="Int32" />
+    <Property Name="estado_entrega" Type="Int32" />
+    <Property Name="sello" Type="Int32" />
+    <Property Name="responsable" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="id_envio" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="fecha_solicitud" Type="DateTime" Precision="3" />
+    <Property Name="driver" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="pallet" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="salidas_items">
+    <Key>
+      <PropertyRef Name="id_salida_item" />
+    </Key>
+    <Property Name="id_salida" Type="Int32" />
+    <Property Name="id_salida_item" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_inventario" Type="Int32" />
+    <Property Name="cantidad" Type="Int32" />
+  </EntityType>
+  <EntityType Name="sello">
+    <Key>
+      <PropertyRef Name="id_sello" />
+    </Key>
+    <Property Name="id_sello" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="inicio" Type="Int32" />
+    <Property Name="final" Type="Int32" />
+    <Property Name="usado" Type="Int32" />
+    <Property Name="fecha_registro" Type="DateTime" Precision="3" />
+    <Property Name="id_sucursal" Type="Int32" />
+  </EntityType>
+  <EntityType Name="sucursale">
+    <Key>
+      <PropertyRef Name="id_sucursal" />
+    </Key>
+    <Property Name="id_sucursal" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="sucursal" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="direccion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="trim">
+    <Key>
+      <PropertyRef Name="id_trim" />
+    </Key>
+    <Property Name="id_trim" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="trim1" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="ubicacione">
+    <Key>
+      <PropertyRef Name="id_ubicacion" />
+    </Key>
+    <Property Name="id_ubicacion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ubicacion" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="unit">
+    <Key>
+      <PropertyRef Name="id_unit" />
+    </Key>
+    <Property Name="id_unit" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="unit1" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="UPC_ARTE">
+    <Key>
+      <PropertyRef Name="Id_UPC" />
+    </Key>
+    <Property Name="Id_UPC" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UPC" Type="Int32" />
+    <NavigationProperty Name="IMAGEN_ARTE" Relationship="Self.FK__IMAGEN_AR__Id_UP__2334397B" FromRole="UPC_ARTE" ToRole="IMAGEN_ARTE" />
+  </EntityType>
+  <EntityType Name="Usuario">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NoEmpleado" Type="String" MaxLength="8" FixedLength="true" Unicode="false" />
+    <Property Name="Nombres" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Apellidos" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Cargo" Type="Int32" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Contrasena" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="id_sucursal" Type="Int32" />
+    <NavigationProperty Name="PRINTSHOPs" Relationship="Self.FK__PRINTSHOP__ID_US__1C873BEC" FromRole="Usuarios" ToRole="PRINTSHOP" />
+    <NavigationProperty Name="Role" Relationship="Self.FK__Usuarios__Cargo__02FC7413" FromRole="Usuarios" ToRole="Roles" />
+    <NavigationProperty Name="Role1" Relationship="Self.FK__Usuarios__Cargo__3D5E1FD2" FromRole="Usuarios" ToRole="Roles" />
+  </EntityType>
+  <EntityType Name="yarn">
+    <Key>
+      <PropertyRef Name="id_yarn" />
+    </Key>
+    <Property Name="id_yarn" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="yarn1" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="ITEM_SIZE_STAGING">
+    <Key>
+      <PropertyRef Name="ID_TALLA" />
+    </Key>
+    <Property Name="ID_TALLA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TALLA_ITEM" Type="Int32" />
+    <Property Name="CANTIDAD" Type="Int32" />
+    <Property Name="ID_SUMMARY" Type="Int32" />
+  </EntityType>
+  <EntityType Name="recibos_items">
+    <Key>
+      <PropertyRef Name="id_recibo_item" />
+    </Key>
+    <Property Name="id_recibo_item" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_recibo" Type="Int32" />
+    <Property Name="id_inventario" Type="Int32" />
+    <Property Name="amt_item" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="total" Type="Int32" />
+    <Property Name="mill_po" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="id_estilo" Type="Int32" />
+  </EntityType>
+  <EntityType Name="database_firewall_rules">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="name" />
+      <PropertyRef Name="start_ip_address" />
+      <PropertyRef Name="end_ip_address" />
+      <PropertyRef Name="create_date" />
+      <PropertyRef Name="modify_date" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="start_ip_address" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="end_ip_address" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="create_date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="modify_date" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <Association Name="FK__PEDIDO__CUSTOMER__04E4BC85">
+    <End Role="CAT_CUSTOMER" Type="Self.CAT_CUSTOMER" Multiplicity="1" />
+    <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_CUSTOMER">
+        <PropertyRef Name="CUSTOMER" />
+      </Principal>
+      <Dependent Role="PEDIDO">
+        <PropertyRef Name="CUSTOMER" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PEDIDO__CUSTOMER__05D8E0BE">
+    <End Role="CAT_CUSTOMER_PO" Type="Self.CAT_CUSTOMER_PO" Multiplicity="1" />
+    <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_CUSTOMER_PO">
+        <PropertyRef Name="CUSTOMER_FINAL" />
+      </Principal>
+      <Dependent Role="PEDIDO">
+        <PropertyRef Name="CUSTOMER_FINAL" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PEDIDO__CUSTOMER__114A936A">
+    <End Role="CAT_CUSTOMER_PO" Type="Self.CAT_CUSTOMER_PO" Multiplicity="1" />
+    <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_CUSTOMER_PO">
+        <PropertyRef Name="CUSTOMER_FINAL" />
+      </Principal>
+      <Dependent Role="PEDIDO">
+        <PropertyRef Name="CUSTOMER_FINAL" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PO_SUMMAR__ID_TE__3B40CD36">
+    <End Role="CAT_FABRIC_CODES" Type="Self.CAT_FABRIC_CODES" Multiplicity="0..1" />
+    <End Role="PO_SUMMARY" Type="Self.PO_SUMMARY" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_FABRIC_CODES">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="PO_SUMMARY">
+        <PropertyRef Name="ID_TELA" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__CAT_GENER__ID_GE__236943A5">
+    <End Role="CAT_GENDER" Type="Self.CAT_GENDER" Multiplicity="0..1" />
+    <End Role="CAT_GENERO_TALLA" Type="Self.CAT_GENERO_TALLA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_GENDER">
+        <PropertyRef Name="ID_GENDER" />
+      </Principal>
+      <Dependent Role="CAT_GENERO_TALLA">
+        <PropertyRef Name="ID_GENERO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PO_SUMMAR__ID_GE__160F4887">
+    <End Role="CAT_GENDER" Type="Self.CAT_GENDER" Multiplicity="0..1" />
+    <End Role="PO_SUMMARY" Type="Self.PO_SUMMARY" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_GENDER">
+        <PropertyRef Name="ID_GENDER" />
+      </Principal>
+      <Dependent Role="PO_SUMMARY">
+        <PropertyRef Name="ID_GENDER" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__CAT_GENER__ID_TA__245D67DE">
+    <End Role="CAT_ITEM_SIZE" Type="Self.CAT_ITEM_SIZE" Multiplicity="0..1" />
+    <End Role="CAT_GENERO_TALLA" Type="Self.CAT_GENERO_TALLA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_ITEM_SIZE">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="CAT_GENERO_TALLA">
+        <PropertyRef Name="ID_TALLA" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ITEM_SIZE__TALLA__3587F3E0">
+    <End Role="CAT_ITEM_SIZE" Type="Self.CAT_ITEM_SIZE" Multiplicity="0..1" />
+    <End Role="ITEM_SIZE" Type="Self.ITEM_SIZE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_ITEM_SIZE">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ITEM_SIZE">
+        <PropertyRef Name="TALLA_ITEM" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PRINTSHOP__ID_TA__16CE6296">
+    <End Role="CAT_ITEM_SIZE" Type="Self.CAT_ITEM_SIZE" Multiplicity="0..1" />
+    <End Role="PRINTSHOP" Type="Self.PRINTSHOP" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_ITEM_SIZE">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="PRINTSHOP">
+        <PropertyRef Name="ID_TALLA" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PO_SUMMAR__ID_PR__3C34F16F">
+    <End Role="CAT_PRODUCT_TYPE_CODES" Type="Self.CAT_PRODUCT_TYPE_CODES" Multiplicity="0..1" />
+    <End Role="PO_SUMMARY" Type="Self.PO_SUMMARY" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_PRODUCT_TYPE_CODES">
+        <PropertyRef Name="ID_TYPE_CODE" />
+      </Principal>
+      <Dependent Role="PO_SUMMARY">
+        <PropertyRef Name="ID_PRODUCT_TYPE" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PEDIDO__ID_STATU__151B244E">
+    <End Role="CAT_STATUS" Type="Self.CAT_STATUS" Multiplicity="0..1" />
+    <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_STATUS">
+        <PropertyRef Name="ID_STATUS" />
+      </Principal>
+      <Dependent Role="PEDIDO">
+        <PropertyRef Name="ID_STATUS" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__REVISIONE__ID_ST__46B27FE2">
+    <End Role="CAT_STATUS" Type="Self.CAT_STATUS" Multiplicity="1" />
+    <End Role="REVISIONES_PO" Type="Self.REVISIONES_PO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_STATUS">
+        <PropertyRef Name="ID_STATUS" />
+      </Principal>
+      <Dependent Role="REVISIONES_PO">
+        <PropertyRef Name="ID_STATUS" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__IMAGEN_AR__Id_Su__22401542">
+    <End Role="PO_SUMMARY" Type="Self.PO_SUMMARY" Multiplicity="0..1" />
+    <End Role="IMAGEN_ARTE" Type="Self.IMAGEN_ARTE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PO_SUMMARY">
+        <PropertyRef Name="ID_PO_SUMMARY" />
+      </Principal>
+      <Dependent Role="IMAGEN_ARTE">
+        <PropertyRef Name="Id_Summary" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__IMAGEN_AR__Id_UP__2334397B">
+    <End Role="UPC_ARTE" Type="Self.UPC_ARTE" Multiplicity="0..1" />
+    <End Role="IMAGEN_ARTE" Type="Self.IMAGEN_ARTE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UPC_ARTE">
+        <PropertyRef Name="Id_UPC" />
+      </Principal>
+      <Dependent Role="IMAGEN_ARTE">
+        <PropertyRef Name="Id_UPC" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ITEM_SIZE__ID_SU__367C1819">
+    <End Role="PO_SUMMARY" Type="Self.PO_SUMMARY" Multiplicity="0..1" />
+    <End Role="ITEM_SIZE" Type="Self.ITEM_SIZE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PO_SUMMARY">
+        <PropertyRef Name="ID_PO_SUMMARY" />
+      </Principal>
+      <Dependent Role="ITEM_SIZE">
+        <PropertyRef Name="ID_SUMMARY" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__REVISIONE__ID_PE__5224328E">
+    <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="1" />
+    <End Role="REVISIONES_PO" Type="Self.REVISIONES_PO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PEDIDO">
+        <PropertyRef Name="ID_PEDIDO" />
+      </Principal>
+      <Dependent Role="REVISIONES_PO">
+        <PropertyRef Name="ID_PEDIDO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__REVISIONE__ID_RE__47A6A41B">
+    <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="1" />
+    <End Role="REVISIONES_PO" Type="Self.REVISIONES_PO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PEDIDO">
+        <PropertyRef Name="ID_PEDIDO" />
+      </Principal>
+      <Dependent Role="REVISIONES_PO">
+        <PropertyRef Name="ID_REVISION_PO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PRINTSHOP__ID_SU__14E61A24">
+    <End Role="PO_SUMMARY" Type="Self.PO_SUMMARY" Multiplicity="0..1" />
+    <End Role="PRINTSHOP" Type="Self.PRINTSHOP" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PO_SUMMARY">
+        <PropertyRef Name="ID_PO_SUMMARY" />
+      </Principal>
+      <Dependent Role="PRINTSHOP">
+        <PropertyRef Name="ID_SUMMARY" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PRINTSHOP__ID_US__1C873BEC">
+    <End Role="Usuarios" Type="Self.Usuario" Multiplicity="0..1" />
+    <End Role="PRINTSHOP" Type="Self.PRINTSHOP" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Usuarios">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PRINTSHOP">
+        <PropertyRef Name="ID_USUARIO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Usuarios__Cargo__02FC7413">
+    <End Role="Roles" Type="Self.Role" Multiplicity="0..1" />
+    <End Role="Usuarios" Type="Self.Usuario" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="id_Rol" />
+      </Principal>
+      <Dependent Role="Usuarios">
+        <PropertyRef Name="Cargo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Usuarios__Cargo__3D5E1FD2">
+    <End Role="Roles" Type="Self.Role" Multiplicity="0..1" />
+    <End Role="Usuarios" Type="Self.Usuario" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="id_Rol" />
+      </Principal>
+      <Dependent Role="Usuarios">
+        <PropertyRef Name="Cargo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="FortuneEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="body_types" EntityType="Self.body_types" />
+    <EntitySet Name="CAT_BRAND_CODES" EntityType="Self.CAT_BRAND_CODES" />
+    <EntitySet Name="CAT_COLORES" EntityType="Self.CAT_COLORES" />
+    <EntitySet Name="CAT_CUSTOMER" EntityType="Self.CAT_CUSTOMER" />
+    <EntitySet Name="CAT_CUSTOMER_PO" EntityType="Self.CAT_CUSTOMER_PO" />
+    <EntitySet Name="CAT_FABRIC_CODES" EntityType="Self.CAT_FABRIC_CODES" />
+    <EntitySet Name="CAT_GENDER" EntityType="Self.CAT_GENDER" />
+    <EntitySet Name="CAT_GENERO_TALLA" EntityType="Self.CAT_GENERO_TALLA" />
+    <EntitySet Name="CAT_ITEM_SIZE" EntityType="Self.CAT_ITEM_SIZE" />
+    <EntitySet Name="CAT_PRODUCT_TYPE_CODES" EntityType="Self.CAT_PRODUCT_TYPE_CODES" />
+    <EntitySet Name="CAT_STATUS" EntityType="Self.CAT_STATUS" />
+    <EntitySet Name="categorias_inventarios" EntityType="Self.categorias_inventarios" />
+    <EntitySet Name="estilos_fabrica" EntityType="Self.estilos_fabrica" />
+    <EntitySet Name="fabric_percents" EntityType="Self.fabric_percents" />
+    <EntitySet Name="fabricantes" EntityType="Self.fabricante" />
+    <EntitySet Name="family_trims" EntityType="Self.family_trims" />
+    <EntitySet Name="IMAGEN_ARTE" EntityType="Self.IMAGEN_ARTE" />
+    <EntitySet Name="inventarios" EntityType="Self.inventario" />
+    <EntitySet Name="ITEM_DESCRIPTION" EntityType="Self.ITEM_DESCRIPTION" />
+    <EntitySet Name="ITEM_SIZE" EntityType="Self.ITEM_SIZE" />
+    <EntitySet Name="lugares" EntityType="Self.lugare" />
+    <EntitySet Name="paises" EntityType="Self.pais" />
+    <EntitySet Name="PEDIDOes" EntityType="Self.PEDIDO" />
+    <EntitySet Name="PO_SUMMARY" EntityType="Self.PO_SUMMARY" />
+    <EntitySet Name="PRINTSHOPs" EntityType="Self.PRINTSHOP" />
+    <EntitySet Name="proveedores" EntityType="Self.proveedore" />
+    <EntitySet Name="recibos" EntityType="Self.recibo" />
+    <EntitySet Name="recibos_cajas" EntityType="Self.recibos_cajas" />
+    <EntitySet Name="REVISIONES_PO" EntityType="Self.REVISIONES_PO" />
+    <EntitySet Name="Roles" EntityType="Self.Role" />
+    <EntitySet Name="salidas" EntityType="Self.salida" />
+    <EntitySet Name="salidas_items" EntityType="Self.salidas_items" />
+    <EntitySet Name="sellos" EntityType="Self.sello" />
+    <EntitySet Name="sucursales" EntityType="Self.sucursale" />
+    <EntitySet Name="trims" EntityType="Self.trim" />
+    <EntitySet Name="ubicaciones" EntityType="Self.ubicacione" />
+    <EntitySet Name="units" EntityType="Self.unit" />
+    <EntitySet Name="UPC_ARTE" EntityType="Self.UPC_ARTE" />
+    <EntitySet Name="Usuarios" EntityType="Self.Usuario" />
+    <EntitySet Name="yarns" EntityType="Self.yarn" />
+    <EntitySet Name="ITEM_SIZE_STAGING" EntityType="Self.ITEM_SIZE_STAGING" />
+    <EntitySet Name="recibos_items" EntityType="Self.recibos_items" />
+    <EntitySet Name="database_firewall_rules" EntityType="Self.database_firewall_rules" />
+    <AssociationSet Name="FK__PEDIDO__CUSTOMER__04E4BC85" Association="Self.FK__PEDIDO__CUSTOMER__04E4BC85">
+      <End Role="CAT_CUSTOMER" EntitySet="CAT_CUSTOMER" />
+      <End Role="PEDIDO" EntitySet="PEDIDOes" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PEDIDO__CUSTOMER__05D8E0BE" Association="Self.FK__PEDIDO__CUSTOMER__05D8E0BE">
+      <End Role="CAT_CUSTOMER_PO" EntitySet="CAT_CUSTOMER_PO" />
+      <End Role="PEDIDO" EntitySet="PEDIDOes" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PEDIDO__CUSTOMER__114A936A" Association="Self.FK__PEDIDO__CUSTOMER__114A936A">
+      <End Role="CAT_CUSTOMER_PO" EntitySet="CAT_CUSTOMER_PO" />
+      <End Role="PEDIDO" EntitySet="PEDIDOes" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PO_SUMMAR__ID_TE__3B40CD36" Association="Self.FK__PO_SUMMAR__ID_TE__3B40CD36">
+      <End Role="CAT_FABRIC_CODES" EntitySet="CAT_FABRIC_CODES" />
+      <End Role="PO_SUMMARY" EntitySet="PO_SUMMARY" />
+    </AssociationSet>
+    <AssociationSet Name="FK__CAT_GENER__ID_GE__236943A5" Association="Self.FK__CAT_GENER__ID_GE__236943A5">
+      <End Role="CAT_GENDER" EntitySet="CAT_GENDER" />
+      <End Role="CAT_GENERO_TALLA" EntitySet="CAT_GENERO_TALLA" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PO_SUMMAR__ID_GE__160F4887" Association="Self.FK__PO_SUMMAR__ID_GE__160F4887">
+      <End Role="CAT_GENDER" EntitySet="CAT_GENDER" />
+      <End Role="PO_SUMMARY" EntitySet="PO_SUMMARY" />
+    </AssociationSet>
+    <AssociationSet Name="FK__CAT_GENER__ID_TA__245D67DE" Association="Self.FK__CAT_GENER__ID_TA__245D67DE">
+      <End Role="CAT_ITEM_SIZE" EntitySet="CAT_ITEM_SIZE" />
+      <End Role="CAT_GENERO_TALLA" EntitySet="CAT_GENERO_TALLA" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ITEM_SIZE__TALLA__3587F3E0" Association="Self.FK__ITEM_SIZE__TALLA__3587F3E0">
+      <End Role="CAT_ITEM_SIZE" EntitySet="CAT_ITEM_SIZE" />
+      <End Role="ITEM_SIZE" EntitySet="ITEM_SIZE" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PRINTSHOP__ID_TA__16CE6296" Association="Self.FK__PRINTSHOP__ID_TA__16CE6296">
+      <End Role="CAT_ITEM_SIZE" EntitySet="CAT_ITEM_SIZE" />
+      <End Role="PRINTSHOP" EntitySet="PRINTSHOPs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PO_SUMMAR__ID_PR__3C34F16F" Association="Self.FK__PO_SUMMAR__ID_PR__3C34F16F">
+      <End Role="CAT_PRODUCT_TYPE_CODES" EntitySet="CAT_PRODUCT_TYPE_CODES" />
+      <End Role="PO_SUMMARY" EntitySet="PO_SUMMARY" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PEDIDO__ID_STATU__151B244E" Association="Self.FK__PEDIDO__ID_STATU__151B244E">
+      <End Role="CAT_STATUS" EntitySet="CAT_STATUS" />
+      <End Role="PEDIDO" EntitySet="PEDIDOes" />
+    </AssociationSet>
+    <AssociationSet Name="FK__REVISIONE__ID_ST__46B27FE2" Association="Self.FK__REVISIONE__ID_ST__46B27FE2">
+      <End Role="CAT_STATUS" EntitySet="CAT_STATUS" />
+      <End Role="REVISIONES_PO" EntitySet="REVISIONES_PO" />
+    </AssociationSet>
+    <AssociationSet Name="FK__IMAGEN_AR__Id_Su__22401542" Association="Self.FK__IMAGEN_AR__Id_Su__22401542">
+      <End Role="PO_SUMMARY" EntitySet="PO_SUMMARY" />
+      <End Role="IMAGEN_ARTE" EntitySet="IMAGEN_ARTE" />
+    </AssociationSet>
+    <AssociationSet Name="FK__IMAGEN_AR__Id_UP__2334397B" Association="Self.FK__IMAGEN_AR__Id_UP__2334397B">
+      <End Role="UPC_ARTE" EntitySet="UPC_ARTE" />
+      <End Role="IMAGEN_ARTE" EntitySet="IMAGEN_ARTE" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ITEM_SIZE__ID_SU__367C1819" Association="Self.FK__ITEM_SIZE__ID_SU__367C1819">
+      <End Role="PO_SUMMARY" EntitySet="PO_SUMMARY" />
+      <End Role="ITEM_SIZE" EntitySet="ITEM_SIZE" />
+    </AssociationSet>
+    <AssociationSet Name="FK__REVISIONE__ID_PE__5224328E" Association="Self.FK__REVISIONE__ID_PE__5224328E">
+      <End Role="PEDIDO" EntitySet="PEDIDOes" />
+      <End Role="REVISIONES_PO" EntitySet="REVISIONES_PO" />
+    </AssociationSet>
+    <AssociationSet Name="FK__REVISIONE__ID_RE__47A6A41B" Association="Self.FK__REVISIONE__ID_RE__47A6A41B">
+      <End Role="PEDIDO" EntitySet="PEDIDOes" />
+      <End Role="REVISIONES_PO" EntitySet="REVISIONES_PO" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PRINTSHOP__ID_SU__14E61A24" Association="Self.FK__PRINTSHOP__ID_SU__14E61A24">
+      <End Role="PO_SUMMARY" EntitySet="PO_SUMMARY" />
+      <End Role="PRINTSHOP" EntitySet="PRINTSHOPs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PRINTSHOP__ID_US__1C873BEC" Association="Self.FK__PRINTSHOP__ID_US__1C873BEC">
+      <End Role="Usuarios" EntitySet="Usuarios" />
+      <End Role="PRINTSHOP" EntitySet="PRINTSHOPs" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Usuarios__Cargo__02FC7413" Association="Self.FK__Usuarios__Cargo__02FC7413">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Usuarios" EntitySet="Usuarios" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Usuarios__Cargo__3D5E1FD2" Association="Self.FK__Usuarios__Cargo__3D5E1FD2">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Usuarios" EntitySet="Usuarios" />
+    </AssociationSet>
+    <FunctionImport Name="Actualizar_Camiseta">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="Codigo" Mode="In" Type="String" />
+      <Parameter Name="Descripcion" Mode="In" Type="String" />
+      <Parameter Name="Grupo" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Actualizar_Cliente">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="Nombre" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Actualizar_ClienteFinal">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="Nombre" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Actualizar_Colores">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="ColorStyle" Mode="In" Type="String" />
+      <Parameter Name="ColorDesc" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Actualizar_Estilos">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="Item" Mode="In" Type="Int32" />
+      <Parameter Name="Color" Mode="In" Type="Int32" />
+      <Parameter Name="Qty" Mode="In" Type="Int32" />
+      <Parameter Name="Price" Mode="In" Type="Double" />
+      <Parameter Name="IdPedidos" Mode="In" Type="Int32" />
+      <Parameter Name="IdGenero" Mode="In" Type="Int32" />
+      <Parameter Name="IdTela" Mode="In" Type="Int32" />
+      <Parameter Name="TipoCamiseta" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Actualizar_Genero">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="Genero" Mode="In" Type="String" />
+      <Parameter Name="Codigo" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Actualizar_Roles">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="Rol" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Actualizar_Talla">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="Talla" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Actualizar_Tallas_Estilo">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="IdTalla" Mode="In" Type="Int32" />
+      <Parameter Name="Cantidad" Mode="In" Type="Int32" />
+      <Parameter Name="Extras" Mode="In" Type="Int32" />
+      <Parameter Name="Ejemplos" Mode="In" Type="Int32" />
+      <Parameter Name="IdSummary" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Actualizar_Tela">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="Tela" Mode="In" Type="String" />
+      <Parameter Name="Codigo" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Actualizar_Usuarios">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="NoEmpleado" Mode="In" Type="String" />
+      <Parameter Name="Nombres" Mode="In" Type="String" />
+      <Parameter Name="Apellidos" Mode="In" Type="String" />
+      <Parameter Name="Cargo" Mode="In" Type="Int32" />
+      <Parameter Name="Email" Mode="In" Type="String" />
+      <Parameter Name="Contrasena" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="ActualizarBatchPrintShop">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="idSummary" Mode="In" Type="Int32" />
+      <Parameter Name="idBatch" Mode="In" Type="Int32" />
+      <Parameter Name="idTalla" Mode="In" Type="Int32" />
+      <Parameter Name="printed" Mode="In" Type="Int32" />
+      <Parameter Name="mp" Mode="In" Type="Int32" />
+      <Parameter Name="def" Mode="In" Type="Int32" />
+      <Parameter Name="maq" Mode="In" Type="Int32" />
+      <Parameter Name="turno" Mode="In" Type="Int32" />
+      <Parameter Name="total" Mode="In" Type="Int32" />
+      <Parameter Name="idUsr" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Agregar_Item_Desc">
+      <Parameter Name="Style" Mode="In" Type="String" />
+      <Parameter Name="Descripcion" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Agregar_Talla_Item">
+      <Parameter Name="Talla" Mode="In" Type="String" />
+      <Parameter Name="Cantidad" Mode="In" Type="Int32" />
+      <Parameter Name="Extras" Mode="In" Type="Int32" />
+      <Parameter Name="Ejemplos" Mode="In" Type="Int32" />
+      <Parameter Name="IdItem" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="AgregarCliente">
+      <Parameter Name="Nombre" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="AgregarClienteFinal">
+      <Parameter Name="Nombre" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="AgregarColor">
+      <Parameter Name="ColorStyle" Mode="In" Type="String" />
+      <Parameter Name="ColorDesc" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="AgregarGeneros">
+      <Parameter Name="Genero" Mode="In" Type="String" />
+      <Parameter Name="Codigo" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="AgregarItem">
+      <Parameter Name="Item" Mode="In" Type="String" />
+      <Parameter Name="Color" Mode="In" Type="String" />
+      <Parameter Name="Qty" Mode="In" Type="Int32" />
+      <Parameter Name="Price" Mode="In" Type="Double" />
+      <Parameter Name="IdPedidos" Mode="In" Type="Int32" />
+      <Parameter Name="IdGenero" Mode="In" Type="String" />
+      <Parameter Name="IdTela" Mode="In" Type="Int32" />
+      <Parameter Name="TipoCamiseta" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="AgregarPedido">
+      <Parameter Name="idPO" Mode="In" Type="String" />
+      <Parameter Name="idPOF" Mode="In" Type="Int32" />
+      <Parameter Name="Customer" Mode="In" Type="Int32" />
+      <Parameter Name="CustomerF" Mode="In" Type="Int32" />
+      <Parameter Name="datecancel" Mode="In" Type="DateTime" />
+      <Parameter Name="datePO" Mode="In" Type="DateTime" />
+      <Parameter Name="totUnid" Mode="In" Type="Int32" />
+      <Parameter Name="idStatus" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="AgregarPedidoSummary" />
+    <FunctionImport Name="AgregarPrintShop">
+      <Parameter Name="idSummary" Mode="In" Type="Int32" />
+      <Parameter Name="idBatch" Mode="In" Type="Int32" />
+      <Parameter Name="idTalla" Mode="In" Type="Int32" />
+      <Parameter Name="printed" Mode="In" Type="Int32" />
+      <Parameter Name="mp" Mode="In" Type="Int32" />
+      <Parameter Name="def" Mode="In" Type="Int32" />
+      <Parameter Name="maq" Mode="In" Type="Int32" />
+      <Parameter Name="turno" Mode="In" Type="Int32" />
+      <Parameter Name="total" Mode="In" Type="Int32" />
+      <Parameter Name="idUsr" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="AgregarRevisionPO">
+      <Parameter Name="idPedido" Mode="In" Type="Int32" />
+      <Parameter Name="idPedidoRevision" Mode="In" Type="Int32" />
+      <Parameter Name="dateRevision" Mode="In" Type="DateTime" />
+      <Parameter Name="idStatus" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="AgregarRoles">
+      <Parameter Name="Rol" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="AgregarTalla">
+      <Parameter Name="Talla" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="AgregarTela">
+      <Parameter Name="Tela" Mode="In" Type="String" />
+      <Parameter Name="Codigo" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="AgregarTipoCamiseta">
+      <Parameter Name="Codigo" Mode="In" Type="String" />
+      <Parameter Name="Descripcion" Mode="In" Type="String" />
+      <Parameter Name="Grupo" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="AgregarUsuarios">
+      <Parameter Name="NoEmpleado" Mode="In" Type="String" />
+      <Parameter Name="Nombres" Mode="In" Type="String" />
+      <Parameter Name="Apellidos" Mode="In" Type="String" />
+      <Parameter Name="Cargo" Mode="In" Type="Int32" />
+      <Parameter Name="Email" Mode="In" Type="String" />
+      <Parameter Name="Contrasena" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="EditarPedidos">
+      <Parameter Name="idPO" Mode="In" Type="String" />
+      <Parameter Name="idPF" Mode="In" Type="Int32" />
+      <Parameter Name="Customer" Mode="In" Type="Int32" />
+      <Parameter Name="CustomerF" Mode="In" Type="Int32" />
+      <Parameter Name="datecancel" Mode="In" Type="DateTime" />
+      <Parameter Name="datePO" Mode="In" Type="DateTime" />
+      <Parameter Name="totUnid" Mode="In" Type="Int32" />
+      <Parameter Name="id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Eliminar_Item">
+      <Parameter Name="idPO" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Eliminar_Pedido">
+      <Parameter Name="idPO" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="EliminarCamiseta">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="EliminarClientes">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="EliminarClientesFinal">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="EliminarColores">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="EliminarGenero">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="EliminarRoles">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="EliminarTalla">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="EliminarTela">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="EliminarUsuarios">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Lista_Batch" ReturnType="Collection(FortuneTestModel.Lista_Batch_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Lista_Estilos_Por_Id" ReturnType="Collection(FortuneTestModel.Lista_Estilos_Por_Id_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Lista_Pedido_Por_Id" ReturnType="Collection(FortuneTestModel.Lista_Pedido_Por_Id_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Lista_PrintShop" ReturnType="Collection(FortuneTestModel.Lista_PrintShop_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Lista_Tallas_Por_Estilo" ReturnType="Collection(FortuneTestModel.Lista_Tallas_Por_Estilo_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Lista_Tallas_Por_Summary" ReturnType="Collection(FortuneTestModel.Lista_Tallas_Por_Summary_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Lista_Tallas_Staging_Por_Estilo" ReturnType="Collection(FortuneTestModel.Lista_Tallas_Staging_Por_Estilo_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Lista_Total_PrintShop" ReturnType="Collection(FortuneTestModel.Lista_Total_PrintShop_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Lista_Usuario_Por_Id" ReturnType="Collection(FortuneTestModel.Lista_Usuario_Por_Id_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Camiseta_Por_Id" ReturnType="Collection(FortuneTestModel.Listar_Camiseta_Por_Id_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Cliente_Por_Id" ReturnType="Collection(FortuneTestModel.Listar_Cliente_Por_Id_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_ClienteFinal_Por_Id" ReturnType="Collection(FortuneTestModel.Listar_ClienteFinal_Por_Id_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Clientes" ReturnType="Collection(FortuneTestModel.Listar_Clientes_Result)" />
+    <FunctionImport Name="Listar_ClientesFinal" ReturnType="Collection(FortuneTestModel.Listar_ClientesFinal_Result)" />
+    <FunctionImport Name="Listar_Color" ReturnType="Collection(FortuneTestModel.Listar_Color_Result)" />
+    <FunctionImport Name="Listar_Color_Por_Id" ReturnType="Collection(FortuneTestModel.Listar_Color_Por_Id_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Customer" ReturnType="Collection(FortuneTestModel.Listar_Customer_Result)" />
+    <FunctionImport Name="Listar_Customer_Final" ReturnType="Collection(FortuneTestModel.Listar_Customer_Final_Result)" />
+    <FunctionImport Name="Listar_Estados" ReturnType="Collection(FortuneTestModel.Listar_Estados_Result)" />
+    <FunctionImport Name="Listar_EstiloDesc_Por_Id" ReturnType="Collection(FortuneTestModel.Listar_EstiloDesc_Por_Id_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Estilos_Por_Pedido" ReturnType="Collection(FortuneTestModel.Listar_Estilos_Por_Pedido_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Genero" ReturnType="Collection(FortuneTestModel.Listar_Genero_Result)" />
+    <FunctionImport Name="Listar_Genero_Por_Id" ReturnType="Collection(FortuneTestModel.Listar_Genero_Por_Id_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Item_Desc" ReturnType="Collection(FortuneTestModel.Listar_Item_Desc_Result)" />
+    <FunctionImport Name="Listar_Item_Por_Pedido" ReturnType="Collection(FortuneTestModel.Listar_Item_Por_Pedido_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Items" ReturnType="Collection(FortuneTestModel.Listar_Items_Result)" />
+    <FunctionImport Name="Listar_Pedidos" ReturnType="Collection(FortuneTestModel.Listar_Pedidos_Result)" />
+    <FunctionImport Name="Listar_Pedidos_Por_Fechas" ReturnType="Collection(FortuneTestModel.Listar_Pedidos_Por_Fechas_Result)">
+      <Parameter Name="FechaCanc" Mode="In" Type="DateTime" />
+      <Parameter Name="FechaOrden" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Pedidos_Revisiones" ReturnType="Collection(FortuneTestModel.Listar_Pedidos_Revisiones_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Roles" ReturnType="Collection(FortuneTestModel.Listar_Roles_Result)" />
+    <FunctionImport Name="Listar_Roles_Por_Id" ReturnType="Collection(FortuneTestModel.Listar_Roles_Por_Id_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Talla_Por_Id" ReturnType="Collection(FortuneTestModel.Listar_Talla_Por_Id_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Tallas" ReturnType="Collection(FortuneTestModel.Listar_Tallas_Result)" />
+    <FunctionImport Name="Listar_Tallas_Por_Genero" ReturnType="Collection(FortuneTestModel.Listar_Tallas_Por_Genero_Result)">
+      <Parameter Name="Genero" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Tela" ReturnType="Collection(FortuneTestModel.Listar_Tela_Result)" />
+    <FunctionImport Name="Listar_Tela_Por_Id" ReturnType="Collection(FortuneTestModel.Listar_Tela_Por_Id_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="Listar_Tipo_Camiseta" ReturnType="Collection(FortuneTestModel.Listar_Tipo_Camiseta_Result)" />
+    <FunctionImport Name="Listar_Usuarios" ReturnType="Collection(FortuneTestModel.Listar_Usuarios_Result)" />
+    <FunctionImport Name="ListarDetallePedido" ReturnType="Collection(FortuneTestModel.ListarDetallePedido_Result)">
+      <Parameter Name="pO" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="ListarItems" ReturnType="Collection(FortuneTestModel.ListarItems_Result)">
+      <Parameter Name="Pedido" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="ListarPedidos" ReturnType="Collection(FortuneTestModel.ListarPedidos_Result)" />
+    <FunctionImport Name="RegresaCliente" ReturnType="Collection(Int32)">
+      <Parameter Name="Cliente" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="RegresaClienteFinal" ReturnType="Collection(Int32)">
+      <Parameter Name="Cliente" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="SpLogin" ReturnType="Collection(FortuneTestModel.SpLogin_Result)">
+      <Parameter Name="Usuario" Mode="In" Type="String" />
+      <Parameter Name="Password" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="Ultimo_PO" ReturnType="Collection(Int32)" />
+    <FunctionImport Name="VerificarColor" ReturnType="Collection(String)">
+      <Parameter Name="Cadena" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="VerificarItem" ReturnType="Collection(String)">
+      <Parameter Name="Cadena" Mode="In" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="Lista_Batch_Result">
+    <Property Type="Int32" Name="ID_PRINTSHOP" Nullable="false" />
+    <Property Type="Int32" Name="ID_SUMMARY" Nullable="true" />
+    <Property Type="Int32" Name="ID_BATCH" Nullable="true" />
+    <Property Type="String" Name="TALLA" Nullable="true" MaxLength="10" />
+    <Property Type="Int32" Name="ID_TALLA" Nullable="true" />
+    <Property Type="Int32" Name="PRINTED" Nullable="true" />
+    <Property Type="Int32" Name="MISPRINT" Nullable="true" />
+    <Property Type="Int32" Name="DEFECT" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="Lista_Estilos_Por_Id_Result">
+    <Property Type="Int32" Name="ID_PO_SUMMARY" Nullable="false" />
+    <Property Type="Int32" Name="ITEM_ID" Nullable="false" />
+    <Property Type="Int32" Name="ID_COLOR" Nullable="false" />
+    <Property Type="Int32" Name="QTY" Nullable="true" />
+    <Property Type="Double" Name="PRICE" Nullable="true" />
+    <Property Type="Int32" Name="ID_PEDIDOS" Nullable="false" />
+    <Property Type="Int32" Name="ID_GENDER" Nullable="true" />
+    <Property Type="Int32" Name="ID_TELA" Nullable="true" />
+    <Property Type="Int32" Name="ID_PRODUCT_TYPE" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="Lista_Pedido_Por_Id_Result">
+    <Property Type="Int32" Name="ID_PEDIDO" Nullable="false" />
+    <Property Type="String" Name="PO" Nullable="true" MaxLength="30" />
+    <Property Type="Int32" Name="VPO" Nullable="true" />
+    <Property Type="Int32" Name="CUSTOMER" Nullable="false" />
+    <Property Type="Int32" Name="CUSTOMER_FINAL" Nullable="false" />
+    <Property Type="DateTime" Name="DATE_CANCEL" Nullable="true" />
+    <Property Type="DateTime" Name="DATE_ORDER" Nullable="true" />
+    <Property Type="Int32" Name="TOTAL_UNITS" Nullable="true" />
+    <Property Type="Int32" Name="ID_STATUS" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="Lista_PrintShop_Result">
+    <Property Type="Int32" Name="ID_PRINTSHOP" Nullable="false" />
+    <Property Type="Int32" Name="ID_SUMMARY" Nullable="true" />
+    <Property Type="String" Name="TALLA" Nullable="true" MaxLength="10" />
+    <Property Type="Int32" Name="ID_TALLA" Nullable="true" />
+    <Property Type="Int32" Name="PRINTED" Nullable="true" />
+    <Property Type="Int32" Name="MISPRINT" Nullable="true" />
+    <Property Type="Int32" Name="DEFECT" Nullable="true" />
+    <Property Type="String" Name="ITEM_STYLE" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="DESCRIPTION" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="Lista_Tallas_Por_Estilo_Result">
+    <Property Type="Int32" Name="ID_TALLA" Nullable="false" />
+    <Property Type="String" Name="TALLA" Nullable="true" MaxLength="10" />
+    <Property Type="Int32" Name="TALLA_ITEM" Nullable="true" />
+    <Property Type="Int32" Name="CANTIDAD" Nullable="true" />
+    <Property Type="Int32" Name="EXTRAS" Nullable="true" />
+    <Property Type="Int32" Name="EJEMPLOS" Nullable="true" />
+    <Property Type="String" Name="ITEM_STYLE" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="DESCRIPTION" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="ID_SUMMARY" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="Lista_Tallas_Por_Summary_Result">
+    <Property Type="String" Name="TALLA" Nullable="true" MaxLength="10" />
+    <Property Type="Int32" Name="CANTIDAD" Nullable="true" />
+    <Property Type="Int32" Name="EXTRAS" Nullable="true" />
+    <Property Type="Int32" Name="EJEMPLOS" Nullable="true" />
+    <Property Type="Int32" Name="ID_SUMMARY" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="Lista_Tallas_Staging_Por_Estilo_Result">
+    <Property Type="Int32" Name="ID_TALLA" Nullable="false" />
+    <Property Type="String" Name="TALLA" Nullable="true" MaxLength="10" />
+    <Property Type="Int32" Name="TALLA_ITEM" Nullable="true" />
+    <Property Type="Int32" Name="CANTIDAD" Nullable="true" />
+    <Property Type="String" Name="ITEM_STYLE" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="DESCRIPTION" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="ID_SUMMARY" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="Lista_Total_PrintShop_Result">
+    <Property Type="Int32" Name="ID_PRINTSHOP" Nullable="false" />
+    <Property Type="Int32" Name="ID_BATCH" Nullable="true" />
+    <Property Type="Int32" Name="ID_SUMMARY" Nullable="true" />
+    <Property Type="Int32" Name="ID_TALLA" Nullable="true" />
+    <Property Type="Int32" Name="TOTAL" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="Lista_Usuario_Por_Id_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="NoEmpleado" Nullable="true" MaxLength="8" />
+    <Property Type="String" Name="Nombres" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Apellidos" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="Cargo" Nullable="true" />
+    <Property Type="String" Name="Email" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Contrasena" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="id_sucursal" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="Listar_Camiseta_Por_Id_Result">
+    <Property Type="Int32" Name="ID_TYPE_CODE" Nullable="false" />
+    <Property Type="String" Name="PRODUCT_TYPE_CODE" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="DESCRIPTION" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="GROUP_TYPE" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="Listar_Cliente_Por_Id_Result">
+    <Property Type="Int32" Name="CUSTOMER" Nullable="false" />
+    <Property Type="String" Name="NAME" Nullable="true" MaxLength="30" />
+  </ComplexType>
+  <ComplexType Name="Listar_ClienteFinal_Por_Id_Result">
+    <Property Type="Int32" Name="CUSTOMER_FINAL" Nullable="false" />
+    <Property Type="String" Name="NAME_FINAL" Nullable="true" MaxLength="100" />
+  </ComplexType>
+  <ComplexType Name="Listar_Clientes_Result">
+    <Property Type="Int32" Name="CUSTOMER" Nullable="false" />
+    <Property Type="String" Name="NAME" Nullable="true" MaxLength="30" />
+  </ComplexType>
+  <ComplexType Name="Listar_ClientesFinal_Result">
+    <Property Type="Int32" Name="CUSTOMER_FINAL" Nullable="false" />
+    <Property Type="String" Name="NAME_FINAL" Nullable="true" MaxLength="100" />
+  </ComplexType>
+  <ComplexType Name="Listar_Color_Result">
+    <Property Type="Int32" Name="ID_COLOR" Nullable="false" />
+    <Property Type="String" Name="CODIGO_COLOR" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="DESCRIPCION" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="Listar_Color_Por_Id_Result">
+    <Property Type="Int32" Name="ID_COLOR" Nullable="false" />
+    <Property Type="String" Name="CODIGO_COLOR" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="DESCRIPCION" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="Listar_Customer_Result">
+    <Property Type="Int32" Name="CUSTOMER" Nullable="false" />
+    <Property Type="String" Name="NAME" Nullable="true" MaxLength="30" />
+  </ComplexType>
+  <ComplexType Name="Listar_Customer_Final_Result">
+    <Property Type="Int32" Name="CUSTOMER_FINAL" Nullable="false" />
+    <Property Type="String" Name="NAME_FINAL" Nullable="true" MaxLength="100" />
+  </ComplexType>
+  <ComplexType Name="Listar_Estados_Result">
+    <Property Type="Int32" Name="ID_STATUS" Nullable="false" />
+    <Property Type="String" Name="ESTADO" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="Listar_EstiloDesc_Por_Id_Result">
+    <Property Type="Int32" Name="ITEM_ID" Nullable="false" />
+    <Property Type="String" Name="ITEM_STYLE" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="DESCRIPTION" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="Listar_Estilos_Por_Pedido_Result">
+    <Property Type="Int32" Name="ID_PO_SUMMARY" Nullable="false" />
+    <Property Type="String" Name="ITEM_STYLE" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="CODIGO_COLOR" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="GENERO_CODE" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="PRODUCT_TYPE_CODE" Nullable="true" MaxLength="10" />
+    <Property Type="Int32" Name="QTY" Nullable="true" />
+    <Property Type="Double" Name="PRICE" Nullable="true" />
+    <Property Type="Int32" Name="ID_TELA" Nullable="true" />
+    <Property Type="Int32" Name="ID_PEDIDOS" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="Listar_Genero_Result">
+    <Property Type="Int32" Name="ID_GENDER" Nullable="false" />
+    <Property Type="String" Name="GENERO" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="GENERO_CODE" Nullable="true" MaxLength="10" />
+  </ComplexType>
+  <ComplexType Name="Listar_Genero_Por_Id_Result">
+    <Property Type="Int32" Name="ID_GENDER" Nullable="false" />
+    <Property Type="String" Name="GENERO" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="GENERO_CODE" Nullable="true" MaxLength="10" />
+  </ComplexType>
+  <ComplexType Name="Listar_Item_Desc_Result">
+    <Property Type="Int32" Name="ITEM_ID" Nullable="false" />
+    <Property Type="String" Name="ITEM_STYLE" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="DESCRIPTION" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="Listar_Item_Por_Pedido_Result">
+    <Property Type="Int32" Name="ID_PO_SUMMARY" Nullable="false" />
+    <Property Type="String" Name="ITEM_STYLE" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="DESCRIPCION_ITEM" Nullable="false" MaxLength="163" />
+    <Property Type="String" Name="CODIGO_COLOR" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="DESCRIPCION" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="QTY" Nullable="true" />
+    <Property Type="String" Name="PRICE" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="TOTAL" Nullable="true" MaxLength="4000" />
+  </ComplexType>
+  <ComplexType Name="Listar_Items_Result">
+    <Property Type="Int32" Name="ITEM_ID" Nullable="false" />
+    <Property Type="String" Name="ITEM_STYLE" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="DESCRIPTION" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="Listar_Pedidos_Result">
+    <Property Type="Int32" Name="ID_PEDIDO" Nullable="false" />
+    <Property Type="String" Name="PO" Nullable="true" MaxLength="30" />
+    <Property Type="Int32" Name="VPO" Nullable="true" />
+    <Property Type="Int32" Name="CUSTOMER" Nullable="false" />
+    <Property Type="Int32" Name="CUSTOMER_FINAL" Nullable="false" />
+    <Property Type="DateTime" Name="DATE_CANCEL" Nullable="true" />
+    <Property Type="DateTime" Name="DATE_ORDER" Nullable="true" />
+    <Property Type="Int32" Name="TOTAL_UNITS" Nullable="true" />
+    <Property Type="Int32" Name="ID_STATUS" Nullable="true" />
+    <Property Type="Int32" Name="ID_STATUS1" Nullable="false" />
+    <Property Type="String" Name="ESTADO" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="CUSTOMER_FINAL1" Nullable="false" />
+    <Property Type="String" Name="NAME_FINAL" Nullable="true" MaxLength="100" />
+    <Property Type="Int32" Name="CUSTOMER1" Nullable="false" />
+    <Property Type="String" Name="NAME" Nullable="true" MaxLength="30" />
+  </ComplexType>
+  <ComplexType Name="Listar_Pedidos_Por_Fechas_Result">
+    <Property Type="Int32" Name="ID_PEDIDO" Nullable="false" />
+    <Property Type="String" Name="PO" Nullable="true" MaxLength="30" />
+    <Property Type="Int32" Name="VPO" Nullable="true" />
+    <Property Type="Int32" Name="CUSTOMER" Nullable="false" />
+    <Property Type="Int32" Name="CUSTOMER_FINAL" Nullable="false" />
+    <Property Type="DateTime" Name="DATE_CANCEL" Nullable="true" />
+    <Property Type="DateTime" Name="DATE_ORDER" Nullable="true" />
+    <Property Type="Int32" Name="TOTAL_UNITS" Nullable="true" />
+    <Property Type="Int32" Name="ID_STATUS" Nullable="true" />
+    <Property Type="Int32" Name="ID_STATUS1" Nullable="false" />
+    <Property Type="String" Name="ESTADO" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="CUSTOMER_FINAL1" Nullable="false" />
+    <Property Type="String" Name="NAME_FINAL" Nullable="true" MaxLength="100" />
+    <Property Type="Int32" Name="CUSTOMER1" Nullable="false" />
+    <Property Type="String" Name="NAME" Nullable="true" MaxLength="30" />
+  </ComplexType>
+  <ComplexType Name="Listar_Pedidos_Revisiones_Result">
+    <Property Type="Int32" Name="ID_PEDIDO" Nullable="false" />
+    <Property Type="String" Name="PO" Nullable="true" MaxLength="30" />
+    <Property Type="Int32" Name="VPO" Nullable="true" />
+    <Property Type="Int32" Name="CUSTOMER" Nullable="false" />
+    <Property Type="Int32" Name="CUSTOMER_FINAL" Nullable="false" />
+    <Property Type="DateTime" Name="DATE_CANCEL" Nullable="true" />
+    <Property Type="DateTime" Name="DATE_ORDER" Nullable="true" />
+    <Property Type="Int32" Name="TOTAL_UNITS" Nullable="true" />
+    <Property Type="Int32" Name="ID_STATUS" Nullable="true" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="Int32" Name="ID_PEDIDO1" Nullable="false" />
+    <Property Type="Int32" Name="ID_REVISION_PO" Nullable="false" />
+    <Property Type="DateTime" Name="FECHA_REVISION" Nullable="false" />
+    <Property Type="Int32" Name="ID_STATUS1" Nullable="false" />
+    <Property Type="Int32" Name="CUSTOMER_FINAL1" Nullable="false" />
+    <Property Type="String" Name="NAME_FINAL" Nullable="true" MaxLength="100" />
+    <Property Type="Int32" Name="CUSTOMER1" Nullable="false" />
+    <Property Type="String" Name="NAME" Nullable="true" MaxLength="30" />
+  </ComplexType>
+  <ComplexType Name="Listar_Roles_Result">
+    <Property Type="Int32" Name="id_Rol" Nullable="false" />
+    <Property Type="String" Name="rol" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="Listar_Roles_Por_Id_Result">
+    <Property Type="Int32" Name="id_Rol" Nullable="false" />
+    <Property Type="String" Name="rol" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="Listar_Talla_Por_Id_Result">
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="TALLA" Nullable="true" MaxLength="10" />
+  </ComplexType>
+  <ComplexType Name="Listar_Tallas_Result">
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="TALLA" Nullable="true" MaxLength="10" />
+  </ComplexType>
+  <ComplexType Name="Listar_Tallas_Por_Genero_Result">
+    <Property Type="Int32" Name="ID_GENDER" Nullable="false" />
+    <Property Type="String" Name="GENERO" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="TALLA" Nullable="true" MaxLength="10" />
+  </ComplexType>
+  <ComplexType Name="Listar_Tela_Result">
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="FABRIC" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="CODE" Nullable="true" MaxLength="10" />
+  </ComplexType>
+  <ComplexType Name="Listar_Tela_Por_Id_Result">
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="FABRIC" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="CODE" Nullable="true" MaxLength="10" />
+  </ComplexType>
+  <ComplexType Name="Listar_Tipo_Camiseta_Result">
+    <Property Type="Int32" Name="ID_TYPE_CODE" Nullable="false" />
+    <Property Type="String" Name="PRODUCT_TYPE_CODE" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="DESCRIPTION" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="GROUP_TYPE" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="Listar_Usuarios_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="NoEmpleado" Nullable="true" MaxLength="8" />
+    <Property Type="String" Name="Nombres" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Apellidos" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="Cargo" Nullable="true" />
+    <Property Type="String" Name="Email" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Contrasena" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="id_sucursal" Nullable="true" />
+    <Property Type="Int32" Name="id_Rol" Nullable="false" />
+    <Property Type="String" Name="rol" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="ListarDetallePedido_Result">
+    <Property Type="Int32" Name="C_" Nullable="false" />
+    <Property Type="String" Name="PO" Nullable="true" MaxLength="30" />
+    <Property Type="Int32" Name="PURSHASE_ORDER" Nullable="true" />
+    <Property Type="String" Name="CLIENT" Nullable="true" MaxLength="30" />
+    <Property Type="String" Name="CUSTOMER" Nullable="true" MaxLength="100" />
+    <Property Type="DateTime" Name="DATE_CANCEL" Nullable="true" />
+    <Property Type="DateTime" Name="DATE_ORDER" Nullable="true" />
+    <Property Type="Int32" Name="TOTAL_UNITS" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="ListarItems_Result">
+    <Property Type="Int32" Name="C_" Nullable="false" />
+    <Property Type="String" Name="ITEM" Nullable="true" MaxLength="15" />
+    <Property Type="String" Name="ITEM_DESCRIPTION" Nullable="true" MaxLength="8000" />
+    <Property Type="String" Name="COLOR" Nullable="true" MaxLength="8000" />
+    <Property Type="String" Name="COLOR_DESCRIPTION" Nullable="true" MaxLength="8000" />
+    <Property Type="Int32" Name="QTY" Nullable="true" />
+    <Property Type="Double" Name="PRICE" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="ListarPedidos_Result">
+    <Property Type="Int32" Name="C_" Nullable="false" />
+    <Property Type="String" Name="PO" Nullable="true" MaxLength="30" />
+    <Property Type="Int32" Name="PURSHASE_ORDER" Nullable="true" />
+    <Property Type="String" Name="CLIENT" Nullable="true" MaxLength="8000" />
+    <Property Type="String" Name="CUSTOMER" Nullable="true" MaxLength="8000" />
+    <Property Type="DateTime" Name="DATE_CANCEL" Nullable="true" />
+    <Property Type="DateTime" Name="DATE_ORDER" Nullable="true" />
+    <Property Type="Int32" Name="ITEMS" Nullable="true" />
+    <Property Type="Int32" Name="TOTAL_UNITS" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="SpLogin_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="NoEmpleado" Nullable="true" MaxLength="8" />
+    <Property Type="String" Name="Nombres" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Apellidos" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="Cargo" Nullable="true" />
+    <Property Type="String" Name="Email" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Contrasena" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="id_sucursal" Nullable="true" />
+  </ComplexType>
+</Schema>

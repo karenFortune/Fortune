@@ -1,4 +1,5 @@
 ﻿using FortuneSystem.Models.Item;
+using FortuneSystem.Models.Usuarios;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,38 +11,48 @@ namespace FortuneSystem.Models.PrintShop
 {
     public class PrintShopData
     {
+        CatUsuarioData objCatUser = new CatUsuarioData();
         //Muestra la lista de tallas de PrintShop por estilo
         public IEnumerable<PrintShopC> ListaTallasPrintShop(int? id)
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-            SqlDataReader leer = null;
             List<PrintShopC> listTallas = new List<PrintShopC>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "Lista_PrintShop";
-            comando.CommandType = CommandType.StoredProcedure;
-            comando.Parameters.AddWithValue("@Id", id);
-            leer = comando.ExecuteReader();
-            int i = 0;
-            while (leer.Read())
+            try
             {
-                PrintShopC tallas = new PrintShopC()
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;               
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Lista_PrintShop";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Id", id);
+                leer = comando.ExecuteReader();
+                int i = 0;
+                while (leer.Read())
                 {
-                    Talla = leer["TALLA"].ToString(),
-                    Printed = Convert.ToInt32(leer["PRINTED"]),
-                    MisPrint = Convert.ToInt32(leer["MISPRINT"]),
-                    Defect = Convert.ToInt32(leer["DEFECT"])
+                    PrintShopC tallas = new PrintShopC()
+                    {
+                        Talla = leer["TALLA"].ToString(),
+                        Printed = Convert.ToInt32(leer["PRINTED"]),
+                        MisPrint = Convert.ToInt32(leer["MISPRINT"]),
+                        Defect = Convert.ToInt32(leer["DEFECT"]),
+                        Repair = Convert.ToInt32(leer["REPAIR"])
 
-                };
+                    };
 
-                listTallas.Add(tallas);
-                i++;
+                    listTallas.Add(tallas);
+                    i++;
+                }
+                if (i == 0)
+                {
+                    listTallas = ObtenerTallas(id);
+                }
+                leer.Close();
             }
-            if (i == 0) {
-                listTallas= ObtenerTallas(id);
-            }
-            leer.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }         
 
             return listTallas;
         }
@@ -50,31 +61,39 @@ namespace FortuneSystem.Models.PrintShop
         public IEnumerable<PrintShopC> ListaTallasBatchId(int? id)
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-            SqlDataReader leer = null;
             List<PrintShopC> listTallas = new List<PrintShopC>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "Lista_Batch";
-            comando.CommandType = CommandType.StoredProcedure;
-            comando.Parameters.AddWithValue("@Id", id);
-            leer = comando.ExecuteReader();
-
-            while (leer.Read())
+            try
             {
-                PrintShopC tallas = new PrintShopC()
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;                
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Lista_Batch";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Id", id);
+                leer = comando.ExecuteReader();
+
+                while (leer.Read())
                 {
-                    Talla = leer["TALLA"].ToString(),
-                    IdBatch= Convert.ToInt32(leer["ID_BATCH"]),
-                    Printed = Convert.ToInt32(leer["PRINTED"]),
-                    MisPrint = Convert.ToInt32(leer["MISPRINT"]),
-                    Defect = Convert.ToInt32(leer["DEFECT"])
+                    PrintShopC tallas = new PrintShopC()
+                    {
+                        Talla = leer["TALLA"].ToString(),
+                        IdBatch = Convert.ToInt32(leer["ID_BATCH"]),
+                        Printed = Convert.ToInt32(leer["PRINTED"]),
+                        MisPrint = Convert.ToInt32(leer["MISPRINT"]),
+                        Defect = Convert.ToInt32(leer["DEFECT"]),
+                        Repair = Convert.ToInt32(leer["REPAIR"])
 
-                };
+                    };
 
-                listTallas.Add(tallas);
+                    listTallas.Add(tallas);
+                }
+                leer.Close();
             }
-            leer.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }        
 
             return listTallas;
         }
@@ -83,29 +102,34 @@ namespace FortuneSystem.Models.PrintShop
         public IEnumerable<PrintShopC> ListaTallasTotalPrintShop(int? id)
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-            SqlDataReader leer = null;
             List<PrintShopC> listTallas = new List<PrintShopC>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "Lista_Total_PrintShop";
-            comando.CommandType = CommandType.StoredProcedure;
-            comando.Parameters.AddWithValue("@Id", id);
-            leer = comando.ExecuteReader();
-
-            while (leer.Read())
+            try
             {
-                PrintShopC tallas = new PrintShopC()
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;                
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Lista_Total_PrintShop";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Id", id);
+                leer = comando.ExecuteReader();
+
+                while (leer.Read())
                 {
-                    
-                    Printed = Convert.ToInt32(leer["TOTAL"]),
-                    
+                    PrintShopC tallas = new PrintShopC()
+                    {
 
-                };
+                        Printed = Convert.ToInt32(leer["TOTAL"])
+                    };
 
-                listTallas.Add(tallas);
+                    listTallas.Add(tallas);
+                }
+                leer.Close();
             }
-            leer.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }      
 
             return listTallas;
         }
@@ -114,27 +138,34 @@ namespace FortuneSystem.Models.PrintShop
         public List<PrintShopC> ObtenerTallas(int? id)
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-            SqlDataReader leer = null;
             List<PrintShopC> listTallas = new List<PrintShopC>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "select S.TALLA from ITEM_SIZE I " +
-                "INNER JOIN CAT_ITEM_SIZE S ON S.ID=I.TALLA_ITEM " +
-                "WHERE I.ID_SUMMARY= '" + id + "' ORDER BY S.TALLA";
-            leer = comando.ExecuteReader();
-            while (leer.Read())
+            try
             {
-                PrintShopC tallas = new PrintShopC()
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;               
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "select S.TALLA from ITEM_SIZE I " +
+                    "INNER JOIN CAT_ITEM_SIZE S ON S.ID=I.TALLA_ITEM " +
+                    "WHERE I.ID_SUMMARY= '" + id + "' ORDER BY S.TALLA ASC";
+                leer = comando.ExecuteReader();
+                while (leer.Read())
                 {
-                  
-                    Talla = leer["TALLA"].ToString()
+                    PrintShopC tallas = new PrintShopC()
+                    {
 
-                };
+                        Talla = leer["TALLA"].ToString()
 
-                listTallas.Add(tallas);
+                    };
+
+                    listTallas.Add(tallas);
+                }
+                leer.Close();
             }
-            leer.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }        
 
             return listTallas;
         }
@@ -144,32 +175,36 @@ namespace FortuneSystem.Models.PrintShop
         public IEnumerable<int> ListaTotalTallasBatchEstilo(int? id)
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-            SqlDataReader leer = null;
             List<int> listTallas = new List<int>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PRINTSHOP T " +
-                "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                "WHERE T.ID_SUMMARY= '" + id + "'";
-            leer = comando.ExecuteReader();
-            int total = 0;
-            int totalPrinted = 0;
-            int totalMisPrint = 0;
-            int totalDefect = 0;
-            while (leer.Read())
+            try
             {
-                PrintShopC tallas = new PrintShopC()
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;               
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PRINTSHOP T " +
+                    "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
+                    "WHERE T.ID_SUMMARY= '" + id + "'";
+                leer = comando.ExecuteReader();
+                int total = 0;
+                while (leer.Read())
                 {
-                    IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
-                    Talla = leer["TALLA"].ToString()
+                    PrintShopC tallas = new PrintShopC()
+                    {
+                        IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
+                        Talla = leer["TALLA"].ToString()
 
-                };
-                total = SumaTotalBacheTalla(id, tallas.IdTalla);
-                listTallas.Add(total);
+                    };
+                    total = SumaTotalBacheTalla(id, tallas.IdTalla);
+                    listTallas.Add(total);
 
+                }
+                leer.Close();
             }
-            leer.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }          
 
             return listTallas;
         }
@@ -178,28 +213,34 @@ namespace FortuneSystem.Models.PrintShop
         public IEnumerable<int> ListaTotalMPTallasBatchEstilo(int? id)
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-            SqlDataReader leer = null;
             List<int> listTallas = new List<int>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PRINTSHOP T " +
-                "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                "WHERE T.ID_SUMMARY= '" + id + "'";
-            leer = comando.ExecuteReader();
-            int totalMisPrint = 0;
-            while (leer.Read())
+            try
             {
-                PrintShopC tallas = new PrintShopC()
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;              
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PRINTSHOP T " +
+                    "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
+                    "WHERE T.ID_SUMMARY= '" + id + "'";
+                leer = comando.ExecuteReader();
+                int totalMisPrint = 0;
+                while (leer.Read())
                 {
-                    IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
-                    Talla = leer["TALLA"].ToString()
+                    PrintShopC tallas = new PrintShopC()
+                    {
+                        IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
+                        Talla = leer["TALLA"].ToString()
 
-                };
-                totalMisPrint = SumaTotalMisprintBacheTalla(id, tallas.IdTalla);
-                listTallas.Add(totalMisPrint);
+                    };
+                    totalMisPrint = SumaTotalMisprintBacheTalla(id, tallas.IdTalla);
+                    listTallas.Add(totalMisPrint);
+                }
+                leer.Close();
             }
-            leer.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+            }         
 
             return listTallas;
         }
@@ -208,29 +249,72 @@ namespace FortuneSystem.Models.PrintShop
         public IEnumerable<int> ListaTotalDefTallasBatchEstilo(int? id)
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-            SqlDataReader leer = null;
             List<int> listTallas = new List<int>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PRINTSHOP T " +
-                "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                "WHERE T.ID_SUMMARY= '" + id + "'";
-            leer = comando.ExecuteReader();
-            int totalDefect = 0;
-            while (leer.Read())
+            try
             {
-                PrintShopC tallas = new PrintShopC()
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PRINTSHOP T " +
+                    "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
+                    "WHERE T.ID_SUMMARY= '" + id + "'";
+                leer = comando.ExecuteReader();
+                int totalDefect = 0;
+                while (leer.Read())
                 {
-                    IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
-                    Talla = leer["TALLA"].ToString()
+                    PrintShopC tallas = new PrintShopC()
+                    {
+                        IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
+                        Talla = leer["TALLA"].ToString()
 
-                };
-                totalDefect = SumaTotalDefectBacheTalla(id, tallas.IdTalla);
-                listTallas.Add(totalDefect);
+                    };
+                    totalDefect = SumaTotalDefectBacheTalla(id, tallas.IdTalla);
+                    listTallas.Add(totalDefect);
+                }
+                leer.Close();
             }
-            leer.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }      
+            
+            return listTallas;
+        }
 
+        //Muestra la lista de tallas TOTAL en Reparacion de PrintShop por estilo
+        public IEnumerable<int> ListaTotalRepTallasBatchEstilo(int? id)
+        {
+            Conexion conn = new Conexion();
+            List<int> listTallas = new List<int>();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;                
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PRINTSHOP T " +
+                    "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
+                    "WHERE T.ID_SUMMARY= '" + id + "'";
+                leer = comando.ExecuteReader();
+                int totalRepair = 0;
+                while (leer.Read())
+                {
+                    PrintShopC tallas = new PrintShopC()
+                    {
+                        IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
+                        Talla = leer["TALLA"].ToString()
+
+                    };
+                    totalRepair = SumaTotalRepairBacheTalla(id, tallas.IdTalla);
+                    listTallas.Add(totalRepair);
+                }
+                leer.Close();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }       
             return listTallas;
         }
 
@@ -238,29 +322,36 @@ namespace FortuneSystem.Models.PrintShop
         public IEnumerable<int> ListaTotalPrintedTallasBatchEstilo(int? id)
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-            SqlDataReader leer = null;
             List<int> listTallas = new List<int>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PRINTSHOP T " +
-                "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                "WHERE T.ID_SUMMARY= '" + id + "'";
-            leer = comando.ExecuteReader();
-            int totalPrinted = 0;
-            while (leer.Read())
+            try
             {
-                PrintShopC tallas = new PrintShopC()
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;               
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PRINTSHOP T " +
+                    "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
+                    "WHERE T.ID_SUMMARY= '" + id + "'";
+                leer = comando.ExecuteReader();
+                int totalPrinted = 0;
+                while (leer.Read())
                 {
-                    IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
-                    Talla = leer["TALLA"].ToString()
+                    PrintShopC tallas = new PrintShopC()
+                    {
+                        IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
+                        Talla = leer["TALLA"].ToString()
 
-                };
-                totalPrinted = SumaTotalPrintedBacheTalla(id, tallas.IdTalla);
-                listTallas.Add(totalPrinted);
+                    };
+                    totalPrinted = SumaTotalPrintedBacheTalla(id, tallas.IdTalla);
+                    listTallas.Add(totalPrinted);
 
+                }
+                leer.Close();
             }
-            leer.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }       
 
             return listTallas;
         }
@@ -269,19 +360,26 @@ namespace FortuneSystem.Models.PrintShop
         public int SumaTotalBacheTalla(int? idEstilo, int idTalla)
         {
             Conexion conex = new Conexion();
-            SqlCommand com = new SqlCommand();
-            SqlDataReader leerF = null;
-            com.Connection = conex.AbrirConexion();
-            com.CommandText = "SELECT PRINTED, MISPRINT, DEFECT  FROM PRINTSHOP WHERE ID_SUMMARY='" + idEstilo + "' AND ID_TALLA='" + idTalla + "' ";
-            leerF = com.ExecuteReader();
             int suma = 0;
-            while (leerF.Read())
+            try
             {
-                suma += Convert.ToInt32(leerF["PRINTED"]) + Convert.ToInt32(leerF["MISPRINT"]) + Convert.ToInt32(leerF["DEFECT"]);
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leerF = null;
+                com.Connection = conex.AbrirConexion();
+                com.CommandText = "SELECT PRINTED, MISPRINT, DEFECT, REPAIR  FROM PRINTSHOP WHERE ID_SUMMARY='" + idEstilo + "' AND ID_TALLA='" + idTalla + "' ";
+                leerF = com.ExecuteReader();                
+                while (leerF.Read())
+                {
+                    suma += Convert.ToInt32(leerF["PRINTED"]) + Convert.ToInt32(leerF["MISPRINT"]) + Convert.ToInt32(leerF["DEFECT"]) + Convert.ToInt32(leerF["REPAIR"]);
 
+                }
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }       
 
             return suma;
         }
@@ -290,19 +388,26 @@ namespace FortuneSystem.Models.PrintShop
         public int SumaTotalPrintedBacheTalla(int? idEstilo, int idTalla)
         {
             Conexion conex = new Conexion();
-            SqlCommand com = new SqlCommand();
-            SqlDataReader leerF = null;
-            com.Connection = conex.AbrirConexion();
-            com.CommandText = "SELECT PRINTED  FROM PRINTSHOP WHERE ID_SUMMARY='" + idEstilo + "' AND ID_TALLA='" + idTalla + "' ";
-            leerF = com.ExecuteReader();
             int suma = 0;
-            while (leerF.Read())
+            try
             {
-                suma += Convert.ToInt32(leerF["PRINTED"]);
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leerF = null;
+                com.Connection = conex.AbrirConexion();
+                com.CommandText = "SELECT PRINTED  FROM PRINTSHOP WHERE ID_SUMMARY='" + idEstilo + "' AND ID_TALLA='" + idTalla + "' ";
+                leerF = com.ExecuteReader();               
+                while (leerF.Read())
+                {
+                    suma += Convert.ToInt32(leerF["PRINTED"]);
 
+                }
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }          
 
             return suma;
         }
@@ -311,19 +416,27 @@ namespace FortuneSystem.Models.PrintShop
         public int SumaTotalMisprintBacheTalla(int? idEstilo, int idTalla)
         {
             Conexion conex = new Conexion();
-            SqlCommand com = new SqlCommand();
-            SqlDataReader leerF = null;
-            com.Connection = conex.AbrirConexion();
-            com.CommandText = "SELECT MISPRINT  FROM PRINTSHOP WHERE ID_SUMMARY='" + idEstilo + "' AND ID_TALLA='" + idTalla + "' ";
-            leerF = com.ExecuteReader();
             int suma = 0;
-            while (leerF.Read())
+            try
             {
-                suma += Convert.ToInt32(leerF["MISPRINT"]);
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leerF = null;
+                com.Connection = conex.AbrirConexion();
+                com.CommandText = "SELECT MISPRINT  FROM PRINTSHOP WHERE ID_SUMMARY='" + idEstilo + "' AND ID_TALLA='" + idTalla + "' ";
+                leerF = com.ExecuteReader();                
+                while (leerF.Read())
+                {
+                    suma += Convert.ToInt32(leerF["MISPRINT"]);
 
+                }
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+              
 
             return suma;
         }
@@ -333,19 +446,57 @@ namespace FortuneSystem.Models.PrintShop
         public int SumaTotalDefectBacheTalla(int? idEstilo, int idTalla)
         {
             Conexion conex = new Conexion();
-            SqlCommand com = new SqlCommand();
-            SqlDataReader leerF = null;
-            com.Connection = conex.AbrirConexion();
-            com.CommandText = "SELECT DEFECT  FROM PRINTSHOP WHERE ID_SUMMARY='" + idEstilo + "' AND ID_TALLA='" + idTalla + "' ";
-            leerF = com.ExecuteReader();
             int suma = 0;
-            while (leerF.Read())
+            try
             {
-                suma += Convert.ToInt32(leerF["DEFECT"]);
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leerF = null;
+                com.Connection = conex.AbrirConexion();
+                com.CommandText = "SELECT DEFECT  FROM PRINTSHOP WHERE ID_SUMMARY='" + idEstilo + "' AND ID_TALLA='" + idTalla + "' ";
+                leerF = com.ExecuteReader();               
+                while (leerF.Read())
+                {
+                    suma += Convert.ToInt32(leerF["DEFECT"]);
 
+                }
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }         
+
+            return suma;
+        }
+
+        //Muestra la lista de suma de Reparaciones tallas por Batch
+        public int SumaTotalRepairBacheTalla(int? idEstilo, int idTalla)
+        {
+            Conexion conex = new Conexion();
+            int suma = 0;
+            try
+            {
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leerF = null;
+                com.Connection = conex.AbrirConexion();
+                com.CommandText = "SELECT REPAIR  FROM PRINTSHOP WHERE ID_SUMMARY='" + idEstilo + "' AND ID_TALLA='" + idTalla + "' ";
+                leerF = com.ExecuteReader();                
+                while (leerF.Read())
+                {
+
+                    if (!Convert.IsDBNull(leerF["REPAIR"]))
+                    {
+                        suma += Convert.ToInt32(leerF["REPAIR"]);
+                    }
+                }
+                leerF.Close();
+            }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }              
 
             return suma;
         }
@@ -354,71 +505,137 @@ namespace FortuneSystem.Models.PrintShop
         public IEnumerable<PrintShopC> ListaBatch(int? id)
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-            SqlDataReader leer = null;
             List<PrintShopC> listTallas = new List<PrintShopC>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "SELECT distinct ID_BATCH FROM PRINTSHOP WHERE ID_SUMMARY='" + id + "'";
-            leer = comando.ExecuteReader();
-
-            while (leer.Read())
+            try
             {
-                PrintShopC tallas = new PrintShopC()
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;               
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "SELECT distinct ID_BATCH FROM PRINTSHOP WHERE ID_SUMMARY='" + id + "'";
+                leer = comando.ExecuteReader();
+
+                while (leer.Read())
                 {
+                    PrintShopC tallas = new PrintShopC()
+                    {
 
-                    IdBatch = Convert.ToInt32(leer["ID_BATCH"])
+                        IdBatch = Convert.ToInt32(leer["ID_BATCH"])
 
 
-                };
-                tallas.Batch = ListaTallasBatch(tallas.IdBatch, id);
-                foreach (var item in tallas.Batch)
-                {
-                    tallas.TipoTurno = item.TipoTurno;
-                    tallas.NombreUsr = item.NombreUsr;
-                    tallas.IdPrintShop = item.IdPrintShop;
+                    };
+                    tallas.Batch = ListaTallasBatch(tallas.IdBatch, id);
+
+                    foreach (var item in tallas.Batch)
+                    {
+                        tallas.TipoTurno = item.TipoTurno;
+                        tallas.NombreUsr = item.NombreUsr;
+                        tallas.IdPrintShop = item.IdPrintShop;
+                        tallas.Maquina = item.Maquina;
+                        ObtenerNombreMaquina(tallas);
+                        tallas.NombreUsrModif = item.NombreUsrModif;
+                        tallas.Status = item.Status;
+
+                    }
+
+
+
+                    listTallas.Add(tallas);
                 }
-
-          
-                listTallas.Add(tallas);
+                leer.Close();
             }
-            leer.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }        
 
             return listTallas;
         }
 
+        public void ObtenerNombreMaquina(PrintShopC printShop)
+        {    
+            switch (printShop.Maquina)
+            {
+                case 1:
+                    printShop.NombreMaquina = "Machine 1";
+                    break;
+                case 2:
+                    printShop.NombreMaquina = "Machine 2";
+                    break;
+                case 3:
+                    printShop.NombreMaquina = "Machine 3";
+                    break;
+                case 4:
+                    printShop.NombreMaquina = "Machine 4";
+                    break;
+                case 5:
+                    printShop.NombreMaquina = "Machine 5";
+                    break;
+                case 6:
+                    printShop.NombreMaquina = "Machine 6";
+                    break;
+                case 7:
+                    printShop.NombreMaquina = "Machine 7";
+                    break;
+                case 8:
+                    printShop.NombreMaquina = "Machine 8";
+                    break;
+                case 9:
+                    printShop.NombreMaquina = "Machine 9";
+                    break;
+                case 10:
+                    printShop.NombreMaquina = "Machine 10";
+                    break;
+                case 11:
+                    printShop.NombreMaquina = "Machine 11";
+                    break;
+                case 12:
+                    printShop.NombreMaquina = "Machine 12";
+                    break;
+                default:
+                    printShop.NombreMaquina = "-";
+                    break;
+            }
+        }
         //Muestra la lista de tallas de UN Batch por estilo y id Batch seleccionado
         public IEnumerable<PrintShopC> ListaCantidadesTallaPorIdBatchEstilo (int? idEstilo, int idBatch)
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-            SqlDataReader leer = null;
             List<PrintShopC> listTallas = new List<PrintShopC>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "SELECT ID_PRINTSHOP, ID_TALLA, S.TALLA, PRINTED, MISPRINT, DEFECT FROM PRINTSHOP " +
-                "INNER JOIN CAT_ITEM_SIZE S ON S.ID=PRINTSHOP.ID_TALLA " +
-                "WHERE ID_SUMMARY='" + idEstilo + "' AND ID_BATCH='" + idBatch + " 'ORDER BY ID_TALLA asc ";
-            leer = comando.ExecuteReader();
-
-            while (leer.Read())
+            try
             {
-                PrintShopC tallas = new PrintShopC()
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;               
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "SELECT ID_PRINTSHOP, ID_TALLA, S.TALLA, PRINTED, MISPRINT, DEFECT, REPAIR FROM PRINTSHOP " +
+                    "INNER JOIN CAT_ITEM_SIZE S ON S.ID=PRINTSHOP.ID_TALLA " +
+                    "WHERE ID_SUMMARY='" + idEstilo + "' AND ID_BATCH='" + idBatch + " 'ORDER BY ID_TALLA asc ";
+                leer = comando.ExecuteReader();
+
+                while (leer.Read())
                 {
+                    PrintShopC tallas = new PrintShopC()
+                    {
 
-                    Talla = leer["TALLA"].ToString(),
-                    IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
-                    Printed = Convert.ToInt32(leer["PRINTED"]),
-                    MisPrint = Convert.ToInt32(leer["MISPRINT"]),
-                    Defect = Convert.ToInt32(leer["DEFECT"])
+                        Talla = leer["TALLA"].ToString(),
+                        IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
+                        Printed = Convert.ToInt32(leer["PRINTED"]),
+                        MisPrint = Convert.ToInt32(leer["MISPRINT"]),
+                        Defect = Convert.ToInt32(leer["DEFECT"]),
+                        Repair = Convert.ToInt32(leer["REPAIR"])
 
 
-                };
-              
+                    };
 
-                listTallas.Add(tallas);
+                    listTallas.Add(tallas);
+                }
+                leer.Close();
             }
-            leer.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }          
 
             return listTallas;
         }
@@ -427,66 +644,118 @@ namespace FortuneSystem.Models.PrintShop
         public List<PrintShopC> ListaTallasBatch(int? batch, int? id)
         {
             Conexion conex = new Conexion();
-            SqlCommand c = new SqlCommand();
-            SqlDataReader leerF = null;
             List<PrintShopC> listTallas = new List<PrintShopC>();
-            c.Connection = conex.AbrirConexion();
-            c.CommandText = "SELECT P.ID_PRINTSHOP, P.ID_SUMMARY, P.ID_BATCH, CONCAT(U.Nombres,' ',U.Apellidos)AS NOMBRE, P.TURNO, " +
-                " P.ID_TALLA, S.TALLA, P.PRINTED, P.MISPRINT, P.DEFECT, sum(PRINTED+MISPRINT+DEFECT)AS TOTAL FROM PRINTSHOP P " +
-                "INNER JOIN CAT_ITEM_SIZE S ON S.ID=P.ID_TALLA " +
-                "INNER JOIN USUARIOS U ON U.Id=P.ID_USUARIO " +
-                "WHERE P.ID_BATCH='" + batch + "' AND P.ID_SUMMARY='" + id + "'  GROUP BY P.ID_PRINTSHOP,P.ID_SUMMARY, P.ID_BATCH, P.ID_TALLA, S.TALLA, " +
-                "P.PRINTED, P.MISPRINT, P.DEFECT, U.Nombres, U.Apellidos, P.TURNO ORDER BY S.TALLA";
-            leerF = c.ExecuteReader();
-
-            while (leerF.Read())
+            try
             {
-                PrintShopC tallas = new PrintShopC()
+                SqlCommand c = new SqlCommand();
+                SqlDataReader leerF = null;               
+                c.Connection = conex.AbrirConexion();
+                c.CommandText = "SELECT P.ID_PRINTSHOP, P.ID_SUMMARY, P.ID_BATCH, CONCAT(U.Nombres,' ',U.Apellidos)AS NOMBRE, P.TURNO, P.MAQUINA, P.ID_USUARIO_MODIF, P.STATUS_PALLET, " +
+                    " P.ID_TALLA, S.TALLA, P.PRINTED, P.MISPRINT, P.DEFECT, P.REPAIR, sum(PRINTED+MISPRINT+DEFECT+REPAIR)AS TOTAL FROM PRINTSHOP P " +
+                    "INNER JOIN CAT_ITEM_SIZE S ON S.ID=P.ID_TALLA " +
+                    "INNER JOIN USUARIOS U ON U.Id=P.ID_USUARIO " +
+                    "WHERE P.ID_BATCH='" + batch + "' AND P.ID_SUMMARY='" + id + "'  GROUP BY P.ID_PRINTSHOP,P.ID_SUMMARY, P.ID_BATCH, P.ID_TALLA, S.TALLA, " +
+                    "P.PRINTED, P.MISPRINT, P.DEFECT, P.REPAIR, U.Nombres, U.Apellidos, P.TURNO, P.MAQUINA, P.ID_USUARIO_MODIF,P.STATUS_PALLET ORDER BY S.TALLA";
+                leerF = c.ExecuteReader();
+
+                while (leerF.Read())
                 {
-                    Talla = leerF["TALLA"].ToString(),
-                    IdBatch = Convert.ToInt32(leerF["ID_BATCH"]),
-                    IdPrintShop = Convert.ToInt32(leerF["ID_PRINTSHOP"]),
-                    IdSummary = Convert.ToInt32(leerF["ID_SUMMARY"]),
-                    TipoTurno= Convert.ToInt32(leerF["TURNO"]),
-                    NombreUsr= leerF["NOMBRE"].ToString(),
-                    Printed = Convert.ToInt32(leerF["PRINTED"]),
-                    MisPrint = Convert.ToInt32(leerF["MISPRINT"]),
-                    Defect = Convert.ToInt32(leerF["DEFECT"]),
-                    Total = Convert.ToInt32(leerF["TOTAL"])
+                    PrintShopC tallas = new PrintShopC()
+                    {
+                        Talla = leerF["TALLA"].ToString(),
+                        IdBatch = Convert.ToInt32(leerF["ID_BATCH"]),
+                        IdPrintShop = Convert.ToInt32(leerF["ID_PRINTSHOP"]),
+                        IdSummary = Convert.ToInt32(leerF["ID_SUMMARY"]),
+                        TipoTurno = Convert.ToInt32(leerF["TURNO"]),
+                        NombreUsr = leerF["NOMBRE"].ToString(),
+                        Printed = Convert.ToInt32(leerF["PRINTED"]),
+                        MisPrint = Convert.ToInt32(leerF["MISPRINT"]),
+                        Defect = Convert.ToInt32(leerF["DEFECT"]),
+                        Total = Convert.ToInt32(leerF["TOTAL"])
+
+                    };
+                    if (!Convert.IsDBNull(leerF["REPAIR"]))
+                    {
+                        tallas.Repair = Convert.ToInt32(leerF["REPAIR"]);
+                    }
+
+                    if (!Convert.IsDBNull(leerF["STATUS_PALLET"]))
+                    {
+                        tallas.EstadoPallet = Convert.ToBoolean(leerF["STATUS_PALLET"]);
+                    }
+
+                    if (!Convert.IsDBNull(leerF["MAQUINA"]))
+                    {
+                        tallas.Maquina = Convert.ToInt32(leerF["MAQUINA"]);
+                    }
+
+                    if (!Convert.IsDBNull(leerF["ID_USUARIO_MODIF"]))
+                    {
+                        tallas.UsuarioModif = Convert.ToInt32(leerF["ID_USUARIO_MODIF"]);
+                    }
+
+                    if (tallas.UsuarioModif != 0)
+                    {
+                        tallas.NombreUsrModif = objCatUser.Obtener_Nombre_Usuario_PorID(tallas.UsuarioModif);
+                    }
+                    else
+                    {
+                        tallas.NombreUsrModif = "-";
+                    }
+
+                    if (tallas.EstadoPallet != false)
+                    {
+                        tallas.Status = "C";
+                    }
+                    else
+                    {
+                        tallas.Status = "I";
+                    }
 
 
-                };
-
-                listTallas.Add(tallas);
+                    listTallas.Add(tallas);
+                }
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
-
-            return listTallas;
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+             return listTallas;
         }
 
         //Agregar las tallas de un batch
         public void AgregarTallasPrintShop(PrintShopC printShop)
         {
             Conexion conex = new Conexion();
-            SqlCommand com = new SqlCommand();
-            com.Connection = conex.AbrirConexion();
-            com.CommandText = "AgregarPrintShop";
-            com.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                SqlCommand com = new SqlCommand();
+                com.Connection = conex.AbrirConexion();
+                com.CommandText = "AgregarPrintShop";
+                com.CommandType = CommandType.StoredProcedure;
 
-            com.Parameters.AddWithValue("@idSummary", printShop.IdSummary);
-            com.Parameters.AddWithValue("@idBatch", printShop.IdBatch);
-            com.Parameters.AddWithValue("@idTalla", printShop.IdTalla);
-            com.Parameters.AddWithValue("@printed", printShop.Printed);
-            com.Parameters.AddWithValue("@mp", printShop.MisPrint);
-            com.Parameters.AddWithValue("@def", printShop.Defect);
-            com.Parameters.AddWithValue("@maq", printShop.Maquina);
-            com.Parameters.AddWithValue("@turno", printShop.TipoTurno);
-            com.Parameters.AddWithValue("@total", printShop.Total);
-            com.Parameters.AddWithValue("@idUsr", printShop.Usuario);
-
-            com.ExecuteNonQuery();
-            conex.CerrarConexion();
+                com.Parameters.AddWithValue("@idSummary", printShop.IdSummary);
+                com.Parameters.AddWithValue("@idBatch", printShop.IdBatch);
+                com.Parameters.AddWithValue("@idTalla", printShop.IdTalla);
+                com.Parameters.AddWithValue("@printed", printShop.Printed);
+                com.Parameters.AddWithValue("@mp", printShop.MisPrint);
+                com.Parameters.AddWithValue("@def", printShop.Defect);
+                com.Parameters.AddWithValue("@rep", printShop.Repair);
+                com.Parameters.AddWithValue("@maq", printShop.Maquina);
+                com.Parameters.AddWithValue("@turno", printShop.TipoTurno);
+                com.Parameters.AddWithValue("@idStatus", printShop.EstadoPallet);
+                com.Parameters.AddWithValue("@idUsr", printShop.Usuario);
+                com.Parameters.AddWithValue("@idUsrAct", printShop.UsuarioModif);
+                com.ExecuteNonQuery();
+            }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+                       
 
         }
 
@@ -494,25 +763,35 @@ namespace FortuneSystem.Models.PrintShop
         public void ActualizarTallasPrintShop(PrintShopC printShop)
         {
             Conexion conex = new Conexion();
-            SqlCommand com = new SqlCommand();
-            com.Connection = conex.AbrirConexion();
-            com.CommandText = "ActualizarBatchPrintShop";
-            com.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                SqlCommand com = new SqlCommand();
+                com.Connection = conex.AbrirConexion();
+                com.CommandText = "ActualizarBatchPrintShop";
+                com.CommandType = CommandType.StoredProcedure;
 
-            com.Parameters.AddWithValue("@id", printShop.IdPrintShop);
-            com.Parameters.AddWithValue("@idSummary", printShop.IdSummary);
-            com.Parameters.AddWithValue("@idBatch", printShop.IdBatch);
-            com.Parameters.AddWithValue("@idTalla", printShop.IdTalla);
-            com.Parameters.AddWithValue("@printed", printShop.Printed);
-            com.Parameters.AddWithValue("@mp", printShop.MisPrint);
-            com.Parameters.AddWithValue("@def", printShop.Defect);
-            com.Parameters.AddWithValue("@maq", printShop.Maquina);
-            com.Parameters.AddWithValue("@turno", printShop.TipoTurno);
-            com.Parameters.AddWithValue("@total", printShop.Total);
-            com.Parameters.AddWithValue("@idUsr", printShop.Usuario);
+                com.Parameters.AddWithValue("@id", printShop.IdPrintShop);
+                com.Parameters.AddWithValue("@idSummary", printShop.IdSummary);
+                com.Parameters.AddWithValue("@idBatch", printShop.IdBatch);
+                com.Parameters.AddWithValue("@idTalla", printShop.IdTalla);
+                com.Parameters.AddWithValue("@printed", printShop.Printed);
+                com.Parameters.AddWithValue("@mp", printShop.MisPrint);
+                com.Parameters.AddWithValue("@def", printShop.Defect);
+                com.Parameters.AddWithValue("@rep", printShop.Repair);
+                com.Parameters.AddWithValue("@maq", printShop.Maquina);
+                com.Parameters.AddWithValue("@turno", printShop.TipoTurno);
+                com.Parameters.AddWithValue("@idStatus", printShop.EstadoPallet);
+                com.Parameters.AddWithValue("@idUsr", printShop.Usuario);
+                com.Parameters.AddWithValue("@idUsrAct", printShop.UsuarioModif);
 
-            com.ExecuteNonQuery();
-            conex.CerrarConexion();
+
+                com.ExecuteNonQuery();
+            }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }          
 
         }
 
@@ -522,18 +801,25 @@ namespace FortuneSystem.Models.PrintShop
             int idBatch = 0;
             int idTotal = 0;
             Conexion conex = new Conexion();
-            SqlCommand coman = new SqlCommand();
-            SqlDataReader leerF = null;
-            coman.Connection = conex.AbrirConexion();
-            coman.CommandText = "SELECT distinct ID_BATCH FROM PRINTSHOP WHERE ID_SUMMARY='" + id + "' ";
-            leerF = coman.ExecuteReader();
-            while (leerF.Read())
+            try
             {
-                idBatch += Convert.ToInt32(leerF["ID_BATCH"]);
-                idTotal++;
+                SqlCommand coman = new SqlCommand();
+                SqlDataReader leerF = null;
+                coman.Connection = conex.AbrirConexion();
+                coman.CommandText = "SELECT distinct ID_BATCH FROM PRINTSHOP WHERE ID_SUMMARY='" + id + "' ";
+                leerF = coman.ExecuteReader();
+                while (leerF.Read())
+                {
+                    idBatch += Convert.ToInt32(leerF["ID_BATCH"]);
+                    idTotal++;
+                }
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }            
             return idTotal;
         }
 
@@ -543,20 +829,59 @@ namespace FortuneSystem.Models.PrintShop
            
             int idPrintShop = 0;
             Conexion conex = new Conexion();
-            SqlCommand coman = new SqlCommand();
-            SqlDataReader leerF = null;
-            coman.Connection = conex.AbrirConexion();
-            coman.CommandText = "SELECT ID_PRINTSHOP FROM PRINTSHOP WHERE ID_BATCH='" + idBatch + "' AND ID_SUMMARY='" + idSummary + "' AND ID_TALLA='" + idTalla + "' ";
-            leerF = coman.ExecuteReader();
-            while (leerF.Read())
+            try
             {
-                idPrintShop += Convert.ToInt32(leerF["ID_PRINTSHOP"]);
-              
+                SqlCommand coman = new SqlCommand();
+                SqlDataReader leerF = null;
+                coman.Connection = conex.AbrirConexion();
+                coman.CommandText = "SELECT ID_PRINTSHOP FROM PRINTSHOP WHERE ID_BATCH='" + idBatch + "' AND ID_SUMMARY='" + idSummary + "' AND ID_TALLA='" + idTalla + "' ";
+                leerF = coman.ExecuteReader();
+                while (leerF.Read())
+                {
+                    idPrintShop += Convert.ToInt32(leerF["ID_PRINTSHOP"]);
+
+
+                }
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }            
             return idPrintShop;
         }
+
+        //Permite obtener el idUsuario del batch registrado
+        public int ObtenerIdUsuarioPorBatchEstilo(int idBatch, int idSummary, int idTalla)
+        {
+
+            int idUsuario = 0;
+            Conexion conex = new Conexion();
+            try
+            {
+                SqlCommand coman = new SqlCommand();
+                SqlDataReader leerF = null;
+                coman.Connection = conex.AbrirConexion();
+                coman.CommandText = "SELECT ID_USUARIO FROM PRINTSHOP WHERE ID_BATCH='" + idBatch + "' AND ID_SUMMARY='" + idSummary + "' AND ID_TALLA='" + idTalla + "' ";
+                leerF = coman.ExecuteReader();
+                while (leerF.Read())
+                {
+                    idUsuario += Convert.ToInt32(leerF["ID_USUARIO"]);
+
+
+                }
+                leerF.Close();
+            }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }           
+            return idUsuario;
+        }
+
+
     }
   
 }

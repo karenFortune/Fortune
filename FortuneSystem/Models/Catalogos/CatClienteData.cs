@@ -14,54 +14,67 @@ namespace FortuneSystem.Models.Catalogos
         //Muestra la lista de clientes
         public IEnumerable<CatCliente> ListaClientes()
         {
-          Conexion conn = new Conexion();
-         SqlCommand comando = new SqlCommand();
-         SqlDataReader leerCliente = null;
-        List<CatCliente> listClientes = new List<CatCliente>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "Listar_Clientes";
-            comando.CommandType = CommandType.StoredProcedure;
-            leerCliente = comando.ExecuteReader();
-
-            while (leerCliente.Read())
+            Conexion conn = new Conexion();
+            List<CatCliente> listClientes = new List<CatCliente>();
+            try
             {
-                CatCliente clientes = new CatCliente()
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leerCliente = null;
+                
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Listar_Clientes";
+                comando.CommandType = CommandType.StoredProcedure;
+                leerCliente = comando.ExecuteReader();
+
+                while (leerCliente.Read())
                 {
-                    Customer = Convert.ToInt32(leerCliente["CUSTOMER"]),
-                    Nombre = leerCliente["NAME"].ToString()
-                };  
+                    CatCliente clientes = new CatCliente()
+                    {
+                        Customer = Convert.ToInt32(leerCliente["CUSTOMER"]),
+                        Nombre = leerCliente["NAME"].ToString()
+                    };
 
-                listClientes.Add(clientes);
+                    listClientes.Add(clientes);
+                }
+                leerCliente.Close();
             }
-            leerCliente.Close();
-            conn.CerrarConexion();
-
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
             return listClientes;
         }
 
         public IEnumerable<CatCliente> ListaClientes2()
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-            SqlDataReader leerClienteP = null;
             List<CatCliente> listClientes = new List<CatCliente>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "Listar_Clientes";
-            comando.CommandType = CommandType.StoredProcedure;
-            leerClienteP = comando.ExecuteReader();
-
-            while (leerClienteP.Read())
+            try
             {
-                CatCliente clientes = new CatCliente()
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leerClienteP = null;               
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Listar_Clientes";
+                comando.CommandType = CommandType.StoredProcedure;
+                leerClienteP = comando.ExecuteReader();
+                while (leerClienteP.Read())
                 {
-                    Customer = Convert.ToInt32(leerClienteP["CUSTOMER"]),
-                    Nombre = leerClienteP["NAME"].ToString()
-                };
+                    CatCliente clientes = new CatCliente()
+                    {
+                        Customer = Convert.ToInt32(leerClienteP["CUSTOMER"]),
+                        Nombre = leerClienteP["NAME"].ToString()
+                    };
 
-                listClientes.Add(clientes);
+                    listClientes.Add(clientes);
+                }
+                leerClienteP.Close();
             }
-            leerClienteP.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
 
             return listClientes;
         }
@@ -70,16 +83,20 @@ namespace FortuneSystem.Models.Catalogos
         public void AgregarClientes(CatCliente clientes)
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-          
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "AgregarCliente";
-            comando.CommandType = CommandType.StoredProcedure;
-
-            comando.Parameters.AddWithValue("@Nombre", clientes.Nombre);
-
-            comando.ExecuteNonQuery();
-            conn.CerrarConexion();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "AgregarCliente";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Nombre", clientes.Nombre);
+                comando.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
 
         }
 
@@ -88,22 +105,27 @@ namespace FortuneSystem.Models.Catalogos
         {
 
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-            SqlDataReader leerCliente = null;
             CatCliente clientes = new CatCliente();
-
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "Listar_Cliente_Por_Id";
-            comando.CommandType = CommandType.StoredProcedure;
-            comando.Parameters.AddWithValue("@Id", id);
-
-            leerCliente = comando.ExecuteReader();
-            while (leerCliente.Read())
+            try
             {
-
-                clientes.Customer= Convert.ToInt32(leerCliente["CUSTOMER"]);
-                clientes.Nombre = leerCliente["NAME"].ToString();
-       
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leerCliente = null;                
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Listar_Cliente_Por_Id";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Id", id);
+                leerCliente = comando.ExecuteReader();
+                while (leerCliente.Read())
+                {
+                    clientes.Customer = Convert.ToInt32(leerCliente["CUSTOMER"]);
+                    clientes.Nombre = leerCliente["NAME"].ToString();
+                }
+                leerCliente.Close();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
             }
             return clientes;
 
@@ -113,33 +135,41 @@ namespace FortuneSystem.Models.Catalogos
         public void ActualizarCliente(CatCliente clientes)
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "Actualizar_Cliente";
-            comando.CommandType = CommandType.StoredProcedure;
-
-            comando.Parameters.AddWithValue("@Id", clientes.Customer);
-            comando.Parameters.AddWithValue("@Nombre", clientes.Nombre);
-
-            comando.ExecuteNonQuery();
-            conn.CerrarConexion();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Actualizar_Cliente";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Id", clientes.Customer);
+                comando.Parameters.AddWithValue("@Nombre", clientes.Nombre);
+                comando.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
         }
 
         //Permite eliminar la informacion de un cliente
         public void EliminarCliente(int? id)
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-         
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "EliminarClientes";
-            comando.CommandType = CommandType.StoredProcedure;
-
-            comando.Parameters.AddWithValue("@Id", id);
-
-            comando.ExecuteNonQuery();
-            conn.CerrarConexion();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "EliminarClientes";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Id", id);
+                comando.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
         }
 
 

@@ -45,12 +45,17 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult Obtener_Lista_Tallas_PrintShop(List<string> ListTalla, int TurnoID, int EstiloID)
+        public JsonResult Obtener_Lista_Tallas_PrintShop(List<string> ListTalla, int TurnoID, int EstiloID, int MaquinaID, String StatusID)
         {
             PrintShopC tallaItem = new PrintShopC();
-            int noEmpleado = 1;//Convert.ToInt32(Session["id_Empleado"]);
+            int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
             tallaItem.Usuario = noEmpleado;
-            tallaItem.TipoTurno = 1; //TurnoID;
+            tallaItem.TipoTurno = TurnoID;
+            tallaItem.Maquina = MaquinaID;
+            if(StatusID != null)
+            {
+                tallaItem.EstadoPallet = Convert.ToBoolean(StatusID);
+            }     
             tallaItem.IdSummary = EstiloID;
             int numBatch = objPrint.ObtenerIdBatch(EstiloID);
             tallaItem.IdBatch = numBatch + 1;
@@ -68,6 +73,7 @@ namespace FortuneSystem.Controllers
                 string printed;
                 string misPrint;
                 string defecto;
+                string repair;
                 int c = 0;
 
 
@@ -79,10 +85,12 @@ namespace FortuneSystem.Controllers
                         printed = tallas[1];
                         misPrint = tallas[2];
                         defecto = tallas[3];
+                        repair = tallas[4];
                         tallaItem.IdTalla = objTalla.ObtenerIdTalla(talla);
                         tallaItem.Printed = Int32.Parse(printed);
                         tallaItem.MisPrint = Int32.Parse(misPrint);
                         tallaItem.Defect= Int32.Parse(defecto);
+                        tallaItem.Repair = Int32.Parse(repair);
 
 
                         objPrint.AgregarTallasPrintShop(tallaItem);
@@ -96,14 +104,19 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult Actualizar_Lista_Tallas_Batch(List<string> ListTalla, int TurnoID, int EstiloID, int IdBatch)
+        public JsonResult Actualizar_Lista_Tallas_Batch(List<string> ListTalla, int TurnoID, int EstiloID, int IdBatch, int MaquinaID, string StatusID)
         {
             PrintShopC tallaItem = new PrintShopC();
             int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
-            tallaItem.Usuario = noEmpleado;
+            tallaItem.UsuarioModif = noEmpleado;
             tallaItem.TipoTurno =TurnoID;
             tallaItem.IdSummary = EstiloID;
             tallaItem.IdBatch = IdBatch;
+            tallaItem.Maquina = MaquinaID;
+            if (StatusID != null)
+            {
+                tallaItem.EstadoPallet = Convert.ToBoolean(StatusID);
+            }
             int i = 1;
             foreach (var item in ListTalla)
             {
@@ -118,6 +131,7 @@ namespace FortuneSystem.Controllers
                 string printed;
                 string misPrint;
                 string defecto;
+                string repair;
                 int c = 0;
 
 
@@ -129,11 +143,14 @@ namespace FortuneSystem.Controllers
                         printed = tallas[1];
                         misPrint = tallas[2];
                         defecto = tallas[3];
+                        repair = tallas[4];
                         tallaItem.IdTalla = objTalla.ObtenerIdTalla(talla);
                         tallaItem.Printed = Int32.Parse(printed);
                         tallaItem.MisPrint = Int32.Parse(misPrint);
                         tallaItem.Defect = Int32.Parse(defecto);
+                        tallaItem.Repair = Int32.Parse(repair);
                         tallaItem.IdPrintShop = objPrint.ObtenerIdPrintShopPorBatchEstilo(tallaItem.IdBatch, tallaItem.IdSummary, tallaItem.IdTalla);
+                        tallaItem.Usuario = objPrint.ObtenerIdUsuarioPorBatchEstilo(tallaItem.IdBatch, tallaItem.IdSummary, tallaItem.IdTalla);
                         objPrint.ActualizarTallasPrintShop(tallaItem);
 
                     }
@@ -158,8 +175,8 @@ namespace FortuneSystem.Controllers
         public JsonResult Lista_Tallas_PrintShop_IdEstilo_IdBatch(int? idEstilo, int idBatch)
         {
             List<PrintShopC> listaCantidadesTallasBatch = objPrint.ListaCantidadesTallaPorIdBatchEstilo(idEstilo, idBatch).ToList();
-
-            var result = Json(new { listaTalla = listaCantidadesTallasBatch });
+            List<int> listaTallasTBatch = objPrint.ListaTotalTallasBatchEstilo(idEstilo).ToList();
+            var result = Json(new { listaTalla = listaCantidadesTallasBatch, listaPrint = listaTallasTBatch });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

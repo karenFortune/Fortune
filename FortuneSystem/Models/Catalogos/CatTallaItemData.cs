@@ -17,23 +17,28 @@ namespace FortuneSystem.Models.Catalogos
         public IEnumerable<CatTallaItem> ListaTallas()
         {
             List<CatTallaItem> listTallas = new List<CatTallaItem>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "Listar_Tallas";
-            comando.CommandType = CommandType.StoredProcedure;
-            leer = comando.ExecuteReader();
-
-            while (leer.Read())
+            try
             {
-                CatTallaItem tallas = new CatTallaItem()
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Listar_Tallas";
+                comando.CommandType = CommandType.StoredProcedure;
+                leer = comando.ExecuteReader();
+                while (leer.Read())
                 {
-                    Id = Convert.ToInt32(leer["ID"]),
-                    Talla = leer["TALLA"].ToString()
-                };
-
-                listTallas.Add(tallas);
+                    CatTallaItem tallas = new CatTallaItem()
+                    {
+                        Id = Convert.ToInt32(leer["ID"]),
+                        Talla = leer["TALLA"].ToString()
+                    };
+                    listTallas.Add(tallas);
+                }
+                leer.Close();
             }
-            leer.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
 
             return listTallas;
         }
@@ -42,20 +47,27 @@ namespace FortuneSystem.Models.Catalogos
         public List<String> Lista_tallas()
         {
             Conexion con = new Conexion();
-            SqlCommand com = new SqlCommand();
-            SqlDataReader leer = null;
-            //string listaStag="";
             List<String> Lista = new List<String>();
-            com.Connection = con.AbrirConexion();
-            com.CommandText = "SELECT TALLA from CAT_ITEM_SIZE order by TALLA asc ";
-            leer = com.ExecuteReader();
-            while (leer.Read())
+            try
             {
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                //string listaStag="";                
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT TALLA from CAT_ITEM_SIZE order by TALLA asc ";
+                leer = com.ExecuteReader();
+                while (leer.Read())
+                {
 
-                Lista.Add(leer["TALLA"].ToString());
+                    Lista.Add(leer["TALLA"].ToString());
+                }
+                leer.Close();
             }
-            leer.Close();
-            con.CerrarConexion();
+            finally
+            {
+                con.CerrarConexion();
+                con.Dispose();
+            }
             //return listaStag;
             return Lista;
 
@@ -67,42 +79,54 @@ namespace FortuneSystem.Models.Catalogos
         //Permite crear una nueva talla
         public void AgregarTallas(CatTallaItem tallas)
         {
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "AgregarTalla";
-            comando.CommandType = CommandType.StoredProcedure;
-
-            comando.Parameters.AddWithValue("@Talla", tallas.Talla);
-
-            comando.ExecuteNonQuery();
-            conn.CerrarConexion();
+            try
+            {
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "AgregarTalla";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Talla", tallas.Talla);
+                comando.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
 
         }
 
         public IEnumerable<CatTallaItem> Lista_tallas_Estilo_Arte(int? idEstilo)
         {
             Conexion con = new Conexion();
-            SqlCommand com = new SqlCommand();
-            SqlDataReader leer = null;
-            //string listaStag="";
             List<CatTallaItem> Lista = new List<CatTallaItem>();
-            com.Connection = con.AbrirConexion();
-            com.CommandText = "SELECT S.TALLA FROM ITEM_SIZE IZ " +
-                "INNER JOIN CAT_ITEM_SIZE S ON IZ.TALLA_ITEM=S.ID " +
-                "WHERE ID_SUMMARY='" + idEstilo + "'  order by S.TALLA asc ";
-            leer = com.ExecuteReader();
-            while (leer.Read())
+            try
             {
-
-                CatTallaItem catTalla = new CatTallaItem()
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                //string listaStag="";               
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT S.TALLA FROM ITEM_SIZE IZ " +
+                    "INNER JOIN CAT_ITEM_SIZE S ON IZ.TALLA_ITEM=S.ID " +
+                    "WHERE ID_SUMMARY='" + idEstilo + "'  order by S.TALLA asc ";
+                leer = com.ExecuteReader();
+                while (leer.Read())
                 {
-                    
-                    Talla = leer["TALLA"].ToString()
-                };
 
-                Lista.Add(catTalla);
+                    CatTallaItem catTalla = new CatTallaItem()
+                    {
+
+                        Talla = leer["TALLA"].ToString()
+                    };
+
+                    Lista.Add(catTalla);
+                }
+                leer.Close();
             }
-            leer.Close();
-            con.CerrarConexion();
+            finally
+            {
+                con.CerrarConexion();
+                con.Dispose();
+            }
             return Lista;
 
 
@@ -111,29 +135,34 @@ namespace FortuneSystem.Models.Catalogos
         public IEnumerable<UPC> Lista_tallas_upc(int? idSummary)
         {
             Conexion con = new Conexion();
-            SqlCommand com = new SqlCommand();
-            SqlDataReader leer = null;
-            //string listaStag="";
             List<UPC> Lista = new List<UPC>();
-            com.Connection = con.AbrirConexion();
-            com.CommandText = "select S.TALLA, UPC from UPC U  " +
-                "INNER JOIN CAT_ITEM_SIZE S ON U.IdTalla=S.ID " +
-                "where IdSummary='" + idSummary + "'  order by S.TALLA asc ";
-            leer = com.ExecuteReader();
-            while (leer.Read())
+            try
             {
-
-                UPC catTalla = new UPC()
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                //string listaStag="";               
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "select S.TALLA, UPC from UPC U  " +
+                    "INNER JOIN CAT_ITEM_SIZE S ON U.IdTalla=S.ID " +
+                    "where IdSummary='" + idSummary + "'  order by S.TALLA asc ";
+                leer = com.ExecuteReader();
+                while (leer.Read())
                 {
+                    UPC catTalla = new UPC()
+                    {
 
-                    Talla = leer["TALLA"].ToString(),
-                    UPC1 = Convert.ToInt64(leer["UPC"])
-                };
-
-                Lista.Add(catTalla);
+                        Talla = leer["TALLA"].ToString(),
+                        UPC1 = Convert.ToInt64(leer["UPC"])
+                    };
+                    Lista.Add(catTalla);
+                }
+                leer.Close();
             }
-            leer.Close();
-            con.CerrarConexion();
+            finally
+            {
+                con.CerrarConexion();
+                con.Dispose();
+            }
             return Lista;
 
 
@@ -143,66 +172,88 @@ namespace FortuneSystem.Models.Catalogos
         public CatTallaItem ConsultarListaTallas(int? id)
         {
             CatTallaItem tallas = new CatTallaItem();
-
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "Listar_Talla_Por_Id";
-            comando.CommandType = CommandType.StoredProcedure;
-            comando.Parameters.AddWithValue("@Id", id);
-
-            leer = comando.ExecuteReader();
-            while (leer.Read())
+            try
             {
-
-                tallas.Id = Convert.ToInt32(leer["ID"]);
-                tallas.Talla = leer["TALLA"].ToString();
-
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Listar_Talla_Por_Id";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Id", id);
+                leer = comando.ExecuteReader();
+                while (leer.Read())
+                {
+                    tallas.Id = Convert.ToInt32(leer["ID"]);
+                    tallas.Talla = leer["TALLA"].ToString();
+                }
+                leer.Close();
             }
-            return tallas;
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
+                return tallas;
 
         }
 
         //Permite actualiza la informacion de una talla
         public void ActualizarTallas(CatTallaItem tallas)
         {
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "Actualizar_Talla";
-            comando.CommandType = CommandType.StoredProcedure;
-
-            comando.Parameters.AddWithValue("@Id", tallas.Id);
-            comando.Parameters.AddWithValue("@Talla", tallas.Talla);
-
-            comando.ExecuteNonQuery();
-            conn.CerrarConexion();
+            try
+            {
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Actualizar_Talla";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Id", tallas.Id);
+                comando.Parameters.AddWithValue("@Talla", tallas.Talla);
+                comando.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
         }
 
         //Permite eliminar la informacion de una talla
         public void EliminarTallas(int? id)
         {
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "EliminarTalla";
-            comando.CommandType = CommandType.StoredProcedure;
-
-            comando.Parameters.AddWithValue("@Id", id);
-
-            comando.ExecuteNonQuery();
-            conn.CerrarConexion();
+            try
+            {
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "EliminarTalla";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Id", id);
+                comando.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
         }
         //Permite obtener el id de un talla
         public int ObtenerIdTalla(string talla)
         {
             int idTalla = 0;
             Conexion conex = new Conexion();
-            SqlCommand coman = new SqlCommand();
-            SqlDataReader leerF = null;
-            coman.Connection = conex.AbrirConexion();
-            coman.CommandText = "select ID from CAT_ITEM_SIZE WHERE TALLA='" + talla + "'";
-            leerF = coman.ExecuteReader();
-            while (leerF.Read())
+            try
             {
-                idTalla += Convert.ToInt32(leerF["ID"]);
+                SqlCommand coman = new SqlCommand();
+                SqlDataReader leerF = null;
+                coman.Connection = conex.AbrirConexion();
+                coman.CommandText = "select ID from CAT_ITEM_SIZE WHERE TALLA='" + talla + "'";
+                leerF = coman.ExecuteReader();
+                while (leerF.Read())
+                {
+                    idTalla += Convert.ToInt32(leerF["ID"]);
+                }
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
             return idTalla;
         }
 
@@ -220,8 +271,10 @@ namespace FortuneSystem.Models.Catalogos
                 cmd.CommandType = CommandType.Text;
                 reader = cmd.ExecuteReader();
                 conex.CerrarConexion();
+            }finally {
+                conex.CerrarConexion();
+                conex.Dispose();
             }
-            finally { conex.CerrarConexion(); }
 
         }
 

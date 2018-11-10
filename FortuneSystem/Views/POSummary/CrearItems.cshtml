@@ -32,8 +32,7 @@
             $('#ItemDescripcion_Descripcion').val('');
             $("#nuevoEstilo").prop("disabled", false);
 
-        }
-        
+        }  
 
             $('#nuevoColor').click(function (e) {
         var colorEstilo = $("#CatColores_CodigoColor").val();
@@ -44,7 +43,7 @@
         }).done(function (data) {        });
                 $("#nuevoColor").prop("disabled", true);   
         alertify.set('notifier', 'position', 'top-right');
-        alertify.notify('Se registro correctamente el color.', 'success', 10, null);
+                alertify.notify('The color was registered correctly.', 'success', 10, null);
         });
 
         $('#nuevoEstilo').click(function (e) {
@@ -57,7 +56,7 @@
         });
             $("#nuevoEstilo").prop("disabled", true);
             alertify.set('notifier', 'position', 'top-right');
-        alertify.notify('Se registro correctamente el estilo.', 'success', 10, null);
+            alertify.notify('The style was correctly registered.', 'success', 10, null);
     });
 
         $("#ItemDescripcion_ItemEstilo,#CatColores_CodigoColor,#f-talla").on('input', function () {
@@ -85,7 +84,7 @@
 
             });            
             if (error != 0) {
-                var alert = alertify.alert("Mensaje", 'Todos los campos son requeridos.').set('label', 'Aceptar');
+                var alert = alertify.alert("Message", 'All fields are required.').set('label', 'Aceptar');
                 alert.set({ transition: 'zoom' });
                 alert.set('modal', false); 
             } else {
@@ -109,7 +108,7 @@
                
                     });
                 alertify.set('notifier', 'position', 'top-right');
-                alertify.notify('Se registro correctamente el Estilo.', 'success', 10, null);
+                alertify.notify('The Style was registered correctly.', 'success', 10, null);
             }
 
                  
@@ -164,10 +163,10 @@
                         html +='<table class="table" id="tablaTallas"><thead>' +
                             '  <tr>' +
 
-                            '<th>Talla</th>' +
-                            ' <th>Cantidad</th>' +
-                            ' <th>Extras</th>' +
-                            ' <th>Ejemplos</th>' +
+                            '<th>Size</th>' +
+                            ' <th>Quantity</th>' +
+                            ' <th>Extra</th>' +
+                            ' <th>Examples</th>' +
                             '</tr>'+
                             '</thead><tbody>';
                         $.each(result, function (key, item) {
@@ -177,7 +176,7 @@
                             html += '<td><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 "  /></td>';
                             html += '<td><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 " value="' + 0 + '"/></td>';
                             html += '<td><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 "  value="' + 0 + '"/></td>';
-                            html += '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Eliminar</button></td>';
+                            html += '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
                             html += '</tr>';
 
                         });
@@ -296,7 +295,7 @@
     function enviarListaTalla(cadena, error) { 
 
         if (error != 0) {
-            var alert = alertify.alert("Mensaje", 'Todos los campos son obligatorios.').set('label', 'Aceptar');
+            var alert = alertify.alert("Message", 'All fields are required.').set('label', 'Aceptar');
             alert.set({ transition: 'zoom' });
             alert.set('modal', false);
         } else {
@@ -309,8 +308,8 @@
                 contentType: 'application/json',
                 success: function (data) {
                     alertify.set('notifier', 'position', 'top-right');
-                    alertify.notify('Se registro correctamente las tallas.', 'success', 5, null);
-                    var confirm = alertify.confirm('Confirmacion', '¿Desea registrar un nuevo Estilo?', null, null).set('labels', { ok: 'Aceptar', cancel: 'Cancelar' });
+                    alertify.notify('The sizes were correctly registered.', 'success', 5, null);
+                    var confirm = alertify.confirm('Confirmation', 'Do you want to register a new Style?', null, null).set('labels', { ok: 'Aceptar', cancel: 'Cancelar' });
 
                     confirm.set({ transition: 'slide' });
 
@@ -322,7 +321,7 @@
                     });
 
                     confirm.set('oncancel', function () { 
-                        alertify.notify('Se finalizo el registro de la orden de compra.','success', 5, null);                  
+                        alertify.notify('The purchase order record was finalized.','success', 5, null);                  
                        
                         setTimeout("redireccionarPagina()", 800);
 
@@ -331,7 +330,7 @@
                 error: function (xhr, ajaxOptions, thrownError) {
                     showError(xhr.status, xhr.responseText);
                     if (data.error == 1) {
-                        alertify.notify('Verificar.', 'error', 5, null);
+                        alertify.notify('Check.', 'error', 5, null);
                     }
                 }
             });
@@ -372,7 +371,9 @@
     @Html.HiddenFor(model => model.IdColor)
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h4>Recepci&oacute;n de Items</h4>
+            <h4>
+                Reception of styles
+            </h4>
         </div>
         <div class="container-fluid">
             <div class="form-row ">
@@ -389,7 +390,7 @@
                 <div class="form-group col-md-4">
                     <br />
                     <button type="button" class="btn btn-success" id="nuevoEstilo" data-toggle="modal">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Estilo
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Style
                     </button>
                 </div>
             </div>
@@ -412,7 +413,7 @@
                     <br />
 
                     <button type="button" class="btn btn-success" id="nuevoColor" data-toggle="modal">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Color
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Color
                     </button>
 
                 </div>
@@ -462,7 +463,7 @@
                 <br />
                 <div class="text-center margin-bottom col-sm-12">
                     <button type="button" class="btn btn-success" id="nuevoItem" data-toggle="modal">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Guardar Item
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Save Item
                     </button>
                 </div>
             </div>

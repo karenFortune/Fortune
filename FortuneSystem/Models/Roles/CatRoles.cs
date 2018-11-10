@@ -10,11 +10,11 @@ namespace FortuneSystem.Models.Roles
     public partial class CatRoles
     {
         
-        [Display(Name = "Id")]
+        [Display(Name = "NO.ROLE")]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Ingrese el Rol.")]
-        [Display(Name = "Rol")]
+        [Required]
+        [Display(Name = "ROLE")]
         [Column("rol")]
         public string Rol { get; set; }  
      

@@ -14,81 +14,79 @@ namespace FortuneSystem.Models.Arte
         public IEnumerable<IMAGEN_ARTE> ListaArtes(int id)
         {
              Conexion conn = new Conexion();
-             SqlCommand comando = new SqlCommand();
-             SqlDataReader leerFilas = null;
-             List<IMAGEN_ARTE> listArte = new List<IMAGEN_ARTE>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "select IA.IdImgArte, IA.IdEstilo,IA.StatusArte,A.IdSummary, C.NAME_FINAL, IA.StatusPNL, ID.ITEM_STYLE, IA.imgArte, IA.imgPNL,P.PO from IMAGEN_ARTE IA " +
-                "INNER JOIN ITEM_DESCRIPTION ID ON ID.ITEM_ID = IA.IdEstilo " +
-                "INNER JOIN ARTE A ON A.IdImgArte=IA.IdImgArte " +
-                "INNER JOIN PO_SUMMARY PS ON PS.ID_PO_SUMMARY=A.IdSummary " +
-                "INNER JOIN PEDIDO P ON P.ID_PEDIDO=PS.ID_PEDIDOS " +
-                "INNER JOIN CAT_CUSTOMER_PO C ON P.CUSTOMER_FINAL=C.CUSTOMER_FINAL WHERE IA.IdImgArte='" + id + "'";
-            leerFilas = comando.ExecuteReader();
-
-            while (leerFilas.Read())
+            List<IMAGEN_ARTE> listArte = new List<IMAGEN_ARTE>();
+            try
             {
-               
-                IMAGEN_ARTE arte = new IMAGEN_ARTE()
-                {
-                    IdImgArte = Convert.ToInt32(leerFilas["IdImgArte"]),
-                    IdEstilo = Convert.ToInt32(leerFilas["IdEstilo"]),
-                    StatusArte = Convert.ToInt32(leerFilas["StatusArte"]),
-                    StatusPNL = Convert.ToInt32(leerFilas["StatusPNL"]),
-                    Estilo = leerFilas["ITEM_STYLE"].ToString(),
-                    Tienda = leerFilas["NAME_FINAL"].ToString(),
-                    PO = leerFilas["PO"].ToString()
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leerFilas = null;               
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "select IA.IdImgArte, IA.IdEstilo,IA.StatusArte,A.IdSummary, C.NAME_FINAL, IA.StatusPNL, ID.ITEM_STYLE, IA.extensionArte, IA.extensionPNL,P.PO from IMAGEN_ARTE IA " +
+                    "INNER JOIN ITEM_DESCRIPTION ID ON ID.ITEM_ID = IA.IdEstilo " +
+                    "INNER JOIN ARTE A ON A.IdImgArte=IA.IdImgArte " +
+                    "INNER JOIN PO_SUMMARY PS ON PS.ID_PO_SUMMARY=A.IdSummary " +
+                    "INNER JOIN PEDIDO P ON P.ID_PEDIDO=PS.ID_PEDIDOS " +
+                    "INNER JOIN CAT_CUSTOMER_PO C ON P.CUSTOMER_FINAL=C.CUSTOMER_FINAL WHERE IA.IdImgArte='" + id + "'";
+                leerFilas = comando.ExecuteReader();
 
-                };
-                ARTE catArte = new ARTE()
+                while (leerFilas.Read())
                 {
-                    IdSummary = Convert.ToInt32(leerFilas["IdSummary"])
-                };
-               
 
-                if (!Convert.IsDBNull(leerFilas["imgArte"]))
-                {
-                    arte.imgArte = (byte[])leerFilas["imgArte"];
-                }
+                    IMAGEN_ARTE arte = new IMAGEN_ARTE()
+                    {
+                        IdImgArte = Convert.ToInt32(leerFilas["IdImgArte"]),
+                        IdEstilo = Convert.ToInt32(leerFilas["IdEstilo"]),
+                        StatusArte = Convert.ToInt32(leerFilas["StatusArte"]),
+                        StatusPNL = Convert.ToInt32(leerFilas["StatusPNL"]),
+                        Estilo = leerFilas["ITEM_STYLE"].ToString(),
+                        Tienda = leerFilas["NAME_FINAL"].ToString(),
+                        extensionArte = leerFilas["extensionArte"].ToString(),
+                        extensionPNL = leerFilas["extensionPNL"].ToString(),
+                        PO = leerFilas["PO"].ToString()
 
-                if (!Convert.IsDBNull(leerFilas["imgPNL"]))
-                {
-                    arte.imgPNL = (byte[])leerFilas["imgPNL"];
-                }
+                    };
+                    ARTE catArte = new ARTE()
+                    {
+                        IdSummary = Convert.ToInt32(leerFilas["IdSummary"])
+                    };
 
-                //Obtener el idEstado Arte 
-                if (arte.StatusArte == 1)
-                {
-                    arte.EstadosArte = EstatusArte.APPROVED;
-                }
-                else if (arte.StatusArte == 2)
-                {
-                    arte.EstadosArte = EstatusArte.REVIEWED;
-                }
-                else if (arte.StatusArte == 3)
-                {
-                    arte.EstadosArte = EstatusArte.PENDING;
-                }
-                //Obtener el idEstado PNL
-                if (arte.StatusPNL == 1)
-                {
-                    arte.EstadosPNL = EstatusPNL.APPROVED;
-                }
-                else if (arte.StatusPNL == 2)
-                {
-                    arte.EstadosPNL = EstatusPNL.REVIEWED;
-                }
-                else if (arte.StatusPNL == 3)
-                {
-                    arte.EstadosPNL = EstatusPNL.PENDING;
-                }
+                    //Obtener el idEstado Arte 
+                    if (arte.StatusArte == 1)
+                    {
+                        arte.EstadosArte = EstatusArte.APPROVED;
+                    }
+                    else if (arte.StatusArte == 2)
+                    {
+                        arte.EstadosArte = EstatusArte.REVIEWED;
+                    }
+                    else if (arte.StatusArte == 3)
+                    {
+                        arte.EstadosArte = EstatusArte.PENDING;
+                    }
+                    //Obtener el idEstado PNL
+                    if (arte.StatusPNL == 1)
+                    {
+                        arte.EstadosPNL = EstatusPNL.APPROVED;
+                    }
+                    else if (arte.StatusPNL == 2)
+                    {
+                        arte.EstadosPNL = EstatusPNL.REVIEWED;
+                    }
+                    else if (arte.StatusPNL == 3)
+                    {
+                        arte.EstadosPNL = EstatusPNL.PENDING;
+                    }
 
-                arte.CATARTE = catArte;
-                listArte.Add(arte);
+                    arte.CATARTE = catArte;
+                    listArte.Add(arte);
 
+                }
+                leerFilas.Close();
             }
-            leerFilas.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }          
 
             return listArte;
         }
@@ -97,70 +95,83 @@ namespace FortuneSystem.Models.Arte
         public IEnumerable<IMAGEN_ARTE> ListaInvArtes()
         {
             Conexion conn = new Conexion();
-            SqlCommand comando = new SqlCommand();
-            SqlDataReader leerFilas = null;
             List<IMAGEN_ARTE> listArte = new List<IMAGEN_ARTE>();
-            comando.Connection = conn.AbrirConexion();
-            comando.CommandText = "select IA.IdImgArte, IA.IdEstilo,IA.StatusArte, IA.StatusPNL, ID.ITEM_STYLE, IA.imgArte, IA.imgPNL from IMAGEN_ARTE IA " +
-                "INNER JOIN ITEM_DESCRIPTION ID ON ID.ITEM_ID = IA.IdEstilo";
-            leerFilas = comando.ExecuteReader();
-
-            while (leerFilas.Read())
+            try
             {
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leerFilas = null;                
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "select IA.IdImgArte, IA.IdEstilo,IA.StatusArte, IA.StatusPNL, ID.ITEM_STYLE, ID.DESCRIPTION, IA.extensionArte, IA.extensionPNL from IMAGEN_ARTE IA " +
+                    "INNER JOIN ITEM_DESCRIPTION ID ON ID.ITEM_ID = IA.IdEstilo";
+                leerFilas = comando.ExecuteReader();
 
-                IMAGEN_ARTE arte = new IMAGEN_ARTE()
+                while (leerFilas.Read())
                 {
-                    IdImgArte = Convert.ToInt32(leerFilas["IdImgArte"]),
-                    IdEstilo = Convert.ToInt32(leerFilas["IdEstilo"]),
-                    StatusArte = Convert.ToInt32(leerFilas["StatusArte"]),
-                    StatusPNL = Convert.ToInt32(leerFilas["StatusPNL"]),
-                    Estilo = leerFilas["ITEM_STYLE"].ToString()
 
-                };            
+                    IMAGEN_ARTE arte = new IMAGEN_ARTE()
+                    {
+                        IdImgArte = Convert.ToInt32(leerFilas["IdImgArte"]),
+                        IdEstilo = Convert.ToInt32(leerFilas["IdEstilo"]),
+                        StatusArte = Convert.ToInt32(leerFilas["StatusArte"]),
+                        StatusPNL = Convert.ToInt32(leerFilas["StatusPNL"]),
+                        Estilo = leerFilas["ITEM_STYLE"].ToString(),
+                        extensionArte = leerFilas["extensionArte"].ToString(),
+                        extensionPNL = leerFilas["extensionPNL"].ToString(),
+                        DescripcionEstilo = leerFilas["DESCRIPTION"].ToString()
 
-                if (!Convert.IsDBNull(leerFilas["imgArte"]))
-                {
-                    arte.imgArte = (byte[])leerFilas["imgArte"];
-                }
 
-                if (!Convert.IsDBNull(leerFilas["imgPNL"]))
-                {
-                    arte.imgPNL = (byte[])leerFilas["imgPNL"];
-                }
+                    };
 
-                //Obtener el idEstado Arte 
-                if (arte.StatusArte == 1)
-                {
-                    arte.EstadosArte = EstatusArte.APPROVED;
-                }
-                else if (arte.StatusArte == 2)
-                {
-                    arte.EstadosArte = EstatusArte.REVIEWED;
-                }
-                else if (arte.StatusArte == 3)
-                {
-                    arte.EstadosArte = EstatusArte.PENDING;
-                }
-                //Obtener el idEstado PNL
-                if (arte.StatusPNL == 1)
-                {
-                    arte.EstadosPNL = EstatusPNL.APPROVED;
-                }
-                else if (arte.StatusPNL == 2)
-                {
-                    arte.EstadosPNL = EstatusPNL.REVIEWED;
-                }
-                else if (arte.StatusPNL == 3)
-                {
-                    arte.EstadosPNL = EstatusPNL.PENDING;
-                }
+                    /* if (!Convert.IsDBNull(leerFilas["imgArte"]))
+                     {
+                         arte.imgArte = (byte[])leerFilas["imgArte"];
+                     }
 
-             
-                listArte.Add(arte);
+                     if (!Convert.IsDBNull(leerFilas["imgPNL"]))
+                     {
+                         arte.imgPNL = (byte[])leerFilas["imgPNL"];
+                     }*/
 
+                    //Obtener el idEstado Arte 
+                    if (arte.StatusArte == 1)
+                    {
+                        arte.EstadosArte = EstatusArte.APPROVED;
+                    }
+                    else if (arte.StatusArte == 2)
+                    {
+                        arte.EstadosArte = EstatusArte.REVIEWED;
+                    }
+                    else if (arte.StatusArte == 3)
+                    {
+                        arte.EstadosArte = EstatusArte.PENDING;
+                    }
+                    //Obtener el idEstado PNL
+                    if (arte.StatusPNL == 1)
+                    {
+                        arte.EstadosPNL = EstatusPNL.APPROVED;
+                    }
+                    else if (arte.StatusPNL == 2)
+                    {
+                        arte.EstadosPNL = EstatusPNL.REVIEWED;
+                    }
+                    else if (arte.StatusPNL == 3)
+                    {
+                        arte.EstadosPNL = EstatusPNL.PENDING;
+                    }
+
+
+                    listArte.Add(arte);
+
+                }
+                leerFilas.Close();
             }
-            leerFilas.Close();
-            conn.CerrarConexion();
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
+            
+            
 
             return listArte;
         }
@@ -175,10 +186,12 @@ namespace FortuneSystem.Models.Arte
                 cmd.Connection = conex.AbrirConexion();
                 cmd.CommandText = "UPDATE IMAGEN_ARTE SET StatusArte='" + idStatus + "', imgArte='" + imagenArte + "',imgPNL='" + imagenPNL + "'  WHERE IdImgArte='" + idArte + "'";
                 cmd.CommandType = CommandType.Text;
-                reader = cmd.ExecuteReader();
-                conex.CerrarConexion();
+                reader = cmd.ExecuteReader();               
             }
-            finally { conex.CerrarConexion(); }
+            finally {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
 
         }
 
@@ -190,11 +203,14 @@ namespace FortuneSystem.Models.Arte
             comando.Connection = conn.AbrirConexion();
             try
             {
-                comando.CommandText = "INSERT INTO  IMAGEN_ARTE (IdEstilo,StatusArte,StatusPNL,imgArte,imgPNL) " +
-                    " VALUES('"+ arte.IdEstilo + "','" + arte.StatusArte + "','" + arte.StatusPNL + "','" + arte.imgArte + "','" + arte.imgPNL + "')";
+                comando.CommandText = "INSERT INTO  IMAGEN_ARTE (IdEstilo,StatusArte,StatusPNL,extensionArte,extensionPNL) " +
+                    " VALUES('"+ arte.IdEstilo + "','" + arte.StatusArte + "','" + arte.StatusPNL + "','" + arte.extensionArte + "','" + arte.extensionPNL + "')";
                 comando.ExecuteNonQuery();
             }
-            finally { conn.CerrarConexion(); }
+            finally {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
 
         }
 
@@ -210,7 +226,10 @@ namespace FortuneSystem.Models.Arte
                     " VALUES('" + idImgArte + "','" + idSummary + "')";
                 comando.ExecuteNonQuery();
             }
-            finally { conn.CerrarConexion(); }
+            finally {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
 
         }
 
@@ -229,29 +248,39 @@ namespace FortuneSystem.Models.Arte
                 {
                     return Convert.ToInt32(reader["IdImgArte"]);
                 }
-                conex.CerrarConexion();
+                
             }
-            finally { conex.CerrarConexion(); }
+            finally {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
             return 0;
         }
 
         public int BuscarIdEstiloArteImagen(int? idEstilo)
         {
-            SqlCommand cmd = new SqlCommand();
             Conexion conex = new Conexion();
-            SqlDataReader leerF = null;
-            int idEst =0;
-            cmd.Connection = conex.AbrirConexion();
+            int idEst = 0;
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                SqlDataReader leerF = null;             
+                cmd.Connection = conex.AbrirConexion();
                 cmd.CommandText = "select IA.IdEstilo from IMAGEN_ARTE IA where IA.IdEstilo='" + idEstilo + "'";
                 cmd.CommandType = CommandType.Text;
                 leerF = cmd.ExecuteReader();
                 while (leerF.Read())
                 {
-                        idEst = Convert.ToInt32(leerF["IdEstilo"]);
+                    idEst = Convert.ToInt32(leerF["IdEstilo"]);
 
                 }
                 leerF.Close();
+            }
+            finally
+            {
                 conex.CerrarConexion();
+                conex.Dispose();
+            }              
                 return idEst;
             }
 
@@ -259,61 +288,65 @@ namespace FortuneSystem.Models.Arte
 
         public IMAGEN_ARTE BuscarEstiloArteImagen(int? idEstilo)
         {
-            SqlCommand cmd = new SqlCommand();
             Conexion conex = new Conexion();
-            SqlDataReader leerF = null;
-            cmd.Connection = conex.AbrirConexion();
-            cmd.CommandText = "select * from IMAGEN_ARTE IA where IA.IdEstilo='" + idEstilo + "'";
-            cmd.CommandType = CommandType.Text;
-            leerF = cmd.ExecuteReader();
             IMAGEN_ARTE arte = new IMAGEN_ARTE();
-            while (leerF.Read())
+            try
             {
-
-                arte.IdImgArte = Convert.ToInt32(leerF["IdImgArte"]);
-                arte.StatusArte = Convert.ToInt32(leerF["StatusArte"]);
-                arte.StatusPNL = Convert.ToInt32(leerF["StatusPNL"]);
-                
-                if (!Convert.IsDBNull(leerF["imgArte"]))
+                SqlCommand cmd = new SqlCommand();
+                SqlDataReader leerF = null;
+                cmd.Connection = conex.AbrirConexion();
+                cmd.CommandText = "select * from IMAGEN_ARTE IA where IA.IdEstilo='" + idEstilo + "'";
+                cmd.CommandType = CommandType.Text;
+                leerF = cmd.ExecuteReader();               
+                while (leerF.Read())
                 {
-                    arte.imgArte = (byte[])leerF["imgArte"];
-                }
 
-                if (!Convert.IsDBNull(leerF["imgPNL"]))
-                {
-                    arte.imgPNL = (byte[])leerF["imgPNL"];
+                    arte.IdImgArte = Convert.ToInt32(leerF["IdImgArte"]);
+                    arte.StatusArte = Convert.ToInt32(leerF["StatusArte"]);
+                    arte.StatusPNL = Convert.ToInt32(leerF["StatusPNL"]);
+                    arte.extensionArte = leerF["extensionArte"].ToString();
+                    arte.extensionPNL = leerF["extensionPNL"].ToString();
                 }
-
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }            
             return arte;
         }
 
         //Permite obtener el cliente final de un estilo
         public string ObtenerclienteEstilo(int? idSummary, int idArte)
         {
-
-            string nombre = "";
             Conexion conex = new Conexion();
-            SqlCommand coman = new SqlCommand();
-            SqlDataReader leerF = null;
-            coman.Connection = conex.AbrirConexion();
-            coman.CommandText = "select  C.NAME_FINAL from IMAGEN_ARTE IA " +
-                "INNER JOIN ITEM_DESCRIPTION ID ON ID.ITEM_ID = IA.IdEstilo " +
-                "INNER JOIN ARTE A ON A.IdImgArte=IA.IdImgArte " +
-                "INNER JOIN PO_SUMMARY PS ON PS.ID_PO_SUMMARY=A.IdSummary " +
-                "INNER JOIN PEDIDO P ON P.ID_PEDIDO=PS.ID_PEDIDOS " +
-                "INNER JOIN CAT_CUSTOMER_PO C ON P.CUSTOMER_FINAL=C.CUSTOMER_FINAL " +
-                " WHERE  A.IdSummary='" + idSummary + "' AND IA.IdImgArte='" + idArte + "' ";
-            leerF = coman.ExecuteReader();
-            while (leerF.Read())
+            string nombre = "";
+            try
             {
-                nombre = leerF["NAME_FINAL"].ToString();
+                SqlCommand coman = new SqlCommand();
+                SqlDataReader leerF = null;
+                coman.Connection = conex.AbrirConexion();
+                coman.CommandText = "select  C.NAME_FINAL from IMAGEN_ARTE IA " +
+                    "INNER JOIN ITEM_DESCRIPTION ID ON ID.ITEM_ID = IA.IdEstilo " +
+                    "INNER JOIN ARTE A ON A.IdImgArte=IA.IdImgArte " +
+                    "INNER JOIN PO_SUMMARY PS ON PS.ID_PO_SUMMARY=A.IdSummary " +
+                    "INNER JOIN PEDIDO P ON P.ID_PEDIDO=PS.ID_PEDIDOS " +
+                    "INNER JOIN CAT_CUSTOMER_PO C ON P.CUSTOMER_FINAL=C.CUSTOMER_FINAL " +
+                    " WHERE  A.IdSummary='" + idSummary + "' AND IA.IdImgArte='" + idArte + "' ";
+                leerF = coman.ExecuteReader();
+                while (leerF.Read())
+                {
+                    nombre = leerF["NAME_FINAL"].ToString();
 
+                }
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }           
             return nombre;
         }
 
@@ -323,27 +356,32 @@ namespace FortuneSystem.Models.Arte
 
             byte[] iArte = null;
             Conexion conex = new Conexion();
-            SqlCommand coman = new SqlCommand();
-            SqlDataReader leerF = null;
-            coman.Connection = conex.AbrirConexion();
-            coman.CommandText = "SELECT imgArte FROM IMAGEN_ARTE WHERE IdImgArte='" + idArte + "' ";
-            leerF = coman.ExecuteReader();
-            while (leerF.Read())
+            try
             {
-
-                if (!Convert.IsDBNull(leerF["imgArte"]))
+                SqlCommand coman = new SqlCommand();
+                SqlDataReader leerF = null;
+                coman.Connection = conex.AbrirConexion();
+                coman.CommandText = "SELECT imgArte FROM IMAGEN_ARTE WHERE IdImgArte='" + idArte + "' ";
+                leerF = coman.ExecuteReader();
+                while (leerF.Read())
                 {
-                    iArte = (byte[])leerF["imgArte"];
+
+                    if (!Convert.IsDBNull(leerF["imgArte"]))
+                    {
+                        iArte = (byte[])leerF["imgArte"];
+                    }
+
+
                 }
-                
-
+                leerF.Close();
             }
-            leerF.Close();
-            conex.CerrarConexion();
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }            
             return iArte;
-        }
-
-        
+        }       
      
     }
 }

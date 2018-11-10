@@ -130,7 +130,11 @@ namespace FortuneSystem.Controllers
             {
                 arte.StatusArte = 3;
                 arte.StatusPNL = 3;
-                objArte.AgregarArteImagen(arte);                
+                //arte.extensionArte = "";
+                //arte.extensionPNL = "";
+                arte.IdEstilo = idEstilo;
+                objArte.AgregarArteImagen(arte);
+                arte = objArte.BuscarEstiloArteImagen(idEstilo);
                 objArte.AgregarArte(arte.IdImgArte, IdItems);
             }
             else
@@ -145,7 +149,7 @@ namespace FortuneSystem.Controllers
         {
             descItem.PedidosId = Convert.ToInt32(Session["idPedidoRevision"]);
             objItems.AgregarItems(descItem);
-
+            Session["IdItemsRev"] = objItems.Obtener_Utlimo_Item();
             return View(descItem);
         }
 
@@ -214,8 +218,15 @@ namespace FortuneSystem.Controllers
                 tallaItem.Ejemplos= Int32.Parse(ejemploT);
 
                 int IdItems = Convert.ToInt32(Session["IdItems"]);
-
-                tallaItem.IdSummary = IdItems;
+                int IdRevItems = Convert.ToInt32(Session["IdItemsRev"]);
+                if (IdItems != 0)
+                {
+                    tallaItem.IdSummary = IdItems;
+                }else if(IdRevItems != 0)
+                {
+                    tallaItem.IdSummary = IdRevItems;
+                }            
+                
 
 
                 objTalla.RegistroTallas(tallaItem);

@@ -31,12 +31,12 @@ namespace FortuneSystem.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 objColores.AgregarColores(colores);
-                TempData["colorOK"] = "Se registro correctamente el color.";
+                TempData["colorOK"] = "The color was registered correctly.";
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["colorError"] = "No se pudo registrar el color, intentelo más tarde.";
+                TempData["colorError"] = "The color can not be registered, try it later.";
             }
             return View(colores);
         }
@@ -98,12 +98,12 @@ namespace FortuneSystem.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 objColores.ActualizarColores(colores);
-                TempData["colorEditar"] = "Se modifico correctamente el color.";
+                TempData["colorEditar"] = "The color was modified correctly.";
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["colorEditarError"] = "No se pudo modificar el color, intentelo más tarde.";
+                TempData["colorEditarError"] = "The color could not be modified, try it later.";
             }
             return View(colores);
         }
@@ -133,7 +133,7 @@ namespace FortuneSystem.Controllers.Catalogos
         public ActionResult ConfimacionEliminar(int? id)
         {
             objColores.EliminarColores(id);
-            TempData["colorEliminar"] = "Se elimino correctamente el color.";
+            TempData["colorEliminar"] = "The color was removed correctly.";
             return RedirectToAction("Index");
         }
 

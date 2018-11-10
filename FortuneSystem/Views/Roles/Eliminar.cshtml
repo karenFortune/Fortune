@@ -1,11 +1,13 @@
 ﻿@model FortuneSystem.Models.Roles.CatRoles
 
 @{
-    ViewBag.Title = "Eliminar";
+    ViewBag.Title = "Delete Role";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h3>¿Est&aacute; seguro de eliminar el rol?</h3>
+<h3>
+    Are you sure to delete the role?
+</h3>
 <div>
     <hr />
     <dl class="dl-horizontal">
@@ -31,8 +33,8 @@
         @Html.AntiForgeryToken()
 
     <div class="form-actions no-color">
-        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
-        @Html.ActionLink("Regresar", "Index")
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        @Html.ActionLink("Back to List", "Index")
     </div>
     }
 </div>

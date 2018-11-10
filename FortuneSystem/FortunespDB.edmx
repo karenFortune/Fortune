@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="FortuneTestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="FortuneTestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ARTE">
           <Key>
             <PropertyRef Name="IdArte" />
@@ -21,8 +21,8 @@
           <Property Name="IdEstilo" Type="int" />
           <Property Name="StatusArte" Type="int" />
           <Property Name="StatusPNL" Type="int" />
-          <Property Name="imgArte" Type="image" />
-          <Property Name="imgPNL" Type="image" />
+          <Property Name="extensionArte" Type="varchar" MaxLength="100" />
+          <Property Name="extensionPNL" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="UPC">
           <Key>
@@ -54,8 +54,7 @@
             <End Role="ARTE" EntitySet="ARTE" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="FortuneTestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -76,9 +75,9 @@
           <Property Name="IdEstilo" Type="Int32" />
           <Property Name="StatusArte" Type="Int32" />
           <Property Name="StatusPNL" Type="Int32" />
-          <Property Name="imgArte" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="imgPNL" Type="Binary" MaxLength="Max" FixedLength="false" />
           <NavigationProperty Name="ARTE" Relationship="Self.FK__ARTE__IdImgArte__467D75B8" FromRole="IMAGEN_ARTE" ToRole="ARTE" />
+          <Property Name="extensionArte" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="extensionPNL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="UPC">
           <Key>
@@ -128,13 +127,13 @@
           <EntitySetMapping Name="IMAGEN_ARTE">
             <EntityTypeMapping TypeName="FortuneTestModel.IMAGEN_ARTE">
               <MappingFragment StoreEntitySet="IMAGEN_ARTE">
+                <ScalarProperty Name="extensionPNL" ColumnName="extensionPNL" />
+                <ScalarProperty Name="extensionArte" ColumnName="extensionArte" />
                 <ScalarProperty Name="IdImgArte" ColumnName="IdImgArte" />
                 <ScalarProperty Name="IdEstilo" ColumnName="IdEstilo" />
                 <ScalarProperty Name="StatusArte" ColumnName="StatusArte" />
                 <ScalarProperty Name="StatusPNL" ColumnName="StatusPNL" />
-                <ScalarProperty Name="imgArte" ColumnName="imgArte" />
-                <ScalarProperty Name="imgPNL" ColumnName="imgPNL" />
-              </MappingFragment>
+                </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UPCs">

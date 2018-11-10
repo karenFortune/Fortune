@@ -17,6 +17,29 @@
     });
 
 </script>
+
+@{
+    if (TempData["imagArteOK"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["imagArteOK"])), 'success', 5, null);
+
+        </script>
+    }
+
+    if (TempData["imagPnlOK"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["imagPnlOK"])), 'success', 5, null);
+
+        </script>
+    }
+    
+
+
+}
 <div class="panel panel-primary">
     <div class="panel-heading">
         <h4>
@@ -30,6 +53,9 @@
             <tr>
                 <th>
                     @Html.DisplayNameFor(model => model.Estilo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DescripcionEstilo)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.imgArte)
@@ -48,6 +74,9 @@
                         @Html.DisplayFor(modelItem => item.Estilo)
                     </td>
                     <td>
+                        @Html.DisplayFor(modelItem => item.DescripcionEstilo)
+                    </td>
+                    <td>
                         <img width="70" height="70" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = item.IdImgArte})" />
                     </td>
                     <td>
@@ -55,6 +84,7 @@
                     </td>
                     <td>
                         <a href="#" class="btn btn-default glyphicon glyphicon-search btnEdit" data-value="@item.IdImgArte" title="List Art"></a>
+                        @Html.ActionLink(" ", "FileUpload", new { idArte = item.IdImgArte }, new { @class = "btn btn-default glyphicon glyphicon-check", @style = "color:black", @Title = "Art" })
                     </td>
 
                 </tr>
@@ -101,12 +131,12 @@
         $(".btnEdit").click(function () {
             var id = $(this).data("value");
             $("#ContenedorModal").load("/Arte/ListaImgArte/" + id, function () {
-                            
+
             });
-          
+
         });
     });
 
-    
+
 
 </script>

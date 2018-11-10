@@ -28,33 +28,33 @@ namespace FortuneSystem.Models.POSummary
 
         public List<ItemDescripcion> ListaItems { get; set; }
 
-        [Required(ErrorMessage = "Ingrese el color")]
-        [Display(Name = "Color")]
+        [Required]
+        [Display(Name = "COLOR")]
         public string IdColor { get; set; }
         public int ColorId { get; set; }
         public virtual CatColores CatColores { get; set; }
 
         public List<CatColores> ListaColores { get; set; }
 
-        [Required(ErrorMessage = "Ingrese la cantidad total del Item.")]
+        [Required]
         [Display(Name = "QTY")]
         public int Cantidad { get; set; }
 
-        [Required(ErrorMessage = "Ingrese el precio del Item.")]
-        [Display(Name = "Precio")]
-        [RegularExpression("[0-9]\\d{0,9}(\\.\\d{1,3})?%?$", ErrorMessage = "El Precio debe contener sólo números(.35 o 2.5)")]
+        [Required]
+        [Display(Name = "PRICE")]
+        [RegularExpression("[0-9]\\d{0,9}(\\.\\d{1,3})?%?$", ErrorMessage = "The Price must contain only numbers(0.35 o 2.5)")]
         [DisplayFormat(DataFormatString = "{0:#.####}")]
         // [DisplayFormat(DataFormatString = "{0:n2}")]
         public double Precio { get; set; }
 
         public string Price { get; set; }
-        [Display(Name = "No. PO")]
+        [Display(Name = "PO#")]
         [Column("ID_PEDIDOS")]
         [ForeignKey("PO_SUMMARY")]
         public virtual int PedidosId { get; set; }
         public virtual OrdenesCompra Pedidos { get; set; }
 
-        [Display(Name = "Género")]
+        [Display(Name = "GENDER")]
         [Column("ID_GENDER")]
         [ForeignKey("ID_GENDER")]
 
@@ -68,13 +68,13 @@ namespace FortuneSystem.Models.POSummary
 
         public virtual ItemTalla ItemTalla { get; set; }
         public int Id_Genero { get; set; }
-        [Display(Name = "Tela")]
+        [Display(Name = "FABRIC")]
         [Column("ID_TELA")]
         [ForeignKey("ID")]
         public int IdTela { get; set; }
         public List<CatTela> ListaTelas { get; set; }
         public virtual CatTela CatTela { get; set; }
-        [Display(Name = "Tipo Camiseta")]
+        [Display(Name = "TYPE OF SHIRT")]
         public string TipoCamiseta { get; set; }
         public int IdCamiseta { get; set; }
         public CatTipoCamiseta CatTipoCamiseta { get; set; }

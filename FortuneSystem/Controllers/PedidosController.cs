@@ -1,7 +1,9 @@
 ﻿using FortuneSystem.Models.Catalogos;
 using FortuneSystem.Models.Item;
 using FortuneSystem.Models.Items;
+using FortuneSystem.Models.Packing;
 using FortuneSystem.Models.Pedidos;
+using FortuneSystem.Models.PNL;
 using FortuneSystem.Models.POSummary;
 using FortuneSystem.Models.PrintShop;
 using FortuneSystem.Models.Revisiones;
@@ -31,6 +33,8 @@ namespace FortuneSystem.Controllers
         RevisionesData objRevision = new RevisionesData();
         ItemDescripcionData objEst = new ItemDescripcionData();
         PrintShopData objPrint = new PrintShopData();
+        PackingData objPacking = new PackingData();
+        PnlData objPnl = new PnlData();
         public int estado;
         public int IdPO;
         public int pedidos;
@@ -98,9 +102,18 @@ namespace FortuneSystem.Controllers
             List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilo(id).ToList();
             List<ItemTalla> listaTallasStaging = objTallas.ListaTallasStagingPorEstilo(id).ToList();
             List<int> listaTallasTBatch = objPrint.ListaTotalTallasBatchEstilo(id).ToList();
-            List<int> listaTallasPBatch = objPrint.ListaTotalPrintedTallasBatchEstilo(id).ToList();
-            List<int> listaTallasMPBatch = objPrint.ListaTotalMPTallasBatchEstilo(id).ToList();
-            List<int> listaTallasDBatch = objPrint.ListaTotalDefTallasBatchEstilo(id).ToList();
+            List<int> listaTallasPBatch = new List<int>();
+            List<int> listaTallasMPBatch = new List<int>();
+            List<int> listaTallasDBatch = new List<int>();
+            List<int> listaTallasRBatch = new List<int>();
+            if (listaTallasTBatch.Count !=0)
+            {
+                listaTallasPBatch = objPrint.ListaTotalPrintedTallasBatchEstilo(id).ToList();
+                listaTallasMPBatch = objPrint.ListaTotalMPTallasBatchEstilo(id).ToList();
+                listaTallasDBatch = objPrint.ListaTotalDefTallasBatchEstilo(id).ToList();
+                listaTallasRBatch = objPrint.ListaTotalRepTallasBatchEstilo(id).ToList();
+            }
+                       
             string estilo = "";
             foreach (var item in listaTallas)
             {
@@ -111,7 +124,87 @@ namespace FortuneSystem.Controllers
                                     listaTallasTotalBatch = listaTallasTBatch,
                                     listaTallasTotalPBatch = listaTallasPBatch,
                                     listaTallasTotalMBatch = listaTallasMPBatch,
-                                    listaTallasTotalDBatch = listaTallasDBatch
+                                    listaTallasTotalDBatch = listaTallasDBatch,
+                                    listaTallasTotalRBatch = listaTallasRBatch
+            });
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult Lista_Tallas_Estilo_Pnl(int? id)
+        {
+            List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilo(id).ToList();
+            List<ItemTalla> listaTallasStaging = objTallas.ListaTallasStagingPorEstilo(id).ToList();
+            List<int> listaTallasTPnlBatch = objPnl.ListaTotalTallasPNLBatchEstilo(id).ToList();
+            List<int> listaTallasPBatchPnl = new List<int>();
+            List<int> listaTallasMPBatchPnl = new List<int>();
+            List<int> listaTallasDBatchPnl = new List<int>();
+            List<int> listaTallasRBatch = new List<int>();
+            if (listaTallasTPnlBatch.Count != 0)
+            {
+                listaTallasPBatchPnl = objPnl.ListaTotalPrintedTallasBatchEstilo(id).ToList();
+                listaTallasMPBatchPnl = objPnl.ListaTotalMPTallasBatchEstilo(id).ToList();
+                listaTallasDBatchPnl = objPnl.ListaTotalDefTallasBatchEstilo(id).ToList();
+                listaTallasRBatch = objPnl.ListaTotalRepTallasBatchEstilo(id).ToList();
+            }
+            List<int> listaTallasTBatch = objPrint.ListaTotalTallasBatchEstilo(id).ToList();
+               string estilo = "";
+            foreach (var item in listaTallas)
+            {
+                estilo = item.Estilo;
+
+            }
+            var result = Json(new
+            {
+                listaTalla = listaTallas,
+                estilos = estilo,
+                listTallaStaging = listaTallasStaging,
+                listaTallasTotalPnlBatch = listaTallasTPnlBatch,
+                listaTallasTotalBatch = listaTallasTBatch,
+                listaTallasTotalPBatchPNL = listaTallasPBatchPnl,
+                listaTallasTotalMBatchPnl = listaTallasMPBatchPnl,
+                listaTallasTotalDBatchPnl = listaTallasDBatchPnl,
+                listaTallasTotalRBatch = listaTallasRBatch
+            });
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public JsonResult Lista_Tallas_Estilo_Packing(int? id)
+        {
+            List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilo(id).ToList();
+            List<ItemTalla> listaTallasStaging = objTallas.ListaTallasStagingPorEstilo(id).ToList();
+            List<int> listaTallasTPrintShopBatch = objPrint.ListaTotalTallasBatchEstilo(id).ToList();
+            List<int> listaTallasTPnlBatch = objPnl.ListaTotalTallasPNLBatchEstilo(id).ToList();
+            List<int> listaTallasTPackingBatch = objPacking.ListaTotalTallasPackingBatchEstilo(id).ToList();
+            List<int> listaTallasPBatchPacking = new List<int>();
+            List<int> listaTallasEBatchPacking = new List<int>();
+            List<int> listaTallasDBatchPacking = new List<int>();
+            if (listaTallasTPackingBatch.Count != 0)
+            {
+                listaTallasPBatchPacking = objPacking.ListaTotalCajasTallasBatchEstilo(id).ToList();
+                listaTallasEBatchPacking = objPacking.ListaTotalETallasBatchEstilo(id).ToList();
+                listaTallasDBatchPacking = objPacking.ListaTotalDefTallasBatchEstilo(id).ToList();
+            }
+            
+            string estilo = "";
+            foreach (var item in listaTallas)
+            {
+                estilo = item.Estilo;
+
+            }
+            var result = Json(new
+            {
+                listaTalla = listaTallas,
+                estilos = estilo,
+                listTallaStaging = listaTallasStaging,
+                listaTallasTotalPnlBatch = listaTallasTPnlBatch,
+                listaTallasTotalBatch = listaTallasTPrintShopBatch,
+                listaTallasTotalPackingBatch = listaTallasTPackingBatch,
+                listaTallasTotalPBatchPacking = listaTallasPBatchPacking,
+                listaTallasTotalEBatchPacking = listaTallasEBatchPacking,
+                listaTallasTotalDBatchPacking = listaTallasDBatchPacking
             });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -136,6 +229,26 @@ namespace FortuneSystem.Controllers
             List<PrintShopC> listaTallas = objPrint.ListaTallasPrintShop(id).ToList();
             List<PrintShopC> listaTallasEstilo = objPrint.ObtenerTallas(id).ToList();
             List<int> listaTallasTBatch = objPrint.ListaTotalTallasBatchEstilo(id).ToList();
+            var result = Json(new { listaTalla = listaTallas, listaEstiloTallas = listaTallasEstilo, listaPrint = listaTallasTBatch });
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult Lista_Tallas_Pnl_Estilo(int? id)
+        {
+            List<Pnl> listaTallas = objPnl.ListaTallasPnl(id).ToList();
+            List<Pnl> listaTallasEstilo = objPnl.ObtenerTallas(id).ToList();
+            List<int> listaTallasTBatch = objPnl.ListaTotalTallasPNLBatchEstilo(id).ToList();
+            var result = Json(new { listaTalla = listaTallas, listaEstiloTallas = listaTallasEstilo, listaPrint = listaTallasTBatch });
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult Lista_Tallas_Packing_Estilo(int? id)
+        {
+            List<PackingM> listaTallas = objPacking.ListaTallasPacking(id).ToList();
+            List<PackingM> listaTallasEstilo = objPacking.ObtenerTallas(id).ToList();
+            List<int> listaTallasTBatch = objPacking.ListaTotalTallasPackingBatchEstilo(id).ToList();
             var result = Json(new { listaTalla = listaTallas, listaEstiloTallas = listaTallasEstilo, listaPrint = listaTallasTBatch });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -243,18 +356,20 @@ namespace FortuneSystem.Controllers
             }pedido.PO = rev.Replace(" ", "");*/
 
 
-            pedido.IdPedido = Convert.ToInt32(id);
+           // pedido.IdPedido = Convert.ToInt32(id);
             pedido.FechaOrden = DateTime.Today;
             Session["id_pedido"] = id;
-           // ObtenerEstadoRevisado(pedido);
-            objPedido.AgregarPO(pedido);
 
+            ObtenerEstadoRevisado(pedido);
+            
+            objPedido.AgregarPO(pedido);
+            Session["idPedidoNuevo"] = objPedido.Obtener_Utlimo_po();
             //Cambia estado pedido original a 5
-           objPedido.ActualizarEstadoPO(Convert.ToInt32(Session["id_pedido"]));
+            objPedido.ActualizarEstadoPO(Convert.ToInt32(Session["id_pedido"]));
 
             //Registrar en Revisado el Pedido Nuevo 
-            int PedidosId = objPedido.Obtener_Utlimo_po();
-            Session["idPedidoNuevo"] = PedidosId;
+            //int PedidosId = objPedido.Obtener_Utlimo_po();
+            //Session["idPedidoNuevo"] = PedidosId;
             int PedidoNuevo = Convert.ToInt32(Session["idPedidoNuevo"]);
             if (PedidoNuevo != 0)
             {
@@ -286,7 +401,7 @@ namespace FortuneSystem.Controllers
                 int? idEstilo = Convert.ToInt32(Convert.ToInt32(Session["id_estilo"]));
                 estilos.PedidosId = Convert.ToInt32(Session["idPedidoNuevo"]);
                 objItems.AgregarItems(estilos);
-
+                Session["estiloIdItem"] = objItems.Obtener_Utlimo_Item();
                 //Obtener la lista de tallas del item
                 List<ItemTalla> listaTallas = objTallas.ListaTallasPorSummary(idEstilo).ToList();
                 ItemTalla tallas = new ItemTalla();
@@ -298,7 +413,7 @@ namespace FortuneSystem.Controllers
                     tallas.Cantidad = itemT.Cantidad;
                     tallas.Extras = itemT.Extras;
                     tallas.Ejemplos = itemT.Ejemplos;
-                    tallas.IdSummary = objItems.Obtener_Utlimo_Item();
+                    tallas.IdSummary = Convert.ToInt32(Session["estiloIdItem"]);
 
                     objTallas.RegistroTallas(tallas);
                 }
@@ -452,7 +567,9 @@ namespace FortuneSystem.Controllers
         [HttpPost]     
         public ActionResult RegistrarPO([Bind] OrdenesCompra ordenCompra,string po, int VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades)
         {
-            ListaEstados(ordenCompra);                          
+            ListaEstados(ordenCompra);
+            int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
+            ordenCompra.Usuario = noEmpleado;
             objPedido.AgregarPO(ordenCompra);    
             Session["idPedido"]= objPedido.Obtener_Utlimo_po();
 

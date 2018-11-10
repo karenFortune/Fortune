@@ -40,23 +40,24 @@ namespace FortuneSystem.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CrearUsuario([Bind] CatUsuario usuario)
         {
-           
-            if(ModelState.IsValid)
+            string rol = Request.Form["listRoles"].ToString();
+            usuario.Cargo = Int32.Parse(rol);
+            if (ModelState.IsValid)
             {
-                string rol = Request.Form["listRoles"].ToString();
-                usuario.Cargo=Int32.Parse(rol);
+                
                usuario.CatRoles= objCaRoles.ConsultarListaRoles(usuario.Cargo);
                 objCatUser.AgregarUsuarios(usuario);
-                TempData["usuarioOK"] = "Se registro correctamente el usuario.";
+                TempData["usuarioOK"] = "The user was registered correctly.";
                 return RedirectToAction("Index");
             }else
             {
-                TempData["usuarioError"] = "No se pudo registrar el usuario, intentelo más tarde.";
+                TempData["usuarioError"] = "The user can not be registered, try it later.";
             }
             return View(usuario);
-        }
+        }       
 
-        [HttpGet]
+
+       [HttpGet]
         public ActionResult Details(int? id)
         {
             if(id == null)
@@ -116,12 +117,12 @@ namespace FortuneSystem.Controllers
                 usuarios.Cargo = Int32.Parse(rol);
                 //usuario.CatRoles = objCaRoles.ConsultarListaRoles(usuario.Cargo);
                 objCatUser.ActualizarUsuarios(usuarios);
-                TempData["usuarioEditar"] = "Se modifico correctamente el usuario.";
+                TempData["usuarioEditar"] = "The user was modified correctly.";
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["usuarioEditarError"] = "No se pudo modificar el usuario, intentelo más tarde.";
+                TempData["usuarioEditarError"] = "The user could not be modified, try it later.";
             }
             return View(usuarios);
         }
@@ -135,8 +136,8 @@ namespace FortuneSystem.Controllers
             }
 
             CatUsuario usuarios = objCatUser.ConsultarListaUsuarios(id);
-
-            if(usuarios == null)
+            usuarios.CatRoles = objCaRoles.ConsultarListaRoles(usuarios.Cargo);
+            if (usuarios == null)
             {
                 return View();
             }
@@ -149,7 +150,7 @@ namespace FortuneSystem.Controllers
         public ActionResult ConfimacionEliminar(int? id)
         {
             objCatUser.EliminarUsuario(id);
-            TempData["usuarioEliminar"] = "Se elimino correctamente el usuario.";
+            TempData["usuarioEliminar"] = "The user was successfully deleted.";
             return RedirectToAction("Index");
         }
 

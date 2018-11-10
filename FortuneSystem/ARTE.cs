@@ -19,7 +19,6 @@ namespace FortuneSystem
         public Nullable<int> IdSummary { get; set; }
         public int IdEstilo { get; set; }
 
-
         public virtual IMAGEN_ARTE IMAGEN_ARTE { get; set; }
     }
 }

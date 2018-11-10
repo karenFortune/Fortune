@@ -1,0 +1,1163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FortuneTestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="body_types">
+    <Key>
+      <PropertyRef Name="id_body_type" />
+    </Key>
+    <Property Name="id_body_type" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="body_type" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="CAT_BRAND_CODES">
+    <Key>
+      <PropertyRef Name="ID_BRAND" />
+    </Key>
+    <Property Name="ID_BRAND" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BRAND" Type="nvarchar" MaxLength="100" />
+    <Property Name="STYLE" Type="nvarchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="CAT_COLORES">
+    <Key>
+      <PropertyRef Name="ID_COLOR" />
+    </Key>
+    <Property Name="ID_COLOR" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CODIGO_COLOR" Type="char" MaxLength="15" />
+    <Property Name="DESCRIPCION" Type="char" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="CAT_CUSTOMER">
+    <Key>
+      <PropertyRef Name="CUSTOMER" />
+    </Key>
+    <Property Name="CUSTOMER" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NAME" Type="char" MaxLength="30" />
+  </EntityType>
+  <EntityType Name="CAT_CUSTOMER_PO">
+    <Key>
+      <PropertyRef Name="CUSTOMER_FINAL" />
+    </Key>
+    <Property Name="CUSTOMER_FINAL" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NAME_FINAL" Type="char" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="CAT_FABRIC_CODES">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FABRIC" Type="nvarchar" MaxLength="50" />
+    <Property Name="CODE" Type="nvarchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="CAT_GENDER">
+    <Key>
+      <PropertyRef Name="ID_GENDER" />
+    </Key>
+    <Property Name="ID_GENDER" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GENERO" Type="char" MaxLength="50" />
+    <Property Name="GENERO_CODE" Type="varchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="CAT_GENERO_TALLA">
+    <Key>
+      <PropertyRef Name="ID_GEN_TALLA" />
+    </Key>
+    <Property Name="ID_GEN_TALLA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ID_GENERO" Type="int" />
+    <Property Name="ID_TALLA" Type="int" />
+  </EntityType>
+  <EntityType Name="CAT_ITEM_SIZE">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TALLA" Type="nvarchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="CAT_PRODUCT_TYPE_CODES">
+    <Key>
+      <PropertyRef Name="ID_TYPE_CODE" />
+    </Key>
+    <Property Name="ID_TYPE_CODE" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PRODUCT_TYPE_CODE" Type="nvarchar" MaxLength="10" />
+    <Property Name="DESCRIPTION" Type="nvarchar" MaxLength="50" />
+    <Property Name="GROUP_TYPE" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="CAT_STATUS">
+    <Key>
+      <PropertyRef Name="ID_STATUS" />
+    </Key>
+    <Property Name="ID_STATUS" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ESTADO" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="categorias_inventarios">
+    <Key>
+      <PropertyRef Name="id_categoria" />
+    </Key>
+    <Property Name="id_categoria" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="categoria" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="estilos_fabrica">
+    <Key>
+      <PropertyRef Name="id_estilo" />
+    </Key>
+    <Property Name="id_estilo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="amt_item" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="color" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="size" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="descripcion" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="master_group" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="groups" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="product_type" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="fabric_type" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="fiber" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="yarn" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="division" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="pack_type" Type="varchar" MaxLength="15" />
+    <Property Name="gender" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="fabric_percents">
+    <Key>
+      <PropertyRef Name="id_fabric_percent" />
+    </Key>
+    <Property Name="id_fabric_percent" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="fabric_percent" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="fabricantes">
+    <Key>
+      <PropertyRef Name="id_fabricante" />
+    </Key>
+    <Property Name="id_fabricante" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="fabricante" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="family_trims">
+    <Key>
+      <PropertyRef Name="id_family_trim" />
+    </Key>
+    <Property Name="id_family_trim" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="family_trim" Type="varchar" MaxLength="60" />
+  </EntityType>
+  <EntityType Name="IMAGEN_ARTE">
+    <Key>
+      <PropertyRef Name="Id_Img_Arte" />
+    </Key>
+    <Property Name="Id_Img_Arte" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Id_Summary" Type="int" />
+    <Property Name="img_Arte" Type="image" />
+    <Property Name="img_PNL" Type="image" />
+    <Property Name="Id_UPC" Type="int" />
+  </EntityType>
+  <EntityType Name="inventario">
+    <Key>
+      <PropertyRef Name="id_inventario" />
+    </Key>
+    <Property Name="id_inventario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_sucursal" Type="int" />
+    <Property Name="id_pedido" Type="int" />
+    <Property Name="id_pais" Type="int" />
+    <Property Name="id_fabricante" Type="int" />
+    <Property Name="mill_po" Type="varchar" MaxLength="10" />
+    <Property Name="amt_item" Type="varchar" MaxLength="10" />
+    <Property Name="id_categoria_inventario" Type="int" />
+    <Property Name="id_color" Type="int" />
+    <Property Name="id_body_type" Type="int" />
+    <Property Name="id_genero" Type="int" />
+    <Property Name="id_fabric_type" Type="int" />
+    <Property Name="id_location" Type="int" />
+    <Property Name="total" Type="int" />
+    <Property Name="id_size" Type="int" />
+    <Property Name="id_customer" Type="int" />
+    <Property Name="id_customer_final" Type="int" />
+    <Property Name="minimo" Type="int" />
+    <Property Name="notas" Type="varchar" MaxLength="500" />
+    <Property Name="id_fabric_percent" Type="int" />
+    <Property Name="stock" Type="varchar" MaxLength="20" />
+    <Property Name="date_comment" Type="datetime" />
+    <Property Name="comment" Type="varchar" MaxLength="200" />
+    <Property Name="id_family_trim" Type="int" />
+    <Property Name="id_unit" Type="int" />
+    <Property Name="id_trim" Type="int" />
+    <Property Name="descripcion" Type="varchar" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="ITEM_DESCRIPTION">
+    <Key>
+      <PropertyRef Name="ITEM_ID" />
+    </Key>
+    <Property Name="ITEM_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ITEM_STYLE" Type="char" MaxLength="15" />
+    <Property Name="DESCRIPTION" Type="char" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="ITEM_SIZE">
+    <Key>
+      <PropertyRef Name="ID_TALLA" />
+    </Key>
+    <Property Name="ID_TALLA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TALLA_ITEM" Type="int" />
+    <Property Name="CANTIDAD" Type="int" />
+    <Property Name="EXTRAS" Type="int" />
+    <Property Name="EJEMPLOS" Type="int" />
+    <Property Name="ID_SUMMARY" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'FortuneTest.dbo.ITEM_SIZE_STAGING' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="ITEM_SIZE_STAGING">
+    <Key>
+      <PropertyRef Name="ID_TALLA" />
+    </Key>
+    <Property Name="ID_TALLA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TALLA_ITEM" Type="int" />
+    <Property Name="CANTIDAD" Type="int" />
+    <Property Name="ID_SUMMARY" Type="int" />
+  </EntityType>
+  <EntityType Name="lugares">
+    <Key>
+      <PropertyRef Name="id_lugar" />
+    </Key>
+    <Property Name="id_lugar" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="lugar" Type="varchar" MaxLength="150" />
+    <Property Name="tipo_lugar" Type="int" />
+  </EntityType>
+  <EntityType Name="paises">
+    <Key>
+      <PropertyRef Name="id_pais" />
+    </Key>
+    <Property Name="id_pais" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="pais" Type="varchar" MaxLength="60" />
+  </EntityType>
+  <EntityType Name="PEDIDO">
+    <Key>
+      <PropertyRef Name="ID_PEDIDO" />
+    </Key>
+    <Property Name="ID_PEDIDO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PO" Type="char" MaxLength="30" />
+    <Property Name="VPO" Type="int" />
+    <Property Name="CUSTOMER" Type="int" Nullable="false" />
+    <Property Name="CUSTOMER_FINAL" Type="int" Nullable="false" />
+    <Property Name="DATE_CANCEL" Type="date" />
+    <Property Name="DATE_ORDER" Type="date" />
+    <Property Name="TOTAL_UNITS" Type="int" />
+    <Property Name="ID_STATUS" Type="int" />
+  </EntityType>
+  <EntityType Name="PO_SUMMARY">
+    <Key>
+      <PropertyRef Name="ID_PO_SUMMARY" />
+    </Key>
+    <Property Name="ID_PO_SUMMARY" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ITEM_ID" Type="int" Nullable="false" />
+    <Property Name="ID_COLOR" Type="int" Nullable="false" />
+    <Property Name="QTY" Type="int" />
+    <Property Name="PRICE" Type="float" />
+    <Property Name="ID_PEDIDOS" Type="int" Nullable="false" />
+    <Property Name="ID_GENDER" Type="int" />
+    <Property Name="ID_TELA" Type="int" />
+    <Property Name="ID_PRODUCT_TYPE" Type="int" />
+  </EntityType>
+  <EntityType Name="PRINTSHOP">
+    <Key>
+      <PropertyRef Name="ID_PRINTSHOP" />
+    </Key>
+    <Property Name="ID_PRINTSHOP" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ID_SUMMARY" Type="int" />
+    <Property Name="ID_BATCH" Type="int" />
+    <Property Name="ID_TALLA" Type="int" />
+    <Property Name="PRINTED" Type="int" />
+    <Property Name="MISPRINT" Type="int" />
+    <Property Name="DEFECT" Type="int" />
+    <Property Name="MAQUINA" Type="int" />
+    <Property Name="TURNO" Type="int" />
+    <Property Name="TOTAL" Type="int" />
+    <Property Name="ID_USUARIO" Type="int" />
+  </EntityType>
+  <EntityType Name="proveedores">
+    <Key>
+      <PropertyRef Name="id_proveedor" />
+    </Key>
+    <Property Name="id_proveedor" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="proveedor" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="recibos">
+    <Key>
+      <PropertyRef Name="id_recibo" />
+    </Key>
+    <Property Name="id_recibo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="po" Type="varchar" MaxLength="15" />
+    <Property Name="fecha" Type="datetime" />
+    <Property Name="total" Type="int" />
+    <Property Name="id_usuario" Type="int" />
+    <Property Name="id_sucursal" Type="int" />
+    <Property Name="id_origen" Type="int" />
+  </EntityType>
+  <EntityType Name="recibos_cajas">
+    <Key>
+      <PropertyRef Name="id_recibo_caja" />
+    </Key>
+    <Property Name="id_recibo_caja" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_recibo_item" Type="int" />
+    <Property Name="id_recibo" Type="int" />
+    <Property Name="total_cajas" Type="int" />
+    <Property Name="cantidad_caja" Type="int" />
+    <Property Name="id_talla" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'FortuneTest.dbo.recibos_items' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="recibos_items">
+    <Key>
+      <PropertyRef Name="id_recibo_item" />
+    </Key>
+    <Property Name="id_recibo_item" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_recibo" Type="int" />
+    <Property Name="id_inventario" Type="int" />
+    <Property Name="amt_item" Type="varchar" MaxLength="15" />
+    <Property Name="total" Type="int" />
+    <Property Name="mill_po" Type="varchar" MaxLength="10" />
+    <Property Name="id_estilo" Type="int" />
+  </EntityType>
+  <EntityType Name="REVISIONES_PO">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ID_PEDIDO" Type="int" Nullable="false" />
+    <Property Name="ID_REVISION_PO" Type="int" Nullable="false" />
+    <Property Name="FECHA_REVISION" Type="date" Nullable="false" />
+    <Property Name="ID_STATUS" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Roles">
+    <Key>
+      <PropertyRef Name="id_Rol" />
+    </Key>
+    <Property Name="id_Rol" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="rol" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="salidas">
+    <Key>
+      <PropertyRef Name="id_salida" />
+    </Key>
+    <Property Name="id_salida" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="fecha" Type="datetime" />
+    <Property Name="total" Type="int" />
+    <Property Name="id_usuario" Type="int" />
+    <Property Name="id_origen" Type="int" />
+    <Property Name="id_destino" Type="int" />
+    <Property Name="estado_aprobacion" Type="int" />
+    <Property Name="estado_entrega" Type="int" />
+    <Property Name="sello" Type="int" />
+    <Property Name="responsable" Type="varchar" MaxLength="150" />
+    <Property Name="id_envio" Type="varchar" MaxLength="10" />
+    <Property Name="fecha_solicitud" Type="datetime" />
+    <Property Name="driver" Type="varchar" MaxLength="100" />
+    <Property Name="pallet" Type="varchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="salidas_items">
+    <Key>
+      <PropertyRef Name="id_salida_item" />
+    </Key>
+    <Property Name="id_salida" Type="int" />
+    <Property Name="id_salida_item" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_inventario" Type="int" />
+    <Property Name="cantidad" Type="int" />
+  </EntityType>
+  <EntityType Name="sellos">
+    <Key>
+      <PropertyRef Name="id_sello" />
+    </Key>
+    <Property Name="id_sello" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="inicio" Type="int" />
+    <Property Name="final" Type="int" />
+    <Property Name="usado" Type="int" />
+    <Property Name="fecha_registro" Type="datetime" />
+    <Property Name="id_sucursal" Type="int" />
+  </EntityType>
+  <EntityType Name="sucursales">
+    <Key>
+      <PropertyRef Name="id_sucursal" />
+    </Key>
+    <Property Name="id_sucursal" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="sucursal" Type="varchar" MaxLength="20" />
+    <Property Name="direccion" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="trims">
+    <Key>
+      <PropertyRef Name="id_trim" />
+    </Key>
+    <Property Name="id_trim" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="trim" Type="varchar" MaxLength="150" />
+  </EntityType>
+  <EntityType Name="ubicaciones">
+    <Key>
+      <PropertyRef Name="id_ubicacion" />
+    </Key>
+    <Property Name="id_ubicacion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ubicacion" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="units">
+    <Key>
+      <PropertyRef Name="id_unit" />
+    </Key>
+    <Property Name="id_unit" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="unit" Type="varchar" MaxLength="60" />
+  </EntityType>
+  <EntityType Name="UPC_ARTE">
+    <Key>
+      <PropertyRef Name="Id_UPC" />
+    </Key>
+    <Property Name="Id_UPC" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UPC" Type="int" />
+  </EntityType>
+  <EntityType Name="Usuarios">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NoEmpleado" Type="char" MaxLength="8" />
+    <Property Name="Nombres" Type="nvarchar" MaxLength="50" />
+    <Property Name="Apellidos" Type="nvarchar" MaxLength="50" />
+    <Property Name="Cargo" Type="int" />
+    <Property Name="Email" Type="nvarchar" MaxLength="50" />
+    <Property Name="Contrasena" Type="nvarchar" MaxLength="50" />
+    <Property Name="id_sucursal" Type="int" />
+  </EntityType>
+  <EntityType Name="yarns">
+    <Key>
+      <PropertyRef Name="id_yarn" />
+    </Key>
+    <Property Name="id_yarn" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="yarn" Type="varchar" MaxLength="30" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'FortuneTest.sys.database_firewall_rules' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="database_firewall_rules">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="name" />
+      <PropertyRef Name="start_ip_address" />
+      <PropertyRef Name="end_ip_address" />
+      <PropertyRef Name="create_date" />
+      <PropertyRef Name="modify_date" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="start_ip_address" Type="varchar" MaxLength="45" Nullable="false" />
+    <Property Name="end_ip_address" Type="varchar" MaxLength="45" Nullable="false" />
+    <Property Name="create_date" Type="datetime" Nullable="false" />
+    <Property Name="modify_date" Type="datetime" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__CAT_GENER__ID_GE__236943A5">
+    <End Role="CAT_GENDER" Type="Self.CAT_GENDER" Multiplicity="0..1" />
+    <End Role="CAT_GENERO_TALLA" Type="Self.CAT_GENERO_TALLA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_GENDER">
+        <PropertyRef Name="ID_GENDER" />
+      </Principal>
+      <Dependent Role="CAT_GENERO_TALLA">
+        <PropertyRef Name="ID_GENERO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__CAT_GENER__ID_TA__245D67DE">
+    <End Role="CAT_ITEM_SIZE" Type="Self.CAT_ITEM_SIZE" Multiplicity="0..1" />
+    <End Role="CAT_GENERO_TALLA" Type="Self.CAT_GENERO_TALLA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_ITEM_SIZE">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="CAT_GENERO_TALLA">
+        <PropertyRef Name="ID_TALLA" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__IMAGEN_AR__Id_Su__22401542">
+    <End Role="PO_SUMMARY" Type="Self.PO_SUMMARY" Multiplicity="0..1" />
+    <End Role="IMAGEN_ARTE" Type="Self.IMAGEN_ARTE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PO_SUMMARY">
+        <PropertyRef Name="ID_PO_SUMMARY" />
+      </Principal>
+      <Dependent Role="IMAGEN_ARTE">
+        <PropertyRef Name="Id_Summary" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__IMAGEN_AR__Id_UP__2334397B">
+    <End Role="UPC_ARTE" Type="Self.UPC_ARTE" Multiplicity="0..1" />
+    <End Role="IMAGEN_ARTE" Type="Self.IMAGEN_ARTE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UPC_ARTE">
+        <PropertyRef Name="Id_UPC" />
+      </Principal>
+      <Dependent Role="IMAGEN_ARTE">
+        <PropertyRef Name="Id_UPC" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ITEM_SIZE__ID_SU__367C1819">
+    <End Role="PO_SUMMARY" Type="Self.PO_SUMMARY" Multiplicity="0..1" />
+    <End Role="ITEM_SIZE" Type="Self.ITEM_SIZE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PO_SUMMARY">
+        <PropertyRef Name="ID_PO_SUMMARY" />
+      </Principal>
+      <Dependent Role="ITEM_SIZE">
+        <PropertyRef Name="ID_SUMMARY" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ITEM_SIZE__TALLA__3587F3E0">
+    <End Role="CAT_ITEM_SIZE" Type="Self.CAT_ITEM_SIZE" Multiplicity="0..1" />
+    <End Role="ITEM_SIZE" Type="Self.ITEM_SIZE" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_ITEM_SIZE">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ITEM_SIZE">
+        <PropertyRef Name="TALLA_ITEM" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PEDIDO__CUSTOMER__04E4BC85">
+    <End Role="CAT_CUSTOMER" Type="Self.CAT_CUSTOMER" Multiplicity="1" />
+    <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_CUSTOMER">
+        <PropertyRef Name="CUSTOMER" />
+      </Principal>
+      <Dependent Role="PEDIDO">
+        <PropertyRef Name="CUSTOMER" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PEDIDO__CUSTOMER__05D8E0BE">
+    <End Role="CAT_CUSTOMER_PO" Type="Self.CAT_CUSTOMER_PO" Multiplicity="1" />
+    <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_CUSTOMER_PO">
+        <PropertyRef Name="CUSTOMER_FINAL" />
+      </Principal>
+      <Dependent Role="PEDIDO">
+        <PropertyRef Name="CUSTOMER_FINAL" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PEDIDO__CUSTOMER__114A936A">
+    <End Role="CAT_CUSTOMER_PO" Type="Self.CAT_CUSTOMER_PO" Multiplicity="1" />
+    <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_CUSTOMER_PO">
+        <PropertyRef Name="CUSTOMER_FINAL" />
+      </Principal>
+      <Dependent Role="PEDIDO">
+        <PropertyRef Name="CUSTOMER_FINAL" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PEDIDO__ID_STATU__151B244E">
+    <End Role="CAT_STATUS" Type="Self.CAT_STATUS" Multiplicity="0..1" />
+    <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_STATUS">
+        <PropertyRef Name="ID_STATUS" />
+      </Principal>
+      <Dependent Role="PEDIDO">
+        <PropertyRef Name="ID_STATUS" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PO_SUMMAR__ID_GE__160F4887">
+    <End Role="CAT_GENDER" Type="Self.CAT_GENDER" Multiplicity="0..1" />
+    <End Role="PO_SUMMARY" Type="Self.PO_SUMMARY" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_GENDER">
+        <PropertyRef Name="ID_GENDER" />
+      </Principal>
+      <Dependent Role="PO_SUMMARY">
+        <PropertyRef Name="ID_GENDER" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PO_SUMMAR__ID_PR__3C34F16F">
+    <End Role="CAT_PRODUCT_TYPE_CODES" Type="Self.CAT_PRODUCT_TYPE_CODES" Multiplicity="0..1" />
+    <End Role="PO_SUMMARY" Type="Self.PO_SUMMARY" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_PRODUCT_TYPE_CODES">
+        <PropertyRef Name="ID_TYPE_CODE" />
+      </Principal>
+      <Dependent Role="PO_SUMMARY">
+        <PropertyRef Name="ID_PRODUCT_TYPE" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PO_SUMMAR__ID_TE__3B40CD36">
+    <End Role="CAT_FABRIC_CODES" Type="Self.CAT_FABRIC_CODES" Multiplicity="0..1" />
+    <End Role="PO_SUMMARY" Type="Self.PO_SUMMARY" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_FABRIC_CODES">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="PO_SUMMARY">
+        <PropertyRef Name="ID_TELA" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PRINTSHOP__ID_SU__14E61A24">
+    <End Role="PO_SUMMARY" Type="Self.PO_SUMMARY" Multiplicity="0..1" />
+    <End Role="PRINTSHOP" Type="Self.PRINTSHOP" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PO_SUMMARY">
+        <PropertyRef Name="ID_PO_SUMMARY" />
+      </Principal>
+      <Dependent Role="PRINTSHOP">
+        <PropertyRef Name="ID_SUMMARY" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PRINTSHOP__ID_TA__16CE6296">
+    <End Role="CAT_ITEM_SIZE" Type="Self.CAT_ITEM_SIZE" Multiplicity="0..1" />
+    <End Role="PRINTSHOP" Type="Self.PRINTSHOP" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_ITEM_SIZE">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="PRINTSHOP">
+        <PropertyRef Name="ID_TALLA" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PRINTSHOP__ID_US__1C873BEC">
+    <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+    <End Role="PRINTSHOP" Type="Self.PRINTSHOP" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Usuarios">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PRINTSHOP">
+        <PropertyRef Name="ID_USUARIO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__REVISIONE__ID_PE__5224328E">
+    <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="1" />
+    <End Role="REVISIONES_PO" Type="Self.REVISIONES_PO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PEDIDO">
+        <PropertyRef Name="ID_PEDIDO" />
+      </Principal>
+      <Dependent Role="REVISIONES_PO">
+        <PropertyRef Name="ID_PEDIDO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__REVISIONE__ID_RE__47A6A41B">
+    <End Role="PEDIDO" Type="Self.PEDIDO" Multiplicity="1" />
+    <End Role="REVISIONES_PO" Type="Self.REVISIONES_PO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PEDIDO">
+        <PropertyRef Name="ID_PEDIDO" />
+      </Principal>
+      <Dependent Role="REVISIONES_PO">
+        <PropertyRef Name="ID_REVISION_PO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__REVISIONE__ID_ST__46B27FE2">
+    <End Role="CAT_STATUS" Type="Self.CAT_STATUS" Multiplicity="1" />
+    <End Role="REVISIONES_PO" Type="Self.REVISIONES_PO" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CAT_STATUS">
+        <PropertyRef Name="ID_STATUS" />
+      </Principal>
+      <Dependent Role="REVISIONES_PO">
+        <PropertyRef Name="ID_STATUS" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Usuarios__Cargo__02FC7413">
+    <End Role="Roles" Type="Self.Roles" Multiplicity="0..1" />
+    <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="id_Rol" />
+      </Principal>
+      <Dependent Role="Usuarios">
+        <PropertyRef Name="Cargo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Usuarios__Cargo__3D5E1FD2">
+    <End Role="Roles" Type="Self.Roles" Multiplicity="0..1" />
+    <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="id_Rol" />
+      </Principal>
+      <Dependent Role="Usuarios">
+        <PropertyRef Name="Cargo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="Actualizar_Camiseta" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="Codigo" Type="nvarchar" Mode="In" />
+    <Parameter Name="Descripcion" Type="nvarchar" Mode="In" />
+    <Parameter Name="Grupo" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="Actualizar_Cliente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="Nombre" Type="char" Mode="In" />
+  </Function>
+  <Function Name="Actualizar_ClienteFinal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="Nombre" Type="char" Mode="In" />
+  </Function>
+  <Function Name="Actualizar_Colores" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="ColorStyle" Type="char" Mode="In" />
+    <Parameter Name="ColorDesc" Type="char" Mode="In" />
+  </Function>
+  <Function Name="Actualizar_Estilos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="Item" Type="int" Mode="In" />
+    <Parameter Name="Color" Type="int" Mode="In" />
+    <Parameter Name="Qty" Type="int" Mode="In" />
+    <Parameter Name="Price" Type="float" Mode="In" />
+    <Parameter Name="IdPedidos" Type="int" Mode="In" />
+    <Parameter Name="IdGenero" Type="int" Mode="In" />
+    <Parameter Name="IdTela" Type="int" Mode="In" />
+    <Parameter Name="TipoCamiseta" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Actualizar_Genero" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="Genero" Type="char" Mode="In" />
+    <Parameter Name="Codigo" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="Actualizar_Roles" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="Rol" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="Actualizar_Talla" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="Talla" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="Actualizar_Tallas_Estilo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="IdTalla" Type="int" Mode="In" />
+    <Parameter Name="Cantidad" Type="int" Mode="In" />
+    <Parameter Name="Extras" Type="int" Mode="In" />
+    <Parameter Name="Ejemplos" Type="int" Mode="In" />
+    <Parameter Name="IdSummary" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Actualizar_Tela" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="Tela" Type="nvarchar" Mode="In" />
+    <Parameter Name="Codigo" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="Actualizar_Usuarios" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="NoEmpleado" Type="char" Mode="In" />
+    <Parameter Name="Nombres" Type="nvarchar" Mode="In" />
+    <Parameter Name="Apellidos" Type="nvarchar" Mode="In" />
+    <Parameter Name="Cargo" Type="int" Mode="In" />
+    <Parameter Name="Email" Type="nvarchar" Mode="In" />
+    <Parameter Name="Contrasena" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="ActualizarBatchPrintShop" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="idSummary" Type="int" Mode="In" />
+    <Parameter Name="idBatch" Type="int" Mode="In" />
+    <Parameter Name="idTalla" Type="int" Mode="In" />
+    <Parameter Name="printed" Type="int" Mode="In" />
+    <Parameter Name="mp" Type="int" Mode="In" />
+    <Parameter Name="def" Type="int" Mode="In" />
+    <Parameter Name="maq" Type="int" Mode="In" />
+    <Parameter Name="turno" Type="int" Mode="In" />
+    <Parameter Name="total" Type="int" Mode="In" />
+    <Parameter Name="idUsr" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Agregar_Item_Desc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Style" Type="char" Mode="In" />
+    <Parameter Name="Descripcion" Type="char" Mode="In" />
+  </Function>
+  <Function Name="Agregar_Talla_Item" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Talla" Type="char" Mode="In" />
+    <Parameter Name="Cantidad" Type="int" Mode="In" />
+    <Parameter Name="Extras" Type="int" Mode="In" />
+    <Parameter Name="Ejemplos" Type="int" Mode="In" />
+    <Parameter Name="IdItem" Type="int" Mode="In" />
+  </Function>
+  <Function Name="AgregarCliente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Nombre" Type="char" Mode="In" />
+  </Function>
+  <Function Name="AgregarClienteFinal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Nombre" Type="char" Mode="In" />
+  </Function>
+  <Function Name="AgregarColor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ColorStyle" Type="nvarchar" Mode="In" />
+    <Parameter Name="ColorDesc" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="AgregarGeneros" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Genero" Type="char" Mode="In" />
+    <Parameter Name="Codigo" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="AgregarItem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Item" Type="char" Mode="In" />
+    <Parameter Name="Color" Type="char" Mode="In" />
+    <Parameter Name="Qty" Type="int" Mode="In" />
+    <Parameter Name="Price" Type="float" Mode="In" />
+    <Parameter Name="IdPedidos" Type="int" Mode="In" />
+    <Parameter Name="IdGenero" Type="char" Mode="In" />
+    <Parameter Name="IdTela" Type="int" Mode="In" />
+    <Parameter Name="TipoCamiseta" Type="char" Mode="In" />
+  </Function>
+  <Function Name="AgregarPedido" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="idPO" Type="char" Mode="In" />
+    <Parameter Name="idPOF" Type="int" Mode="In" />
+    <Parameter Name="Customer" Type="int" Mode="In" />
+    <Parameter Name="CustomerF" Type="int" Mode="In" />
+    <Parameter Name="datecancel" Type="date" Mode="In" />
+    <Parameter Name="datePO" Type="date" Mode="In" />
+    <Parameter Name="totUnid" Type="int" Mode="In" />
+    <Parameter Name="idStatus" Type="int" Mode="In" />
+  </Function>
+  <Function Name="AgregarPedidoSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="AgregarPrintShop" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="idSummary" Type="int" Mode="In" />
+    <Parameter Name="idBatch" Type="int" Mode="In" />
+    <Parameter Name="idTalla" Type="int" Mode="In" />
+    <Parameter Name="printed" Type="int" Mode="In" />
+    <Parameter Name="mp" Type="int" Mode="In" />
+    <Parameter Name="def" Type="int" Mode="In" />
+    <Parameter Name="maq" Type="int" Mode="In" />
+    <Parameter Name="turno" Type="int" Mode="In" />
+    <Parameter Name="total" Type="int" Mode="In" />
+    <Parameter Name="idUsr" Type="int" Mode="In" />
+  </Function>
+  <Function Name="AgregarRevisionPO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="idPedido" Type="int" Mode="In" />
+    <Parameter Name="idPedidoRevision" Type="int" Mode="In" />
+    <Parameter Name="dateRevision" Type="date" Mode="In" />
+    <Parameter Name="idStatus" Type="int" Mode="In" />
+  </Function>
+  <Function Name="AgregarRoles" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Rol" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="AgregarTalla" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Talla" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="AgregarTela" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Tela" Type="nvarchar" Mode="In" />
+    <Parameter Name="Codigo" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="AgregarTipoCamiseta" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Codigo" Type="nvarchar" Mode="In" />
+    <Parameter Name="Descripcion" Type="nvarchar" Mode="In" />
+    <Parameter Name="Grupo" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="AgregarUsuarios" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="NoEmpleado" Type="char" Mode="In" />
+    <Parameter Name="Nombres" Type="nvarchar" Mode="In" />
+    <Parameter Name="Apellidos" Type="nvarchar" Mode="In" />
+    <Parameter Name="Cargo" Type="int" Mode="In" />
+    <Parameter Name="Email" Type="nvarchar" Mode="In" />
+    <Parameter Name="Contrasena" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="EditarPedidos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="idPO" Type="char" Mode="In" />
+    <Parameter Name="idPF" Type="int" Mode="In" />
+    <Parameter Name="Customer" Type="int" Mode="In" />
+    <Parameter Name="CustomerF" Type="int" Mode="In" />
+    <Parameter Name="datecancel" Type="date" Mode="In" />
+    <Parameter Name="datePO" Type="date" Mode="In" />
+    <Parameter Name="totUnid" Type="int" Mode="In" />
+    <Parameter Name="id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Eliminar_Item" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="idPO" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Eliminar_Pedido" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="idPO" Type="char" Mode="In" />
+  </Function>
+  <Function Name="EliminarCamiseta" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="EliminarClientes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="EliminarClientesFinal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="EliminarColores" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="EliminarGenero" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="EliminarRoles" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="EliminarTalla" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="EliminarTela" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="EliminarUsuarios" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Lista_Batch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Lista_Estilos_Por_Id" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Lista_Pedido_Por_Id" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Lista_PrintShop" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Lista_Tallas_Por_Estilo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Lista_Tallas_Por_Summary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Lista_Tallas_Staging_Por_Estilo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Lista_Total_PrintShop" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Lista_Usuario_Por_Id" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Listar_Camiseta_Por_Id" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Listar_Cliente_Por_Id" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Listar_ClienteFinal_Por_Id" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Listar_Clientes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_ClientesFinal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_Color" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_Color_Por_Id" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Listar_Customer" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_Customer_Final" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_Estados" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_EstiloDesc_Por_Id" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Listar_Estilos_Por_Pedido" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Listar_Genero" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_Genero_Por_Id" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Listar_Item_Desc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_Item_Por_Pedido" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Listar_Items" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_Pedidos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_Pedidos_Por_Fechas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="FechaCanc" Type="date" Mode="In" />
+    <Parameter Name="FechaOrden" Type="date" Mode="In" />
+  </Function>
+  <Function Name="Listar_Pedidos_Revisiones" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Listar_Roles" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_Roles_Por_Id" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Listar_Talla_Por_Id" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Listar_Tallas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_Tallas_Por_Genero" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Genero" Type="char" Mode="In" />
+  </Function>
+  <Function Name="Listar_Tela" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_Tela_Por_Id" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Listar_Tipo_Camiseta" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Listar_Usuarios" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="ListarDetallePedido" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="pO" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="ListarItems" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Pedido" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="ListarPedidos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="RegresaCliente" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Cliente" Type="char" Mode="In" />
+  </Function>
+  <Function Name="RegresaClienteFinal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Cliente" Type="char" Mode="In" />
+  </Function>
+  <Function Name="SpLogin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Usuario" Type="char" Mode="In" />
+    <Parameter Name="Password" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="Ultimo_PO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="VerificarColor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Cadena" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="VerificarItem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Cadena" Type="nvarchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="FortuneTestModelStoreContainer">
+    <EntitySet Name="body_types" EntityType="Self.body_types" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CAT_BRAND_CODES" EntityType="Self.CAT_BRAND_CODES" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CAT_COLORES" EntityType="Self.CAT_COLORES" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CAT_CUSTOMER" EntityType="Self.CAT_CUSTOMER" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CAT_CUSTOMER_PO" EntityType="Self.CAT_CUSTOMER_PO" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CAT_FABRIC_CODES" EntityType="Self.CAT_FABRIC_CODES" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CAT_GENDER" EntityType="Self.CAT_GENDER" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CAT_GENERO_TALLA" EntityType="Self.CAT_GENERO_TALLA" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CAT_ITEM_SIZE" EntityType="Self.CAT_ITEM_SIZE" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CAT_PRODUCT_TYPE_CODES" EntityType="Self.CAT_PRODUCT_TYPE_CODES" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CAT_STATUS" EntityType="Self.CAT_STATUS" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="categorias_inventarios" EntityType="Self.categorias_inventarios" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="estilos_fabrica" EntityType="Self.estilos_fabrica" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="fabric_percents" EntityType="Self.fabric_percents" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="fabricantes" EntityType="Self.fabricantes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="family_trims" EntityType="Self.family_trims" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="IMAGEN_ARTE" EntityType="Self.IMAGEN_ARTE" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="inventario" EntityType="Self.inventario" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ITEM_DESCRIPTION" EntityType="Self.ITEM_DESCRIPTION" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ITEM_SIZE" EntityType="Self.ITEM_SIZE" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="lugares" EntityType="Self.lugares" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="paises" EntityType="Self.paises" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PEDIDO" EntityType="Self.PEDIDO" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PO_SUMMARY" EntityType="Self.PO_SUMMARY" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PRINTSHOP" EntityType="Self.PRINTSHOP" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="proveedores" EntityType="Self.proveedores" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="recibos" EntityType="Self.recibos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="recibos_cajas" EntityType="Self.recibos_cajas" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="REVISIONES_PO" EntityType="Self.REVISIONES_PO" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="salidas" EntityType="Self.salidas" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="salidas_items" EntityType="Self.salidas_items" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sellos" EntityType="Self.sellos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sucursales" EntityType="Self.sucursales" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="trims" EntityType="Self.trims" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ubicaciones" EntityType="Self.ubicaciones" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="units" EntityType="Self.units" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UPC_ARTE" EntityType="Self.UPC_ARTE" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="yarns" EntityType="Self.yarns" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ITEM_SIZE_STAGING" EntityType="Self.ITEM_SIZE_STAGING" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [ITEM_SIZE_STAGING].[ID_TALLA] AS [ID_TALLA], 
+    [ITEM_SIZE_STAGING].[TALLA_ITEM] AS [TALLA_ITEM], 
+    [ITEM_SIZE_STAGING].[CANTIDAD] AS [CANTIDAD], 
+    [ITEM_SIZE_STAGING].[ID_SUMMARY] AS [ID_SUMMARY]
+    FROM [dbo].[ITEM_SIZE_STAGING] AS [ITEM_SIZE_STAGING]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="recibos_items" EntityType="Self.recibos_items" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [recibos_items].[id_recibo_item] AS [id_recibo_item], 
+    [recibos_items].[id_recibo] AS [id_recibo], 
+    [recibos_items].[id_inventario] AS [id_inventario], 
+    [recibos_items].[amt_item] AS [amt_item], 
+    [recibos_items].[total] AS [total], 
+    [recibos_items].[mill_po] AS [mill_po], 
+    [recibos_items].[id_estilo] AS [id_estilo]
+    FROM [dbo].[recibos_items] AS [recibos_items]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="database_firewall_rules" EntityType="Self.database_firewall_rules" store:Type="Views" store:Schema="sys">
+      <DefiningQuery>SELECT 
+    [database_firewall_rules].[id] AS [id], 
+    [database_firewall_rules].[name] AS [name], 
+    [database_firewall_rules].[start_ip_address] AS [start_ip_address], 
+    [database_firewall_rules].[end_ip_address] AS [end_ip_address], 
+    [database_firewall_rules].[create_date] AS [create_date], 
+    [database_firewall_rules].[modify_date] AS [modify_date]
+    FROM [sys].[database_firewall_rules] AS [database_firewall_rules]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK__CAT_GENER__ID_GE__236943A5" Association="Self.FK__CAT_GENER__ID_GE__236943A5">
+      <End Role="CAT_GENDER" EntitySet="CAT_GENDER" />
+      <End Role="CAT_GENERO_TALLA" EntitySet="CAT_GENERO_TALLA" />
+    </AssociationSet>
+    <AssociationSet Name="FK__CAT_GENER__ID_TA__245D67DE" Association="Self.FK__CAT_GENER__ID_TA__245D67DE">
+      <End Role="CAT_ITEM_SIZE" EntitySet="CAT_ITEM_SIZE" />
+      <End Role="CAT_GENERO_TALLA" EntitySet="CAT_GENERO_TALLA" />
+    </AssociationSet>
+    <AssociationSet Name="FK__IMAGEN_AR__Id_Su__22401542" Association="Self.FK__IMAGEN_AR__Id_Su__22401542">
+      <End Role="PO_SUMMARY" EntitySet="PO_SUMMARY" />
+      <End Role="IMAGEN_ARTE" EntitySet="IMAGEN_ARTE" />
+    </AssociationSet>
+    <AssociationSet Name="FK__IMAGEN_AR__Id_UP__2334397B" Association="Self.FK__IMAGEN_AR__Id_UP__2334397B">
+      <End Role="UPC_ARTE" EntitySet="UPC_ARTE" />
+      <End Role="IMAGEN_ARTE" EntitySet="IMAGEN_ARTE" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ITEM_SIZE__ID_SU__367C1819" Association="Self.FK__ITEM_SIZE__ID_SU__367C1819">
+      <End Role="PO_SUMMARY" EntitySet="PO_SUMMARY" />
+      <End Role="ITEM_SIZE" EntitySet="ITEM_SIZE" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ITEM_SIZE__TALLA__3587F3E0" Association="Self.FK__ITEM_SIZE__TALLA__3587F3E0">
+      <End Role="CAT_ITEM_SIZE" EntitySet="CAT_ITEM_SIZE" />
+      <End Role="ITEM_SIZE" EntitySet="ITEM_SIZE" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PEDIDO__CUSTOMER__04E4BC85" Association="Self.FK__PEDIDO__CUSTOMER__04E4BC85">
+      <End Role="CAT_CUSTOMER" EntitySet="CAT_CUSTOMER" />
+      <End Role="PEDIDO" EntitySet="PEDIDO" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PEDIDO__CUSTOMER__05D8E0BE" Association="Self.FK__PEDIDO__CUSTOMER__05D8E0BE">
+      <End Role="CAT_CUSTOMER_PO" EntitySet="CAT_CUSTOMER_PO" />
+      <End Role="PEDIDO" EntitySet="PEDIDO" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PEDIDO__CUSTOMER__114A936A" Association="Self.FK__PEDIDO__CUSTOMER__114A936A">
+      <End Role="CAT_CUSTOMER_PO" EntitySet="CAT_CUSTOMER_PO" />
+      <End Role="PEDIDO" EntitySet="PEDIDO" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PEDIDO__ID_STATU__151B244E" Association="Self.FK__PEDIDO__ID_STATU__151B244E">
+      <End Role="CAT_STATUS" EntitySet="CAT_STATUS" />
+      <End Role="PEDIDO" EntitySet="PEDIDO" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PO_SUMMAR__ID_GE__160F4887" Association="Self.FK__PO_SUMMAR__ID_GE__160F4887">
+      <End Role="CAT_GENDER" EntitySet="CAT_GENDER" />
+      <End Role="PO_SUMMARY" EntitySet="PO_SUMMARY" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PO_SUMMAR__ID_PR__3C34F16F" Association="Self.FK__PO_SUMMAR__ID_PR__3C34F16F">
+      <End Role="CAT_PRODUCT_TYPE_CODES" EntitySet="CAT_PRODUCT_TYPE_CODES" />
+      <End Role="PO_SUMMARY" EntitySet="PO_SUMMARY" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PO_SUMMAR__ID_TE__3B40CD36" Association="Self.FK__PO_SUMMAR__ID_TE__3B40CD36">
+      <End Role="CAT_FABRIC_CODES" EntitySet="CAT_FABRIC_CODES" />
+      <End Role="PO_SUMMARY" EntitySet="PO_SUMMARY" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PRINTSHOP__ID_SU__14E61A24" Association="Self.FK__PRINTSHOP__ID_SU__14E61A24">
+      <End Role="PO_SUMMARY" EntitySet="PO_SUMMARY" />
+      <End Role="PRINTSHOP" EntitySet="PRINTSHOP" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PRINTSHOP__ID_TA__16CE6296" Association="Self.FK__PRINTSHOP__ID_TA__16CE6296">
+      <End Role="CAT_ITEM_SIZE" EntitySet="CAT_ITEM_SIZE" />
+      <End Role="PRINTSHOP" EntitySet="PRINTSHOP" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PRINTSHOP__ID_US__1C873BEC" Association="Self.FK__PRINTSHOP__ID_US__1C873BEC">
+      <End Role="Usuarios" EntitySet="Usuarios" />
+      <End Role="PRINTSHOP" EntitySet="PRINTSHOP" />
+    </AssociationSet>
+    <AssociationSet Name="FK__REVISIONE__ID_PE__5224328E" Association="Self.FK__REVISIONE__ID_PE__5224328E">
+      <End Role="PEDIDO" EntitySet="PEDIDO" />
+      <End Role="REVISIONES_PO" EntitySet="REVISIONES_PO" />
+    </AssociationSet>
+    <AssociationSet Name="FK__REVISIONE__ID_RE__47A6A41B" Association="Self.FK__REVISIONE__ID_RE__47A6A41B">
+      <End Role="PEDIDO" EntitySet="PEDIDO" />
+      <End Role="REVISIONES_PO" EntitySet="REVISIONES_PO" />
+    </AssociationSet>
+    <AssociationSet Name="FK__REVISIONE__ID_ST__46B27FE2" Association="Self.FK__REVISIONE__ID_ST__46B27FE2">
+      <End Role="CAT_STATUS" EntitySet="CAT_STATUS" />
+      <End Role="REVISIONES_PO" EntitySet="REVISIONES_PO" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Usuarios__Cargo__02FC7413" Association="Self.FK__Usuarios__Cargo__02FC7413">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Usuarios" EntitySet="Usuarios" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Usuarios__Cargo__3D5E1FD2" Association="Self.FK__Usuarios__Cargo__3D5E1FD2">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Usuarios" EntitySet="Usuarios" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

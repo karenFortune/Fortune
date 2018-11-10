@@ -6,7 +6,9 @@
 }
 
 
-<h3>¿Est&aacute; seguro de eliminar al usuario?</h3>
+<h3>
+    Are you sure to delete the user?
+</h3>
 <div>
     <hr />
     <dl class="dl-horizontal">
@@ -39,7 +41,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Cargo)
+            @Html.DisplayFor(model => model.CatRoles.Rol)
         </dd>
 
         <dt>
@@ -64,8 +66,8 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Eliminar" class="btn btn-danger" /> |
-            @Html.ActionLink("Regresar", "Index")
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            @Html.ActionLink("Back to List", "Index")
         </div>
     }
 </div>

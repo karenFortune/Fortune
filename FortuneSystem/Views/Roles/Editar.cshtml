@@ -1,11 +1,11 @@
 ﻿@model FortuneSystem.Models.Roles.CatRoles
 
 @{
-    ViewBag.Title = "Editar";
+    ViewBag.Title = "Edit Role";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Editar Rol</h2>
+<h2>Edit Role</h2>
 
 
 @using (Html.BeginForm())
@@ -26,14 +26,14 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Guardar" class="btn btn-success" />
+            <input type="submit" value="Save" class="btn btn-success" />
         </div>
     </div>
 </div>
 }
 
 <div>
-    @Html.ActionLink("Regresar", "Index")
+    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

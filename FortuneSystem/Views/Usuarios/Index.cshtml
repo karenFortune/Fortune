@@ -19,10 +19,18 @@
         color: #fff;
         background-color: #006bb3;
     }
+
+    #nuevo-usuario {
+        margin-left: 50px;
+        margin-top: 1px;
+        width: 140px;
+        height: 40px;
+        border: none;
+        font-size: 15px;
+        font-weight: 600;
+    }
 </style>
-<h2>
-    User administration
-</h2>
+
 @{
     if (TempData["usuarioOK"] != null)
     {
@@ -64,71 +72,70 @@
 
         </script>
     }
-    
+
 }
-<p>
-    <a href="@Url.Action("CrearUsuario")">
-        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add New User
-        </button>
-    </a>
-</p>
-<br />
-<table class="table table-striped" id="tablaUsuarios">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.NoEmpleado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombres)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Apellidos)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cargo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Contrasena)
-            </th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NoEmpleado)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombres)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Apellidos)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CatRoles.Rol)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Contrasena)
-                </td>
-                <td>
-                    @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Edit User" }) |
-                    @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details User" }) |
-                    @Html.ActionLink(" ", "Eliminar", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Delete User" })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <div class="panel panel-primary" id="consultaPO">
+            <div class="panel-heading">
+                <h3>
+                    User administration
+                </h3>
+            </div>
+            <br />
+
+            <p>
+                <a href="@Url.Action("CrearUsuario")">
+                    <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add New User
+                    </button>
+                </a>
+            </p>
+            <br />
+            <table class="table table-striped" id="tablaUsuarios">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.NoEmpleado)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nombres)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Cargo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NoEmpleado)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NombreCompleto)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CatRoles.Rol)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Edit User" }) |
+                                @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details User" }) |
+                                @Html.ActionLink(" ", "Eliminar", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Delete User" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
 <script>
     $('#tablaUsuarios tr').click(function (e) {
         $('#tablaUsuarios tr').removeClass('highlighted');

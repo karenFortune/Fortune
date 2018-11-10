@@ -44,10 +44,15 @@ namespace FortuneSystem
         public List<CatTallaItem> ListaTallas { get; set; }
         [Display(Name = "STYLE")]
         public string Estilo { get; set; }
+        [Display(Name = "DESCRIPTION")]
+        public string DescripcionEstilo { get; set; }
         public MatchCollection ResultadoK { get; set; }
         public MatchCollection ResultadoW { get; set; }
         public virtual ARTE CATARTE { get; set; }
         public string PO { get; set; }
+
+        public string extensionArte { get; set; }
+        public string extensionPNL { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ARTE> ARTE { get; set; }

@@ -1,11 +1,11 @@
 ﻿@model FortuneSystem.Models.Usuarios.CatUsuario
 
 @{
-    ViewBag.Title = "Consulta";
+    ViewBag.Title = "Details Users";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Detalles </h2>
+<h2>Details </h2>
 
 <div>
     <hr />
@@ -61,6 +61,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Regresar", "Index")
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
 </p>

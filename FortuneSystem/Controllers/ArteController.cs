@@ -31,9 +31,63 @@ namespace FortuneSystem.Controllers
             return View(listaArtes);
 
         }
+        public ActionResult FileUpload(int idArte)
+        {
+            IMAGEN_ARTE IArte = db.ImagenArte.Find(idArte);
+
+            ARTE art = db.Arte.Where(x => x.IdImgArte == idArte).FirstOrDefault();
+            IArte.CATARTE = art;
+            ObtenerEstados(IArte.StatusArte, IArte.StatusPNL, IArte);
+
+
+            return View(IArte);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult FileUpload([Bind] IMAGEN_ARTE Arte, HttpPostedFileBase fileArte, HttpPostedFileBase filePNL)
+        {
+            if(Arte.extensionArte == null)
+            {
+                fileArte = Arte.FileArte;
+                if (fileArte != null)
+                {
+                    string ext = Path.GetFileName(fileArte.FileName);
+                    string path = Path.Combine(Server.MapPath("~/Content/imagenesArte"), ext);
+                    Arte.extensionArte = ext;
+                    fileArte.SaveAs(path);
+                    TempData["imagArteOK"] = "The Art image was registered correctly.";
+                }
+            }
+           
+            if(Arte.extensionPNL == null)
+            {
+                filePNL = Arte.FilePNL;
+                if (filePNL != null)
+                {
+                    string ext = Path.GetFileName(filePNL.FileName);
+                    string path = Path.Combine(Server.MapPath("~/Content/imagenesArte"), ext);
+                    Arte.extensionPNL = ext;
+                    filePNL.SaveAs(path);
+                    TempData["imagPnlOK"] = "The PNL image was registered correctly.";
+                }
+            }
+           
+
+            ObtenerEstadosPorId(Arte);
+
+            if (ModelState.IsValid)
+            {
+                db.Entry(Arte).State = EntityState.Modified;
+                db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+          
+            return View(Arte);
+        }
 
         // GET: Arte
-       
+
         public ActionResult ListaImgArte(int id)
         {
             List<IMAGEN_ARTE> listaArtes = new List<IMAGEN_ARTE>();
@@ -46,17 +100,15 @@ namespace FortuneSystem.Controllers
             var arte = db.ImagenArte.Where(x => x.IdImgArte == arteCodigo).FirstOrDefault();
             if (arte != null)
             {
-                if (arte.imgArte != null)
+                if (arte.extensionArte != null && arte.extensionArte != "" )
                 {
-                    return File(arte.imgArte, "image/jpg");
+                    return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Application.Octet);
                 }
                 else
                 {
                     return File("~/Content/img/noImagen.png", "image/png");
-                }
-              
-          
-                
+                }       
+                         
             }
             else
             {
@@ -68,18 +120,15 @@ namespace FortuneSystem.Controllers
         {
             var arte = db.ImagenArte.Where(x => x.IdImgArte == pnlCodigo).FirstOrDefault();
             if (arte != null)
-            {
-                                 
-
-                if (arte.imgPNL != null)
+            {                              
+                if (arte.extensionPNL != null && arte.extensionPNL != "" )
                 {
-                    return File(arte.imgPNL, "image/jpg");
+                    return new FilePathResult("~/Content/imagenesArte/" + arte.extensionPNL, System.Net.Mime.MediaTypeNames.Application.Octet);
                 }
                 else
                 {
                     return File("~/Content/img/noImagen.png", "image/png");
                 }
-
             }
             else
             {
@@ -99,9 +148,9 @@ namespace FortuneSystem.Controllers
             var arte = db.ImagenArte.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
             if (arte != null)
             {
-                if (arte.imgArte != null)
+                if (arte.extensionArte != null && arte.extensionArte != "")
                 {
-                    return File(arte.imgArte, "image/jpg");
+                    return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Application.Octet);
                 }
                 else
                 {
@@ -122,9 +171,9 @@ namespace FortuneSystem.Controllers
             var arte = db.ImagenArte.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
             if(arte != null)
             {
-                if(arte.imgPNL != null)
+                if (arte.extensionPNL != null && arte.extensionPNL != "")
                 {
-                    return File(arte.imgPNL, "image/jpg");
+                    return new FilePathResult("~/Content/imagenesArte/" + arte.extensionPNL, System.Net.Mime.MediaTypeNames.Application.Octet);
                 }
                 else
                 {
@@ -137,8 +186,6 @@ namespace FortuneSystem.Controllers
             }
            
         }
-
-
 
         public ActionResult Create(int? id, int idArte)
         {
@@ -156,9 +203,8 @@ namespace FortuneSystem.Controllers
             IArte.ResultadoK = kohl.Matches(IArte.Tienda);
             IArte.ResultadoW = walmart.Matches(IArte.Tienda);
             ObtenerEstados(IArte.StatusArte, IArte.StatusPNL, IArte);     
-
-
-                return View(IArte);
+        
+            return View(IArte);
         }
 
         public void ObtenerEstados(int? idEstadoArte, int? idEstadoPNL, IMAGEN_ARTE arte)
@@ -192,48 +238,17 @@ namespace FortuneSystem.Controllers
 
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind] IMAGEN_ARTE Arte, HttpPostedFileBase imgArte, HttpPostedFileBase imgPNL)
+        public void ObtenerEstadosPorId(IMAGEN_ARTE Arte)
         {
-            byte[] iArte = objArte.ObtenerImagenArte(Arte.IdImgArte);
-            if (iArte == null)
-            {
-                imgArte = Arte.FileArte;
-                if (imgArte != null && imgArte.ContentLength > 0)
-                {
-                    byte[] imageData = null;
-                    using (var binaryReader = new BinaryReader(imgArte.InputStream))
-                    {
-                        imageData = binaryReader.ReadBytes(imgArte.ContentLength);
-                    }
-                    //setear la imagen a la entidad que se creara
-                    Arte.imgArte = imageData;
-                }
-            }
-            else
-            {
-                Arte.imgArte = iArte;
-            }
-            imgPNL = Arte.FilePNL;
-            if (imgPNL != null && imgPNL.ContentLength > 0)
-            {
-                byte[] imageData = null;
-                using (var binaryReader = new BinaryReader(imgPNL.InputStream))
-                {
-                    imageData = binaryReader.ReadBytes(imgPNL.ContentLength);
-                }
-                //setear la imagen a la entidad que se creara
-                Arte.imgPNL = imageData;
-            }
-
-            if(Arte.EstadosArte == EstatusArte.APPROVED)
+            if (Arte.EstadosArte == EstatusArte.APPROVED)
             {
                 Arte.StatusArte = 1;
-            }else if(Arte.EstadosArte == EstatusArte.REVIEWED)
+            }
+            else if (Arte.EstadosArte == EstatusArte.REVIEWED)
             {
                 Arte.StatusArte = 2;
-            }else if (Arte.EstadosArte == EstatusArte.PENDING)
+            }
+            else if (Arte.EstadosArte == EstatusArte.PENDING)
             {
                 Arte.StatusArte = 3;
             }
@@ -251,21 +266,13 @@ namespace FortuneSystem.Controllers
                 Arte.StatusPNL = 3;
             }
 
-            if (ModelState.IsValid)
-            {
-                
-               
-                db.Entry(Arte).State = EntityState.Modified;
-                db.SaveChanges();
-                //objArte.ActualizarArteEstilo(Arte.IdImgArte, Arte.imgArte, Arte.imgPNL, Arte.StatusArte);
-                /*   db.ImagenArte.Add(Arte);
-                   db.SaveChanges();*/
+        }
 
-
-                return RedirectToAction("Index");
-            }
-
-         
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind] IMAGEN_ARTE Arte)
+        {
+                    
             return View(Arte);
         }
 
@@ -294,26 +301,22 @@ namespace FortuneSystem.Controllers
         public ActionResult Edit([Bind] IMAGEN_ARTE Arte, HttpPostedFileBase imgArte, HttpPostedFileBase imgPNL)
         {
             imgArte = Arte.FileArte;
-            if (imgArte != null && imgArte.ContentLength > 0)
+
+            if (imgArte != null)
             {
-                byte[] imageData = null;
-                using (var binaryReader = new BinaryReader(imgArte.InputStream))
-                {
-                    imageData = binaryReader.ReadBytes(imgArte.ContentLength);
-                }
-                //setear la imagen a la entidad que se creara
-                Arte.imgArte = imageData;
+                string ext = Path.GetFileName(imgArte.FileName);
+                string path = Path.Combine(Server.MapPath("~/Content/imagenesArte"), ext);
+                Arte.extensionArte = ext;
+                imgArte.SaveAs(path);
             }
+
             imgPNL = Arte.FilePNL;
-            if (imgPNL != null && imgPNL.ContentLength > 0)
+            if (imgPNL != null)
             {
-                byte[] imageData = null;
-                using (var binaryReader = new BinaryReader(imgPNL.InputStream))
-                {
-                    imageData = binaryReader.ReadBytes(imgPNL.ContentLength);
-                }
-                //setear la imagen a la entidad que se creara
-                Arte.imgPNL = imageData;
+                string ext = Path.GetFileName(imgPNL.FileName);
+                string path = Path.Combine(Server.MapPath("~/Content/imagenesArte"), ext);
+                Arte.extensionPNL = ext;
+                imgPNL.SaveAs(path);
             }
             if (ModelState.IsValid)
             {
