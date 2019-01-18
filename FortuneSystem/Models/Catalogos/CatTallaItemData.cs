@@ -28,8 +28,15 @@ namespace FortuneSystem.Models.Catalogos
                     CatTallaItem tallas = new CatTallaItem()
                     {
                         Id = Convert.ToInt32(leer["ID"]),
-                        Talla = leer["TALLA"].ToString()
-                    };
+                        Talla = leer["TALLA"].ToString(),
+                       
+                };
+
+                    if (!Convert.IsDBNull(leer["ORDEN"]))
+                    {
+                        tallas.Orden = Convert.ToInt32(leer["ORDEN"]);
+                    }
+
                     listTallas.Add(tallas);
                 }
                 leer.Close();
@@ -54,7 +61,7 @@ namespace FortuneSystem.Models.Catalogos
                 SqlDataReader leer = null;
                 //string listaStag="";                
                 com.Connection = con.AbrirConexion();
-                com.CommandText = "SELECT TALLA from CAT_ITEM_SIZE order by TALLA asc ";
+                com.CommandText = "SELECT TALLA from CAT_ITEM_SIZE ORDER by cast(ORDEN AS int) ASC ";
                 leer = com.ExecuteReader();
                 while (leer.Read())
                 {
@@ -85,6 +92,7 @@ namespace FortuneSystem.Models.Catalogos
                 comando.CommandText = "AgregarTalla";
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@Talla", tallas.Talla);
+                comando.Parameters.AddWithValue("@Orden", tallas.Orden);
                 comando.ExecuteNonQuery();
             }
             finally
@@ -107,7 +115,7 @@ namespace FortuneSystem.Models.Catalogos
                 com.Connection = con.AbrirConexion();
                 com.CommandText = "SELECT S.TALLA FROM ITEM_SIZE IZ " +
                     "INNER JOIN CAT_ITEM_SIZE S ON IZ.TALLA_ITEM=S.ID " +
-                    "WHERE ID_SUMMARY='" + idEstilo + "'  order by S.TALLA asc ";
+                    "WHERE ID_SUMMARY='" + idEstilo + "'  ORDER by cast(ORDEN AS int) ASC ";
                 leer = com.ExecuteReader();
                 while (leer.Read())
                 {
@@ -144,7 +152,7 @@ namespace FortuneSystem.Models.Catalogos
                 com.Connection = con.AbrirConexion();
                 com.CommandText = "select S.TALLA, UPC from UPC U  " +
                     "INNER JOIN CAT_ITEM_SIZE S ON U.IdTalla=S.ID " +
-                    "where IdSummary='" + idSummary + "'  order by S.TALLA asc ";
+                    "where IdSummary='" + idSummary + "'  ORDER by cast(ORDEN AS int) ASC ";
                 leer = com.ExecuteReader();
                 while (leer.Read())
                 {
@@ -182,7 +190,12 @@ namespace FortuneSystem.Models.Catalogos
                 while (leer.Read())
                 {
                     tallas.Id = Convert.ToInt32(leer["ID"]);
-                    tallas.Talla = leer["TALLA"].ToString();
+                    tallas.Talla = leer["TALLA"].ToString();             
+
+                    if (!Convert.IsDBNull(leer["ORDEN"]))
+                    {
+                        tallas.Orden = Convert.ToInt32(leer["ORDEN"]);
+                    }
                 }
                 leer.Close();
             }
@@ -205,6 +218,7 @@ namespace FortuneSystem.Models.Catalogos
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@Id", tallas.Id);
                 comando.Parameters.AddWithValue("@Talla", tallas.Talla);
+                comando.Parameters.AddWithValue("@Orden", tallas.Orden);
                 comando.ExecuteNonQuery();
             }
             finally

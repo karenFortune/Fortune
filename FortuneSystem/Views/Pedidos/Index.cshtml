@@ -4,7 +4,7 @@
     ViewBag.Title = "RECEPTION PO";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<link href="~/Content/base_m.css" rel="stylesheet" />
+
 <style>
     tr.highlighted td {
         background: #b3e0ff;
@@ -30,13 +30,15 @@
         font-weight: 600;
     }
 
-    #botones {
+    /*#botones {
         padding: 20px;
         font-size: 14px;
         font-weight: 600;
         margin-left: 1250px;
         margin-top: 1px;
-    }
+        display:inline-block;
+
+    }*/
 
     .buttons-pdf {
         background-color: red;
@@ -83,6 +85,7 @@
 
         </script>
     }
+
     <script type="text/javascript">
         function confirmar() {
             var confirm = alertify.confirm('Confirmacion', '¿Desea revisar el  Estilo?', null, null).set('labels', { ok: 'Aceptar', cancel: 'Cancelar' });
@@ -98,9 +101,7 @@
 
             confirm.set('oncancel', function () {
                 alertify.notify('Se finalizo el registro de la orden de compra.', 'success', 5, null);
-
                 setTimeout("redireccionarPagina()", 800);
-
             });
         }
 
@@ -108,7 +109,7 @@
 
 }
 
-        </div>
+</div>
 <div class="container-fluid" style="margin-left:20em; margin-right:10em; ">
     <div class="panel panel-primary" id="listaPO">
         <div class="panel-heading">
@@ -139,12 +140,13 @@
         </p>
 
         @*<p id="date_filter_fo">
-                 <span id="date-label-from_fo" class="date-label">From Range Date Orden: </span><input class="date_range_filter date" type="text" id="datepicker_from_fo" />
-                <span id="date-label-to_fo" class="date-label">To:<input class="date_range_filter date" type="text" id="datepicker_to_fo" />
-        </p>*@
+                     <span id="date-label-from_fo" class="date-label">From Range Date Orden: </span><input class="date_range_filter date" type="text" id="datepicker_from_fo" />
+                    <span id="date-label-to_fo" class="date-label">To:<input class="date_range_filter date" type="text" id="datepicker_to_fo" />
+            </p>*@
 
 
         <div id="botones"></div>
+        <br />
         <br />
         <div id="div_tabla_estilos" style="width: 100%; height:670px; overflow:auto; ">
             <table align="center" class="table table-striped" id="tablaPO">
@@ -168,7 +170,7 @@
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.TotalUnidades)
-                        </th>                        
+                        </th>
                         <th>ACTIONS</th>
                     </tr>
                 </thead>
@@ -194,7 +196,7 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.TotalUnidades)
-                            </td>                            
+                            </td>
                             <td>
                                 @Html.ActionLink(" ", "Detalles", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details Style" }) |
                                 @Html.ActionLink(" ", "Revision", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-check", @style = "color:black", @Title = "Check PO", onclick = "event.preventDefault();ConfirmRev(this)" }) |
@@ -210,6 +212,7 @@
             </table>
         </div>
     </div>
+</div>
 <script>
     $('#tablaPO tr').click(function (e) {
         $('#tablaPO tr').removeClass('highlighted');
@@ -218,16 +221,25 @@
     function ConfirmRev(a) {
         alertify.confirm("Are you sure you want to perform a review?", function (result) {
             location.href = a;
-        }).set({
-            title: "Confirmation" });
+        },
+            function () {
+                $("#loading").css('display', 'none');
+            }).set({
+                title: "Confirmation"
+            });
+
+
     }
     function ConfirmCancel(a) {
+
         alertify.confirm("Are you sure you want to cancel PO ?", function (result) {
             location.href = a;
-        }).set({
-            title: "Confirmation"
-        });
+        },
+            function () {
+                $("#loading").css('display', 'none');
+            }).set({
+                title: "Confirmation"
+            });
     }
-    
 
 </script>

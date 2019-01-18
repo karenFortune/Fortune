@@ -1,4 +1,5 @@
-﻿using FortuneSystem.Models.Roles;
+﻿using FortuneSystem.Models.Catalogos;
+using FortuneSystem.Models.Roles;
 using FortuneSystem.Models.Usuarios;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace FortuneSystem.Controllers
         CatUsuarioData objCatUser= new CatUsuarioData();
         CatRolesData objCaRoles = new CatRolesData();
         CatUsuario usuario = new CatUsuario();
+        CatSucursalData objSucursal = new CatSucursalData();
         // GET: Usuarios
         public ActionResult Index()
         {            
@@ -24,7 +26,16 @@ namespace FortuneSystem.Controllers
             return View(listaUsuarios);
         }
 
-       [HttpGet]
+        public void ListaSucursal(CatUsuario suc)
+        {
+            List<CatSucursal> listaSucursal = suc.ListaSucursal;
+            listaSucursal = objSucursal.ListaSucursales().ToList();
+
+            ViewBag.listSucursal = new SelectList(listaSucursal, "IdSucursal", "Sucursal", suc.IdSucursal);
+
+        }
+
+        [HttpGet]
         public ActionResult CrearUsuario()
         {
             CatUsuario usuario = new CatUsuario();
@@ -67,6 +78,9 @@ namespace FortuneSystem.Controllers
 
             CatUsuario usuario = objCatUser.ConsultarListaUsuarios(id);
             usuario.CatRoles = objCaRoles.ConsultarListaRoles(usuario.Cargo);
+
+            usuario.CatSucursal = objSucursal.ConsultarListaSucursal(usuario.IdSucursal);
+
             if (usuario == null)
             {
                 return View();
@@ -92,6 +106,11 @@ namespace FortuneSystem.Controllers
             usuario.CatRoles.Id = usuario.Cargo;
             ViewBag.listRoles = new SelectList(listaRoles, "Id", "rol", usuario.Cargo);
 
+            List<CatSucursal> listaSucursal = usuario.ListaSucursal;
+            listaSucursal = objSucursal.ListaSucursales().ToList();
+            usuario.CatSucursal = objSucursal.ConsultarListaSucursal(usuario.IdSucursal);
+            usuario.CatSucursal.IdSucursal = usuario.IdSucursal;
+            ViewBag.listSucursal = new SelectList(listaSucursal, "IdSucursal", "Sucursal", usuario.IdSucursal);
 
             if (usuario == null)
             {
@@ -115,6 +134,8 @@ namespace FortuneSystem.Controllers
             {
                 string rol = Request.Form["Rol"].ToString();
                 usuarios.Cargo = Int32.Parse(rol);
+                string sucursal = Request.Form["Sucursal"].ToString();
+                usuarios.IdSucursal = Int32.Parse(sucursal);
                 //usuario.CatRoles = objCaRoles.ConsultarListaRoles(usuario.Cargo);
                 objCatUser.ActualizarUsuarios(usuarios);
                 TempData["usuarioEditar"] = "The user was modified correctly.";

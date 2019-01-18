@@ -68,7 +68,7 @@ namespace FortuneSystem.Models.PNL
                 comando.Connection = conn.AbrirConexion();
                 comando.CommandText = "select S.TALLA from ITEM_SIZE I " +
                     "INNER JOIN CAT_ITEM_SIZE S ON S.ID=I.TALLA_ITEM " +
-                    "WHERE I.ID_SUMMARY= '" + id + "' ORDER BY S.TALLA ASC";
+                    "WHERE I.ID_SUMMARY= '" + id + "' ORDER by cast(S.ORDEN AS int) ASC";
                 leer = comando.ExecuteReader();
                 while (leer.Read())
                 {
@@ -607,7 +607,7 @@ namespace FortuneSystem.Models.PNL
                 comando.Connection = conn.AbrirConexion();
                 comando.CommandText = "SELECT ID_PNL, ID_TALLA, S.TALLA, PRINTED, MISPRINT, DEFECT, REPAIR FROM PNL " +
                     "INNER JOIN CAT_ITEM_SIZE S ON S.ID=PNL.ID_TALLA " +
-                    "WHERE ID_SUMMARY='" + idEstilo + "' AND ID_BATCH='" + idBatch + " 'ORDER BY ID_TALLA asc ";
+                    "WHERE ID_SUMMARY='" + idEstilo + "' AND ID_BATCH='" + idBatch + " 'ORDER by cast(S.ORDEN AS int) ASC ";
                 leer = comando.ExecuteReader();
 
                 while (leer.Read())
@@ -650,7 +650,7 @@ namespace FortuneSystem.Models.PNL
                     "INNER JOIN CAT_ITEM_SIZE S ON S.ID=P.ID_TALLA " +
                     "INNER JOIN USUARIOS U ON U.Id=P.ID_USUARIO " +
                     "WHERE P.ID_BATCH='" + batch + "' AND P.ID_SUMMARY='" + id + "'  GROUP BY P.ID_PNL,P.ID_SUMMARY, P.ID_BATCH, P.ID_TALLA, S.TALLA, " +
-                    "P.PRINTED, P.MISPRINT, P.DEFECT,P.REPAIR, U.Nombres, U.Apellidos, P.TURNO,P.MAQUINA, P.ID_USUARIO_MODIF,P.STATUS_PALLET ORDER BY S.TALLA";
+                    "P.PRINTED, P.MISPRINT, P.DEFECT,P.REPAIR, U.Nombres, U.Apellidos, P.TURNO,P.MAQUINA, P.ID_USUARIO_MODIF,P.STATUS_PALLET,S.ORDEN ORDER by cast(S.ORDEN AS int) ASC ";
                 leerF = c.ExecuteReader();
 
                 while (leerF.Read())

@@ -106,6 +106,7 @@ namespace FortuneSystem.Controllers
         [HttpPost]
         public JsonResult Actualizar_Lista_Tallas_Batch(List<string> ListTalla, int TurnoID, int EstiloID, int IdBatch, int MaquinaID, string StatusID)
         {
+            
             PrintShopC tallaItem = new PrintShopC();
             int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
             tallaItem.UsuarioModif = noEmpleado;
@@ -165,8 +166,8 @@ namespace FortuneSystem.Controllers
         public JsonResult Lista_Batch_Estilo(int? id)
         {
             List<PrintShopC> listaBatch = objPrint.ListaBatch(id).ToList();
-           
-            var result = Json(new { listaTalla = listaBatch });
+            int cargo = Convert.ToInt32(Session["idCargo"]);
+            var result = Json(new { listaTalla = listaBatch, cargoUser= cargo });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

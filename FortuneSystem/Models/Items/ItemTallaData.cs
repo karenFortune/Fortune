@@ -1,14 +1,18 @@
-﻿using System;
+﻿using FortuneSystem.Models.Packing;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using FortuneSystem.Models.Staging;
+
 
 namespace FortuneSystem.Models.Item
 {
     public class ItemTallaData
     {
+        PackingData packing = new PackingData();
             
        public void RegistroTallas(ItemTalla tallas)
         {
@@ -44,8 +48,6 @@ namespace FortuneSystem.Models.Item
             }
         }
 
-
-
         //Muestra la lista de tallas por estilo
         public IEnumerable<ItemTalla> ListaTallasPorEstilo(int? id)
         {
@@ -60,19 +62,22 @@ namespace FortuneSystem.Models.Item
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@Id", id);
                 leer = comando.ExecuteReader();
-
+                int calidad = 0;
                 while (leer.Read())
                 {
                     ItemTalla tallas = new ItemTalla()
                     {
                         Talla = leer["TALLA"].ToString(),
+                        IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]),
                         Cantidad = Convert.ToInt32(leer["CANTIDAD"]),
                         Extras = Convert.ToInt32(leer["EXTRAS"]),
                         Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
                         Estilo = leer["ITEM_STYLE"].ToString()
-
+                        
                     };
+                    calidad = Convert.ToInt32(leer["CANTIDAD"]) + Convert.ToInt32(leer["EJEMPLOS"]);
 
+                    tallas.Cantidad = calidad;
                     listTallas.Add(tallas);
                 }
                 leer.Close();
@@ -86,32 +91,168 @@ namespace FortuneSystem.Models.Item
             return listTallas;
         }
 
-        //Muestra la lista de tallas de Staging por estilo
-        public IEnumerable<ItemTalla> ListaTallasStagingPorEstilo(int? id)
+        //Muestra la lista de tallas por estilo
+        public IEnumerable<ItemTalla> ListaTallasPorEstiloRev(int? id)
         {
             Conexion conn = new Conexion();
             List<ItemTalla> listTallas = new List<ItemTalla>();
             try
             {
                 SqlCommand comando = new SqlCommand();
-                SqlDataReader leer = null;                
+                SqlDataReader leer = null;
                 comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "Lista_Tallas_Staging_Por_Estilo";
+                comando.CommandText = "Lista_Tallas_Por_Estilo";
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@Id", id);
                 leer = comando.ExecuteReader();
-
+                int calidad = 0;
                 while (leer.Read())
                 {
                     ItemTalla tallas = new ItemTalla()
                     {
                         Talla = leer["TALLA"].ToString(),
-                        Cantidad = Convert.ToInt32(leer["TOTAL"]),
+                        IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]),
+                        Cantidad = Convert.ToInt32(leer["CANTIDAD"]),
+                        Extras = Convert.ToInt32(leer["EXTRAS"]),
+                        Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
                         Estilo = leer["ITEM_STYLE"].ToString()
 
                     };
+                    calidad = Convert.ToInt32(leer["CANTIDAD"]);
 
+                    tallas.Cantidad = calidad;
                     listTallas.Add(tallas);
+                }
+                leer.Close();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
+
+            return listTallas;
+        }
+
+        //Muestra la lista de tallas por estilo
+        public IEnumerable<ItemTalla> ListaTallasAssortPorEstilo(int? id, string namePack)
+        {
+            Conexion conn = new Conexion();
+            List<ItemTalla> listTallas = new List<ItemTalla>();
+            List<PackingTypeSize> listadoEstilos = packing.ObtenerListadoEstilosPackAssort(id, namePack);
+            string valores = "";
+            for (int v = 0; v < listadoEstilos.Count; v++)
+            {
+                if (v > 0)
+                {
+                    valores += "," + listadoEstilos[v].IdSummary;
+                }
+                else
+                {
+                    valores += listadoEstilos[v].IdSummary;
+                }
+
+            }
+            string query = valores;
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "select I.TALLA_ITEM,S.TALLA, S.ORDEN, I.CANTIDAD, I.EXTRAS, I.EJEMPLOS from  ITEM_SIZE I  " +
+                       "INNER JOIN CAT_ITEM_SIZE S ON S.ID=I.TALLA_ITEM " +
+                       "WHERE I.ID_SUMMARY in(" + query + ") ORDER by cast(S.ORDEN AS int) ASC";
+                leer = comando.ExecuteReader();
+                int calidad = 0;
+                int cant = 0;
+                int ext = 0;
+                int ejm = 0;
+                while (leer.Read())
+                {
+                    ItemTalla tallas = new ItemTalla()
+                    {
+                        Talla = leer["TALLA"].ToString(),
+                        IdTalla = Convert.ToInt32(leer["TALLA_ITEM"])
+
+                    };
+                    tallas.Cantidad += Convert.ToInt32(leer["CANTIDAD"]);
+                    tallas.Extras += Convert.ToInt32(leer["EXTRAS"]);
+                    tallas.Ejemplos += Convert.ToInt32(leer["EJEMPLOS"]);
+
+
+                    ItemTalla result = listTallas.Find(x => x.IdTalla == tallas.IdTalla);
+                    if (result == null)
+                    {
+                        listTallas.Add(tallas);
+                    }
+                    else
+                    {
+                        if (result.IdTalla == tallas.IdTalla)
+                        {
+                            cant = result.Cantidad + tallas.Cantidad;
+                            /*ext += result.Extras;*/
+                            ejm += result.Ejemplos + tallas.Ejemplos;
+
+                            calidad = cant + ejm;
+
+                            result.Cantidad = calidad;
+                        }
+                    }
+                }
+                leer.Close();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
+
+            return listTallas;
+        }
+
+        //Muestra la lista de tallas de Staging por estilo
+        public IEnumerable<Staging.StagingD> ListaTallasStagingPorEstilo(int? id)
+        {
+            Conexion conn = new Conexion();
+            List<Staging.StagingD> listTallas = new List<Staging.StagingD>();
+            int cant = 0;
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;                
+                comando.Connection = conn.AbrirConexion();
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "select sc.id_talla, cat.talla, sc.total from staging s " +
+                       "inner join staging_count sc on s.id_staging=sc.id_staging " +
+                       "INNER JOIN CAT_ITEM_SIZE cat ON cat.ID=SC.ID_TALLA " +
+                       "WHERE s.id_summary='" + id + "' ORDER by cast(cat.ORDEN AS int) ASC";
+                leer = comando.ExecuteReader();
+
+                while (leer.Read())
+                {
+                    Staging.StagingD tallas = new Staging.StagingD()
+                    {
+                        talla = leer["TALLA"].ToString(),                        
+                        id_talla = Convert.ToInt32(leer["id_talla"])
+
+                    };
+                    tallas.total += Convert.ToInt32(leer["TOTAL"]);
+
+                    Staging.StagingD result = listTallas.Find(x => x.talla == tallas.talla);
+                    if (result == null)
+                    {
+                        listTallas.Add(tallas);
+                    }
+                    else
+                    {
+                        if (result.talla == tallas.talla)
+                        {
+                            cant = result.total + tallas.total;
+
+                            result.total = cant;
+                        }
+                    }
+                    
                 }
                 leer.Close();
             }
@@ -161,6 +302,45 @@ namespace FortuneSystem.Models.Item
             }         
 
             return listTallas;
+        }
+
+        //Muestra la lista de cantidades por tallas de estilo
+        public IEnumerable<ItemTalla> ListaCantidadesTallasPorEstilo(int? idEstilo)
+        {
+            Conexion conex = new Conexion();
+            List<ItemTalla> listCantidades = new List<ItemTalla>();
+            try
+            {
+                SqlCommand c = new SqlCommand();
+                SqlDataReader leerF = null;
+                c.Connection = conex.AbrirConexion();
+                c.CommandText = "select its.talla_item, s.orden, s.talla, its.cantidad, its.id_summary from item_size its " +
+                                "INNER JOIN CAT_ITEM_SIZE S ON S.ID= its.talla_item " +
+                                "where its.id_summary='" + idEstilo + "' GROUP by S.ORDEN, its.talla_item, S.TALLA, its.cantidad, its.id_summary  " +
+                                "ORDER BY cast(S.ORDEN AS int) ASC  ";
+                leerF = c.ExecuteReader();
+
+                while (leerF.Read())
+                {
+                    ItemTalla tallas = new ItemTalla()
+                    {
+                        IdSummary = Convert.ToInt32(leerF["id_summary"]),
+                        IdTalla = Convert.ToInt32(leerF["talla_item"]),
+                        Talla = leerF["TALLA"].ToString(),
+                        Cantidad = Convert.ToInt32(leerF["cantidad"])
+                    };
+
+                    listCantidades.Add(tallas);
+                }
+                leerF.Close();
+            }
+            catch (Exception)
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+
+            return listCantidades;
         }
 
         //Permite actualiza la informacion de un usuario

@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewBag.Title = "Create transfer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>New transfer</h4>
+<script src="~/Scripts/html5-qrcode.min.js"></script>
+<link href="~/Content/base_m.css" rel="stylesheet" />
+<script>
+    $(document).on("input", ".numeric", function () {
+        this.value = this.value.replace(/\D/g, '');
+    });
+    $(document).on("input", ".validacion", function () {
+        var c = this.selectionStart,
+            r = /[^a-zA-Z0-9áéíóúÁÉÍÓÚ .()!@@/#%-]/,
+            v = $(this).val();
+        if (r.test(v)) {
+            $(this).val(v.replace(r, ''));
+            c--;
+        }
+        this.setSelectionRange(c, c);
+    });
+    $(document).on("input", ".po", function () { $('.po').autocomplete({ source: '@Url.Action("Autocomplete_po")' }); });
+    $(document).on("input", ".estilo", function () { $('.estilo').autocomplete({ source: '@Url.Action("Autocomplete_estilos")' }); });
+    $(function () {
+        $.datepicker.regional['es'] = {
+            closeText: 'Cerrar',
+            prevText: '<Ant',
+            nextText: 'Sig>',
+            currentText: 'Hoy',
+            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+                'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+            dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+            weekHeader: 'Sm',
+            dateFormat: 'yy-mm-dd',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''
+        };
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+        $('#caja_date_trans').datepicker();
+
+
+
+    });//DATEPICKER
+
+    $(document).ready(function () {
+        $("#reader").html5_qrcode(function (data) {
+            $("#caja_codigo_qr").val(data);
+        }, function (error) {
+            //$('#read_error').html(error);
+            }, function (videoError) {
+                 //$('#vid_error').html(videoError);
+                alert("No cam");
+            }
+        );
+    });
+
+
+    $('#file').on("change", function () {
+        for (i = 0; i < $('form').length; i++) {
+            if ($('form').get(i)[0].value != "") /* get the file tag, you have to customize this code */
+            {
+                var formdata = new FormData($('form').get(i));
+                CallService(formdata);
+                break;
+            }
+        }
+    });
+    function CallService(file) {
+        $.ajax({
+            url: '@Url.Action("Scan", "Home")',
+            type: 'POST',
+            data: file,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (barcode) {
+                alert(barcode);
+            },
+            error: function () {
+                alert("ERROR");
+            }
+        });
+    }
+
+
+</script>
+
+<style>
+    tr {
+        cursor: pointer;
+    }
+    .load2 {
+        position: fixed;
+        z-index: 2001 !important;
+        height: 100%;
+        display: none;
+        border: 0;
+        padding: .5em 1em;
+        overflow: auto;
+        top: 0%;
+        left: 0%;
+        background: white;
+        width: 100%;
+        border: none;
+        opacity: 0.8;
+    }
+    .imagen_loading2 {
+        position: absolute;
+        z-index: 2000 !important;
+        top: 35%;
+        left: 43%;
+        width: 300px;
+        height: 300px;
+        background: url('../../Content/img/gif/loader3.gif');
+    }
+
+   
+</style>
+</div>
+<div id="loading_trans" class="load2">
+    <div id="spinner" class="imagen_loading2" style=""></div>
+</div>
+<div class="container-fluid" style="padding-left:8em; padding-right:3em;">
+
+    <div class="form-group col-sm-3" id="div_from">
+        <label for="" class=" col-form-label must_trans">QR </label>
+        <input type="text" class="form-control numeric " id="read" value="">
+    </div>
+
+    <div id="reader" style="width:320px; height:300px;"></div>
+<!------------------------------------------------------------------------------------------------------>
+    <form>
+        <input type="file" class="upload" size="45" name="file" id="file">
+    </form>
+
+
+
+
+
+</div>

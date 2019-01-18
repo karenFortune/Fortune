@@ -4,11 +4,12 @@
     $("#div_tabla_pnl").css("visibility", "hidden");
 });
 
-function probar() {
+function probar(id) {
     $('#tabless tr').on('click', function (e) {
         $('#tabless tr').removeClass('highlighted');
         $(this).addClass('highlighted');
     });
+    obtener_tallas_item(id);
 }
 
 
@@ -214,7 +215,7 @@ function buscar_estilos(ID) {
             var lista_estilo = jsonData.Data.listaItem;
 
             $.each(lista_estilo, function (key, item) {
-                html += '<tr  onclick="probar()">';
+                html += '<tr  onclick="probar(' + item.IdItems + ')">';
                 html += '<td>' + item.EstiloItem + '</td>';
                 html += '<td>' + item.ItemDescripcion.Descripcion + '</td>';
                 html += '<td>' + item.CatColores.CodigoColor + '</td>';
@@ -222,7 +223,7 @@ function buscar_estilos(ID) {
                 html += '<td>' + item.Cantidad + '</td>';
                 html += '<td>' + item.Price + '</td>';
                 html += '<td>' + item.Total + '</td>';
-                html += '<td><a href="#" onclick="obtener_tallas_item(' + item.IdItems + ');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Sizes"></a></td>';
+               // html += '<td><a href="#" onclick="obtener_tallas_item(' + item.IdItems + ');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Sizes"></a></td>';
                 html += '</tr>';
             });
             if (Object.keys(lista_estilo).length === 0) {
@@ -240,6 +241,7 @@ var listaPO;
 
 function obtener_tallas_item(IdEstilo) {
     var tempScrollTop = $(window).scrollTop();
+    $("#panelPNL").css('display', 'inline');
     $("#loading").css('display', 'inline');
     estiloId = IdEstilo;
     obtener_tallas_PO(IdEstilo);
@@ -260,13 +262,13 @@ function obtener_tallas_item(IdEstilo) {
 
             var lista_estilo = jsonData.Data.listaTalla;
             listaEstiloPO = lista_estilo;
-            html += '<tr> <th>  </th>'
+            html += '<tr> <th>  </th>';
             $.each(lista_estilo, function (key, item) {
 
                 html += '<th>' + item.Talla + '</th>';
 
             });
-            html += '<th> Total </th>'
+            html += '<th> Total </th>';      
             html += '</tr><tr><td>PO Quantity</td>';
             var cantidadesPO = 0;
             var cadena_cantidades = "";
@@ -279,23 +281,27 @@ function obtener_tallas_item(IdEstilo) {
             var cantidades_array = cadena_cantidades.split('*');
             html += '<td>' + cantidadesPO + '</td>';
             html += '</tr>';
+            var numTallas = 0;
+            $.each(lista_estilo, function (key, item) {
+                numTallas++;
+            });
             html += '</tr><tr><td>Staging Quantity</td>';
             var cantidades = 0;
             var lista_Staging = jsonData.Data.listTallaStaging;//listaStaging.length;
             if (lista_Staging.length === 0) {
-                lista_Staging = lista_estilo;
-            } else {
-                lista_Staging
-            }
-            $.each(lista_Staging, function (key, item) {
-                if (lista_Staging === 0) {
-                    item.Cantidad = 0;
-                    html += '<td>' + item.Cantidad + '</td>';
-                } else {
-                    html += '<td>' + item.Cantidad + '</td>';
+                var total = 0;
+                for (var v = 0; v < numTallas; v++) {
+
+                    html += '<td>' + total + '</td>';
+                    cantidades += total;
                 }
 
-                cantidades += item.Cantidad;
+            }
+            $.each(lista_Staging, function (key, item) {
+                
+                html += '<td>' + item.total + '</td>';
+                
+                cantidades += item.total;
             });
             html += '<td>' + cantidades + '</td>';
             html += '</tr><tr><td>PrintShop Quantity</td>';
@@ -308,7 +314,7 @@ function obtener_tallas_item(IdEstilo) {
             if (listaTBatch === 0) {
                 lista_Batch = lista_estilo;
             } else {
-                lista_Batch
+                lista_Batch;
             }
             $.each(lista_Batch, function (key, item) {
                 if (listaTBatch === 0) {
@@ -331,7 +337,7 @@ function obtener_tallas_item(IdEstilo) {
             if (listaTBatchPnl === 0) {
                 lista_Batch_PNL = lista_estilo;
             } else {
-                lista_Batch_PNL
+                lista_Batch_PNL;
             }
             $.each(lista_Batch_PNL, function (key, item) {
                 if (listaTBatchPnl === 0) {
@@ -354,7 +360,7 @@ function obtener_tallas_item(IdEstilo) {
             if (listaPBatch === 0) {
                 lista_Batch_Printed = lista_estilo;
             } else {
-                lista_Batch_Printed
+                lista_Batch_Printed;
             }
             $.each(lista_Batch_Printed, function (key, item) {
                 if (listaPBatch === 0) {
@@ -376,7 +382,7 @@ function obtener_tallas_item(IdEstilo) {
             if (listaMPBatch === 0) {
                 lista_Batch_MP = lista_estilo;
             } else {
-                lista_Batch_MP
+                lista_Batch_MP;
             }
             $.each(lista_Batch_MP, function (key, item) {
                 if (listaMPBatch === 0) {
@@ -398,7 +404,7 @@ function obtener_tallas_item(IdEstilo) {
             if (listaDefBatch === 0) {
                 lista_Batch_Defect = lista_estilo;
             } else {
-                lista_Batch_Defect
+                lista_Batch_Defect;
             }
             $.each(lista_Batch_Defect, function (key, item) {
                 if (listaDefBatch === 0) {
@@ -421,7 +427,7 @@ function obtener_tallas_item(IdEstilo) {
             if (listaRepBatch === 0) {
                 lista_Batch_Repair = lista_estilo;
             } else {
-                lista_Batch_Repair
+                lista_Batch_Repair;
             }
             $.each(lista_Batch_Repair, function (key, item) {
                 if (listaRepBatch === 0) {
@@ -437,14 +443,23 @@ function obtener_tallas_item(IdEstilo) {
             html += '<tr><td>+/-</td>';
             var totales = 0;
             var i = 1;
+            var sumaTotal = 0;
             $.each(lista_Batch_PNL, function (key, item) {
                 if (listaTBatchPnl === 0) {
                     item = 0;
                 }
-                var resta = (parseFloat(cantidades_array[i]) - parseFloat(item))
-                html += '<td >' + resta + '</td>';
+                var resta = parseFloat(cantidades_array[i]) - parseFloat(item);
+                if (resta === 0) {
+                    html += '<td class="restaPnl" style="color:black;">' + resta + '</td>';
+                } else if (resta >= 0) {
+                    html += '<td class="restaPnl" style="color:blue;">' + resta + '</td>';
+                } else {
+                    html += '<td class="restaPnl" style="color:red;">' + resta + '</td>';
+                }
                 i++;
+                sumaTotal += resta;
             });
+            html += '<td>' + sumaTotal + '</td>';
             html += '</tr>';
 
             if (Object.keys(lista_estilo).length === 0) {
@@ -458,7 +473,10 @@ function obtener_tallas_item(IdEstilo) {
             obtenerImagenPNL(estilos);
             obtenerImagenArte(estilos);
             obtener_bacth_estilo(IdEstilo);
-            obtenerTallas_Pnl(IdEstilo);
+            if (sumaTotal !== 0) {
+                obtenerTallas_Pnl(IdEstilo);
+            }
+            
             //obtenerIdEstilo(IdEstilo);
             $("#loading").css('display', 'none');
             $(window).scrollTop(tempScrollTop);
@@ -656,7 +674,7 @@ function obtenerTallas_Pnl(idEstilo) {
                 if (listaBat === 0) {
                     html += '<td id="po"><input type="text" id="po" class="txtDes form-control cantPO"  value="' + item.Cantidad + '"/></td>';
                 } else {
-                    var resta = (parseFloat(cantidades_array[i]) - parseFloat(item))
+                    var resta = parseFloat(cantidades_array[i]) - parseFloat(item);
                     html += '<td id="po"><input type="text" id="po" class="txtDes form-control cantPO"  value="' + resta + '"/></td>';
                     i++;
                 }
@@ -789,7 +807,7 @@ function obtenerTallas_Batch(idBatch, idTurno, idMaquina, idPrintShop, idStatus)
             if (lista_estilo === 0) {
                 lista_estilo = listaEstiloPO;
             } else {
-                lista_estilo
+                lista_estilo;
 
             }
             html += '</tr><tr><td>PO </td>';
@@ -813,7 +831,7 @@ function obtenerTallas_Batch(idBatch, idTurno, idMaquina, idPrintShop, idStatus)
                 if (listaBat === 0) {
                     html += '<td id="po"><input type="text" id="po" class="txtDes form-control cantPO"  value="' + item.Cantidad + '"/></td>';
                 } else {
-                    var resta = (parseFloat(cantidades_array[i]) - parseFloat(item))
+                    var resta = parseFloat(cantidades_array[i]) - parseFloat(item);
                     html += '<td id="po"><input type="text" id="po" class="txtDes form-control cantPO"  value="' + resta + '"/></td>';
                     i++;
                 }

@@ -18,6 +18,15 @@
 
 </script>
 
+<style>
+
+    .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+
 @{
     if (TempData["imagArteOK"] != null)
     {
@@ -36,107 +45,105 @@
 
         </script>
     }
-    
+
 
 
 }
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h4>
-            ART INVENTORY
-        </h4>
+</div>
+<div class="container-fluid" style="padding-left:20em; padding-right:10em;">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4>
+                ART INVENTORY
+            </h4>
 
-    </div>
-    <br />
-    <table id="tablaArteInventario" class="table table-striped">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Estilo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DescripcionEstilo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.imgArte)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.imgPNL)
-                </th>
-                <th>ACTIONS</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+        </div>
+        <br />
+        <table id="tablaArteInventario" class="table table-striped">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Estilo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DescripcionEstilo)
-                    </td>
-                    <td>
-                        <img width="70" height="70" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = item.IdImgArte})" />
-                    </td>
-                    <td>
-                        <img width="70" height="70" src="@Url.Action("ConvertirImagenPNL", "Arte", new {pnlCodigo= item.IdImgArte})" />
-                    </td>
-                    <td>
-                        <a href="#" class="btn btn-default glyphicon glyphicon-search btnEdit" data-value="@item.IdImgArte" title="List Art"></a>
-                        @Html.ActionLink(" ", "FileUpload", new { idArte = item.IdImgArte }, new { @class = "btn btn-default glyphicon glyphicon-check", @style = "color:black", @Title = "Art" })
-                    </td>
-
+                    <th>
+                        @Html.DisplayNameFor(model => model.Estilo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DescripcionEstilo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.imgArte)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.imgPNL)
+                    </th>
+                    <th>ACTIONS</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    <br />
-</div>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Estilo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DescripcionEstilo)
+                        </td>
+                        <td>
+                            <img width="70" height="70" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = item.IdImgArte})" />
+                        </td>
+                        <td>
+                            <img width="70" height="70" src="@Url.Action("ConvertirImagenPNL", "Arte", new {pnlCodigo= item.IdImgArte})" />
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-default glyphicon glyphicon-search btnEdit" data-value="@item.IdImgArte" title="List Art"></a>
+                            @Html.ActionLink(" ", "FileUpload", new { idArte = item.IdImgArte }, new { @class = "btn btn-default glyphicon glyphicon-check", @style = "color:black", @Title = "Art" })
+                        </td>
 
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h4>
-            LIST ART
-        </h4>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
     </div>
-    <br />
-    <div id="ContenedorModal"></div>
-    <br />
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4>
+                LIST ART
+            </h4>
+        </div>
+        <br />
+        <div id="ContenedorModal"></div>
+        <br />
+    </div>
 </div>
 
-
-<div class="modal fade" id="enlargeImageModal" tabindex="-1" role="dialog" aria-labelledby="enlargeImageModal" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" id="exampleModalLabel">ART</h2>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                <img class="enlargeImageModalSource center" style="width: 80%;">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <div class="modal fade" id="enlargeImageModal" tabindex="-1" role="dialog" aria-labelledby="enlargeImageModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel">ART</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <img class="enlargeImageModalSource center" style="width: 50%;">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        debugger
-        $(".btnEdit").click(function () {
+    <script type="text/javascript">
+        $(document).on('click', '.btnEdit', function () {
+            $("#loading").css('display', 'inline');
             var id = $(this).data("value");
             $("#ContenedorModal").load("/Arte/ListaImgArte/" + id, function () {
-
+                $("#loading").css('display', 'none');
             });
-
         });
-    });
 
 
-
-</script>
+    </script>

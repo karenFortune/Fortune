@@ -13,5 +13,7 @@ namespace FortuneSystem.Models.Catalogos
         [Required(ErrorMessage = "Please enter the size.")]
         [Display(Name = "SIZE")]
         public string Talla { get; set; }
+        [Display(Name = "ORDER")]
+        public int Orden { get; set; }
     }
 }

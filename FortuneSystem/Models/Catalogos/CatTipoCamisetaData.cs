@@ -9,16 +9,15 @@ namespace FortuneSystem.Models.Catalogos
 {
     public class CatTipoCamisetaData
     {
-        private Conexion conn = new Conexion();
-        private SqlCommand comando = new SqlCommand();
-        private SqlDataReader leer = null;
-
-
+       
         public IEnumerable<CatTipoCamiseta> ListaTipoCamiseta()
         {
             List<CatTipoCamiseta> listTipoCamiseta = new List<CatTipoCamiseta>();
+            Conexion conn = new Conexion();
             try
             {
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;
                 comando.Connection = conn.AbrirConexion();
                 comando.CommandText = "Listar_Tipo_Camiseta";
                 comando.CommandType = CommandType.StoredProcedure;
@@ -50,20 +49,22 @@ namespace FortuneSystem.Models.Catalogos
         //Permite crear un nuevo tipo de camiseta
         public void AgregarCamiseta(CatTipoCamiseta camiseta)
         {
+            Conexion conne = new Conexion();
             try
             {
-                comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "AgregarTipoCamiseta";
-                comando.CommandType = CommandType.StoredProcedure;
-                comando.Parameters.AddWithValue("@Codigo", camiseta.TipoProducto);
-                comando.Parameters.AddWithValue("@Descripcion", camiseta.DescripcionTipo);
-                comando.Parameters.AddWithValue("@Grupo", camiseta.TipoGrupo);
-                comando.ExecuteNonQuery();
+                SqlCommand com = new SqlCommand();
+                com.Connection = conne.AbrirConexion();
+                com.CommandText = "AgregarTipoCamiseta";
+                com.CommandType = CommandType.StoredProcedure;
+                com.Parameters.AddWithValue("@Codigo", camiseta.TipoProducto);
+                com.Parameters.AddWithValue("@Descripcion", camiseta.DescripcionTipo);
+                com.Parameters.AddWithValue("@Grupo", camiseta.TipoGrupo);
+                com.ExecuteNonQuery();
             }
             finally
             {
-                conn.CerrarConexion();
-                conn.Dispose();
+                conne.CerrarConexion();
+                conne.Dispose();
             }
 
         }
@@ -72,26 +73,29 @@ namespace FortuneSystem.Models.Catalogos
         public CatTipoCamiseta ConsultarListaCamisetas(int? id)
         {
             CatTipoCamiseta camiseta = new CatTipoCamiseta();
+            Conexion connex = new Conexion();
             try
             {
-                comando.Connection = conn.AbrirConexion();
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leerC = null;
+                comando.Connection = connex.AbrirConexion();
                 comando.CommandText = "Listar_Camiseta_Por_Id";
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@Id", id);
-                leer = comando.ExecuteReader();
-                while (leer.Read())
+                leerC = comando.ExecuteReader();
+                while (leerC.Read())
                 {
-                    camiseta.IdTipo = Convert.ToInt32(leer["ID_TYPE_CODE"]);
-                    camiseta.TipoProducto = leer["PRODUCT_TYPE_CODE"].ToString();
-                    camiseta.DescripcionTipo = leer["DESCRIPTION"].ToString();
-                    camiseta.TipoGrupo = leer["GROUP_TYPE"].ToString();
+                    camiseta.IdTipo = Convert.ToInt32(leerC["ID_TYPE_CODE"]);
+                    camiseta.TipoProducto = leerC["PRODUCT_TYPE_CODE"].ToString();
+                    camiseta.DescripcionTipo = leerC["DESCRIPTION"].ToString();
+                    camiseta.TipoGrupo = leerC["GROUP_TYPE"].ToString();
                 }
-                leer.Close();
+                leerC.Close();
             }
             finally
             {
-                conn.CerrarConexion();
-                conn.Dispose();
+                connex.CerrarConexion();
+                connex.Dispose();
             }
                 return camiseta;
 
@@ -100,9 +104,11 @@ namespace FortuneSystem.Models.Catalogos
         //Permite actualiza la informacion de un tipo de camiseta
         public void ActualizarCamisetas(CatTipoCamiseta camiseta)
         {
+            Conexion connexi = new Conexion();
             try
             {
-                comando.Connection = conn.AbrirConexion();
+                SqlCommand comando = new SqlCommand();
+                comando.Connection = connexi.AbrirConexion();
                 comando.CommandText = "Actualizar_Camiseta";
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@Id", camiseta.IdTipo);
@@ -113,17 +119,19 @@ namespace FortuneSystem.Models.Catalogos
             }
             finally
             {
-                conn.CerrarConexion();
-                conn.Dispose();
+                connexi.CerrarConexion();
+                connexi.Dispose();
             }
         }
 
         //Permite eliminar la informacion de un tipo de camiseta
         public void EliminarCamisetas(int? id)
         {
+            Conexion con = new Conexion();
             try
             {
-                comando.Connection = conn.AbrirConexion();
+                SqlCommand comando = new SqlCommand();
+                comando.Connection = con.AbrirConexion();
                 comando.CommandText = "EliminarCamiseta";
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@Id", id);
@@ -131,8 +139,8 @@ namespace FortuneSystem.Models.Catalogos
             }
             finally
             {
-                conn.CerrarConexion();
-                conn.Dispose();
+                con.CerrarConexion();
+                con.Dispose();
             }
         }
 

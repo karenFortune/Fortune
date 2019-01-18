@@ -31,12 +31,12 @@ namespace FortuneSystem.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 objCliente.AgregarClientes(clientes);
-                TempData["clienteOK"] = "Se registro correctamente el cliente.";
+                TempData["clienteOK"] = "The customer was registered correctly.";
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["clienteError"] = "No se pudo registrar el cliente, intentelo más tarde.";
+                TempData["clienteError"] = "The customer can not be registered, try it later.";
             }
             return View(clientes);
         }
@@ -86,12 +86,12 @@ namespace FortuneSystem.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 objCliente.ActualizarCliente(clientes);
-                TempData["clienteEditar"] = "Se modifico correctamente el cliente.";
+                TempData["clienteEditar"] = "The customer was modified correctly.";
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["clienteEditarError"] = "No se pudo modificar el cliente, intentelo más tarde.";
+                TempData["clienteEditarError"] = "The client could not be modified, try it later.";
             }
             return View(clientes);
         }
@@ -119,7 +119,7 @@ namespace FortuneSystem.Controllers.Catalogos
         public ActionResult ConfimacionEliminar(int? id)
         {
             objCliente.EliminarCliente(id);
-            TempData["clienteEliminar"] = "Se elimino correctamente el cliente.";
+            TempData["clienteEliminar"] = "The customer was successfully deleted.";
             return RedirectToAction("Index");
         }
 

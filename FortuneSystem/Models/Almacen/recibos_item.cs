@@ -10,11 +10,11 @@ namespace FortuneSystem.Models.Almacen
         public int id_recibo { get; set; }
         public int id_recibo_item { get; set; }
         public int id_inventario { get; set; }
-        public string amt_item { get; set; }
-        public string estilo { get; set; }
         public int total { get; set; }
-        public string mill_po { get; set; }
-        public virtual recibos_cajas rc { get; set; }
-        public List<recibos_cajas> lista_recibos_cajas { get; set; }
+
+        public Inventario item { get; set; }
+
+        public virtual caja_inventario ci { get; set; }
+        public List<caja_inventario> lista_cajas { get; set; }
     }
 }

@@ -13,7 +13,7 @@
                 '<td><input type="text" id="l-cantidad" name="l-cantidad" class="form-control l-name01"  /></td>' +
                 '<td><input type="text" id="e-extras"  name="e-extras" class="form-control e-name01" value="' + 0 + '"/></td>' +
                 '<td><input type="text" id="s-ejemplo" name="s-ejemplo" class="form-control s-name01" value="' + 0 + '"/></td>' +
-                '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Eliminar</button></td>' +
+                '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
 
                 '</tr>';
             $('#tablaTallas').append(tallasdiv);
@@ -23,46 +23,46 @@
             $(this).closest("tr").remove();
         });
         $('#selectGenero').select2({
-            placeholder: "Seleccione un género",
+            placeholder: "Select a gender",
             language: {
 
                 noResults: function () {
 
-                    return "No hay resultado";
+                    return "There is no result";
                 },
                 searching: function () {
 
-                    return "Buscando..";
+                    return "Searching..";
                 }
             }
         });
 
         $('#selectTela').select2({
-            placeholder: "Seleccione un tipo de tela",
+            placeholder: "Select a type of fabric",
             language: {
 
                 noResults: function () {
 
-                    return "No hay resultado";
+                    return "There is no result";
                 },
                 searching: function () {
 
-                    return "Buscando..";
+                    return "Searching..";
                 }
             }
         });
 
         $("#selectTipoCamiseta").select2({
-            placeholder: "Seleccione un tipo de camiseta",
+            placeholder: "Select a type of shirt",
             language: {
 
                 noResults: function () {
 
-                    return "No hay resultado";
+                    return "There is no result";
                 },
                 searching: function () {
 
-                    return "Buscando..";
+                    return "Searching..";
                 }
             }
         });
@@ -70,10 +70,7 @@
         if (estilo != '') {
             $('#ItemDescripcion_Descripcion').val('');
             $("#nuevoEstilo").prop("disabled", false);
-
         }
-
-
             $('#nuevoColor').click(function (e) {
         var colorEstilo = $("#CatColores_CodigoColor").val();
         var colorDesc = $("#CatColores_DescripcionColor").val();
@@ -83,7 +80,7 @@
         }).done(function (data) {        });
                 $("#nuevoColor").prop("disabled", true);
         alertify.set('notifier', 'position', 'top-right');
-        alertify.notify('Se registro correctamente el color.', 'success', 10, null);
+        alertify.notify('The color was registered correctly.', 'success', 10, null);
         });
 
         $('#nuevoEstilo').click(function (e) {
@@ -96,7 +93,7 @@
         });
             $("#nuevoEstilo").prop("disabled", true);
             alertify.set('notifier', 'position', 'top-right');
-        alertify.notify('Se registro correctamente el estilo.', 'success', 10, null);
+        alertify.notify('the style was registered correctly.', 'success', 10, null);
     });
 
         $("#ItemDescripcion_ItemEstilo,#CatColores_CodigoColor,#f-talla").on('input', function () {
@@ -121,10 +118,9 @@
                 } else {
                     $("#" + id).css('border', '1px solid #cccccc');
                 }
-
             });
             if (error != 0) {
-                var alert = alertify.alert("Mensaje", 'Todos los campos son requeridos.').set('label', 'Aceptar');
+                var alert = alertify.alert("Mensaje", 'All fields are required.').set('label', 'Aceptar');
                 alert.set({ transition: 'zoom' });
                 alert.set('modal', false);
             } else {
@@ -148,15 +144,12 @@
 
                     });
                 alertify.set('notifier', 'position', 'top-right');
-                alertify.notify('Se registro correctamente el Estilo.', 'success', 10, null);
+                alertify.notify('The style was registered correctly.', 'success', 10, null);
             }
-
-
         });
 
         var colorDesc = $("#CatColores_DescripcionColor").val();
         var colorEstilo = $("#CatColores_CodigoColor").val();
-
 
         $(function () {
             $('#selectGenero').change(function () {
@@ -169,10 +162,10 @@
                         html +='<table class="table" id="tablaTallas"><thead>' +
                             '  <tr>' +
 
-                            '<th>Talla</th>' +
-                            ' <th>Cantidad</th>' +
-                            ' <th>Extras</th>' +
-                            ' <th>Ejemplos</th>' +
+                            '<th>Size</th>' +
+                            ' <th>Quantity</th>' +
+                            ' <th>Extra</th>' +
+                            ' <th>Examples</th>' +
                             '</tr>'+
                             '</thead><tbody>';
                         $.each(result, function (key, item) {
@@ -182,9 +175,8 @@
                             html += '<td><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 "  /></td>';
                             html += '<td><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 " value="' + 0 + '"/></td>';
                             html += '<td><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 "  value="' + 0 + '"/></td>';
-                            html += '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Eliminar</button></td>';
+                            html += '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
                             html += '</tr>';
-
                         });
                         html += '</tbody> </table>';
                         $('#listaTalla').html(html);
@@ -197,9 +189,7 @@
             });
             });
         });
-
         var exists = false;
-
 
     });
 
@@ -242,11 +232,7 @@
             return numero;
 
         }
-
-
     }
-
-
 
     function InputToUpper(obj) {
         if (obj.value != "") {
@@ -271,8 +257,7 @@
 
                     r++;
                     });
-                });
-            debugger
+                });   
             var error = 0;
             $('#tablaTallas').find('td').each(function (i, el) {
 
@@ -285,10 +270,7 @@
                     } else {
                         $(el).children().css('border', '1px solid #cccccc');
 
-                    }
-
-
-
+                }
             });
 
             enviarListaTalla(cadena, error);
@@ -298,10 +280,11 @@
     function redireccionarPagina() {
         window.location = '/pedidos/Index';
     }
+    //Revisar por que se redirecciona a la pagina index
     function enviarListaTalla(cadena, error) {
 
         if (error != 0) {
-            var alert = alertify.alert("Mensaje", 'Todos los campos son obligatorios.').set('label', 'Aceptar');
+            var alert = alertify.alert("Mensaje", 'All fields are required.').set('label', 'Aceptar');
             alert.set({ transition: 'zoom' });
             alert.set('modal', false);
         } else {
@@ -314,8 +297,8 @@
                 contentType: 'application/json',
                 success: function (data) {
                     alertify.set('notifier', 'position', 'top-right');
-                    alertify.notify('Se registro correctamente las tallas.', 'success', 5, null);
-                    var confirm = alertify.confirm('Confirmacion', '¿Desea registrar un nuevo Estilo?', null, null).set('labels', { ok: 'Aceptar', cancel: 'Cancelar' });
+                    alertify.notify('The size was registered correctly.', 'success', 5, null);
+                    var confirm = alertify.confirm('Confirmation', 'Do you want to register a new Style ?', null, null).set('labels', { ok: 'OK', cancel: 'Cancel' });
 
                     confirm.set({ transition: 'slide' });
 
@@ -323,20 +306,20 @@
                         $("#crearTallas").hide();
                         $('#nuevoItem').prop("disabled", false);
                         limpiarFormItems();
-                        alertify.success('Has confirmado');
+                        alertify.success('You have confirmed');
+                        $("#loading").css('display', 'none');
                     });
-
-                    confirm.set('oncancel', function () {
-                        alertify.notify('Se finalizo el registro de la orden de compra.','success', 5, null);
-
-                        setTimeout("redireccionarPagina()", 800);
-
+                    confirm.set('oncancel', function () {                       
+                        $("#loading").css('display', 'none');                        
+                        var ID = $("#PedidosId").val(); //Revisar id de pedido                       
+                        $("#nuevoEstiloModal").modal("hide");
+                        buscar_estilos_rev(ID);
                     });
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     showError(xhr.status, xhr.responseText);
                     if (data.error == 1) {
-                        alertify.notify('Verificar.', 'error', 5, null);
+                        alertify.notify('Check.', 'error', 5, null);
                     }
                 }
             });
@@ -359,10 +342,13 @@
     .ui-autocomplete {
         position: absolute;
         z-index: 2150000000 !important;
-        cursor: default;
         border: 2px solid #ccc;
         padding: 5px 0;
         border-radius: 2px;
+        cursor: default;
+        height: 200px;
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
 </style>
 
@@ -378,7 +364,7 @@
     @Html.HiddenFor(model => model.PedidosId)
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h4>Recepci&oacute;n de Items</h4>
+            <h4>Reception of Items</h4>
         </div>
         <div class="container-fluid">
             <div class="form-row ">
@@ -395,7 +381,7 @@
                 <div class="form-group col-md-3">
                     <br />
                     <button type="button" class="btn btn-success" id="nuevoEstilo" data-toggle="modal">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Estilo
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Style
                     </button>
                 </div>
             </div>
@@ -418,7 +404,7 @@
                     <br />
 
                     <button type="button" class="btn btn-success" id="nuevoColor" data-toggle="modal">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Color
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Color
                     </button>
 
                 </div>
@@ -468,7 +454,7 @@
                 <br />
                 <div class="text-center margin-bottom col-sm-12">
                     <button type="button" class="btn btn-success" id="nuevoItem" data-toggle="modal">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Guardar Item
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Save Item
                     </button>
                 </div>
             </div>
@@ -478,15 +464,15 @@
 
     <div class="panel panel-primary" id="crearTallas">
         <div class="panel-heading">
-            <h4>Recepci&oacute;n de Tallas</h4>
+            <h4>Reception of Sizes</h4>
         </div>
 
         <div class="container-fluid">
             <br />
 
-            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">+ Otra Talla</button>
+            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">+ Add Size</button>
             <div id="listaTalla"></div>
-            <button type="button" id="nuevaTalla" class="btn btn-success btn-md pull-right btn-sm">Guardar Tallas</button>
+            <button type="button" id="nuevaTalla" class="btn btn-success btn-md pull-right btn-sm">Save Size</button>
             <br />
             <br />
         </div>

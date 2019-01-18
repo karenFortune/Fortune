@@ -1,4 +1,5 @@
-﻿using FortuneSystem.Models.Roles;
+﻿using FortuneSystem.Models.Catalogos;
+using FortuneSystem.Models.Roles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -49,13 +50,17 @@ namespace FortuneSystem.Models.Usuarios
         public string Contrasena { get; set; }
 
         public string NombreCompleto { get; set; }
-      
 
+        [Display(Name = "FACTORY")]
+        public int IdSucursal { get; set; }
+        [Display(Name = "FACTORY")]
+        public string Sucursal { get; set; }
 
-
+        public virtual CatSucursal CatSucursal { get; set; }
+        public List<CatSucursal> ListaSucursal { get; set; }
 
     }
 
 
-      
+
 }

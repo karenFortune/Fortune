@@ -1,14 +1,14 @@
 ﻿@model FortuneSystem.Models.Catalogos.CatTipoCamiseta
 
 @{
-    ViewBag.Title = "Detalles Tipo Camiseta";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Details T-Shirt Type";
+
 }
 
-<h2>Detalles</h2>
+
 
 <div>
-    <hr />
+
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.TipoProducto)
@@ -37,6 +37,5 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Editar", "Editar", new { id = Model.IdTipo }) |
-    @Html.ActionLink("Regresar", "Index")
+
 </p>

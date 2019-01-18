@@ -418,7 +418,16 @@ namespace FortuneSystem.Controllers
             return Json(listaTallas, JsonRequestBehavior.AllowGet);
         }
 
-  
+        public JsonResult Lista_Tallas_Por_Estilos_Rev(int? id)
+        {
+            Session["id_estilo"] = id;
+            POSummary summary = new POSummary();
+            List<ItemTalla> listaTallas = summary.ListarTallasPorEstilo;
+            listaTallas = objTalla.ListaTallasPorEstiloRev(id).ToList();
+            summary.ListarTallasPorEstilo = listaTallas;
+            var result = Json(new { listaTalla = listaTallas });
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }       
 
 
         [HttpPost]

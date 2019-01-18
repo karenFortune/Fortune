@@ -1,4 +1,5 @@
 ﻿using FortuneSystem.Models.Catalogos;
+using FortuneSystem.Models.Items;
 using FortuneSystem.Models.Packing;
 using FortuneSystem.Models.PNL;
 using FortuneSystem.Models.POSummary;
@@ -91,12 +92,20 @@ namespace FortuneSystem.Models.Pedidos
 
         public virtual Pnl PNL { get; set; }
 
-        public virtual PackingM Packing { get; set; }
+        public virtual PackingM Packing { get; set; }       
 
         public int Usuario { get; set; }
         public string NombreUsr { get; set; }
 
         public string NombreClienteFinal { get; set; }
+
+        public int HistorialPacking { get; set; }
+
+        public List<PackingTypeSize> ListPack { get; set; }
+
+        public List<ItemDescripcion> ListItems { get; set; }
+        [Display(Name = "STYLE")]
+        public int IdEstilo { get; set; }
 
 
     }

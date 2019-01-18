@@ -18,9 +18,7 @@ namespace FortuneSystem.Controllers
         public ActionResult _Layout()
         {
             CatUsuario usr = new CatUsuario();
-            usr.Cargo = 1;
-            ViewData["cargo"] = 1;
-            ViewBag.Nombre = "Karen";
+            usr.Cargo = Convert.ToInt32(Session["idCargo"]);
             return View(usr);
         }
     }

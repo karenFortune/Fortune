@@ -343,6 +343,8 @@ C:\Users\karen\Source\Repos\fortuneSystem3\FortuneSystem\bin\zxing.pdb
 C:\Users\karen\Source\Repos\fortuneSystem3\FortuneSystem\bin\zxing.xml
 C:\Users\karen\Source\Repos\fortuneSystem3\FortuneSystem\bin\zxing.presentation.pdb
 C:\Users\karen\Source\Repos\fortuneSystem3\FortuneSystem\bin\zxing.presentation.xml
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csprojAssemblyReference.cache
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csproj.CoreCompileInputs.cache
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\ApplicationInsights.config
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\FortuneSystem.dll.config
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\FortuneSystem.dll
@@ -490,8 +492,12 @@ C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Xml.XmlSerializer.d
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Xml.XPath.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Xml.XPath.XDocument.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Antlr3.Runtime.dll
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\ClosedXML.dll
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\DocumentFormat.OpenXml.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\EntityFramework.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\EntityFramework.SqlServer.dll
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\ExcelNumberFormat.dll
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\FastMember.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Helpers.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.AI.Agent.Intercept.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.AI.DependencyCollector.dll
@@ -568,6 +574,7 @@ C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.Web.Infrastructu
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.Win32.Registry.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Newtonsoft.Json.Bson.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Newtonsoft.Json.dll
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\OfficeOpenXml.Core.ExcelPackage.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\PagedList.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\PagedList.Mvc.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Rotativa.AspNetCore.dll
@@ -580,6 +587,7 @@ C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Data.SQLite.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Data.SQLite.EF6.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Data.SQLite.Linq.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Diagnostics.DiagnosticSource.dll
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.IO.Packaging.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Reflection.Metadata.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Runtime.CompilerServices.Unsafe.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Security.AccessControl.dll
@@ -598,8 +606,12 @@ C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\WebGrease.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\zxing.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\zxing.presentation.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Helpers.pdb
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\ClosedXML.pdb
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\ClosedXML.xml
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\DocumentFormat.OpenXml.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\EntityFramework.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\EntityFramework.SqlServer.xml
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\ExcelNumberFormat.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.AspNet.TelemetryCorrelation.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.AspNetCore.Antiforgery.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.AspNetCore.Authentication.Abstractions.xml
@@ -661,6 +673,7 @@ C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.Extensions.Primi
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.Extensions.WebEncoders.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.Net.Http.Headers.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Newtonsoft.Json.Bson.xml
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\OfficeOpenXml.Core.ExcelPackage.pdb
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\PagedList.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\PagedList.Mvc.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Buffers.xml
@@ -688,8 +701,6 @@ C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.AI.DependencyCol
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.AI.WindowsServer.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.AI.Web.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csprojAssemblyReference.cache
-C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csproj.CoreCompileInputs.cache
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csproj.CopyComplete
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.pdb

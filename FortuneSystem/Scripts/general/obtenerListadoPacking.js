@@ -6,11 +6,12 @@ $(document).ready(function () {
   
 });
 
-function probar() {
+function select(id) {
     $('#tabless tr').on('click', function (e) {
         $('#tabless tr').removeClass('highlighted');
         $(this).addClass('highlighted');
     });
+    obtenerListaTallas(id);
 }
 
 
@@ -29,10 +30,9 @@ $(function () {
                 list_datalist.push(data[i].Talla);
             }
         }
-    })
+    });
     var availableTags = list_datalist;
     $(document).on("focus keyup", "input.talla", function (event) {
-        debugger
         $(this).autocomplete({
             source: availableTags,
             select: function (event, ui) {
@@ -49,6 +49,7 @@ $(function () {
 
 function buscar_estilos(ID) {
     var tempScrollTop = $(window).scrollTop();
+    $("#packBPPK").show();   
     $.ajax({
         url: "/Pedidos/Lista_Estilos_PO/" + ID,
         type: "POST",
@@ -59,7 +60,7 @@ function buscar_estilos(ID) {
             var lista_estilo = jsonData.Data.listaItem;
 
             $.each(lista_estilo, function (key, item) {
-                html += '<tr  onclick="probar()">';
+                html += '<tr  onclick="select(' + item.IdItems + ');">';
                 html += '<td>' + item.EstiloItem + '</td>';
                 html += '<td>' + item.ItemDescripcion.Descripcion + '</td>';
                 html += '<td>' + item.CatColores.CodigoColor + '</td>';
@@ -67,7 +68,7 @@ function buscar_estilos(ID) {
                 html += '<td>' + item.Cantidad + '</td>';
                 html += '<td>' + item.Price + '</td>';
                 html += '<td>' + item.Total + '</td>';
-                html += '<td><a href="#" onclick="obtenerListaTallas(' + item.IdItems + ');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Sizes"></a></td>';
+              //  html += '<td><a href="#" onclick="obtenerListaTallas(' + item.IdItems + ');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Packing"></a></td>';
                 html += '</tr>';
             });
             if (Object.keys(lista_estilo).length === 0) {
@@ -83,203 +84,282 @@ function buscar_estilos(ID) {
 }
 var estiloId;
 var tipoEmp = "";
+var numTipoPack;
+var listaPsc;
+var listCantTalla;
+var numBoxPPK;
 function obtenerListaTallas(EstiloId) {
-   // $("#loading").css('display', 'inline');
+   $("#loading").css('display', 'inline');   
+    $("#panelPacking").css('display', 'inline');
+    $("#consultaTalla").css('width', '100%');
     estiloId = EstiloId;
         $.ajax({
             url: "/Packing/Lista_Tallas_Por_Estilo/" + EstiloId,
         method: 'POST',
         dataType: "json",
-        success: function (jsonData) {
-            var listaT = jsonData.Data.listaTalla;
-            var listaPacking = jsonData.Data.listaPackingS;
-            var listaEmpaque = jsonData.Data.listaEmpaqueTallas;
-            var listaTCajas = jsonData.Data.listaTotalCajasPack;
-            //var listaTCajas = jsonData.Data.listaCajasT;
-            var html = '';      
-            var estilos = jsonData.Data.estilos;
-            if (listaPacking.length === 0) {
-                $("#btnAdd").show();
-                $("#nuevaTalla").show();
-                $("#nuevoPallet").hide();
-                $("#modificarBatch").hide();
-                $("#registrarNuevo").hide();
-                $("#tableTallasBulk").hide();
-                $("#div_estilo").html("<h3>REGISTER 1rst QUALITY OF SIZES</h3>");
-                html += '<table class="table" id="tablaTallas"><thead>';
-                html += '<tr><th>Size</th>' +
-                    ' <th>1rst QTY</th>' +
-                    '</tr>' +
-                    '</thead><tbody>';
-                $.each(listaT, function (key, item) {
-                    html += '<tr>';
-                    html += '<td width="250"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '"/></td>';
-                    html += '<td width="250"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control numeric" value="' + 0 + '" /></td>';
-                    html += '<td width="250"><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
-                    html += '</tr>';
-
-                });
-                html += '</tbody> </table>';
-                ocultarOpciones();                
-                $('#listaTalla').html(html);
-            } else {
-                $("#btnAdd").hide();
-                $("#nuevaTalla").hide();
-                $("#nuevoPallet").hide();
-                $("#tablaTallas").hide();
-                $("#tablePacking").show();
-                $("#modificarBatch").hide();
-                $("#div_estilo").html("<h3>QUALITY OF SIZES</h3>"); 
-                html += '<tr> <th width="30%"> Size </th>'
-                $.each(listaPacking, function (key, item) {
-                    html += '<th>' + item.Talla + '</th>';
-                });
-                html += '<th width="30%"> Total </th>'
-                html += '</tr><tr><td width="30%">1rst Quantity</td>';
-                var cantidades = 0;
-                var cadena_cantidades = "";
-                $.each(listaPacking, function (key, item) {
-                    html += '<td class="calidad">' + item.Calidad + '</td>';
-                    cantidades += item.Calidad;
-                    cadena_cantidades += "*" + item.Calidad;
-                });
-                var cantidades_array = cadena_cantidades.split('*');
-                html += '<td>' + cantidades + '</td>';
-                
-                if (listaEmpaque.length === 0) {                    
-                    listaEmpaque;
-                    html += '</tr><tr><td width="30%">Type Packing</td>';
+            success: function (jsonData) {                
+                var listaT = jsonData.Data.lista;
+                var listaPacking = jsonData.Data.listaPackingS;
+                var listaEmpaque = jsonData.Data.listaEmpaqueTallas;
+                var listaTCajas = jsonData.Data.listaTotalCajasPack;
+                var cargo = jsonData.Data.cargoUser;
+                var tPiezasEstilos = jsonData.Data.numTPSyle;
+                var tPiezasPack = jsonData.Data.numTPack;
+                var listTotalPiezas = jsonData.Data.listaTotalPiezas;
+                listaPsc = jsonData.Data.listaTotalPiezas;
+                listCantTalla = jsonData.Data.listCantTalla;
+                //var listaTCajas = jsonData.Data.listaCajasT;
+                var html = '';
+                var estilos = jsonData.Data.estilos;
+               // if (tPiezasPack <= tPiezasEstilos) { 
+                if (listaPacking.length === 0) {
+                    if (cargo === 1 || cargo === 9) {
+                        $("#btnAdd").show();
+                        $("#nuevaTalla").show();
+                        $("#nuevoPallet").hide();
+                        $("#modificarBatch").hide();
+                        $("#registrarNuevo").hide();
+                        $("#tableTallasBulk").hide();
+                        $("#titulo_Tipo_Empaque").css('display', 'none');
+                        $("#div_estilo").html("<h3>REGISTER 1rst QUALITY OF SIZES</h3>");
+                        html += '<table class="table" id="tablaTallas"><thead>';
+                        html += '<tr><th>Size</th>' +
+                            ' <th>1rst QTY</th>' +
+                            '</tr>' +
+                            '</thead><tbody>';
+                        var cont = 0;
+                        $.each(listaT, function (key, item) {
+                           
+                            html += '<tr id="pallet' + cont + '" class="pallet">';
+                            html += '<td width="250"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '"/></td>';
+                            html += '<td width="250"><input type="text" name="l-cantidad" id="l-cantidad'+cont+'" class="form-control numeric qualityT" value="' + 0 + '" /></td>';
+                            html += '<td width="250"><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
+                            html += '</tr>';
+                            cont = cont + 1;
+                        });
+                        html += '</tbody> </table>';
+                        ocultarOpciones();
+                        $('#listaTalla').html(html);
+                    } else {
+                        $("#btnAdd").hide();
+                        $("#nuevaTalla").hide();
+                        $("#nuevoPallet").hide();
+                        $("#modificarBatch").hide();
+                        $("#panelNoEstilosBPPK").css('display', 'inline');
+                        $("#imgPanelBPPK").css('cursor', 'none');
+                        $("#div_estilo").hide();
+                        $("#div_titulo").hide();
+                        $("#tablePacking").hide();
+                        $("#listaTallaBatch").hide();
+                        $("#consultaTalla").css('height', '700px');
+                    }
                 } else {
-                   $.each(listaEmpaque, function (key, item) {
+                    if (cargo !== 1 || cargo !== 9) {
+                        $("#div_estilo").show();
+                        $("#panelNoEstilosBPPK").css('display', 'none');
+                        $("#consultaTalla").css('height', '1300px');
+
+                    } else {
+                        $("#consultaTalla").css('height', '1600px');
+                    }
+                    $("#btnAdd").hide();
+                    $("#nuevaTalla").hide();
+                    $("#nuevoPallet").hide();
+                    $("#tablaTallas").hide();
+                    $("#tablePacking").show();
+                    $("#modificarBatch").hide();       
+                    $.each(listaEmpaque, function (key, item) {
                         tipoEmp = item.NombreTipoPak;
                     });
-                   
-                }
-                var cantidadesEmp = 0;
-                if (tipoEmp === "BULK") {
-                    html += '</tr><tr><td width="30%">' + tipoEmp + '- #Pieces' + '</td>';
+                    $("#titulo_Tipo_Empaque").css('display', 'inline');
+                    $("#titulo_Tipo_Empaque").html("<h1> Packing- " + tipoEmp +"</h1>");
+                    $("#div_estilo").html("<h3>QUALITY OF SIZES</h3>");
+                    html += '<tr> <th width="30%"> Size </th>';
+                    var numTallas = 0;
+                    $.each(listaPacking, function (key, item) {
+                        numTallas++;
+                    });
+                    $.each(listaPacking, function (key, item) {
+                        html += '<th>' + item.Talla + '</th>';
+                    });
+                    html += '<th width="30%"> Total </th>';
+                    html += '</tr><tr><td width="30%">1rst Quantity</td>';
+                    var cantidades = 0;
+                    var cadena_cantidades = "";
+                    $.each(listaPacking, function (key, item) {
+                        html += '<td class="calidad">' + item.Calidad + '</td>';
+                        cantidades += item.Calidad;
+                        cadena_cantidades += "*" + item.Calidad;
+                    });
+                    var cantidades_array = cadena_cantidades.split('*');
+                    html += '<td>' + cantidades + '</td>';
+                    var cantidadesEmp = 0;
+                    if (listaEmpaque.length === 0) {
+                        listaEmpaque;
+                        html += '</tr><tr><td width="30%">Type Packing</td>';
 
-                    $.each(listaEmpaque, function (key, item) {
-                        html += '<td>' + item.Pieces + '</td>';
-                        cantidadesEmp += item.Pieces;
-                    });
-                } else if (tipoEmp === "PPK") {
-                    html += '</tr><tr><td width="30%">' + tipoEmp + '- #Ratio' + '</td>';
-                    $.each(listaEmpaque, function (key, item) {
-                        html += '<td>' + item.Ratio + '</td>';
-                        cantidadesEmp += item.Ratio;
-                    });
-                }
-                html += '<td>' + cantidadesEmp + '</td>';
-                html += '</tr><tr><td width="30%">Packages</td>';
-              /*  $.each(listaTCajas, function (key, item) {
-                    html += '<td>' + item.TotalPiezas + '</td>';
-                });*/
-                var cantidadesTBox = 0;
-                var lista_Batch = jsonData.Data.listaTallasTotalBatch;
-                var listaTBatch = 0;
-                $.each(listaTCajas, function (key, item) {
-                    listaTBatch++;
-                });
-                if (listaTBatch === 0) {
-                    listaTCajas = listaPacking;
-                } else {
-                    listaTCajas
-                }
-                $.each(listaTCajas, function (key, item) {
-                    if (listaTBatch === 0) {
-                        item = 0;
-                        html += '<td>' + item + '</td>';
+                        var total = 0;
+                        for (var v = 0; v < numTallas; v++) {
+
+                            html += '<td>' + total + '</td>';
+                            cantidadesEmp += total;
+                        }
+                        html += '<td>' + cantidadesEmp + '</td>';
+
                     } else {
-                        html += '<td>' + item + '</td>';
+                        $.each(listaEmpaque, function (key, item) {
+                            tipoEmp = item.NombreTipoPak;
+                        });
+                        if (tipoEmp === "BULK") {
+                            numTipoPack = 1;
+                            html += '</tr><tr><td width="30%">' + tipoEmp + '- #Pieces' + '</td>';
+
+                            $.each(listaEmpaque, function (key, item) {
+                                html += '<td>' + item.Pieces + '</td>';
+                                cantidadesEmp += item.Pieces;
+
+                            });
+                        } else if (tipoEmp === "PPK") {
+                            numTipoPack = 2;
+                            html += '</tr><tr><td width="30%">' + tipoEmp + '- #Ratio' + '</td>';
+                            $.each(listaEmpaque, function (key, item) {
+                                html += '<td class="numRatio">' + item.Ratio + '</td>';
+                                cantidadesEmp += item.Ratio;
+
+                            });
+                        }
+                        html += '<td>' + cantidadesEmp + '</td>';
                     }
 
-                    cantidadesTBox += item;
-                });
-                html += '<td>' + cantidadesTBox + '</td>';
-                html += '</tr><tr>';
-                if (tipoEmp === "BULK") {
-                     html += '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Box</td>';
-                }
-               
-                var lista_Batch_Box = jsonData.Data.listaCajasT;
-                var listaPBatch = 0;
-                $.each(lista_Batch_Box, function (key, item) {
-                    listaPBatch++;
-                });
-                if (listaPBatch === 0) {
-                    lista_Batch_Box = listaPacking;
-                } else {
-                    lista_Batch_Box
-                }
-                $.each(lista_Batch_Box, function (key, item) {
-     
-                    if (tipoEmp === "PPK") {
-                        if (key === 1) {
+                    html += '</tr><tr><td width="30%">Packages</td>';
+                    /*  $.each(listaTCajas, function (key, item) {
+                          html += '<td>' + item.TotalPiezas + '</td>';
+                      });*/
+                    var cantidadesTBox = 0;
+                    var lista_Batch = jsonData.Data.listaTallasTotalBatch;
+                    var listaTBatch = 0;
+                    $.each(listaTCajas, function (key, item) {
+                        listaTBatch++;
+                    });
+                    if (listaTBatch === 0) {
+                        listaTCajas = listaPacking;
+                    } else {
+                        listaTCajas;
+                    }
+                    $.each(listaTCajas, function (key, item) {
+                        if (listaTBatch === 0) {
+                            item = 0;
+                            html += '<td class="cantPack">' + item + '</td>';
+                        } else {
+                            html += '<td class="cantPack">' + item + '</td>';
+                        }
+
+                        cantidadesTBox += item;
+                    });
+                    html += '<td>' + cantidadesTBox + '</td>';
+                    html += '</tr><tr>';
+                    if (tipoEmp === "BULK") {
+                        html += '<td class="cajasQty">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Box</td>';
+                    }
+
+                    var lista_Batch_Box = jsonData.Data.listaCajasT;
+                    var listaPBatch = 0;
+                    $.each(lista_Batch_Box, function (key, item) {
+                        listaPBatch++;
+                    });
+                    if (listaPBatch === 0) {
+                        lista_Batch_Box = listaPacking;
+                    } else {
+                        lista_Batch_Box;
+                    }
+                    $.each(lista_Batch_Box, function (key, item) {
+
+                        if (tipoEmp === "PPK") {
+                            if (key === 1) {
+                                if (listaPBatch === 0) {
+                                    item = 0;
+                                    html += '<td>' + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Box# -" + item + '</td>';
+                                    numBoxPPK = item;
+                                } else {
+                                    html += '<td>' + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Box# -" + item + '</td>';
+                                    numBoxPPK = item;
+                                }
+                            }
+                        } else {
                             if (listaPBatch === 0) {
                                 item = 0;
-                                html += '<td>' + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Box# -" + item + '</td>';
+                                html += '<td>' + item + '</td>';
                             } else {
-                                html += '<td>'+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Box# -" + item + '</td>';
+                                html += '<td>' + item + '</td>';
                             }
                         }
-                    } else {                        
-                        if (listaPBatch === 0) {
+                        // cantidadesPrinted += item;
+                    });
+                    var sumaTotal = 0;
+                    html += '</tr><tr><td width="30%">+/-</td>';
+                    var totales = 0;
+                    var i = 1;
+                    $.each(listaTCajas, function (key, item) {
+                        if (listaTBatch === 0) {
                             item = 0;
-                            html += '<td>' + item + '</td>';
+                        }
+                        var resta = parseInt(cantidades_array[i]) - parseInt(item);
+
+                        if (resta === 0) {
+                            html += '<td class="faltante" style="color:black;">' + resta + '</td>';
+                        } else if (resta >= 0) {
+                            html += '<td class="faltante" style="color:blue;">' + resta + '</td>';
                         } else {
-                            html += '<td>' + item + '</td>';
+                            html += '<td class="faltante" style="color:red;">' + resta + '</td>';
+                        }
+                      
+                        $('.faltante').css('color', '2px solid #e03f3f');
+                        i++;
+                        sumaTotal += resta;
+                    });
+                    html += '<td>' + sumaTotal + '</td>';
+                    html += '</tr>';
+
+                    $('.tbodyP').html(html);
+                    if (cargo === 1 || cargo === 9) {
+                        if (listaEmpaque.length === 0) {
+                            $("#div_titulo").html("<h3>REGISTRATION OF TYPE OF PACKAGING</h3>");
+                            $("#div_titulo").css("visibility", "visible");
+                            $("#opciones").css("visibility", "visible");
+                            $("#listaTallaBatch").hide();
+                            $("#tablaTallasPallet").hide();
+                            $("#modificarBatch").hide();
+                            $('#Packing_PackingTypeSize_NombreTipoPak').hide();
+                            $("#div_estilo_pack").css("visibility", "hidden");
+                            $("#opcionesPack").css("visibility", "hidden");
+                        } else {
+                            $("#tablaTallasPPK").hide();
+                            $("#tablaTallasBulk").hide();
+                            $("#nuevoEmpaque").hide();
+                            $("#nuevoEmpaquePPK").hide();
+                            if (tipoEmp === "BULK") {
+                                registrarPallet(EstiloId);
+                            } else if (tipoEmp === "PPK") {
+                                registrarPalletPPK(EstiloId);
+                            }
+
                         }
                     }
-                    // cantidadesPrinted += item;
-                });
-                html += '</tr><tr><td width="30%">+/-</td>';
-                var totales = 0;
-                var i = 1;
-                $.each(listaTCajas, function (key, item) {
-                    if (listaTBatch === 0) {
-                        item = 0;
-                    }
-                    var resta = (parseFloat(cantidades_array[i]) - parseFloat(item))
-                    html += '<td class="faltante">' + resta + '</td>';
-                    i++;
-                });
-                html += '</tr>';
 
-                $('.tbodyP').html(html);
-
-                if (listaEmpaque.length === 0) {
-                    $("#div_titulo").html("<h3>REGISTRATION OF TYPE OF PACKAGING</h3>");
-                    $("#div_titulo").css("visibility", "visible");
-                    $("#opciones").css("visibility", "visible");  
-                    $("#listaTallaBatch").hide();  
-                    $("#tablaTallasPallet").hide();
-                    $("#modificarBatch").hide();                    
-                    $('#Packing_PackingTypeSize_NombreTipoPak').hide(); 
-                    $("#div_estilo_pack").css("visibility", "hidden");
-                    $("#opcionesPack").css("visibility", "hidden");  
-                } else {
-                    $("#tablaTallasPPK").hide(); 
-                    $("#tablaTallasBulk").hide(); 
-                    $("#nuevoEmpaque").hide();
-                    $("#nuevoEmpaquePPK").hide();
-                    if (tipoEmp === "BULK") {
-                        registrarPallet(EstiloId);
-                    } else if (tipoEmp === "PPK") {
-                        registrarPalletPPK(EstiloId);
-                    }
-                    
                 }
-            }         
+            //}
             $("#consultaTalla").css("visibility", "visible"); 
-            $("#arte").css("visibility", "visible");
+            $("#arte").css("display", "inline-block");
             obtenerImagenPNL(estilos);
             obtenerImagenArte(estilos);
             obtener_bacth_estilo(EstiloId);
+            $("#packAssort").hide(); 
+            $("#packBPPK").show();
+            $("#loading").css('display', 'none');
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
-        },
+        }
     }).done(function (data) {
 
     });
@@ -310,7 +390,7 @@ function ocultarOpciones() {
 }
  
 $(document).on("keyup", "input.cantBox", function () {
-    obtTotalPiezas();
+    obtTotalPiezas(numBoxPPK);
 });
 function registrarPallet(EstiloId) {
     $.ajax({
@@ -339,27 +419,50 @@ function registrarPallet(EstiloId) {
                 html += '<table class="table" id="tablaTallasPallet"><thead>';
             html += '<tr><th style="visibility:hidden;"> </th> ' +
                     '<th> Size</th> ' +
-                    ' <th>Box#</th>' +
-                    ' <th>CantxBox#</th>' +
-                    ' <th>TotalPieces#</th>' +
+                    '<th>Box#</th>' +
+                    '<th>CantxBox#</th>' +
+                    '<th>TotalPieces#</th>' +
+                    '<th>TotalBox</th>' +
+                    ' <th>TotalFaltante#</th>' +            
                     '</tr>' +
-                    '</thead><tbody>';   
-                
+                    '</thead><tbody>';                   
                
             var cantidadesEmp = 0;
             var cantidadesT = 0;
             var cantidadPiezas;
             var cantidadRatio;
             var cont = 0;
+           
             $.each(listaEmpaque, function (key, item) {              
                 cont = cont + 1;
-                html += '<tr id="pallet' + (cont) + '" class="pallet">';
+                var valorCalidad = $(".calidad").parent("tr").find("td").eq(cont).text();
+                var pCalidad = parseInt(valorCalidad);
+                var numTotalBox = pCalidad / item.Pieces;
+                var totalBox = Math.floor(numTotalBox);
+                var valorCajas = $(".cajasQty").parent("tr").find("td").eq(cont).text();
+                var nCajas = parseInt(valorCajas);
+                var resta = parseInt(totalBox) - nCajas;
+                html += '<tr id="pallet' + cont + '" class="pallet">';
                 html += '<td width="1" style="visibility:hidden;"><input type="text" id="f-id" class="form-control" value="' + item.IdPackingTypeSize + '" /></td>';
                 html += '<td width="250"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '" readonly/></td>'; //onChange="calcular_TotalPiezas()"
-                html += '<td width="250" class="cBox"><input type="text" name="l-cantidadBox" id="l-cantidadBox" class="form-control numeric cantCajas" onkeyup="obtTotalMat(' + (cont) + ')" value="' + 0 + '"></td>';
-                html += '<td width="250"><input type="text" name="l-piezas" id="l-piezas" class="form-control numeric cant" onkeyup="obtTotalMat(' + (cont) + ')" value="' + item.Pieces + '"  readonly/></td>';
-                cantidadesEmp += item.Pieces;              
+                if (resta !== 0) {
+                    html += '<td width="250" class="cBox"><input type="text" name="l-cantidadBox" id="l-cantidadBox" class="form-control numeric cantCajas"  onkeyup="obtTotalMat(' + cont + ')" value="' + 0 + '"></td>';
+                } else {
+                    html += '<td width="250" class="cBox"><input type="text" name="l-cantidadBox" id="l-cantidadBox" class="form-control numeric cantCajas"  onkeyup="obtTotalMat(' + cont + ')" value="' + 0 + '" readonly></td>';
+                            
+                }
+                
+                html += '<td width="250"><input type="text" name="l-piezas" id="l-piezas" class="form-control numeric cant" value="' + item.Pieces + '"  readonly/></td>';
+                cantidadesEmp += item.Pieces;                  
                 html += '<td width="250"><input type="text" name="l-totalPiezas" id="l-totalPiezas" class="form-control numeric totalPiezas" value="' + 0 + '" readonly/></td>';
+                html += '<td width="250"><input type="text" name="l-totBox" id="l-totBox" class="form-control numeric totBox" value="' + totalBox + '" readonly/></td>';
+               
+                if (parseInt(valorCajas) === 0) {
+                    html += '<td width="250" class="tFalB"><input type="text" name="l-totFaltantes" id="l-totFaltantes" class="form-control numeric totFaltantes" value="' + totalBox + '" readonly/></td>';
+                } else {
+                    html += '<td width="250" class="tFalB"><input type="text" name="l-totFaltantes" id="l-totFaltantes" class="form-control numeric totFaltantes" value="' + resta + '" readonly/></td>';
+                }
+               
                 html += '</tr>';                 
             });
            
@@ -376,7 +479,7 @@ function registrarPallet(EstiloId) {
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
-        },
+        }
     }).done(function (data) {
 
     });
@@ -399,6 +502,20 @@ function registrarPalletPPK(EstiloId) {
             $("#div_estilo_pack").html("<h3>REGISTRATION OF PALLET</h3>");
             $("#div_estilo_pack").css("visibility", "visible");
             var tipoEmp = "";
+            var valorCalidad = $(".calidad").parent("tr").find("td").eq(1).text();
+            var valorRatio = $(".numRatio").parent("tr").find("td").eq(1).text();
+            var pCalidad = parseInt(valorCalidad);
+            var numRatio = parseInt(valorRatio);
+            var numTotalCart = pCalidad / numRatio;
+            $("#Packing_TotalCartonsPPK").val(numTotalCart);
+            
+            if (parseInt(numBoxPPK) === 0) {
+                $("#Packing_TotalCartonesFaltPPK").val(numTotalCart);
+            } else {
+                var restar = parseInt(numTotalCart) - parseInt(numBoxPPK);
+                $("#Packing_TotalCartonesFaltPPK").val(restar);
+            } 
+
             $.each(listaEmpaque, function (key, item) {
                 tipoEmp = item.NombreTipoPak;
             });
@@ -420,15 +537,18 @@ function registrarPalletPPK(EstiloId) {
             var cantidadPiezas;
             var cantidadRatio;
             var cont = 0;
+        
             $.each(listaEmpaque, function (key, item) {
                 cont = cont + 1;
-                html += '<tr id="pallet' + (cont) + '" class="pallet">';
+               
+                
+                html += '<tr id="pallet' + cont + '" class="pallet">';
                 html += '<td width="1" style="visibility:hidden;"><input type="text" id="f-id" class="form-control" value="' + item.IdPackingTypeSize + '" /></td>';
                 html += '<td width="250"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '" readonly/></td>'; //onChange="calcular_TotalPiezas()"
-                    html += '<td width="250"><input type="text" name="l-ratio" id="l-ratio" class="form-control numeric cant" onkeyup="obtTotalMat(' + (cont) + ')" value="' + item.Ratio + '"  readonly/></td>';
-                    cantidadesEmp += item.Ratio;
-                    html += '<td width="250"><input type="text" name="l-totalPiezas" id="l-totalPiezas" class="form-control numeric totalPiezas" value="' + 0 + '" readonly/></td>';
-                    html += '</tr>';
+                html += '<td width="250"><input type="text" name="l-ratio" id="l-ratio" class="form-control numeric cant" onkeyup="obtTotalMat(' + cont + ')" value="' + item.Ratio + '"  readonly/></td>';
+                cantidadesEmp += item.Ratio;
+                html += '<td width="250"><input type="text" name="l-totalPiezas" id="l-totalPiezas" class="form-control numeric totalPiezas" value="' + 0 + '" readonly/></td>';
+                html += '</tr>';
              
             });
 
@@ -444,7 +564,7 @@ function registrarPalletPPK(EstiloId) {
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
-        },
+        }
     }).done(function (data) {
 
     });
@@ -511,7 +631,7 @@ function TallasEmpaqueBulk() {
                 });
                
                 $("#div_titulo").css("visibility", "visible");
-                html += '<tr> <th width="30%"> Size </th>'
+                html += '<tr> <th width="30%"> Size </th>';
                 $.each(listaPacking, function (key, item) {
                     html += '<th width="30%">' + item.Talla + '</th>';
                 });
@@ -529,7 +649,7 @@ function TallasEmpaqueBulk() {
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
-        },
+        }
     }).done(function (data) {
     });
 }
@@ -570,7 +690,7 @@ function TallasEmpaquePPK() {
                 });
 
                 $("#div_titulo").css("visibility", "visible");
-                html += '<tr> <th width="30%"> Size </th>'
+                html += '<tr> <th width="30%"> Size </th>';
                 $.each(listaPacking, function (key, item) {
                     html += '<th width="30%">' + item.Talla + '</th>';
                 });
@@ -588,7 +708,7 @@ function TallasEmpaquePPK() {
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
-        },
+        }
     }).done(function (data) {
     });
 }
@@ -625,16 +745,24 @@ function obtenerIdEstilo(IdEstilo) {
 
 function obtener_bacth_estilo(IdEstilo) {
     var tempScrollTop = $(window).scrollTop();
+    if (numTipoPack === undefined) {
+        numTipoPack = 0;
+    }
     //  $("#loading").css('display', 'inline');
     $.ajax({
-        url: "/Packing/Lista_Batch_Estilo/" + IdEstilo,
+        url: "/Packing/Lista_Batch_Estilo/",
         type: "POST",
+        data: JSON.stringify({ id: IdEstilo, tipoEmpaque: numTipoPack }),
         contentType: "application/json;charset=UTF-8",
         dataType: "json",
         success: function (jsonData) {
               
-            var lista_batch = jsonData.Data.listaTalla;
-            var numBatch = lista_batch.length;
+            var lista_batch = jsonData.Data.listaPO;
+            var cargoUser = jsonData.Data.cargoUser;
+            var numBatch = 0;
+            $.each(lista_batch, function (key, item) {
+                numBatch++;
+            });
             if (numBatch === 0) {
                 // $("#div_tabla_talla").hide();
             } else {
@@ -692,10 +820,12 @@ function obtener_bacth_estilo(IdEstilo) {
                         
                     });
                 }
-
-                if (item.TipoEmpaque === 1) {                   
+                if (numTipoPack === 0) {
+                    numTipoPack = item.TipoEmpaque;
+                }
+                if (numTipoPack === 1) {                   
                     html += '<td>BULK</td>';
-                } else if (item.TipoEmpaque === 2) {
+                } else if (numTipoPack === 2) {
                   html += '<td>PPK</td>';
                 } else {
                     html += '<td>ASSORTMENT</td>';
@@ -708,14 +838,14 @@ function obtener_bacth_estilo(IdEstilo) {
                     html += '<td>2nd Turn</td>';
                 }
                 html += '<td>' + item.NombreUsrModif + '</td>';
-  
-                html += '<td><a href="#" onclick="obtenerTallas_Batch(' + item.IdBatch + ',' + item.TipoTurno + ',' + item.IdPacking + ',' + item.TipoEmpaque /*+ ',\'' + item.Status + '\'*/+');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Details Bacth"></a></td>';
+                if (cargoUser === 9 || cargoUser === 1) {
+                    html += '<td><a href="#" onclick="obtenerTallas_Batch(' + item.IdBatch + ',' + item.TipoTurno + ',' + item.IdPacking + ',' + numTipoPack  /*+ ',\'' + item.Status + '\'*/ + ');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Details Bacth"></a></td>';
+                }
+               
                 html += '</tr>';
-
             });
             if (Object.keys(lista_batch).length === 0) {
                 html += '<tr class="odd"><td valign="middle" align="center" colspan="10" class="dataTables_empty">No batches were found for the style.</td></tr>';
-
             }
             html += '</tbody> </table>';
                 $('#listaTallaBatch').html(html);
@@ -723,13 +853,10 @@ function obtener_bacth_estilo(IdEstilo) {
             $("#div_titulo").css("visibility", "visible");
             // $("#loading").css('display', 'none');
                 $(window).scrollTop(tempScrollTop);
-            }
-               
-
+            }            
         },
         error: function (errormessage) { alert(errormessage.responseText); }
     });
-    //calcular_Restantes();
 }
 
 function obtenerImagenPNL(nombreEstilo) {
@@ -750,12 +877,46 @@ function ConfirmRev(a) {
 
 //Registrar tallas
 
-$(document).ready(function () {
-    $('#nuevaTalla').on('click', function () {
-        var r = 0; var c = 0; var i = 0; var cadena = new Array(2);
+
+    $(document).on("click", "#nuevaTalla", function () {
+        var error = 0;
+        var r = 0; var c = 0; var i = 0; var x = 1; var cadena = new Array(2);
         cadena[0] = ''; cadena[1] = '';
         var nFilas = $("#tablaTallas tbody>tr").length;
         var nColumnas = $("#tablaTallas tr:last td").length;
+        var total = 0;      
+        var cadena_cantidades = "";
+        var cantidades_array = "";
+        $('#tablaTallas tbody>tr').each(function () {           
+            $(this).find(".qualityT").each(function () {
+                $(this).closest('td').find(".qualityT").each(function () {
+                    cadena_cantidades += this.value + "*";
+                    cantidades_array = cadena_cantidades.split('*');               
+                });      
+            });
+        });
+        var cadena_cantidades_Talla = "";
+        var cantidades_array_Talla = "";
+        $.each(listCantTalla, function (key, item) {
+            //total = item.TotalPieces + parseInt(this.value);
+            cadena_cantidades_Talla += item.Cantidad + "*";
+            cantidades_array_Talla = cadena_cantidades_Talla.split('*');  
+        });
+        var errorT = 0;
+        $.each(listaPsc, function (key, item) {
+            //total = item.TotalPieces + parseInt(this.value);
+            var sum = parseInt(cantidades_array[i]) + parseInt(item.TotalPieces);
+            var result = parseInt(cantidades_array_Talla[i]);
+            var nombre = "#l-cantidad" + i;
+            if (parseInt(sum) >= parseInt(result)) {
+                errorT++;
+                $(nombre).css('border', '2px solid #e03f3f');                
+            } else {
+                $(nombre).css('border', '1px solid #cccccc');
+            }
+            i++;
+        });
+       
         $('#tablaTallas tbody>tr').each(function () {
             r = 0;
             c = 0;
@@ -764,11 +925,10 @@ $(document).ready(function () {
                     cadena[c] += this.value + "*";
                     c++;
                 });
-
                 r++;
             });
         });
-        var error = 0;
+        
         $('#tablaTallas').find('td').each(function (i, el) {
 
             var valor = $(el).children().val();
@@ -777,20 +937,25 @@ $(document).ready(function () {
                 error++;
                 $(el).children().css('border', '2px solid #e03f3f');
 
-            } else {
+            }/* else {
                 $(el).children().css('border', '1px solid #cccccc');
 
-            }
+            }*/
         });
-        enviarListaTalla(cadena, error);
+            enviarListaTalla(cadena, error, errorT);
+        
     });
-});
 
-function enviarListaTalla(cadena, error) {
+
+function enviarListaTalla(cadena, error, errorT) {
     if (error !== 0) {
         var alert = alertify.alert("Message", 'All fields are required.').set('label', 'Aceptar');
         alert.set({ transition: 'zoom' });
         alert.set('modal', false);
+    } else if (errorT !== 0) {
+        var alertE = alertify.alert("Message", 'Review the quantities of the packaging exceed the order.').set('label', 'Aceptar');
+        alertE.set({ transition: 'zoom' });
+        alertE.set('modal', false);
     } else {
         $.ajax({
             url: "/Packing/Obtener_Lista_Tallas_Packing",
@@ -909,12 +1074,10 @@ function enviarListaTallaBulk(cadena, error) {
             if ($(el).children().val() === '' || $(el).children().val() === '0') {
                 error++;
                 $(el).children().css('border', '2px solid #e03f3f');
-
             } else {
                 $(el).children().css('border', '1px solid #cccccc');
             }
         });
-
         var tipoEmpaque = $("#Packing_PackingTypeSize_TipoEmpaque option:selected").val();
         if (tipoEmpaque === "0") {
             error++;
@@ -923,10 +1086,8 @@ function enviarListaTallaBulk(cadena, error) {
         else {
             $('#Packing_PackingTypeSize_TipoEmpaque').css('border', '');
         }
-
         enviarListaTallaPPK(cadena, error);
     });
-
 
 function enviarListaTallaPPK(cadena, error) {
     var idTipoP = $("#Packing_PackingTypeSize_TipoEmpaque option:selected").val();
@@ -1093,13 +1254,15 @@ function actualizarEmpaqueBulk(idBatch) {
             $('label[for="Packing_CantBox"]').hide();
             $("#Packing_CantBox").hide();
             html += '<table class="table" id="tablaTallasPallet"><thead>';
-            html += '<tr><th style="visibility:hidden;"> </th>' +
-                '<th>Size</th>' +
-                ' <th>Box#</th>' +
-                ' <th>CantxBox#</th>' +
-                ' <th>TotalPieces#</th>' +
+            html += '<tr><th style="visibility:hidden;"> </th> ' +
+                '<th> Size</th> ' +
+                '<th>Box#</th>' +
+                '<th>CantxBox#</th>' +
+                '<th>TotalPieces#</th>' +
+                '<th>TotalBox</th>' +
+                ' <th>TotalFaltante#</th>' +
                 '</tr>' +
-                '</thead><tbody>';
+                '</thead><tbody>';     
 
             var cantidadesEmp = 0;
             var cantidadesT = 0;
@@ -1111,12 +1274,25 @@ function actualizarEmpaqueBulk(idBatch) {
 
                 var x = item.PackingM;
                 cont = cont + 1;
-                html += '<tr id="pallet' + (cont) + '" class="pallet">';
+                html += '<tr id="pallet' + cont + '" class="pallet">';
                 html += '<td width="1" style="visibility:hidden;"><input type="text" id="f-id" class="form-control " value="' + x.IdPacking + '"/></td>';
                 html += '<td width="250"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '" readonly/></td>';
-                html += '<td width="250" class="cBox"><input type="text" name="l-cantidadBox" id="l-cantidadBox" class="form-control numeric cantCajas" onkeyup="obtTotalMat(' + (cont) + ')" value="' + x.CantBox + '"></td>';
+                html += '<td width="250" class="cBox"><input type="text" name="l-cantidadBox" id="l-cantidadBox" class="form-control numeric cantCajas" onkeyup="obtTotalMat(' + cont + ')" value="' + x.CantBox + '"></td>';
                 html += '<td width="250"><input type="text" name="l-piezas" id="l-piezas" class="form-control numeric cant"  value="' + item.Pieces + '"  readonly/></td>';
+                var valorCalidad = $(".calidad").parent("tr").find("td").eq(cont).text();
+                var pCalidad = parseInt(valorCalidad);
+                var numTotalBox = pCalidad / item.Pieces;
+                var totalBox = Math.floor(numTotalBox);
                 html += '<td width="250"><input type="text" name="l-totalPiezas" id="l-totalPiezas" class="form-control numeric totalPiezas" value="' + x.TotalPiezas + '" readonly/></td>';
+                html += '<td width="250"><input type="text" name="l-totBox" id="l-totBox" class="form-control numeric totBox" value="' + totalBox + '" readonly/></td>';
+                var valorCajas = $(".cajasQty").parent("tr").find("td").eq(cont).text();
+                var nCajas = parseInt(valorCajas);
+                var resta = parseInt(totalBox) - nCajas;
+                if (parseInt(valorCajas) === 0) {
+                    html += '<td width="250" class="tFalB"><input type="text" name="l-totFaltantes" id="l-totFaltantes" class="form-control numeric totFaltantes" value="' + totalBox + '" readonly/></td>';
+                } else {
+                    html += '<td width="250" class="tFalB"><input type="text" name="l-totFaltantes" id="l-totFaltantes" class="form-control numeric totFaltantes" value="' + resta + '" readonly/></td>';
+                }
                 html += '</tr>';
             });
 
@@ -1180,10 +1356,10 @@ function actualizarEmpaquePPK(idBatch) {
                 cont = cont + 1;
                 var x = item.PackingM;
                 $("#Packing_CantBox").val(x.CantBox);
-                html += '<tr id="pallet' + (cont) + '" class="pallet">';
+                html += '<tr id="pallet' + cont + '" class="pallet">';
                 html += '<td width="1" style="visibility:hidden;"><input type="text" id="f-id" class="form-control" value="' + x.IdPacking+ '" /></td>';
                 html += '<td width="250"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '" readonly/></td>'; //onChange="calcular_TotalPiezas()"
-                html += '<td width="250"><input type="text" name="l-ratio" id="l-ratio" class="form-control numeric cant" onkeyup="obtTotalMat(' + (cont) + ')" value="' + item.Ratio + '"  readonly/></td>';
+                html += '<td width="250"><input type="text" name="l-ratio" id="l-ratio" class="form-control numeric cant" onkeyup="obtTotalMat(' + cont + ')" value="' + item.Ratio + '"  readonly/></td>';
                 cantidadesEmp += item.Ratio;
                 html += '<td width="250"><input type="text" name="l-totalPiezas" id="l-totalPiezas" class="form-control numeric totalPiezas" value="' + x.TotalPiezas + '" readonly/></td>';
                 html += '</tr>';
@@ -1198,7 +1374,7 @@ function actualizarEmpaquePPK(idBatch) {
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
-        },
+        }
     }).done(function (data) {
 
     });

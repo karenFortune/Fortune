@@ -90,6 +90,9 @@
             } else {
                 $("#nuevoItem").prop("disabled", true);
                 $("#crearTallas").show();
+                $('#l-cantidad').val('');
+                $('#e-extras').val(0);
+                $('#s-ejemplo').val(0);
                 var EstiloItem = $("#ItemDescripcion_ItemEstilo").val();
                 var IdColor = $("#CatColores_CodigoColor").val();
                 var Cantidad = $("#Cantidad").val();
@@ -125,9 +128,7 @@
                     for (var i = 0; i < data.length; i++) {
                         var html = "";
                         list_datalist.push(data[i].Talla);
-
                     }
-
                 }
             })
             var availableTags = list_datalist;
@@ -138,18 +139,13 @@
                     select: function (event, ui) {
                         event.preventDefault();
                         this.value = ui.item.label;
-
                     },
                     focus: function (event, ui) {
                         event.preventDefault();
                         this.value = ui.item.label;
-
                     }
                 });
-
             });
-
-
         });
 
         $(function () {
@@ -161,12 +157,11 @@
                     success: function (result) {
                         var html = '';
                         html +='<table class="table" id="tablaTallas"><thead>' +
-                            '  <tr>' +
-
+                            '<tr>' +
                             '<th>Size</th>' +
-                            ' <th>Quantity</th>' +
-                            ' <th>Extra</th>' +
-                            ' <th>Examples</th>' +
+                            '<th>Quantity</th>' +
+                            '<th>Extra</th>' +
+                            '<th>Examples</th>' +
                             '</tr>'+
                             '</thead><tbody>';
                         $.each(result, function (key, item) {
@@ -279,10 +274,7 @@
                     } else {
                         $(el).children().css('border', '1px solid #cccccc');
 
-                    }
-             
-                    
-               
+                    }                                 
             });       
     
             enviarListaTalla(cadena, error);
@@ -351,9 +343,6 @@
 </script>
 
 <style>
-
- 
- 
 
 </style>
 
@@ -473,15 +462,15 @@
     
     <div class="panel panel-primary" id="crearTallas">
         <div class="panel-heading">
-            <h4>Recepci&oacute;n de Tallas</h4>
+            <h4>Reception of sizes</h4>
         </div>
 
         <div class="container-fluid">
             <br />
 
-            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">+ Otra Talla</button>
+            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">+ New Size</button>
             <div id="listaTalla"></div>
-            <button type="button" id="nuevaTalla" class="btn btn-success btn-md pull-right btn-sm">Guardar Tallas</button>
+            <button type="button" id="nuevaTalla" class="btn btn-success btn-md pull-right btn-sm">Save sizes</button>
             <br />
             <br />
         </div>

@@ -1,13 +1,13 @@
 ﻿@model FortuneSystem.Models.Catalogos.CatTipoCamiseta
 
 @{
-    ViewBag.Title = "Eliminar Tipo Camiseta";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Delete T-Shirt Type";
+
 }
 
-<h3>¿Est&aacute; seguro de eliminar el tipo de camiseta?</h3>
+
 <div>
-    <hr />
+
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.TipoProducto)
@@ -40,8 +40,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Eliminar" class="btn btn-danger" /> |
-            @Html.ActionLink("Regresar", "Index")
+            <input type="submit" value="Delete" class="btn btn-danger" /> 
         </div>
     }
 </div>

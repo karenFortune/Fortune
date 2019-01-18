@@ -32,12 +32,12 @@ namespace FortuneSystem.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 objTalla.AgregarTallas(tallas);
-                TempData["tallaOK"] = "Se registro correctamente la talla.";
-                return RedirectToAction("CatTallas");
+                TempData["tallaOK"] = "The size was registered correctly.";
+                return RedirectToAction("Index");
             }
             else
             {
-                TempData["tallaError"] = "No se pudo registrar la talla, intentelo más tarde.";
+                TempData["tallaError"] = "The size can not be registered, try it later.";
             }
             return View(tallas);
         }
@@ -87,12 +87,12 @@ namespace FortuneSystem.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 objTalla.ActualizarTallas(tallas);
-                TempData["tallaEditar"] = "Se modifico correctamente la talla.";
+                TempData["tallaEditar"] = "The size was modified correctly.";
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["tallaEditarError"] = "No se pudo modificar la talla, intentelo más tarde.";
+                TempData["tallaEditarError"] = "The size could not be modified, try it later.";
             }
             return View(tallas);
         }
@@ -121,7 +121,7 @@ namespace FortuneSystem.Controllers.Catalogos
         public ActionResult ConfimacionEliminar(int? id)
         {
             objTalla.EliminarTallas(id);
-            TempData["tallaEliminar"] = "Se elimino correctamente la talla.";
+            TempData["tallaEliminar"] = "The size was removed correctly.";
             return RedirectToAction("Index");
         }
 

@@ -1,4 +1,5 @@
 ﻿using FortuneSystem.Models.Catalogos;
+using FortuneSystem.Models.Items;
 using FortuneSystem.Models.Revisiones;
 using System;
 using System.Collections.Generic;
@@ -76,6 +77,101 @@ namespace FortuneSystem.Models.Pedidos
            
 
             return listPedidos;
+        }
+
+        //Muestra la lista de estilos por IdPedido
+        public IEnumerable<ItemDescripcion> ListaEstilosPorIdPedido(int? id)
+        {
+            int pedido = Convert.ToInt32(id);
+            Conexion conn = new Conexion();
+            List<ItemDescripcion> listEstilos = new List<ItemDescripcion>();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;
+                comando.Connection = conn.AbrirConexion();
+                // comando.CommandText = "Listar_Pedidos";
+                comando.CommandText = "select  ITD.ITEM_ID, ITD.ITEM_STYLE, PS.ID_PO_SUMMARY from po_summary PS " +
+                    "INNER JOIN item_description ITD ON PS.ITEM_ID = ITD.ITEM_ID " +
+                    "where  PS.id_pedidos= '" + pedido + "'"; 
+                comando.CommandType = CommandType.Text;
+                leer = comando.ExecuteReader();
+
+                while (leer.Read())
+                {
+
+                    ItemDescripcion estilos = new ItemDescripcion() {
+
+                      ItemEstilo = leer["ITEM_STYLE"].ToString(),
+                      ItemId = Convert.ToInt32(leer["ITEM_ID"]),
+                      IdSummary=Convert.ToInt32(leer["ID_PO_SUMMARY"])
+                };
+
+
+
+                    listEstilos.Add(estilos);
+                }
+                leer.Close();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
+            return listEstilos;
+        }
+
+        //Muestra la lista de estilos por IdPedido
+        public IEnumerable<ItemDescripcion> ListaItemEstilosPorIdPedido(int? id)
+        {
+            int pedido = Convert.ToInt32(id);
+            Conexion conn = new Conexion();
+            List<ItemDescripcion> listEstilos = new List<ItemDescripcion>();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "select PS.ID_PO_SUMMARY, PS.ITEM_ID, RTRIM(ITD.ITEM_STYLE) as ITEM_STYLE, RTRIM(ITD.DESCRIPTION) as DESCRIPTION, PS.ID_COLOR, CONCAT(RTRIM(C.CODIGO_COLOR),'  ',C.DESCRIPCION ) AS DESCRIPCION, RTRIM(C.CODIGO_COLOR) AS CODIGO from po_summary PS " +
+                    "INNER JOIN item_description ITD ON PS.ITEM_ID = ITD.ITEM_ID "+
+                    "INNER JOIN cat_colores C ON PS.ID_COLOR = C.ID_COLOR "+
+                    "where PS.id_pedidos= '" + pedido + "'";
+                comando.CommandType = CommandType.Text;
+                leer = comando.ExecuteReader();
+
+                while (leer.Read())
+                {
+
+                    ItemDescripcion estilos = new ItemDescripcion()
+                    {
+
+                        ItemId = Convert.ToInt32(leer["ITEM_ID"]),
+                        ItemEstilo = leer["ITEM_STYLE"].ToString(),
+                        Descripcion = leer["DESCRIPTION"].ToString(),
+                        IdSummary = Convert.ToInt32(leer["ID_PO_SUMMARY"])
+                    };
+
+                    CatColores CatColores = new CatColores() {
+                        DescripcionColor = leer["DESCRIPCION"].ToString(),
+                        IdColor = Convert.ToInt32(leer["ID_COLOR"]),
+                        CodigoColor = leer["CODIGO"].ToString()
+                    };
+
+
+                    estilos.CatColores = CatColores;
+
+
+
+                    listEstilos.Add(estilos);
+                }
+                leer.Close();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
+            return listEstilos;
         }
 
         //Muestra la lista de PO
@@ -230,9 +326,9 @@ namespace FortuneSystem.Models.Pedidos
                 while (leerF.Read())
                 {
 
+                    pedidos.IdPedido = Convert.ToInt32(leerF["ID_PEDIDO"]);
                     pedidos.PO = leerF["PO"].ToString();
                     pedidos.VPO = Convert.ToInt32(leerF["VPO"]);
-
                     pedidos.Cliente = Convert.ToInt32(leerF["CUSTOMER"]);
                     pedidos.ClienteFinal = Convert.ToInt32(leerF["CUSTOMER_FINAL"]);
                     pedidos.FechaCancel = Convert.ToDateTime(leerF["DATE_CANCEL"]);
@@ -336,6 +432,8 @@ namespace FortuneSystem.Models.Pedidos
             }
             return 0;
         }
+
+
 
         public void ActualizarEstadoPO(int id)
         {

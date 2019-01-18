@@ -30,13 +30,14 @@
     }
     */
     #guardarBatch {
-        margin-left: 750px;
+        margin-left: 600px;
         margin-top: 1px;
         width: 100px;
         height: 40px;
         border: none;
         font-size: 20px;
         font-weight: 600;
+        display: inline-block;
     }
 
     #registrarNuevo {
@@ -50,7 +51,7 @@
     }
 
     #modificarBatch {
-        margin-left: 750px;
+        margin-left: 600px;
         margin-top: 1px;
         width: 120px;
         height: 40px;
@@ -88,18 +89,24 @@
     img {
         cursor: zoom-in;
     }
+
+    #flecha {
+        cursor: auto;
+    }
 </style>
 <script>
     $(function () {
-        $('img').on('click', function () {
+        $('#imagenArte').on('click', function () {
+            $('.enlargeImageModalSource').attr('src', $(this).attr('src'));
+            $('#enlargeImageModal').modal('show');
+        });
+        $('#imagenPNL').on('click', function () {
             $('.enlargeImageModalSource').attr('src', $(this).attr('src'));
             $('#enlargeImageModal').modal('show');
         });
     });
 </script>
-<div>
-
-    <hr />
+</div>
     <div class="modal fade" id="enlargeImageModal" tabindex="-1" role="dialog" aria-labelledby="enlargeImageModal" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -116,7 +123,7 @@
             </div>
         </div>
     </div>
-
+    <div class="container-fluid" style="padding-left:20em; padding-right:10em;">
         <div class="panel panel-primary" id="consultaPO">
             <div class="panel-heading">
                 <h2>Reference Order: @Html.DisplayFor(model => model.PO, new { @class = "control-label col-md-6" })  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      Purchase Order: @Html.DisplayFor(model => model.VPO, new { @class = "control-label col-md-6" })</h2>
@@ -157,21 +164,18 @@
                             <th>QTY</th>
                             <th>PRICE</th>
                             <th>TOTAL</th>
-                            <th>ACTIONS</th>
+                            @* <th>ACTIONS</th>*@
                         </tr>
                     </thead>
                     <tbody class="tbody"></tbody>
                 </table>
             </div>
-
         </div>
-
         <br />
         <br />
-        <div class="row">
+        <div class="row" style="display:none;" id="panelPrintShop">
             <div class="col-sm-10">
-                <div class="panel panel-primary" id="consultaTalla" style="visibility:hidden; width: 976px; height: 1450px;">
-
+                <div class="panel panel-primary" id="consultaTalla" style="visibility:hidden; height: 1350px;">
                     <div class="panel-heading">
                         <h4>PRINTSHOP</h4>
                     </div>
@@ -185,7 +189,7 @@
                     </div>
 
                     <br />
-                    <div id="div_tabla_talla" style="width: 100%; height:350px; overflow:auto;  ">
+                    <div id="div_tabla_talla" style="width: 100%; height:250px; overflow:auto;  ">
                         <div id="div_estilo_batch" style=" overflow:auto; visibility:visible; ">
                         </div>
                         <table id="tableBatch" class="table table-sm table-striped table-hover ">
@@ -194,54 +198,55 @@
                         </table>
                     </div>
                     <br />
-                    <div id="div_tabla_print" style="width: 100%; height:600px; overflow:auto;  ">
-                        <div id="div_estilo_print" style=" overflow:auto; visibility:hidden; ">
-                        </div>
-                       
+                    @if ((int)Session["idCargo"] == 5 || (int)Session["idCargo"] == 1)
+                    {
+                        <div id="div_tabla_print" style="width: 100%; height:600px; ">
+                            <div id="div_estilo_print" style="visibility:hidden; ">
+                            </div>
+
                             <button type="button" class="btn btn-primary" id="registrarNuevo" data-toggle="modal">
                                 <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> ADD NEW BATCH
                             </button>
-                      
-                        <div class="container-fluid">
-                            <div class="form-row">
-                                <div class="form-group col-sm-4 ">
-                                    @Html.LabelFor(model => model.PrintShopC.Turnos, htmlAttributes: new { @class = "control-label " })
-                                    @Html.EnumDropDownListFor(model => model.PrintShopC.Turnos, "Select Turn", new { @class = "form-control" })
-                                    @Html.ValidationMessageFor(model => model.PrintShopC.Turnos, "", new { @class = "text-danger" })
+
+                            <div class="container-fluid">
+                                <div class="form-row">
+                                    <div class="form-group col-sm-4 ">
+                                        @Html.LabelFor(model => model.PrintShopC.Turnos, htmlAttributes: new { @class = "control-label " })
+                                        @Html.EnumDropDownListFor(model => model.PrintShopC.Turnos, "Select Turn", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.PrintShopC.Turnos, "", new { @class = "text-danger" })
+
+                                    </div>
+                                    <div class="form-group col-sm-4 ">
+                                        @Html.LabelFor(model => model.PrintShopC.Maquina, htmlAttributes: new { @class = "control-label " })
+                                        @Html.EnumDropDownListFor(model => model.PrintShopC.Maquinas, "Select Machine", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.PrintShopC.Maquinas, "", new { @class = "text-danger" })
+
+                                    </div>
+                                    <div class="form-group col-sm-4 ">
+                                        @Html.LabelFor(model => model.PrintShopC.EstadoPallet, htmlAttributes: new { @class = "control-label " })
+                                        <br />
+                                        @Html.RadioButtonFor(model => model.PrintShopC.EstadoPallet, "true", new { @class = "form-radio" }) @Html.Label("Complete")
+                                        @Html.RadioButtonFor(model => model.PrintShopC.EstadoPallet, "false", new { @class = "form-radio", Checked = "checked" }) @Html.Label("Incomplete")
+                                        @Html.ValidationMessageFor(model => model.PrintShopC.EstadoPallet, "", new { @class = "text-danger" })
+
+                                    </div>
 
                                 </div>
-                                <div class="form-group col-sm-4 ">
-                                    @Html.LabelFor(model => model.PrintShopC.Maquina, htmlAttributes: new { @class = "control-label " })
-                                    @Html.EnumDropDownListFor(model => model.PrintShopC.Maquinas, "Select Machine", new { @class = "form-control" })
-                                    @Html.ValidationMessageFor(model => model.PrintShopC.Maquinas, "", new { @class = "text-danger" })
-
-                                </div>
-                                <div class="form-group col-sm-4 ">
-                                    @Html.LabelFor(model => model.PrintShopC.EstadoPallet, htmlAttributes: new { @class = "control-label " })
-                                    <br />
-                                    @Html.RadioButtonFor(model => model.PrintShopC.EstadoPallet, "true", new { @class = "form-radio" }) @Html.Label("Complete")
-                                    @Html.RadioButtonFor(model => model.PrintShopC.EstadoPallet, "false", new { @class = "form-radio", Checked = "checked" }) @Html.Label("Incomplete")
-                                    @Html.ValidationMessageFor(model => model.PrintShopC.EstadoPallet, "", new { @class = "text-danger" })
-
-                                </div>
-
                             </div>
+
+                            <br />
+                            <table id="tablePrint" class="table table-sm table-striped table-hover ">
+                                <thead class="encabezado"></thead>
+                                <tbody class="tbodyprint"></tbody>
+                            </table>
+
+                            <button type="button" id="guardarBatch" class="btn btn-success btn-md pull-right btn-sm" onclick="registrarBatch();"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save</button>
+                            <button type="button" class="btn btn-success btn-md pull-right btn-sm" id="modificarBatch" onclick="event.preventDefault(); ConfirmRev(this);">
+                                <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Modify
+                            </button>
+
                         </div>
-
-                        <br />
-                        <table id="tablePrint" class="table table-sm table-striped table-hover ">
-                            <thead class="encabezado"></thead>
-                            <tbody class="tbodyprint"></tbody>
-                        </table>
-
-                        <button type="button" class="btn btn-success" id="guardarBatch" onclick="registrarBatch();">
-                            <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save
-                        </button>
-                        <button type="button" class="btn btn-success" id="modificarBatch" onclick="event.preventDefault(); ConfirmRev(this);">
-                            <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Modify
-                        </button>
-
-                    </div>
+                    }
                 </div>
             </div>
             <div class="col-sm-2">
@@ -269,8 +274,11 @@
         <br />
 
         <p>
-            @Html.ActionLink("Back to List", "Index")
+            <a href='@Url.Action("Index", "PrintShop")'>
+                <img src='@Url.Content("~/Content/img/backToPage.png")' id="flecha" title="Go Back" />
+            </a>
         </p>
+    </div>
         <script>
             $('#tabless tr').click(function (e) {
                 $('#tabless tr').removeClass('highlighted');

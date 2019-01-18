@@ -1,14 +1,12 @@
 ﻿@model FortuneSystem.Models.Catalogos.CatTallaItem
 
 @{
-    ViewBag.Title = "Detalles Talla";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Details Size";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Detalles</h2>
 
 <div>
-    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Talla)
@@ -18,9 +16,16 @@
             @Html.DisplayFor(model => model.Talla)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.Orden)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Orden)
+        </dd>
+
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Editar", "Editar", new { id = Model.Id }) |
-    @Html.ActionLink("Regresar", "Index")
+
 </p>

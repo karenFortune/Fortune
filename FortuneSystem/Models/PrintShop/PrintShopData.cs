@@ -146,7 +146,7 @@ namespace FortuneSystem.Models.PrintShop
                 comando.Connection = conn.AbrirConexion();
                 comando.CommandText = "select S.TALLA from ITEM_SIZE I " +
                     "INNER JOIN CAT_ITEM_SIZE S ON S.ID=I.TALLA_ITEM " +
-                    "WHERE I.ID_SUMMARY= '" + id + "' ORDER BY S.TALLA ASC";
+                    "WHERE I.ID_SUMMARY= '" + id + "' ORDER by cast(S.ORDEN AS int) ASC";
                 leer = comando.ExecuteReader();
                 while (leer.Read())
                 {
@@ -534,8 +534,9 @@ namespace FortuneSystem.Models.PrintShop
                         ObtenerNombreMaquina(tallas);
                         tallas.NombreUsrModif = item.NombreUsrModif;
                         tallas.Status = item.Status;
-
+                        tallas.Cargo = item.Cargo;
                     }
+                  
 
 
 
@@ -609,7 +610,7 @@ namespace FortuneSystem.Models.PrintShop
                 comando.Connection = conn.AbrirConexion();
                 comando.CommandText = "SELECT ID_PRINTSHOP, ID_TALLA, S.TALLA, PRINTED, MISPRINT, DEFECT, REPAIR FROM PRINTSHOP " +
                     "INNER JOIN CAT_ITEM_SIZE S ON S.ID=PRINTSHOP.ID_TALLA " +
-                    "WHERE ID_SUMMARY='" + idEstilo + "' AND ID_BATCH='" + idBatch + " 'ORDER BY ID_TALLA asc ";
+                    "WHERE ID_SUMMARY='" + idEstilo + "' AND ID_BATCH='" + idBatch + " 'ORDER by cast(S.ORDEN AS int) ASC ";
                 leer = comando.ExecuteReader();
 
                 while (leer.Read())
@@ -650,12 +651,12 @@ namespace FortuneSystem.Models.PrintShop
                 SqlCommand c = new SqlCommand();
                 SqlDataReader leerF = null;               
                 c.Connection = conex.AbrirConexion();
-                c.CommandText = "SELECT P.ID_PRINTSHOP, P.ID_SUMMARY, P.ID_BATCH, CONCAT(U.Nombres,' ',U.Apellidos)AS NOMBRE, P.TURNO, P.MAQUINA, P.ID_USUARIO_MODIF, P.STATUS_PALLET, " +
+                c.CommandText = "SELECT P.ID_PRINTSHOP, P.ID_SUMMARY, P.ID_BATCH, CONCAT(U.Nombres,' ',U.Apellidos)AS NOMBRE,P.TURNO, P.MAQUINA, P.ID_USUARIO_MODIF, P.STATUS_PALLET, " +
                     " P.ID_TALLA, S.TALLA, P.PRINTED, P.MISPRINT, P.DEFECT, P.REPAIR, sum(PRINTED+MISPRINT+DEFECT+REPAIR)AS TOTAL FROM PRINTSHOP P " +
                     "INNER JOIN CAT_ITEM_SIZE S ON S.ID=P.ID_TALLA " +
                     "INNER JOIN USUARIOS U ON U.Id=P.ID_USUARIO " +
                     "WHERE P.ID_BATCH='" + batch + "' AND P.ID_SUMMARY='" + id + "'  GROUP BY P.ID_PRINTSHOP,P.ID_SUMMARY, P.ID_BATCH, P.ID_TALLA, S.TALLA, " +
-                    "P.PRINTED, P.MISPRINT, P.DEFECT, P.REPAIR, U.Nombres, U.Apellidos, P.TURNO, P.MAQUINA, P.ID_USUARIO_MODIF,P.STATUS_PALLET ORDER BY S.TALLA";
+                    "P.PRINTED, P.MISPRINT, P.DEFECT, P.REPAIR, U.Nombres, U.Apellidos, P.TURNO, P.MAQUINA, P.ID_USUARIO_MODIF,P.STATUS_PALLET,S.ORDEN ORDER by cast(S.ORDEN AS int) ASC ";
                 leerF = c.ExecuteReader();
 
                 while (leerF.Read())
@@ -672,6 +673,8 @@ namespace FortuneSystem.Models.PrintShop
                         MisPrint = Convert.ToInt32(leerF["MISPRINT"]),
                         Defect = Convert.ToInt32(leerF["DEFECT"]),
                         Total = Convert.ToInt32(leerF["TOTAL"])
+
+                        
 
                     };
                     if (!Convert.IsDBNull(leerF["REPAIR"]))

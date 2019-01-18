@@ -118,7 +118,7 @@
     });
     
     function obtenerListaTallas() { 
-        $("#loading").css('display', 'inline');
+                $("#loading").css('display', 'inline');
                 $.ajax('@Url.Action("Lista_Tallas_Estilo", "Arte")', {              
                     method: 'GET',
                     dataType: "json",
@@ -169,7 +169,7 @@
         }
 
     function obtenerDetalleListaTallas() {  
-        $("#loading").css('display', 'inline');
+                $("#loading").css('display', 'inline');
                 $.ajax('@Url.Action("Lista_Tallas_Estilo", "Arte")', {              
                     method: 'GET',
                     dataType: "json",

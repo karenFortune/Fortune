@@ -31,12 +31,12 @@ namespace FortuneSystem.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 objCamiseta.AgregarCamiseta(camisetas);
-                TempData["camisetaOK"] = "Se registro correctamente el tipo de camiseta.";
+                TempData["camisetaOK"] = "The shirt type was registered correctly.";
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["camisetaError"] = "No se pudo registrar el tipo de camiseta, intentelo más tarde.";
+                TempData["camisetaError"] = "The shirt type can not be registered, try it later.";
             }
             return View(camisetas);
         }
@@ -86,12 +86,12 @@ namespace FortuneSystem.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 objCamiseta.ActualizarCamisetas(camisetas);
-                TempData["camisetaEditar"] = "Se modifico correctamente el tipo de camiseta.";
+                TempData["camisetaEditar"] = "The shirt type was modified correctly.";
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["camisetaEditarError"] = "No se pudo modificar el tipo de camiseta, intentelo más tarde.";
+                TempData["camisetaEditarError"] = "The shirt type could not be modified, try it later.";
             }
             return View(camisetas);
         }
@@ -120,7 +120,7 @@ namespace FortuneSystem.Controllers.Catalogos
         public ActionResult ConfimacionEliminar(int? id)
         {
             objCamiseta.EliminarCamisetas(id);
-            TempData["camisetaEliminar"] = "Se elimino correctamente el tipo de camiseta.";
+            TempData["camisetaEliminar"] = "The shirt type was removed correctly.";
             return RedirectToAction("Index");
         }
     }

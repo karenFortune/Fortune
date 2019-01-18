@@ -6,102 +6,127 @@ using System.Web.Mvc;
 using Rotativa;
 using System.Globalization;
 using FortuneSystem.Models.Pedidos;
+using FortuneSystem.Models.Almacen;
+using FortuneSystem.Models.Staging;
+using FortuneSystem.Models.Shipping;
 
 namespace FortuneSystem.Controllers
 {
     public class PDFController : Controller
     {
 
-       /* DatosRecibos recibo = new DatosRecibos();
-        DatosEstilos estilos = new DatosEstilos();
-        DatosStaging stag = new DatosStaging();
-        DatosTallasEstilos tye = new DatosTallasEstilos();
 
+        DatosInventario di = new DatosInventario();
+        DatosTransferencias dt = new DatosTransferencias();
+        DatosStaging ds = new DatosStaging();
+        DatosShipping dsh = new DatosShipping();
+        StagingGeneral sg = new StagingGeneral();
         string filename, footer_alineacion, footer_size,vista;
                 
         public ActionResult Index(){            
             return View();
-        }
+        }            
 
-        [ChildActionOnly]
-        public ActionResult ListaEstilos(){
-            
-            estilos.id_pedido = Convert.ToInt32(Session["id_pedido"]);
-            List<Estilo> lista = estilos.ListaEstilos();            
-            return PartialView(lista);
-        }
-
-        public ActionResult imprimir_staging()
+        public ActionResult imprimir_etiquetas_recibos()
         {
-            ViewBag.cantidad = Convert.ToInt32(Session["cantidad"]);
-            List<Staging> lista = stag.Lista_stag_imprimir(Convert.ToInt32(Session["id_recibo_imprimir"])).ToList();
-            filename = Convert.ToString(Session["nombre_pdf"]) + ".pdf";
-            vista = Convert.ToString(Session["vista"]);
-            stag.buscar_po_estilo_recibo(Convert.ToInt32(Session["id_recibo_imprimir"]));
-            ViewBag.po = stag.po;
-            ViewBag.estilo = stag.estilo;
-            //return View(lista);
-            return new ViewAsPdf(vista,lista)
+            int recibo = Convert.ToInt32(Session["id_recibo_nuevo"]);
+            //return View("etiquetas_cajas_recibo", di.lista_recibo_etiqueta(recibo.ToString()));            
+            return new ViewAsPdf("etiquetas_cajas_recibo", di.lista_recibo_etiqueta(recibo.ToString()))
+            {
+                FileName = filename,
+                PageOrientation = Rotativa.Options.Orientation.Portrait,
+                PageSize = Rotativa.Options.Size.Letter,               
+                PageMargins = new Rotativa.Options.Margins(5, 5, 5, 5),
+                CustomSwitches = "--page-offset 0 ",
+                PageHeight=40,
+                PageWidth=120,
+            };
+        }
+        [AllowAnonymous]
+        public ActionResult transfer_ticket()
+        {
+            int salida = Convert.ToInt32(Session["id_transfer_ticket"]);
+            //return View("transfer_ticket", dt.lista_transfer_ticket(salida));              
+            int tipo = dt.buscar_tipo_salida(salida);
+            if (tipo == 0){
+                return new ViewAsPdf("transfer_ticket", dt.lista_transfer_ticket(salida)){
+                    FileName = filename,
+                    PageOrientation = Rotativa.Options.Orientation.Landscape,
+                    PageSize = Rotativa.Options.Size.Letter,
+                    PageMargins = new Rotativa.Options.Margins(15, 10, 15, 10),
+                    CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
+                };
+            }else {
+                //return View("transfer_ticket_contratista", dt.lista_transfer_ticket(salida));
+                return new ViewAsPdf("transfer_ticket_contratista", dt.lista_transfer_ticket(salida)){
+                    FileName = filename,
+                    PageOrientation = Rotativa.Options.Orientation.Landscape,
+                    PageSize = Rotativa.Options.Size.Letter,
+                    PageMargins = new Rotativa.Options.Margins(15, 10, 15, 10),
+                    CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
+                };
+            }
+
+        }
+
+
+
+
+
+       
+        [AllowAnonymous]
+        public ActionResult papeleta_staging_vacias()
+        {
+            int salida = Convert.ToInt32(Session["id_transfer_ticket"]);            
+            ViewBag.color = sg.obtener_color_item(Convert.ToInt32(Session["id_inventario"]));
+            ViewBag.pais = sg.obtener_pais_item(Convert.ToInt32(Session["id_inventario"]));
+            return new ViewAsPdf("papeleta_staging_vacias", ds.lista_papeleta(Convert.ToInt32(Session["id_inventario"]), Convert.ToInt32(Session["turno"])))
             {
                 FileName = filename,
                 PageOrientation = Rotativa.Options.Orientation.Portrait,
                 PageSize = Rotativa.Options.Size.Letter,
                 PageMargins = new Rotativa.Options.Margins(15, 10, 15, 10),
-                CustomSwitches = "--page-offset 0 --footer-center [page]/[page] --footer-font-size 8 ",
+                CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
             };
         }
-
-        public ActionResult Print()//EJEMPLO
-        {
-            filename = Convert.ToString(Session["nombre_pdf"])+".pdf";
-            vista = Convert.ToString(Session["vista"]);
-            return new ViewAsPdf(vista){
+        //papeleta_staging
+        [AllowAnonymous]
+        public ActionResult papeleta_staging(){
+            return new ViewAsPdf("papeleta_staging", ds.lista_papeleta_staging(Convert.ToInt32(Session["id_staging"]), Convert.ToInt32(Session["turno"])))
+            {
                 FileName = filename,
                 PageOrientation = Rotativa.Options.Orientation.Portrait,
                 PageSize = Rotativa.Options.Size.Letter,
                 PageMargins = new Rotativa.Options.Margins(15, 10, 15, 10),
-                CustomSwitches = "--page-offset 0 --footer-center [page]/[page] --footer-font-size 8 ",                
+                CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
             };
         }
-
-        public ActionResult imprimir_reporte_recibos(){
-            estilos.tipo_reporte = Convert.ToString(Session["tipo_reporte"]);
-            ViewBag.encabezado = "REPORTE DE RECIBOS ";
-            if (estilos.tipo_reporte == "Por fechas"){
-                ViewBag.tipo_reporte = 1;
-                estilos.fecha_inicio = Convert.ToString(Session["fecha_inicio"]);
-                estilos.fecha_final = Convert.ToString(Session["fecha_final"]);               
-                ViewBag.fechas= "De " + Convert.ToDateTime(tye.fecha_inicio).ToString("d MMMM yyyy", CultureInfo.CreateSpecificCulture("es-MX")) + "  a  " + Convert.ToDateTime(tye.fecha_final).ToString("d MMMM yyyy", CultureInfo.CreateSpecificCulture("es-MX")); 
-            }
-            if (estilos.tipo_reporte == "Por PO"){
-                estilos.po = Convert.ToString(Session["po"]);
-                
-                ViewBag.tipo_reporte =2;
-            }
-            if (estilos.tipo_reporte == "Recibidos hoy") {
-                ViewBag.tipo_reporte = 1;
-            }
-            ViewBag.fecha_consulta = DateTime.Now.ToString("d MMMM yyyy", CultureInfo.CreateSpecificCulture("es-MX"));
-           List<Estilo> lista = estilos.ListaEstilosReportes();
-            //return View(lista);            
-            return new ViewAsPdf("imprimir_reporte_recibos", lista){
+        //*************************
+        [AllowAnonymous]
+        public ActionResult imprimir_pk(){
+            //return View("packing_list", dsh.obtener_packing_list(Convert.ToInt32(Session["pk"])));
+            return new ViewAsPdf("packing_list", dsh.obtener_packing_list(Convert.ToInt32(Session["pk"]))){
                 FileName = filename,
                 PageOrientation = Rotativa.Options.Orientation.Landscape,
                 PageSize = Rotativa.Options.Size.Letter,
-                PageMargins = new Rotativa.Options.Margins(15, 10, 15, 10),
+                PageMargins = new Rotativa.Options.Margins(8, 10, 15, 10),
                 CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
             };
-        }*/
-
-       
-
-
-
-
-
-
-
-
+        }
+        //*************************
+        [AllowAnonymous]
+        public ActionResult imprimir_bol()
+        {
+            //return View("bol", dsh.obtener_packing_list(Convert.ToInt32(Session["pk"])));
+            return new ViewAsPdf("bol", dsh.obtener_packing_list(Convert.ToInt32(Session["pk"])))
+            {
+                FileName = filename,
+                PageOrientation = Rotativa.Options.Orientation.Portrait,
+                PageSize = Rotativa.Options.Size.Letter,
+                PageMargins = new Rotativa.Options.Margins(8, 10, 15, 10),
+                CustomSwitches = "--page-offset 0  ",
+            };
+        }
 
 
 

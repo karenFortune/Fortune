@@ -45,11 +45,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClosedXML, Version=0.94.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.94.2\lib\net46\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.0.3.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.0.3\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="FastMember, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.1.3.0\lib\net45\FastMember.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.EntityDataSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.EntityDataSource.6.0.0\lib\net40\Microsoft.AspNet.EntityDataSource.dll</HintPath>
@@ -241,11 +253,18 @@
     <Reference Include="Microsoft.Net.Http.Headers, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.Headers.2.0.1\lib\netstandard2.0\Microsoft.Net.Http.Headers.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.Win32.Registry, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Registry.4.4.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="OfficeOpenXml.Core.ExcelPackage, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OfficeOpenXml.Core.ExcelPackage.1.0.0\lib\net46\OfficeOpenXml.Core.ExcelPackage.dll</HintPath>
     </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
@@ -318,6 +337,9 @@
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.4.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Reflection.Metadata, Version=1.4.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -448,6 +470,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
     <Reference Include="zxing, Version=0.16.4.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
       <HintPath>..\packages\ZXing.Net.0.16.4\lib\net461\zxing.dll</HintPath>
     </Reference>
@@ -491,6 +514,7 @@
     <Compile Include="ARTE.cs">
       <DependentUpon>FortunespDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\AlmacenController.cs" />
     <Compile Include="Controllers\ArteController.cs" />
     <Compile Include="Controllers\CatalogosController.cs" />
     <Compile Include="Controllers\Catalogos\CatStatusController.cs" />
@@ -501,6 +525,7 @@
     <Compile Include="Controllers\Catalogos\TallasController.cs" />
     <Compile Include="Controllers\Catalogos\TelaController.cs" />
     <Compile Include="Controllers\Catalogos\TipoCamisetaController.cs" />
+    <Compile Include="Controllers\FantasyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -516,6 +541,8 @@
     <Compile Include="Controllers\QRCodeTagHelper.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SharedController.cs" />
+    <Compile Include="Controllers\ShippingController.cs" />
+    <Compile Include="Controllers\StagingController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="FortunespDB.Context.cs">
       <AutoGen>True</AutoGen>
@@ -553,9 +580,23 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>LoginModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Almacen\caja_inventario.cs" />
+    <Compile Include="Models\Almacen\DatosInventario.cs" />
+    <Compile Include="Models\Almacen\DatosReportes.cs" />
+    <Compile Include="Models\Almacen\DatosTransferencias.cs" />
+    <Compile Include="Models\Almacen\FuncionesInventarioGeneral.cs" />
+    <Compile Include="Models\Almacen\inventario.cs" />
+    <Compile Include="Models\Almacen\Item.cs" />
+    <Compile Include="Models\Almacen\recibos.cs" />
+    <Compile Include="Models\Almacen\recibos_cajas.cs" />
+    <Compile Include="Models\Almacen\recibos_item.cs" />
+    <Compile Include="Models\Almacen\salidas.cs" />
+    <Compile Include="Models\Almacen\salidas_cajas.cs" />
+    <Compile Include="Models\Almacen\salidas_item.cs" />
     <Compile Include="Models\AplicationDbContext.cs" />
     <Compile Include="Models\Arte\Arte.cs" />
     <Compile Include="Models\Arte\ArteData.cs" />
+    <Compile Include="Models\Catalogos\CatSucursal.cs" />
     <Compile Include="Models\Catalogos\CatCliente.cs" />
     <Compile Include="Models\Catalogos\CatClienteData.cs" />
     <Compile Include="Models\Catalogos\CatClienteFinales.cs" />
@@ -566,13 +607,22 @@
     <Compile Include="Models\Catalogos\CatGeneroData.cs" />
     <Compile Include="Models\Catalogos\CatStatus.cs" />
     <Compile Include="Models\Catalogos\CatStatusData.cs" />
+    <Compile Include="Models\Catalogos\CatSucursalData.cs" />
     <Compile Include="Models\Catalogos\CatTallaItem.cs" />
     <Compile Include="Models\Catalogos\CatTallaItemData.cs" />
     <Compile Include="Models\Catalogos\CatTela.cs" />
     <Compile Include="Models\Catalogos\CatTelaData.cs" />
     <Compile Include="Models\Catalogos\CatTipoCamiseta.cs" />
     <Compile Include="Models\Catalogos\CatTipoCamisetaData.cs" />
+    <Compile Include="Models\Catalogos\estilos.cs" />
+    <Compile Include="Models\Catalogos\family_trims.cs" />
+    <Compile Include="Models\Catalogos\hilos.cs" />
+    <Compile Include="Models\Catalogos\lugares.cs" />
+    <Compile Include="Models\Catalogos\paises.cs" />
+    <Compile Include="Models\Catalogos\units.cs" />
     <Compile Include="Models\Conexion.cs" />
+    <Compile Include="Models\Fantasy\DatosFantasy.cs" />
+    <Compile Include="Models\Fantasy\Fantasy.cs" />
     <Compile Include="Models\MyDbContext.cs" />
     <Compile Include="Models\Estilos\Estilo.cs" />
     <Compile Include="Models\Items\ItemDescripcion.cs" />
@@ -585,6 +635,7 @@
     <Compile Include="Models\Login\LoginData.cs" />
     <Compile Include="Models\OrderModel\OrderModel.cs" />
     <Compile Include="Models\Packing\Packing.cs" />
+    <Compile Include="Models\Packing\PackingAssortment.cs" />
     <Compile Include="Models\Packing\PackingData.cs" />
     <Compile Include="Models\Packing\PackingSize.cs" />
     <Compile Include="Models\Packing\PackingTypeSize.cs" />
@@ -601,6 +652,11 @@
     <Compile Include="Models\Revisiones\RevisionesData.cs" />
     <Compile Include="Models\Roles\CatRoles.cs" />
     <Compile Include="Models\Roles\CatRolesData.cs" />
+    <Compile Include="Models\Shipping\DatosShipping.cs" />
+    <Compile Include="Models\Shipping\Shipping.cs" />
+    <Compile Include="Models\Staging\DatosStaging.cs" />
+    <Compile Include="Models\Staging\Staging.cs" />
+    <Compile Include="Models\Staging\StagingGeneral.cs" />
     <Compile Include="Models\Usuarios\CatUsuario.cs" />
     <Compile Include="Models\Usuarios\CatUsuarioData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -633,6 +689,381 @@
     <Content Include="Content\alert\lib\alertify.js" />
     <Content Include="Content\alert\themes\alertify.core.css" />
     <Content Include="Content\alert\themes\alertify.default.css" />
+    <Content Include="Content\Chart.js-master\.gitignore" />
+    <Content Include="Content\Chart.js-master\Chart.bundle.js" />
+    <Content Include="Content\Chart.js-master\Chart.bundle.min.js" />
+    <Content Include="Content\Chart.js-master\Chart.min.js" />
+    <Content Include="Content\Chart.js-master\docs\style.css" />
+    <Content Include="Content\Chart.js-master\gulpfile.js" />
+    <Content Include="Content\Chart.js-master\karma.conf.js" />
+    <Content Include="Content\Chart.js-master\moment.js" />
+    <Content Include="Content\Chart.js-master\samples\advanced\data-labelling.html" />
+    <Content Include="Content\Chart.js-master\samples\advanced\progress-bar.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\area\analyser.js" />
+    <Content Include="Content\Chart.js-master\samples\charts\area\line-boundaries.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\area\line-datasets.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\area\line-stacked.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\area\radar.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\bar\horizontal.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\bar\multi-axis.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\bar\stacked-group.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\bar\stacked.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\bar\vertical.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\bubble.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\combo-bar-line.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\doughnut.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\line\basic.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\line\interpolation-modes.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\line\line-styles.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\line\multi-axis.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\line\point-sizes.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\line\point-styles.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\line\skip-points.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\line\stepped.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\pie.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\polar-area.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\radar-skip-points.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\radar.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\scatter\basic.html" />
+    <Content Include="Content\Chart.js-master\samples\charts\scatter\multi-axis.html" />
+    <Content Include="Content\Chart.js-master\samples\favicon.ico" />
+    <Content Include="Content\Chart.js-master\samples\index.html" />
+    <Content Include="Content\Chart.js-master\samples\legend\point-style.html" />
+    <Content Include="Content\Chart.js-master\samples\legend\positioning.html" />
+    <Content Include="Content\Chart.js-master\samples\logo.svg" />
+    <Content Include="Content\Chart.js-master\samples\samples.js" />
+    <Content Include="Content\Chart.js-master\samples\scales\filtering-labels.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\gridlines-display.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\gridlines-style.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\linear\min-max-suggested.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\linear\min-max.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\linear\step-size.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\logarithmic\line.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\logarithmic\scatter.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\multiline-labels.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\non-numeric-y.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\time\combo.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\time\financial.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\time\line-point-data.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\time\line.html" />
+    <Content Include="Content\Chart.js-master\samples\scales\toggle-scale-type.html" />
+    <Content Include="Content\Chart.js-master\samples\scriptable\bar.html" />
+    <Content Include="Content\Chart.js-master\samples\scriptable\bubble.html" />
+    <Content Include="Content\Chart.js-master\samples\style.css" />
+    <Content Include="Content\Chart.js-master\samples\tooltips\border.html" />
+    <Content Include="Content\Chart.js-master\samples\tooltips\callbacks.html" />
+    <Content Include="Content\Chart.js-master\samples\tooltips\custom-line.html" />
+    <Content Include="Content\Chart.js-master\samples\tooltips\custom-pie.html" />
+    <Content Include="Content\Chart.js-master\samples\tooltips\custom-points.html" />
+    <Content Include="Content\Chart.js-master\samples\tooltips\interactions.html" />
+    <Content Include="Content\Chart.js-master\samples\tooltips\positioning.html" />
+    <Content Include="Content\Chart.js-master\samples\utils.js" />
+    <Content Include="Content\Chart.js-master\src\chart.js" />
+    <Content Include="Content\Chart.js-master\src\charts\Chart.Bar.js" />
+    <Content Include="Content\Chart.js-master\src\charts\Chart.Bubble.js" />
+    <Content Include="Content\Chart.js-master\src\charts\Chart.Doughnut.js" />
+    <Content Include="Content\Chart.js-master\src\charts\Chart.Line.js" />
+    <Content Include="Content\Chart.js-master\src\charts\Chart.PolarArea.js" />
+    <Content Include="Content\Chart.js-master\src\charts\Chart.Radar.js" />
+    <Content Include="Content\Chart.js-master\src\charts\Chart.Scatter.js" />
+    <Content Include="Content\Chart.js-master\src\controllers\controller.bar.js" />
+    <Content Include="Content\Chart.js-master\src\controllers\controller.bubble.js" />
+    <Content Include="Content\Chart.js-master\src\controllers\controller.doughnut.js" />
+    <Content Include="Content\Chart.js-master\src\controllers\controller.line.js" />
+    <Content Include="Content\Chart.js-master\src\controllers\controller.polarArea.js" />
+    <Content Include="Content\Chart.js-master\src\controllers\controller.radar.js" />
+    <Content Include="Content\Chart.js-master\src\controllers\controller.scatter.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.animation.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.animations.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.controller.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.datasetController.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.defaults.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.element.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.helpers.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.interaction.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.layouts.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.plugins.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.scale.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.scaleService.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.ticks.js" />
+    <Content Include="Content\Chart.js-master\src\core\core.tooltip.js" />
+    <Content Include="Content\Chart.js-master\src\elements\element.arc.js" />
+    <Content Include="Content\Chart.js-master\src\elements\element.line.js" />
+    <Content Include="Content\Chart.js-master\src\elements\element.point.js" />
+    <Content Include="Content\Chart.js-master\src\elements\element.rectangle.js" />
+    <Content Include="Content\Chart.js-master\src\elements\index.js" />
+    <Content Include="Content\Chart.js-master\src\helpers\helpers.canvas.js" />
+    <Content Include="Content\Chart.js-master\src\helpers\helpers.core.js" />
+    <Content Include="Content\Chart.js-master\src\helpers\helpers.easing.js" />
+    <Content Include="Content\Chart.js-master\src\helpers\helpers.options.js" />
+    <Content Include="Content\Chart.js-master\src\helpers\index.js" />
+    <Content Include="Content\Chart.js-master\src\platforms\platform.basic.js" />
+    <Content Include="Content\Chart.js-master\src\platforms\platform.dom.js" />
+    <Content Include="Content\Chart.js-master\src\platforms\platform.js" />
+    <Content Include="Content\Chart.js-master\src\plugins\index.js" />
+    <Content Include="Content\Chart.js-master\src\plugins\plugin.filler.js" />
+    <Content Include="Content\Chart.js-master\src\plugins\plugin.legend.js" />
+    <Content Include="Content\Chart.js-master\src\plugins\plugin.title.js" />
+    <Content Include="Content\Chart.js-master\src\scales\scale.category.js" />
+    <Content Include="Content\Chart.js-master\src\scales\scale.linear.js" />
+    <Content Include="Content\Chart.js-master\src\scales\scale.linearbase.js" />
+    <Content Include="Content\Chart.js-master\src\scales\scale.logarithmic.js" />
+    <Content Include="Content\Chart.js-master\src\scales\scale.radialLinear.js" />
+    <Content Include="Content\Chart.js-master\src\scales\scale.time.js" />
+    <Content Include="Content\Chart.js-master\test\context.js" />
+    <Content Include="Content\Chart.js-master\test\fixture.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\backgroundColor\indexable.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\backgroundColor\indexable.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\backgroundColor\scriptable.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\backgroundColor\scriptable.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\backgroundColor\value.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\backgroundColor\value.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-absolute.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-flex-offset.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-flex.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-max.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-min-interval.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-multiple.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-no-overlap.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-offset.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-single-xy.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-single.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-stacked.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderColor\indexable.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderColor\indexable.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderColor\scriptable.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderColor\scriptable.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderColor\value.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderColor\value.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderSkipped\indexable.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderSkipped\indexable.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderSkipped\scriptable.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderSkipped\scriptable.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderSkipped\value.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderSkipped\value.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderWidth\indexable.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderWidth\indexable.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderWidth\scriptable.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderWidth\scriptable.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderWidth\value.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\borderWidth\value.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bubble\point-style.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bubble\radius-scriptable.js" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bubble\radius-scriptable.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.line\point-style.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.polarArea\angle-array.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.polarArea\angle-undefined.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.radar\point-style.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\core.scale\label-offset-vertical-axes.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\core.scale\tick-drawing.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-circle.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-cross-rot.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-cross.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-dash.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-line.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-rect-rot.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-rect-rounded.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-rect.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-star.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-triangle.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-end-span.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-end.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-origin-span.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-origin-spline-span.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-origin-spline.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-origin-stepped-span.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-origin-stepped.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-origin.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-start-span.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-start.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-dataset-span.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-dataset-spline-span.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-dataset-spline.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-dataset.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-radar-boundary-origin-spline.png" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-radar-boundary-origin.png" />
+    <Content Include="Content\Chart.js-master\test\index.js" />
+    <Content Include="Content\Chart.js-master\test\matchers.js" />
+    <Content Include="Content\Chart.js-master\test\specs\controller.bar.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\controller.bubble.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\controller.doughnut.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\controller.line.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\controller.polarArea.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\controller.radar.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\controller.scatter.test.js" />
+    <Content Include="Content\Chart.js-master\test\specs\core.controller.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\core.datasetController.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\core.element.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\core.helpers.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\core.interaction.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\core.layouts.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\core.plugin.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\core.scale.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\core.scaleService.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\core.ticks.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\core.tooltip.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\element.arc.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\element.line.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\element.point.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\element.rectangle.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\global.defaults.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\global.deprecations.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\global.namespace.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\helpers.canvas.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\helpers.core.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\helpers.easing.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\helpers.options.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\platform.dom.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\plugin.filler.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\plugin.legend.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\plugin.title.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\scale.category.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\scale.linear.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\scale.logarithmic.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\scale.radialLinear.tests.js" />
+    <Content Include="Content\Chart.js-master\test\specs\scale.time.tests.js" />
+    <Content Include="Content\Chart.js-master\test\utils.js" />
+    <Content Include="Content\img\backFlecha.png" />
+    <Content Include="Content\img\backToPage.png" />
+    <Content Include="Content\img\Edit.png" />
+    <Content Include="Content\img\fortune_nombre_contratistas.jpg" />
+    <Content Include="Content\img\gif\blue-dot.gif" />
+    <Content Include="Content\img\gif\blue-dots.gif" />
+    <Content Include="Content\img\gif\loading-dots.gif" />
+    <Content Include="Content\img\gif\preloader.gif" />
+    <Content Include="Content\img\iconoEmpaque.png" />
+    <Content Include="Content\img\load.gif" />
+    <Content Include="Content\img\LOGO FORTUNE.png" />
+    <Content Include="Content\img\logoFortune.jpg" />
+    <Content Include="Content\img\LogoFortune.png" />
+    <Content Include="Content\img\logo_fortune_contratistas.jpg" />
+    <Content Include="Content\img\logo_small.png" />
+    <Content Include="Content\img\QrCode.jpg" />
+    <Content Include="Content\img\QR\caja_104.jpg" />
+    <Content Include="Content\img\QR\caja_193.jpg" />
+    <Content Include="Content\img\QR\caja_194.jpg" />
+    <Content Include="Content\img\QR\caja_195.jpg" />
+    <Content Include="Content\img\QR\caja_196.jpg" />
+    <Content Include="Content\img\QR\caja_197.jpg" />
+    <Content Include="Content\img\QR\caja_198.jpg" />
+    <Content Include="Content\img\QR\caja_199.jpg" />
+    <Content Include="Content\img\QR\caja_200.jpg" />
+    <Content Include="Content\img\QR\caja_201.jpg" />
+    <Content Include="Content\img\QR\caja_202.jpg" />
+    <Content Include="Content\img\QR\caja_203.jpg" />
+    <Content Include="Content\img\QR\caja_204.jpg" />
+    <Content Include="Content\img\QR\caja_205.jpg" />
+    <Content Include="Content\img\QR\caja_206.jpg" />
+    <Content Include="Content\img\QR\caja_207.jpg" />
+    <Content Include="Content\img\QR\caja_208.jpg" />
+    <Content Include="Content\img\QR\caja_209.jpg" />
+    <Content Include="Content\img\QR\caja_210.jpg" />
+    <Content Include="Content\img\QR\caja_211.jpg" />
+    <Content Include="Content\img\QR\caja_212.jpg" />
+    <Content Include="Content\img\QR\caja_213.jpg" />
+    <Content Include="Content\img\QR\caja_214.jpg" />
+    <Content Include="Content\img\QR\caja_215.jpg" />
+    <Content Include="Content\img\QR\caja_216.jpg" />
+    <Content Include="Content\img\QR\caja_217.jpg" />
+    <Content Include="Content\img\QR\caja_218.jpg" />
+    <Content Include="Content\img\QR\caja_219.jpg" />
+    <Content Include="Content\img\QR\caja_220.jpg" />
+    <Content Include="Content\img\QR\caja_221.jpg" />
+    <Content Include="Content\img\QR\caja_222.jpg" />
+    <Content Include="Content\img\QR\caja_223.jpg" />
+    <Content Include="Content\img\QR\caja_224.jpg" />
+    <Content Include="Content\img\QR\caja_225.jpg" />
+    <Content Include="Content\img\QR\caja_226.jpg" />
+    <Content Include="Content\img\QR\caja_227.jpg" />
+    <Content Include="Content\img\QR\caja_228.jpg" />
+    <Content Include="Content\img\QR\caja_229.jpg" />
+    <Content Include="Content\img\QR\caja_230.jpg" />
+    <Content Include="Content\img\QR\caja_231.jpg" />
+    <Content Include="Content\img\QR\caja_232.jpg" />
+    <Content Include="Content\img\QR\caja_233.jpg" />
+    <Content Include="Content\img\QR\caja_234.jpg" />
+    <Content Include="Content\img\QR\caja_235.jpg" />
+    <Content Include="Content\img\QR\caja_236.jpg" />
+    <Content Include="Content\img\QR\caja_237.jpg" />
+    <Content Include="Content\img\QR\caja_238.jpg" />
+    <Content Include="Content\img\QR\caja_239.jpg" />
+    <Content Include="Content\img\QR\caja_240.jpg" />
+    <Content Include="Content\img\QR\caja_241.jpg" />
+    <Content Include="Content\img\QR\caja_242.jpg" />
+    <Content Include="Content\img\QR\caja_243.jpg" />
+    <Content Include="Content\img\QR\caja_244.jpg" />
+    <Content Include="Content\img\QR\caja_245.jpg" />
+    <Content Include="Content\img\QR\caja_246.jpg" />
+    <Content Include="Content\img\QR\caja_247.jpg" />
+    <Content Include="Content\img\QR\caja_248.jpg" />
+    <Content Include="Content\img\QR\caja_249.jpg" />
+    <Content Include="Content\img\QR\caja_250.jpg" />
+    <Content Include="Content\img\QR\caja_251.jpg" />
+    <Content Include="Content\img\QR\caja_252.jpg" />
+    <Content Include="Content\img\QR\caja_253.jpg" />
+    <Content Include="Content\img\QR\caja_254.jpg" />
+    <Content Include="Content\img\QR\caja_255.jpg" />
+    <Content Include="Content\img\QR\caja_256.jpg" />
+    <Content Include="Content\img\QR\caja_257.jpg" />
+    <Content Include="Content\img\QR\caja_258.jpg" />
+    <Content Include="Content\img\QR\caja_259.jpg" />
+    <Content Include="Content\img\QR\caja_260.jpg" />
+    <Content Include="Content\img\QR\caja_261.jpg" />
+    <Content Include="Content\img\QR\caja_262.jpg" />
+    <Content Include="Content\img\QR\caja_263.jpg" />
+    <Content Include="Content\img\QR\caja_264.jpg" />
+    <Content Include="Content\img\QR\caja_265.jpg" />
+    <Content Include="Content\img\QR\caja_266.jpg" />
+    <Content Include="Content\img\QR\caja_267.jpg" />
+    <Content Include="Content\img\QR\caja_268.jpg" />
+    <Content Include="Content\img\QR\caja_269.jpg" />
+    <Content Include="Content\img\QR\caja_270.jpg" />
+    <Content Include="Content\img\QR\caja_271.jpg" />
+    <Content Include="Content\img\QR\caja_272.jpg" />
+    <Content Include="Content\img\QR\caja_273.jpg" />
+    <Content Include="Content\img\QR\caja_274.jpg" />
+    <Content Include="Content\img\QR\caja_275.jpg" />
+    <Content Include="Content\img\QR\caja_276.jpg" />
+    <Content Include="Content\img\QR\caja_277.jpg" />
+    <Content Include="Content\img\QR\caja_278.jpg" />
+    <Content Include="Content\img\QR\caja_279.jpg" />
+    <Content Include="Content\img\QR\caja_280.jpg" />
+    <Content Include="Content\img\QR\caja_281.jpg" />
+    <Content Include="Content\img\QR\caja_282.jpg" />
+    <Content Include="Content\img\QR\caja_283.jpg" />
+    <Content Include="Content\img\QR\caja_284.jpg" />
+    <Content Include="Content\img\QR\caja_285.jpg" />
+    <Content Include="Content\img\QR\caja_286.jpg" />
+    <Content Include="Content\img\QR\recibo_100.jpg" />
+    <Content Include="Content\img\QR\recibo_101.jpg" />
+    <Content Include="Content\img\QR\recibo_102.jpg" />
+    <Content Include="Content\img\QR\recibo_103.jpg" />
+    <Content Include="Content\img\QR\recibo_104.jpg" />
+    <Content Include="Content\img\QR\recibo_105.jpg" />
+    <Content Include="Content\img\QR\recibo_106.jpg" />
+    <Content Include="Content\img\QR\recibo_107.jpg" />
+    <Content Include="Content\img\QR\recibo_108.jpg" />
+    <Content Include="Content\img\QR\recibo_109.jpg" />
+    <Content Include="Content\img\QR\recibo_110.jpg" />
+    <Content Include="Content\img\QR\recibo_111.jpg" />
+    <Content Include="Content\img\QR\recibo_112.jpg" />
+    <Content Include="Content\img\QR\recibo_113.jpg" />
+    <Content Include="Content\img\QR\recibo_114.jpg" />
+    <Content Include="Content\img\QR\recibo_115.jpg" />
+    <Content Include="Content\img\QR\recibo_116.jpg" />
+    <Content Include="Content\img\QR\recibo_117.jpg" />
+    <Content Include="Content\img\QR\recibo_118.jpg" />
+    <Content Include="Content\img\QR\recibo_119.jpg" />
+    <Content Include="Content\img\QR\recibo_120.jpg" />
+    <Content Include="Content\img\QR\recibo_121.jpg" />
+    <Content Include="Content\img\QR\recibo_122.jpg" />
+    <Content Include="Content\img\QR\recibo_123.jpg" />
+    <Content Include="Content\img\QR\recibo_98.jpg" />
+    <Content Include="Content\img\QR\recibo_99.jpg" />
+    <Content Include="Content\img\QR\transferencia_13.jpg" />
+    <Content Include="Content\img\QR\transferencia_17.jpg" />
+    <Content Include="Content\load.css" />
     <Content Include="Content\base_m.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -1819,6 +2250,124 @@
       <DependentUpon>FortunespDB.edmx</DependentUpon>
     </Content>
     <Content Include="App_Browsers\qt.browser" />
+    <Content Include="Content\Chart.js-master\.codeclimate.yml" />
+    <Content Include="Content\Chart.js-master\.editorconfig" />
+    <Content Include="Content\Chart.js-master\.eslintignore" />
+    <Content Include="Content\Chart.js-master\.eslintrc.yml" />
+    <Content Include="Content\Chart.js-master\.github\ISSUE_TEMPLATE.md" />
+    <Content Include="Content\Chart.js-master\.github\PULL_REQUEST_TEMPLATE.md" />
+    <Content Include="Content\Chart.js-master\.htmllintrc" />
+    <Content Include="Content\Chart.js-master\.npmignore" />
+    <Content Include="Content\Chart.js-master\.travis.yml" />
+    <Content Include="Content\Chart.js-master\book.json" />
+    <Content Include="Content\Chart.js-master\composer.json" />
+    <Content Include="Content\Chart.js-master\docs\axes\cartesian\category.md" />
+    <Content Include="Content\Chart.js-master\docs\axes\cartesian\linear.md" />
+    <Content Include="Content\Chart.js-master\docs\axes\cartesian\logarithmic.md" />
+    <Content Include="Content\Chart.js-master\docs\axes\cartesian\README.md" />
+    <Content Include="Content\Chart.js-master\docs\axes\cartesian\time.md" />
+    <Content Include="Content\Chart.js-master\docs\axes\labelling.md" />
+    <Content Include="Content\Chart.js-master\docs\axes\radial\linear.md" />
+    <Content Include="Content\Chart.js-master\docs\axes\radial\README.md" />
+    <Content Include="Content\Chart.js-master\docs\axes\README.md" />
+    <Content Include="Content\Chart.js-master\docs\axes\styling.md" />
+    <Content Include="Content\Chart.js-master\docs\charts\area.md" />
+    <Content Include="Content\Chart.js-master\docs\charts\bar.md" />
+    <Content Include="Content\Chart.js-master\docs\charts\bubble.md" />
+    <Content Include="Content\Chart.js-master\docs\charts\doughnut.md" />
+    <Content Include="Content\Chart.js-master\docs\charts\line.md" />
+    <Content Include="Content\Chart.js-master\docs\charts\mixed.md" />
+    <Content Include="Content\Chart.js-master\docs\charts\polar.md" />
+    <Content Include="Content\Chart.js-master\docs\charts\radar.md" />
+    <Content Include="Content\Chart.js-master\docs\charts\README.md" />
+    <Content Include="Content\Chart.js-master\docs\charts\scatter.md" />
+    <Content Include="Content\Chart.js-master\docs\configuration\animations.md" />
+    <Content Include="Content\Chart.js-master\docs\configuration\elements.md" />
+    <Content Include="Content\Chart.js-master\docs\configuration\layout.md" />
+    <Content Include="Content\Chart.js-master\docs\configuration\legend.md" />
+    <Content Include="Content\Chart.js-master\docs\configuration\README.md" />
+    <Content Include="Content\Chart.js-master\docs\configuration\title.md" />
+    <Content Include="Content\Chart.js-master\docs\configuration\tooltip.md" />
+    <Content Include="Content\Chart.js-master\docs\developers\api.md" />
+    <Content Include="Content\Chart.js-master\docs\developers\axes.md" />
+    <Content Include="Content\Chart.js-master\docs\developers\charts.md" />
+    <Content Include="Content\Chart.js-master\docs\developers\contributing.md" />
+    <Content Include="Content\Chart.js-master\docs\developers\plugins.md" />
+    <Content Include="Content\Chart.js-master\docs\developers\README.md" />
+    <Content Include="Content\Chart.js-master\docs\developers\updates.md" />
+    <Content Include="Content\Chart.js-master\docs\general\accessibility.md" />
+    <Content Include="Content\Chart.js-master\docs\general\colors.md" />
+    <Content Include="Content\Chart.js-master\docs\general\device-pixel-ratio.md" />
+    <Content Include="Content\Chart.js-master\docs\general\fonts.md" />
+    <Content Include="Content\Chart.js-master\docs\general\interactions\events.md" />
+    <Content Include="Content\Chart.js-master\docs\general\interactions\modes.md" />
+    <Content Include="Content\Chart.js-master\docs\general\interactions\README.md" />
+    <Content Include="Content\Chart.js-master\docs\general\options.md" />
+    <Content Include="Content\Chart.js-master\docs\general\README.md" />
+    <Content Include="Content\Chart.js-master\docs\general\responsive.md" />
+    <Content Include="Content\Chart.js-master\docs\getting-started\installation.md" />
+    <Content Include="Content\Chart.js-master\docs\getting-started\integration.md" />
+    <Content Include="Content\Chart.js-master\docs\getting-started\README.md" />
+    <Content Include="Content\Chart.js-master\docs\getting-started\usage.md" />
+    <Content Include="Content\Chart.js-master\docs\notes\comparison.md" />
+    <Content Include="Content\Chart.js-master\docs\notes\extensions.md" />
+    <Content Include="Content\Chart.js-master\docs\notes\license.md" />
+    <Content Include="Content\Chart.js-master\docs\notes\README.md" />
+    <Content Include="Content\Chart.js-master\docs\README.md" />
+    <Content Include="Content\Chart.js-master\docs\SUMMARY.md" />
+    <Content Include="Content\Chart.js-master\LICENSE.md" />
+    <Content Include="Content\Chart.js-master\MAINTAINING.md" />
+    <Content Include="Content\Chart.js-master\package.json" />
+    <Content Include="Content\Chart.js-master\README.md" />
+    <Content Include="Content\Chart.js-master\samples\.eslintrc.yml" />
+    <Content Include="Content\Chart.js-master\scripts\deploy.sh" />
+    <Content Include="Content\Chart.js-master\scripts\release.sh" />
+    <Content Include="Content\Chart.js-master\test\.eslintrc.yml" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-absolute.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-flex-offset.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-flex.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-max.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-min-interval.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-multiple.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-no-overlap.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-offset.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-single-xy.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-single.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bar\bar-thickness-stacked.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.bubble\point-style.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.line\point-style.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.polarArea\angle-array.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.polarArea\angle-undefined.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\controller.radar\point-style.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\core.scale\label-offset-vertical-axes.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\core.scale\tick-drawing.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-circle.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-cross-rot.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-cross.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-dash.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-line.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-rect-rot.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-rect-rounded.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-rect.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-star.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\element.point\point-style-triangle.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-end-span.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-end.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-origin-span.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-origin-spline-span.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-origin-spline.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-origin-stepped-span.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-origin-stepped.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-origin.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-start-span.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-boundary-start.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-dataset-span.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-dataset-spline-span.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-dataset-spline.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-line-dataset.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-radar-boundary-origin-spline.json" />
+    <Content Include="Content\Chart.js-master\test\fixtures\plugin.filler\fill-radar-boundary-origin.json" />
+    <Content Include="Content\img\Thumbs.db" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FortuneSystem - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -1831,6 +2380,7 @@
     <Content Include="Scripts\general\autocomplete.js" />
     <Content Include="Scripts\general\calculosPrintShop.js" />
     <Content Include="Scripts\general\obtenerListadoPacking.js" />
+    <Content Include="Scripts\general\obtenerListadoPackingAssort.js" />
     <Content Include="Scripts\general\obtenerListadoPackingHT.js" />
     <Content Include="Scripts\general\obtenerListadoPnl.js" />
     <Content Include="Scripts\general\obtenerListado.js" />
@@ -1956,6 +2506,20 @@
     <Content Include="Views\Packing\Detalles.cshtml" />
     <Content Include="Views\Packing\Index.cshtml" />
     <Content Include="Views\Arte\FileUpload.cshtml" />
+    <Content Include="Views\Almacen\edicion_inventario.cshtml" />
+    <Content Include="Views\Almacen\formulario_nuevo_item.cshtml" />
+    <Content Include="Views\Almacen\imprimir_recibo.cshtml" />
+    <Content Include="Views\Almacen\Index.cshtml" />
+    <Content Include="Views\Almacen\lista_recepcion_transferencias.cshtml" />
+    <Content Include="Views\Almacen\lista_recibos.cshtml" />
+    <Content Include="Views\Almacen\lista_transferencias.cshtml" />
+    <Content Include="Views\Almacen\nueva_transferencia.cshtml" />
+    <Content Include="Views\Almacen\nueva_transferencia_qr.cshtml" />
+    <Content Include="Views\Almacen\recibo_items.cshtml" />
+    <Content Include="Views\Fantasy\Index.cshtml" />
+    <Content Include="Views\Shipping\Index.cshtml" />
+    <Content Include="Views\Shipping\new_pk.cshtml" />
+    <Content Include="Views\Staging\empleados.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

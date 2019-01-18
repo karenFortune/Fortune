@@ -2,13 +2,13 @@
 
 @{
     ViewBag.Title = "Details Gender";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
-<h2>Details</h2>
+
 
 <div>
-    <hr />
+
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.IdGender)
@@ -36,6 +36,5 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Editar", new { id = Model.IdGender }) |
-    @Html.ActionLink("Back to List", "Index")
+
 </p>

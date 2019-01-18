@@ -28,6 +28,16 @@ namespace FortuneSystem.Models.Packing
         public int IdPackingSize { get; set; }
         public int IdPackingTypeSize { get; set; }
         public int TipoEmpaque { get; set; }
+        public int NumberPO { get; set; }
+        public int CantidadP { get; set; }
+        [Display(Name = "PPKS#")]
+        public int CantidadPPKS { get; set; }
+
+        [Display(Name = "TOTAL CARTONS#")]
+        public int TotalCartonsPPK { get; set; }
+
+        [Display(Name = "MISSING CARTONS#")]
+        public int TotalCartonesFaltPPK { get; set; }
 
         public List<PackingM> Batch { get; set; }
 
@@ -38,6 +48,8 @@ namespace FortuneSystem.Models.Packing
         public virtual PackingSize PackingSize { get; set; }
 
         public virtual PackingTypeSize PackingTypeSize { get; set; }
+
+        public virtual PackingAssortment PackingAssort { get; set; }
     }
 
     public enum Turno

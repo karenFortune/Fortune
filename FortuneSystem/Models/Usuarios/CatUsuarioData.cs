@@ -88,6 +88,7 @@ namespace FortuneSystem.Models.Usuarios
                 usuarios.Cargo = Convert.ToInt32(leerFilas["Cargo"]);
                 usuarios.Email = leerFilas["Email"].ToString();
                 usuarios.Contrasena = leerFilas["Contrasena"].ToString();
+                usuarios.IdSucursal = Convert.ToInt32(leerFilas["id_sucursal"]);
 
             }
             return usuarios;
@@ -146,6 +147,28 @@ namespace FortuneSystem.Models.Usuarios
             }
             finally { conex.CerrarConexion(); }
             return 0;
+        }
+
+        // Obtener contraseña de un usuario 
+        public string Obtener_Contraseña_Usuario(string noEmpleado)
+        {
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
+            Conexion conex = new Conexion();
+            try
+            {
+                cmd.Connection = conex.AbrirConexion();
+                cmd.CommandText = "SELECT contrasena FROM Usuarios WHERE NoEmpleado='" + noEmpleado + "'";
+                cmd.CommandType = CommandType.Text;
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    return reader["contrasena"].ToString();
+                }
+                conex.CerrarConexion();
+            }
+            finally { conex.CerrarConexion(); }
+            return "";
         }
 
         // Obtenernombre de un usuario 

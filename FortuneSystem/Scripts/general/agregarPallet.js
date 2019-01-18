@@ -25,6 +25,30 @@
             $(el).children().css('border', '1px solid #cccccc');
         }
     });
+    
+    $('#tablaTallasPallet').find('td.tFalB').each(function (i, el) {
+        var valor = $(el).children().val();
+        var faltBox = parseInt(valor);
+        var c = i + 1;
+        var nombreC = "#pallet" + c + " .cantCajas";
+        if (faltBox < 0) {
+            error++;
+            $(el).children().css('border', '2px solid #e03f3f');
+            $(nombreC).css('border', '2px solid #e03f3f');
+     
+
+        } else {
+            if ($(nombreC).val() === '' || $(nombreC).val() === '0') {
+                error++;
+                $(nombreC).css('border', '2px solid #e03f3f');
+
+            } else {
+                $(el).children().css('border', '1px solid #cccccc');
+                $(nombreC).css('border', '1px solid #cccccc');
+            }
+           
+        }
+    });
 
     var tipoTurno = $("#Packing_Turnos option:selected").val();
     if (tipoTurno === "0") {

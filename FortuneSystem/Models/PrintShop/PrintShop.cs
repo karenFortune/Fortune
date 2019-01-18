@@ -33,6 +33,7 @@ namespace FortuneSystem.Models.PrintShop
         [Display(Name = "STATE PALLET")]
         public Boolean EstadoPallet { get; set; }
         public string Status { get; set; }
+        public int Cargo { get; set; }
 
         public List<PrintShopC> Batch { get; set; }
 

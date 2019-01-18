@@ -1,5 +1,6 @@
 ﻿using FortuneSystem.Models.Catalogos;
 using FortuneSystem.Models.Items;
+using FortuneSystem.Models.Packing;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,8 @@ using System.Web;
 namespace FortuneSystem.Models.POSummary
 {
     public class DescripcionItemData
-    {      
+    {
+        PackingData objPacking = new PackingData();
         //Muestra la lista de PO Summary Por PO
           public IEnumerable<POSummary> ListaItemsPorPO(int? id)
           {
@@ -197,6 +199,97 @@ namespace FortuneSystem.Models.POSummary
             return 0;
         }
 
+        //Permite obtener el total de piezas de los estilos por Id
+        public int ObtenerPiezasTotalesEstilos(int? id)
+        {
+            Conexion conex = new Conexion();
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
+            int suma = 0;
+            try
+            {
+                cmd.Connection = conex.AbrirConexion();
+                cmd.CommandText = "SELECT QTY FROM PO_SUMMARY WHERE ID_PEDIDOS='"+id+"' ";
+                cmd.CommandType = CommandType.Text;
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    suma += Convert.ToInt32(reader["QTY"]);
+                    
+                }                
+                conex.CerrarConexion();
+               
+            }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+            return suma;
+        }
+
+
+        //Permite obtener el total de piezas por tipo de empaque 
+        public int ObtenerPiezasTotalesPorPack(int? id)
+        {
+            Conexion conex = new Conexion();
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
+            int suma = 0;
+            int pedidoId = Convert.ToInt32(id);
+            string query = objPacking.ObtenerEstilosPorIdPedido(pedidoId);
+            try
+            {
+                cmd.Connection = conex.AbrirConexion();
+                cmd.CommandText = "SELECT DISTINCT P.ID_TALLA, P.ID_SUMMARY, P.CANT_BOX, P.TOTAL_PIECES, PT.TYPE_PACKING  FROM packing_type_size PT, PACKING P " +
+                                  "WHERE PT.ID_SUMMARY in(" + query + ") AND PT.TYPE_PACKING IN(1,2) AND P.ID_SUMMARY=PT.ID_SUMMARY";
+                cmd.CommandType = CommandType.Text;
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    suma += Convert.ToInt32(reader["TOTAL_PIECES"]);
+
+                }
+                conex.CerrarConexion();
+
+            }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+            return suma;
+        }
+
+        //Permite obtener el total de piezas por tipo de empaque para Assort
+        public int ObtenerPiezasTotalesPorPackAssort(int? id)
+        {
+            Conexion conex = new Conexion();
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
+            int suma = 0;
+            try
+            {
+                cmd.Connection = conex.AbrirConexion();
+                cmd.CommandText = "SELECT DISTINCT P.ID_TALLA, P.ID_SUMMARY, P.CANT_BOX, P.TOTAL_PIECES, PT.TYPE_PACKING  FROM packing_type_size PT, PACKING P " +
+                                  "WHERE PT.ID_SUMMARY='"+id+"' AND PT.TYPE_PACKING IN(3) AND P.ID_SUMMARY=PT.ID_SUMMARY";
+                cmd.CommandType = CommandType.Text;
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    suma += Convert.ToInt32(reader["TOTAL_PIECES"]);
+
+                }
+                conex.CerrarConexion();
+
+            }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+            return suma;
+        }
         //Permite actualiza la informacion de un estilo
         public void ActualizarEstilos(POSummary items)
         {
@@ -226,6 +319,46 @@ namespace FortuneSystem.Models.POSummary
                 conex.Dispose();
             }
                       
+        }
+
+        //Permite eliminar la informacion de un estilo 
+        public void EliminarEstilos(int? id)
+        {
+            Conexion conex = new Conexion();           
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                comando.Connection = conex.AbrirConexion();
+                comando.CommandText = "EliminarEstilo";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Id", id);
+                comando.ExecuteNonQuery();
+            }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+        }
+
+        //Permite eliminar la informacion de un estilo 
+        public void EliminarTallasEstilo(int? id)
+        {
+            Conexion conex = new Conexion();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                comando.Connection = conex.AbrirConexion();
+                comando.CommandText = "EliminarTallasEstilo";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Id", id);
+                comando.ExecuteNonQuery();
+            }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
         }
     }
 }

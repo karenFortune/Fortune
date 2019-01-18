@@ -8,17 +8,16 @@ using System.Web;
 namespace FortuneSystem.Models.Catalogos
 {
     public class CatTelaData
-    {
-        private Conexion conn = new Conexion();
-        private SqlCommand comando = new SqlCommand();
-        private SqlDataReader leer = null;
-
+    {     
 
         public IEnumerable<CatTela> ListaTela()
         {
             List<CatTela> listTela = new List<CatTela>();
+            Conexion conn = new Conexion();   
             try
             {
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;
                 comando.Connection = conn.AbrirConexion();
                 comando.CommandText = "Listar_Tela";
                 comando.CommandType = CommandType.StoredProcedure;
@@ -47,19 +46,21 @@ namespace FortuneSystem.Models.Catalogos
         //Permite crear una nueva tela
         public void AgregarTelas(CatTela telas)
         {
-            try
+            Conexion conne = new Conexion();
+            SqlCommand comandos = new SqlCommand();
+           try
             {
-                comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "AgregarTela";
-                comando.CommandType = CommandType.StoredProcedure;
-                comando.Parameters.AddWithValue("@Tela", telas.Tela);
-                comando.Parameters.AddWithValue("@Codigo", telas.CodigoTela);
-                comando.ExecuteNonQuery();
+                comandos.Connection = conne.AbrirConexion();
+                comandos.CommandText = "AgregarTela";
+                comandos.CommandType = CommandType.StoredProcedure;
+                comandos.Parameters.AddWithValue("@Tela", telas.Tela);
+                comandos.Parameters.AddWithValue("@Codigo", telas.CodigoTela);
+                comandos.ExecuteNonQuery();
             }
             finally
             {
-                conn.CerrarConexion();
-                conn.Dispose();
+                conne.CerrarConexion();
+                conne.Dispose();
             }
 
         }
@@ -68,20 +69,23 @@ namespace FortuneSystem.Models.Catalogos
         public CatTela ConsultarListaTelas(int? id)
         {
             CatTela telas = new CatTela();
+            Conexion conn = new Conexion();
             try
             {
-                comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "Listar_Tela_Por_Id";
-                comando.CommandType = CommandType.StoredProcedure;
-                comando.Parameters.AddWithValue("@Id", id);
-                leer = comando.ExecuteReader();
-                while (leer.Read())
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leerF = null;
+                com.Connection = conn.AbrirConexion();
+                com.CommandText = "Listar_Tela_Por_Id";
+                com.CommandType = CommandType.StoredProcedure;
+                com.Parameters.AddWithValue("@Id", id);
+                leerF = com.ExecuteReader();
+                while (leerF.Read())
                 {
-                    telas.Id_Tela = Convert.ToInt32(leer["ID"]);
-                    telas.Tela = leer["FABRIC"].ToString();
-                    telas.CodigoTela = leer["CODE"].ToString();
+                    telas.Id_Tela = Convert.ToInt32(leerF["ID"]);
+                    telas.Tela = leerF["FABRIC"].ToString();
+                    telas.CodigoTela = leerF["CODE"].ToString();
                 }
-                leer.Close();
+                leerF.Close();
             }
             finally
             {
@@ -95,8 +99,10 @@ namespace FortuneSystem.Models.Catalogos
         //Permite actualiza la informacion de una tela
         public void ActualizarTelas(CatTela telas)
         {
+            Conexion conn = new Conexion();            
             try
             {
+                SqlCommand comando = new SqlCommand();
                 comando.Connection = conn.AbrirConexion();
                 comando.CommandText = "Actualizar_Tela";
                 comando.CommandType = CommandType.StoredProcedure;
@@ -115,8 +121,10 @@ namespace FortuneSystem.Models.Catalogos
         //Permite eliminar la informacion de una tela
         public void EliminarTelas(int? id)
         {
+            Conexion conn = new Conexion();
             try
             {
+                SqlCommand comando = new SqlCommand();
                 comando.Connection = conn.AbrirConexion();
                 comando.CommandText = "EliminarTela";
                 comando.CommandType = CommandType.StoredProcedure;

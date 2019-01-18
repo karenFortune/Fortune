@@ -15,14 +15,12 @@
         color: #fff;
         background-color: #006bb3;
     }
-
- 
-  
 </style>
-<div class="container-fluid">
+</div>
+<div class="container-fluid" style="padding-left:20em; padding-right:10em;">
     <div class="panel panel-primary" id="listaPO">
         <div class="panel-heading">
-            <h2>List PO</h2>
+            <h2>PNL</h2>
         </div>
         <br />
         <br />
@@ -51,44 +49,44 @@
                         <th>
                             @Html.DisplayNameFor(model => model.TotalUnidades)
                         </th>
-                       
+
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
-                    <tr onclick="location.href = '@(Url.Action("Detalles", "Pnl", new { id = item.IdPedido }))'">
-                        <td>
-                            @Html.DisplayFor(modelItem => item.IdPedido)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PO)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.VPO)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CatClienteFinal.NombreCliente)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FechaCancel)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FechaOrden)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TotalUnidades)
-                        </td>
-                        @*  <td>
-                                @Html.ActionLink(" ", "Detalles", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details Style" })
-                            </td>*@
-                    </tr>
+                        <tr onclick="location.href = '@(Url.Action("Detalles", "Pnl", new { id = item.IdPedido }))'">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdPedido)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PO)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.VPO)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CatClienteFinal.NombreCliente)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FechaCancel)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FechaOrden)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalUnidades)
+                            </td>
+                            @*  <td>
+                                    @Html.ActionLink(" ", "Detalles", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details Style" })
+                                </td>*@
+                        </tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
-
+</div>
     <script>
         $('#tablaPOPnl tr').click(function (e) {
             $('#tablaPOPnl tr').removeClass('highlighted');

@@ -4,8 +4,6 @@
     ViewBag.Title = "PrintShop";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-
 <style>
     tr.highlighted td {
         background: #b3e0ff;
@@ -15,14 +13,14 @@
         color: #fff;
         background-color: #006bb3;
     }
-
- 
-  
 </style>
-<div class="container-fluid">
+
+
+</div>
+<div class="container-fluid" style="padding-left:20em; padding-right:10em;">
     <div class="panel panel-primary" id="listaPO">
         <div class="panel-heading">
-            <h2>List PO</h2>
+            <h2>PRINTSHOP</h2>
         </div>
         <br />
         <br />
@@ -45,7 +43,10 @@
                         <th>
                             @Html.DisplayNameFor(model => model.TotalUnidades)
                         </th>
-                        @* <th>ACTIONS</th>*@
+                        @*<th>
+                            @Html.DisplayNameFor(model => model.CatStatus.Estado)
+                          </th>
+                         <th>ACTIONS</th>*@
                     </tr>
                 </thead>
                 <tbody>
@@ -67,6 +68,10 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.TotalUnidades)
                         </td>
+                        @*
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CatStatus.Estado)
+                        </td>**@
                         @*<td>
         @Html.ActionLink(" ", "Detalles", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Details Style" })
 
@@ -78,13 +83,21 @@
             </table>
         </div>
     </div>
-
+</div>
     <script>
         $('#tablaPOPrint tr').click(function (e) {
             $('#tablaPOPrint tr').removeClass('highlighted');
             $(this).addClass('highlighted');
         })
+               
+        $(function () {
+            // $('#tablaPOPrint td:last-child:contains(REGISTERED)').closest('tr').css('background-color', '#ffb3b3');
+            //$('#tablaPOPrint td:last-child:contains(COMPLETED)').closest('tr').css('background-color', '#99ffbb');
+            //$('#tablaPOPrint td:last-child:contains(CANCELLED)').closest('tr').css('background-color', '#cceeff');
+           
+        });
+     
 
-        
+
 
     </script>

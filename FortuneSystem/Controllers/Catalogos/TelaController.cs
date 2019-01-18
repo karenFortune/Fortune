@@ -31,12 +31,12 @@ namespace FortuneSystem.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 objTela.AgregarTelas(telas);
-                TempData["telaOK"] = "Se registro correctamente la tela.";
+                TempData["telaOK"] = "The fabric was registered correctly.";
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["telaError"] = "No se pudo registrar la tela, intentelo más tarde.";
+                TempData["telaError"] = "The fabric can not be registered, try it later.";
             }
             return View(telas);
         }
@@ -86,12 +86,12 @@ namespace FortuneSystem.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 objTela.ActualizarTelas(telas);
-                TempData["telaEditar"] = "Se modifico correctamente la tela.";
+                TempData["telaEditar"] = "The fabric was modified correctly.";
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["telaEditarError"] = "No se pudo modificar la tela, intentelo más tarde.";
+                TempData["telaEditarError"] = "The fabric could not be modified, try it later.";
             }
             return View(telas);
         }
@@ -120,7 +120,7 @@ namespace FortuneSystem.Controllers.Catalogos
         public ActionResult ConfimacionEliminar(int? id)
         {
             objTela.EliminarTelas(id);
-            TempData["telaEliminar"] = "Se elimino correctamente la tela.";
+            TempData["telaEliminar"] = "The fabric was removed correctly.";
             return RedirectToAction("Index");
         }
     }

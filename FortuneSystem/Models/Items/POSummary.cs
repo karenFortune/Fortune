@@ -21,7 +21,7 @@ namespace FortuneSystem.Models.POSummary
         public int IdItems { get; set; }
 
         [Required(ErrorMessage = "Ingrese el estilo del Item.")]
-        [Display(Name = "Estilo")]
+        [Display(Name = "STYLE")]
         public string EstiloItem { get; set; }
         public int IdEstilo { get; set; }
         public virtual ItemDescripcion ItemDescripcion { get; set; }
@@ -84,6 +84,7 @@ namespace FortuneSystem.Models.POSummary
         public List<CatTallaItem> ListaTallas { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:#.####}")]
+        [Display(Name = "TOTAL")]
         public string Total { get; set; }
 
 
