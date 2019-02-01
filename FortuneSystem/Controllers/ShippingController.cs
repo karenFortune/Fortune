@@ -5,8 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using FortuneSystem.Models.Almacen;
 using FortuneSystem.Models.Shipping;
-using Excel = Microsoft.Office.Interop.Excel;
-using FortuneSystem.Models.Items;
 using System.Web.UI.WebControls;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -264,21 +262,16 @@ namespace FortuneSystem.Controllers
         {  //ESTE GUARDA LOS ESTILOS  s
             string[] Estilo = estilos.Split('*'), Cantidad = cantidades.Split('*'), Tienda = tiendas.Split('*'), Tipo = tipos.Split('*'), Talla = tallas.Split('*');
             int ultimo_shipping_id = 0;
-            for (int i = 1; i < Estilo.Length; i++)
-            {
+            for (int i = 1; i < Estilo.Length; i++){
                 int id_talla = consultas.buscar_talla(Talla[i]);
                 int summary = consultas.obtener_po_summary(Convert.ToInt32(Session["pedido"]), Convert.ToInt32(Estilo[i]));
                 ds.guardar_estilos_paking(Convert.ToInt32(Session["pk"]), number_po, Convert.ToString(Session["pedido"]), Estilo[i], Cantidad[i], Tienda[i], Tipo[i], id_talla.ToString(), summary);
                 ultimo_shipping_id = ds.obtener_ultimo_shipping_registrado();
-                if (tipo_packing == "1")
-                {
+                if (tipo_packing == "1"){
                     ds.agregar_cantidades_enviadas(summary, id_talla, Convert.ToInt32(Cantidad[i]), ultimo_shipping_id, Tipo[i], 0);
-                }
-                else
-                {//tipo packing 2
+                }else{//tipo packing 2
                     List<ratio_tallas> ratio = ds.obtener_lista_ratio(summary, Convert.ToInt32(Estilo[i]));
-                    foreach (ratio_tallas r in ratio)
-                    {
+                    foreach (ratio_tallas r in ratio){
                         ds.agregar_cantidades_enviadas(summary, r.id_talla, (Convert.ToInt32(Cantidad[i]) * r.ratio), ultimo_shipping_id, Tipo[i], 0);
                     }
                 }
@@ -292,17 +285,17 @@ namespace FortuneSystem.Controllers
         {
             int cerrar = 0;
             List<Cantidades_Estilos> cantidades_estilos = ds.obtener_cantidades_estilos(Convert.ToInt32(Session["pedido"]));
-            foreach (Cantidades_Estilos item in cantidades_estilos)
-            {
-                foreach (Talla i in item.lista_tallas)
-                {
-                    if (i.total > 0)
-                    { //SI QUEDAN RESTANTES
+            foreach (Cantidades_Estilos item in cantidades_estilos){
+                foreach (Talla i in item.lista_tallas){
+                    if (i.total > 0){ //SI QUEDAN RESTANTES
                         cerrar++;
                     }
                 }
             }
-            if (cerrar == 0) { ds.cerrar_pedido(Convert.ToInt32(Session["pedido"])); }
+            if (cerrar == 0) {
+                ds.cerrar_pedido(Convert.ToInt32(Session["pedido"]));
+                ds.eliminar_inventario_pedido(Convert.ToInt32(Session["pedido"]));
+            }
         }
         public JsonResult cerrar_po(string po) {
             ds.cerrar_pedido(consultas.buscar_pedido(po));
@@ -1390,7 +1383,7 @@ namespace FortuneSystem.Controllers
 
                     //IMAGEN AL CENTRO
                     ws.Range(1, 7, 1, 10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                    var imagePath = @"C:\Users\melissa\source\repos\FortuneSys----\FortuneSystem\Content\img\LOGO FORTUNE.png";
+                    var imagePath = @"C:\Users\melissa\source\repos\karen\FortuneSystem\Content\img\LOGO FORTUNE.png";
                     var image = ws.AddPicture(imagePath).MoveTo(ws.Cell("E1")).Scale(0.30);
                     //PK ABAJO DE LA IMAGEN
                     ws.Cell("D7").Value = "PK: ";

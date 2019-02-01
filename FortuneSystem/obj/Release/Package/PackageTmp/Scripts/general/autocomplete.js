@@ -31,14 +31,11 @@
             } else {
                 $('#nuevoEstilo').attr('disabled', false);
             }
-
-
         },
         minLength: 1
     });
 
     //Autocomplete codigo de color 
-    debugger
     $("#CatColores_CodigoColor").autocomplete({
         source: function (request, response) {
             $.ajax({
@@ -54,12 +51,11 @@
                             color: item.Color,
                             id: item.Id
                         };
-                    }))
+                    }));
                 },
                 error: function () {
-
                 }
-            })
+            });
         },
         select: function (event, ui) {
             var color = $("#CatColores_DescripcionColor").val(ui.item.color);
@@ -72,9 +68,7 @@
 
         },
         minLength: 1
-    });
-
-    //Autocomplete codigo de color 
+    });   
 
 
 });

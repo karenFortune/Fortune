@@ -5,10 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using Rotativa;
 using System.Globalization;
-using FortuneSystem.Models.Pedidos;
+
 using FortuneSystem.Models.Almacen;
 using FortuneSystem.Models.Staging;
 using FortuneSystem.Models.Shipping;
+using FortuneSystem.Models.POSummary;
 
 namespace FortuneSystem.Controllers
 {
@@ -21,6 +22,7 @@ namespace FortuneSystem.Controllers
         DatosStaging ds = new DatosStaging();
         DatosShipping dsh = new DatosShipping();
         StagingGeneral sg = new StagingGeneral();
+        DescripcionItemData de = new DescripcionItemData();
         string filename, footer_alineacion, footer_size,vista;
                 
         public ActionResult Index(){            
@@ -66,14 +68,7 @@ namespace FortuneSystem.Controllers
                     CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
                 };
             }
-
-        }
-
-
-
-
-
-       
+        }       
         [AllowAnonymous]
         public ActionResult papeleta_staging_vacias()
         {
@@ -126,6 +121,21 @@ namespace FortuneSystem.Controllers
                 PageMargins = new Rotativa.Options.Margins(8, 10, 15, 10),
                 CustomSwitches = "--page-offset 0  ",
             };
+        }
+
+        [AllowAnonymous]
+        public ActionResult Imprimir_Reporte_PO()
+        {
+            int id = Convert.ToInt32(Session["idPed"]);
+            return new ViewAsPdf("Imprimir_Reporte_PO", de.ListadoInfEstilo(id))
+            {
+                FileName = filename,
+                PageOrientation = Rotativa.Options.Orientation.Portrait,
+                PageSize = Rotativa.Options.Size.Letter,
+                PageMargins = new Rotativa.Options.Margins(5, 10, 15, 10),
+                CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
+            };
+           
         }
 
 

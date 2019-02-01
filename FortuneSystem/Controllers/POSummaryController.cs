@@ -109,7 +109,7 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpGet]
-        public ActionResult RegistrarItem([Bind] POSummary descItem, string EstiloItem, string IdColor, int Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta)
+        public ActionResult RegistrarItem([Bind] POSummary descItem, string EstiloItem, string IdColor, int Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad)
         {
             int PedidosId = Convert.ToInt32(Session["idPedido"]);
             descItem.PedidosId = PedidosId;                           

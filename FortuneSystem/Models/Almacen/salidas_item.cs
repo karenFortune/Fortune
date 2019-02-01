@@ -19,6 +19,7 @@ namespace FortuneSystem.Models.Almacen
         public List<Inventario> lista_inventario { get; set; }
         
         public string descripcion { get; set; }
+        public string codigo { get; set; }
         public string po { get; set; }
         public string mill_po { get; set; }
         public string color { get; set; }

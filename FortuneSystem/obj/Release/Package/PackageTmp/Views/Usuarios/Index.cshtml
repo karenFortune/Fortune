@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<FortuneSystem.Models.Usuarios.CatUsuario>
 
 @{
-    ViewBag.Title = "USUARIOS";
+    ViewBag.Title = "USERS";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
@@ -19,8 +19,29 @@
         color: #fff;
         background-color: #006bb3;
     }
+
+    #nuevo-usuario {
+        margin-left: 50px;
+        margin-top: 1px;
+        width: 160px;
+        height: 40px;
+        border: none;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .edit_driver {
+    }
+
+        .edit_driver:hover {
+            color: white !important;
+            background: #3479bf !important;
+            border-radius: 15px;
+        }
+
+
 </style>
-<h2>Administraci&oacute;n de Usuarios</h2>
+
 @{
     if (TempData["usuarioOK"] != null)
     {
@@ -62,74 +83,167 @@
 
         </script>
     }
-    
+
 }
-<p>
-    <a href="@Url.Action("CrearUsuario")">
-        <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar Nuevo Usuario
-        </button>
-    </a>
-</p>
-<br />
-<table class="table table-striped" id="tablaUsuarios">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.NoEmpleado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombres)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Apellidos)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cargo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Contrasena)
-            </th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NoEmpleado)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombres)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Apellidos)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CatRoles.Rol)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Contrasena)
-                </td>
-                <td>
-                    @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-edit", @style = "color:black", @Title = "Editar Usuario" }) |
-                    @Html.ActionLink(" ", "Details", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Consultar Usuario" }) |
-                    @Html.ActionLink(" ", "Eliminar", new { id = item.Id }, new { @class = "btn btn-default glyphicon glyphicon-trash", @style = "color:black", @Title = "Eliminar Usuario" })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+</div>
+<div class="modal fade" id="consulModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="consulModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">DETAILS USER</h2>
+            </div>
+            <div class="modal-body">
+                <div id="ContenedorModal"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editarModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="editarModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">EDIT USER</h2>
+            </div>
+            <div class="modal-body">
+                <div id="ContenedorEditModal"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="crearModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="crearModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">ADD USER</h2>
+            </div>
+            <div class="modal-body">
+                <div id="ContenedorCrearModal"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="deleteModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">Are you sure to eliminate the user?</h2>
+            </div>
+            <div class="modal-body">
+                <div id="ContenedorDeleteModal"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" style="padding-left:20em; padding-right:10em;">
+    <div class="panel panel-primary" id="consultaPO">
+        <div class="panel-heading">
+            <h3>
+                User administration
+            </h3>
+        </div>
+        <br />
+
+        <p>
+
+                <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> ADD NEW USER
+                </button>
+      
+        </p>
+        <br />
+        <table class="table table-striped" id="tablaUsuarios">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NoEmpleado)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nombres)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Cargo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NoEmpleado)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NombreCompleto)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CatRoles.Rol)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            <a href="#" class="btn edit_driver edicion_driver btnEdit" data-value="@item.Id " title="Edit User"><span class="glyphicon glyphicon-edit " aria-hidden="true" style="padding: 0px !important;"></span></a> 
+                            <a href="#" class="btn edit_driver edicion_driver btnSearch" data-value="@item.Id " title="Details User"><span class="glyphicon glyphicon-search " aria-hidden="true" style="padding: 0px !important;"></span></a> 
+                            <a href="#" class="btn edit_driver edicion_driver btnDelete" data-value="@item.Id " title="Delete User"><span class="glyphicon glyphicon-trash " aria-hidden="true" style="padding: 0px !important;"></span></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
 <script>
     $('#tablaUsuarios tr').click(function (e) {
         $('#tablaUsuarios tr').removeClass('highlighted');
         $(this).addClass('highlighted');
+    });
+
+    $(document).on('click', '.btnSearch', function () {
+        $("#loading").css('display', 'none');
+        var id = $(this).data("value");
+        $('#consulModal').modal('show');
+        $("#ContenedorModal").load("/Usuarios/Details/" + id, function () {
+        });
+    });
+
+    $(document).on('click', '.btnEdit', function () {
+        $("#loading").css('display', 'none');
+        var id = $(this).data("value");
+        $('#editarModal').modal('show');
+        $("#ContenedorEditModal").load("/Usuarios/Edit/" + id, function () {
+        });
+    });
+
+    $(document).on('click', '.btnDelete', function () {
+        $("#loading").css('display', 'none');
+        var id = $(this).data("value");
+        $('#deleteModal').modal('show');
+        $("#ContenedorDeleteModal").load("/Usuarios/Eliminar/" + id, function () {
+        });
+    });
+
+    $(document).on('click', '#nuevo-usuario', function () {
+        $("#loading").css('display', 'none');
+        var id = $(this).data("value");
+        $('#crearModal').modal('show');
+        $("#ContenedorCrearModal").load("/Usuarios/CrearUsuario/" + id, function () {
+        });
     });
 </script>

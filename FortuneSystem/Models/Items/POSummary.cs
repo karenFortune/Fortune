@@ -47,6 +47,8 @@ namespace FortuneSystem.Models.POSummary
         // [DisplayFormat(DataFormatString = "{0:n2}")]
         public double Precio { get; set; }
 
+        [Required]
+        [Display(Name = "PRICE")]
         public string Price { get; set; }
         [Display(Name = "PO#")]
         [Column("ID_PEDIDOS")]
@@ -79,13 +81,20 @@ namespace FortuneSystem.Models.POSummary
         public int IdCamiseta { get; set; }
         public CatTipoCamiseta CatTipoCamiseta { get; set; }
 
+
         public List<CatTipoCamiseta> ListaTipoCamiseta { get; set; }
 
         public List<CatTallaItem> ListaTallas { get; set; }
 
+        public CatEspecialidades CatEspecialidades { get; set; }
+        public int IdEspecialidad { get; set; }
+        public List<CatEspecialidades> ListaEspecialidades { get; set; }
+
         [DisplayFormat(DataFormatString = "{0:#.####}")]
         [Display(Name = "TOTAL")]
         public string Total { get; set; }
+
+        public List<OrdenesCompra> ListaPO { get; set; }
 
 
 

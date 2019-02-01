@@ -2,13 +2,11 @@
 
 @{
     ViewBag.Title = "Eliminar";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
 
-<h3>¿Est&aacute; seguro de eliminar al usuario?</h3>
 <div>
-    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.NoEmpleado)
@@ -39,7 +37,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Cargo)
+            @Html.DisplayFor(model => model.CatRoles.Rol)
         </dd>
 
         <dt>
@@ -64,8 +62,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Eliminar" class="btn btn-danger" /> |
-            @Html.ActionLink("Regresar", "Index")
+            <input type="submit" value="Delete" class="btn btn-danger" />
         </div>
     }
 </div>

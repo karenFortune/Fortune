@@ -29,5 +29,7 @@ namespace FortuneSystem.Controllers
                 CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
             };
         }
+
+
     }
 }

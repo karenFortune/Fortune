@@ -375,10 +375,10 @@ function RegistrarEmpaqueBulkHT(nPO, tEmpaque) {
                 } else {
                     cadenaCantidad += cajaTemp + "*";
                     cont = cont + 1;
-                    html += '<tr id="pallet' + (cont) + '" class="pallet">';
+                    html += '<tr id="pallet' + cont + '" class="pallet">';
                     html += '<td width="20%"><input type="text" id="f-talla" class="form-control talla" value="' + tallaTemp + '" readonly/></td>';
                     if (cajaTemp === 0) {
-                        html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " onkeyup="obtTotalCartonesBulk(' + (cont) + ')"  value="' + cajaTemp + '"  /></td>';
+                        html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " onkeyup="obtTotalCartonesBulk(' + cont + ')"  value="' + cajaTemp + '"  /></td>';
                     } else {
                         html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " value="' + cajaTemp+ '"  readonly/></td>';
                     }

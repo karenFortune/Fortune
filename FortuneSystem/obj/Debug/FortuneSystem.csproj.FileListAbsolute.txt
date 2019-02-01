@@ -343,8 +343,9 @@ C:\Users\karen\Source\Repos\fortuneSystem3\FortuneSystem\bin\zxing.pdb
 C:\Users\karen\Source\Repos\fortuneSystem3\FortuneSystem\bin\zxing.xml
 C:\Users\karen\Source\Repos\fortuneSystem3\FortuneSystem\bin\zxing.presentation.pdb
 C:\Users\karen\Source\Repos\fortuneSystem3\FortuneSystem\bin\zxing.presentation.xml
-C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csprojAssemblyReference.cache
-C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csproj.CoreCompileInputs.cache
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Collections.Immutable.dll
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Web.Helpers.xml
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Web.Mvc.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\ApplicationInsights.config
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\FortuneSystem.dll.config
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\FortuneSystem.dll
@@ -580,7 +581,6 @@ C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\PagedList.Mvc.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Rotativa.AspNetCore.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Rotativa.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Buffers.dll
-C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Collections.Immutable.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.ComponentModel.Annotations.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Data.SqlClient.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Data.SQLite.dll
@@ -683,8 +683,6 @@ C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Data.SQLite.dll.con
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Reflection.Metadata.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Text.Encodings.Web.xml
-C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Web.Helpers.xml
-C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Web.Mvc.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Web.Razor.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Web.WebPages.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\System.Web.WebPages.Deployment.xml
@@ -701,6 +699,8 @@ C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.AI.DependencyCol
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.AI.WindowsServer.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.AI.Web.xml
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csprojAssemblyReference.cache
+C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csproj.CoreCompileInputs.cache
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csproj.CopyComplete
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.pdb

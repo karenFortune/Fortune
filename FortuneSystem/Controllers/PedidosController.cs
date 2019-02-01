@@ -36,6 +36,8 @@ namespace FortuneSystem.Controllers
         PrintShopData objPrint = new PrintShopData();
         PackingData objPacking = new PackingData();
         PnlData objPnl = new PnlData();
+        PDFController pdf = new PDFController();
+        CatEspecialidadesData objEspecialidad = new CatEspecialidadesData();
         public int estado;
         public int IdPO;
         public int pedidos;
@@ -45,8 +47,22 @@ namespace FortuneSystem.Controllers
             List<OrdenesCompra> listaPedidos= new List<OrdenesCompra>();
              listaPedidos = objPedido.ListaOrdenCompra().ToList();
              return View(listaPedidos);
-         }      
-     
+         }  
+
+        public void Reporte(int? id)
+        {
+            Session["idPed"] = id;
+            pdf.Imprimir_Reporte_PO();
+        }
+
+        [HttpPost]
+        public JsonResult Imprimir_Reporte_PO(int id)
+        {            
+            //pedido        
+            Session["idPed"] = id;
+
+            return Json("0", JsonRequestBehavior.AllowGet);
+        }
 
         /*  [ChildActionOnly]
           public ActionResult StudentList()
@@ -317,6 +333,7 @@ namespace FortuneSystem.Controllers
             ListaGenero(summary);
             ListaTela(summary);
             ListaTipoCamiseta(summary);
+            ListaEspecialidades(summary);
             return View();
         }
        
@@ -725,6 +742,15 @@ namespace FortuneSystem.Controllers
             listaTipoCamiseta = objTipoC.ListaTipoCamiseta().ToList();
 
             ViewBag.listTipoCamiseta = new SelectList(listaTipoCamiseta, "TipoProducto", "DescripcionTipo", summary.TipoCamiseta);
+
+        }
+
+        public void ListaEspecialidades(POSummary summary)
+        {
+            List<CatEspecialidades> listaEspecialidades = summary.ListaEspecialidades;
+            listaEspecialidades = objEspecialidad.ListaEspecialidades().ToList();
+
+            ViewBag.listEspecialidad = new SelectList(listaEspecialidades, "IdEspecialidad", "Especialidad", summary.IdEspecialidad);
 
         }
 

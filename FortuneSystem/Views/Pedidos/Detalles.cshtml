@@ -8,6 +8,15 @@
     tr.highlighted td {
         background: #b3e0ff;
     }
+
+    .edit_driver {
+    }
+
+        .edit_driver:hover {
+            color: white !important;
+            background: #3479bf !important;
+            border-radius: 15px;
+        }
 </style>
 <script>
 
@@ -45,7 +54,8 @@
                     html += '<td>' + item.Cantidad + '</td>';
                     html += '<td>' + item.Price + '</td>';
                     html += '<td>' + item.Total + '</td>';
-                    html += '<td><a href="#" onclick="obtener_tallas_item(' + item.IdItems +');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Sizes"></a></td>';
+                    html += '<td><a href="#" onclick="obtener_tallas_item(' + item.IdItems + ');" class = "btn edit_driver edicion_driver l1s"  Title = "Sizes"> <span class="glyphicon glyphicon-search" aria-hidden="true" style="padding: 0px !important;"></span></a>';
+                    //html += '<a class="btn edit_driver edicion_driver " Title="Report" onclick="imprimir_reporte_po(' + item.IdItems+')"> <span class="fa fa-file-pdf-o fa-lg" aria-hidden="true" style="padding: 0px !important;"></span></a></td>';
                     html += '</tr>';
                 });
                 if (Object.keys(lista_estilo).length === 0) {
@@ -57,6 +67,25 @@
             },
             error: function (errormessage) { alert(errormessage.responseText); }
         });
+    }
+
+    function imprimir_reporte_po(id) {
+        $.ajax({
+            url: "/Pedidos/Imprimir_Reporte_PO/",
+            data: "{'id':'" + id + "'}",
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'post',
+            success: function () {
+                imprimir_reporte();
+            }
+        });
+    }
+    function imprimir_reporte(id) {
+        var h = screen.height - 100;
+        var w = screen.width - 30;
+        window.open('/PDF/Imprimir_Reporte_PO', '_blank', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');
+        $("#loading").css('display', 'none');
     }
 
     function obtener_tallas_item(IdTalla, estilo) {
@@ -126,6 +155,21 @@
     }
 
 </script>
+</div>
+<div class="modal fade" id="reporteModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="consulColorModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">REPORT PURCHASE ORDER</h2>
+            </div>
+            <div class="modal-body">
+                <div id="ContenedorModal"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="container-fluid" style="padding-left:20em; padding-right:10em;">
     <div>
@@ -211,4 +255,12 @@
             $('#tabless tr').removeClass('highlighted');
             $(this).addClass('highlighted');
         });
+
+        $(document).on('click', '.btnReport', function () {
+            $("#loading").css('display', 'none');
+            var id = $(this).data("value");
+            $('#reporteModal').modal('show');
+            //$("#ContenedorModal").load("/Colores/Detalles/" + id, function () {
+        //});
+    });
     </script>

@@ -338,13 +338,16 @@
         window.open('/PDF/papeleta_staging', '_blank', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');
     }
     $(document).on("click", "#tabla_inicio_stag tr", function () {
-        if (this.style.background == "" || this.style.background == "white") {
-            $(this).css('background', '#46a772');
-            $(this).css('color', 'white');
+        var row = this.rowIndex;
+        if (row != 0) {
+            if (this.style.background == "" || this.style.background == "white") {
+                $(this).css('background', '#46a772');
+                $(this).css('color', 'white');
 
-        } else {
-            $(this).css('background', 'white');
-            $(this).css('color', 'black');
+            } else {
+                $(this).css('background', 'white');
+                $(this).css('color', 'black');
+            }
         }
     });
     $(document).on("dblclick", "#tabla_inicio_stag tr", function () {
@@ -485,26 +488,17 @@
         }
 </style>
 
-
-
-
 </div>
 <div id="loading_staging" class="load_recibos">
     <div id="spinner" class="imagen_loading2" style=""></div>
 </div>
 
-
-
-
-
-
 <div id="div_tabla_staging" class="container-fluid" style="padding-left:8em; padding-right:3em; ">
 
-    <div class="row" style=" height:250px;  ">
+    <div class="row" style="   ">
         <div style="float:left;"> <h1 style="color:#337ab7; "><b>STAGING</b></h1></div>
-        <div style="float:left; height:250px;width:250px;"><canvas id="staging_chart" width="50" height="50"> </canvas></div>
     </div>
-
+    <!---<div style="float:left; height:250px; width:250px;"><canvas id="staging_chart" width="50" height="50"> </canvas></div>---->
 
 
     <div style="margin-right:.5em; margin-left:.5em;">
@@ -516,7 +510,7 @@
         <div id="div_tabla_inicio_stag" class="panel panel-default panel-primary " style="  overflow:auto; height:250px; border-top-left-radius:0px !important;border-top-right-radius:0px !important;">
             <table id="tabla_inicio_stag" class="table table-striped results_s">
                 <thead class="cabecera_tabla">
-                    <tr style="pointer-events: none !important; cursor: not-allowed !important;">
+                    <tr>
                         <th style="border-top-left-radius:0px !important;">#</th>
                         <th>ORDER</th>
                         <th>STYLE</th>
@@ -533,7 +527,7 @@
 
     <div class="container-fluid" style="padding-left:8em; padding-right:3em;">
         <div id="blocker" style="width:90%; height:300px; background:none; position:absolute; z-index:-1;"></div>
-        <div class="panel-heading " style="margin-left:.5em; margin-right:.5em;border-bottom: 1px solid;">
+        <div class="panel-heading " style="margin-left:.5em; margin-right:.5em;">
             <b style="left:1em;">STYLES RECEIVED</b>
             <span class="counter_staging" style="right:1em;"></span>
             <input type="text" class="search_staging form-control validacion" placeholder="Search something" id="caja_estilo_po" style=" float:right;margin-top: -5px; ">

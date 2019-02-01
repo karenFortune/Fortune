@@ -112,17 +112,17 @@
     }
 </style>
 <h2>PURCHASE ORDER REGISTRATION</h2>
-
+</div>
 @*@using (Ajax.BeginForm("CrearPO", "Pedidos", new AjaxOptions { HttpMethod = "POST" }))*@
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formPO" }))
 
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
+<div class="form-horizontal">
 
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="container-fluid" style="padding-left:20em; padding-right:10em;">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4>Reception of Purchase Order</h4>
@@ -182,17 +182,20 @@
 
             </div>
         </div>
+        <div class="container-fluid" id="crearItems" style="visibility:hidden;">
+            @RenderPage("~/Views/POSummary/CrearItems.cshtml")
+        </div>
+
+        <a href='@Url.Action("Index", "Pedidos")'>
+            <img src='@Url.Content("~/Content/img/backToPage.png")' id="flecha" title="Go Back" />
+        </a>
     </div>
-}
-<div class="container-fluid" id="crearItems" style="visibility:hidden;">
-    @RenderPage("~/Views/POSummary/CrearItems.cshtml")
-</div>
+    </div>
+    }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
-@Scripts.Render("~/bundles/jqueryval")
+   
+    @Scripts.Render("~/bundles/jqueryval")
 
 
 

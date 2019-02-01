@@ -596,6 +596,8 @@
     <Compile Include="Models\AplicationDbContext.cs" />
     <Compile Include="Models\Arte\Arte.cs" />
     <Compile Include="Models\Arte\ArteData.cs" />
+    <Compile Include="Models\Catalogos\CatEspecialidades.cs" />
+    <Compile Include="Models\Catalogos\CatEspecialidadesData.cs" />
     <Compile Include="Models\Catalogos\CatSucursal.cs" />
     <Compile Include="Models\Catalogos\CatCliente.cs" />
     <Compile Include="Models\Catalogos\CatClienteData.cs" />
@@ -2481,11 +2483,7 @@
     <Content Include="Views\TipoCamiseta\Detalles.cshtml" />
     <Content Include="Views\TipoCamiseta\Editar.cshtml" />
     <Content Include="Views\TipoCamiseta\Eliminar.cshtml" />
-    <Content Include="Views\Estilos\Index.cshtml" />
-    <Content Include="Views\Recibos\Index.cshtml" />
-    <Content Include="Views\Recibos\Recibo_general.cshtml" />
     <Content Include="Views\Staging\Index.cshtml" />
-    <Content Include="Views\TallasEstilos\Index.cshtml" />
     <Content Include="Views\Pedidos\StudentList.cshtml" />
     <Content Include="Views\Pedidos\Revision.cshtml" />
     <Content Include="Views\Pedidos\Listado_Estilos_PO.cshtml" />
@@ -2520,11 +2518,22 @@
     <Content Include="Views\Shipping\Index.cshtml" />
     <Content Include="Views\Shipping\new_pk.cshtml" />
     <Content Include="Views\Staging\empleados.cshtml" />
+    <Content Include="Views\PDF\bol.cshtml" />
+    <Content Include="Views\PDF\etiquetas_cajas_recibo.cshtml" />
+    <Content Include="Views\PDF\Index.cshtml" />
+    <Content Include="Views\PDF\ListaEstilos.cshtml" />
+    <Content Include="Views\PDF\packing_list.cshtml" />
+    <Content Include="Views\PDF\papeleta_staging.cshtml" />
+    <Content Include="Views\PDF\papeleta_staging_vacias.cshtml" />
+    <Content Include="Views\PDF\transfer_ticket.cshtml" />
+    <Content Include="Views\PDF\transfer_ticket_contratista.cshtml" />
+    <Content Include="Views\PDF\Imprimir_Reporte_PO.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\imagenesArte\" />
     <Folder Include="Models\Shared\" />
+    <Folder Include="Views\Estilos\" />
     <Folder Include="Views\ReportPDF\" />
   </ItemGroup>
   <ItemGroup>

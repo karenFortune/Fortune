@@ -1,6 +1,5 @@
 ﻿@model FortuneSystem.Models.Pedidos.OrdenesCompra
 
-
 @{
     ViewBag.Title = "Create PO";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -44,7 +43,7 @@
                 }
             });
             if (error != 0) {
-                var alert = alertify.alert("Mensaje",'Todos los campos son obligatorios.').set('label', 'Aceptar');
+                var alert = alertify.alert("Menssage",'All fields are required.').set('label', 'Aceptar');
                 alert.set({ transition: 'zoom' });
                 alert.set('modal', false);
             } else {
@@ -60,7 +59,7 @@
                 var TotalUnidades = $("#TotalUnidades").val();
                 enviarPO(po, VPO, FechaCancel, FechaOrden, Cliente, ClienteFinal, TotalUnidades);
                 alertify.set('notifier', 'position', 'top-right');
-                alertify.notify('Se registro correctamente la orden de compra.', 'success', 5, null);
+                alertify.notify('The purchase order was correctly registered.', 'success', 5, null);
                
             }
 
@@ -106,22 +105,27 @@
 
 </script>
 <style>
+    .ui-autocomplete {
+        height: 200px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
 </style>
-<h2>REGISTRO DE ORDEN DE COMPRA</h2>
-
+<h2>PURCHASE ORDER REGISTRATION</h2>
+</div>
 @*@using (Ajax.BeginForm("CrearPO", "Pedidos", new AjaxOptions { HttpMethod = "POST" }))*@
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formPO" }))
 
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
+<div class="form-horizontal">
 
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="container-fluid" style="padding-left:20em; padding-right:10em;">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h4>Recepci&oacute;n de Orden de Compra</h4>
+                <h4>Reception of Purchase Order</h4>
             </div>
             <div class="container-fluid">
 
@@ -178,17 +182,20 @@
 
             </div>
         </div>
+        <div class="container-fluid" id="crearItems" style="visibility:hidden;">
+            @RenderPage("~/Views/POSummary/CrearItems.cshtml")
+        </div>
+
+        <a href='@Url.Action("Index", "Pedidos")'>
+            <img src='@Url.Content("~/Content/img/backToPage.png")' id="flecha" title="Go Back" />
+        </a>
     </div>
-}
-<div class="container-fluid" id="crearItems" style="visibility:hidden;">
-    @RenderPage("~/Views/POSummary/CrearItems.cshtml")
-</div>
+    </div>
+    }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
-@Scripts.Render("~/bundles/jqueryval")
+   
+    @Scripts.Render("~/bundles/jqueryval")
 
 
 

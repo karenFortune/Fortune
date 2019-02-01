@@ -9,7 +9,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using FortuneSystem.Models.Almacen;
-using FortuneSystem.Models.Catalogos;
+using FortuneSystem.Models.Shipping;
+//using FortuneSystem.Models.Catalogos;
 using System.Text.RegularExpressions;
 
 namespace FortuneSystem.Models.Almacen

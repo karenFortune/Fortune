@@ -422,7 +422,7 @@ function registrarPallet(EstiloId) {
                     '<th>Box#</th>' +
                     '<th>CantxBox#</th>' +
                     '<th>TotalPieces#</th>' +
-                    '<th>TotalBox</th>' +
+                    '<th>TotalBox#</th>' +
                     ' <th>TotalFaltante#</th>' +            
                     '</tr>' +
                     '</thead><tbody>';                   

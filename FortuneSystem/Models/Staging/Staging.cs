@@ -20,7 +20,7 @@ namespace FortuneSystem.Models.Staging
         [Display(Name = "TOTAL")]
         public int total { get; set; }        
     }*/
-    public class StagingD
+    public class Staging
     {
         [Display(Name = "RECIBO")]
         public int id_recibo{ get; set; }//PARA LAS TABLAS
@@ -96,7 +96,13 @@ namespace FortuneSystem.Models.Staging
         public string turno { get; set; }
     }
 
+    public class StagingD {
 
+        public string talla { get; set; }
+        public int id_talla { get; set; }
+        public int total { get; set; }
+
+    }
 
 
 

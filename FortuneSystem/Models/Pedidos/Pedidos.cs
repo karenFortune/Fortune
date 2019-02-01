@@ -64,6 +64,11 @@ namespace FortuneSystem.Models.Pedidos
         [Display(Name = "CANCEL DATE")]
         public DateTime FechaCancel { get; set; }
 
+        [RegularExpression("^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$")]
+        [DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}")]
+        [Display(Name = "DATE")]
+        public DateTime FechaFinalOrden { get; set; }
+
         [Required]
         // [RegularExpression("^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$", ErrorMessage = "Formato de fecha incorrecta.")]
         [RegularExpression("^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$")]

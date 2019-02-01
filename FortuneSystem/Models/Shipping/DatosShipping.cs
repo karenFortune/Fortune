@@ -703,7 +703,7 @@ namespace FortuneSystem.Models.Shipping
             try {
                 SqlCommand com_c = new SqlCommand();
                 com_c.Connection = con_c.AbrirConexion();
-                com_c.CommandText = "INSERT INTO packing_list(pk,id_customer,id_customer_po,id_direccion_envio,id_pedido,id_driver,id_container,shipping_manager,seal,replacement,fecha,tipo,id_usuario,num_envio) VALUES " +
+                com_c.CommandText = "INSERT INTO packing_list(pk,id_customer,id_customer_po,id_direccion_envio,id_pedido,id_driver,id_container,shipping_manager,seal,replacement,fecha,tipo,id_usuario,envio) VALUES " +
                     " ('" + pk + "','" + customer + "','" + customer_final + "','" + address + "','" + pedido + "','" + driver + "','" + container + "','" + manager + "','" + seal + "','" + replacement + "','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "','" + tipo + "','" + usuario + "','" + num_envio + "')";
                 com_c.ExecuteNonQuery();
             } finally { con_c.CerrarConexion(); con_c.Dispose(); }
@@ -2388,8 +2388,39 @@ namespace FortuneSystem.Models.Shipping
         /***************************************************************************************************************************************************/
         /***************************************************************************************************************************************************/
 
-
-
+        public void eliminar_inventario_pedido(int pedido) {
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT id_inventario FROM inventario WHERE id_pedido='"+pedido+"' ";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    vaciar_cajas_inventario(Convert.ToInt32(leer["id_inventario"]));
+                    vaciar_inventario(Convert.ToInt32(leer["id_inventario"]));
+                }
+                leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
+        }
+        public void vaciar_cajas_inventario(int item){
+            Conexion con_s = new Conexion();
+            try{
+                SqlCommand com_s = new SqlCommand();
+                com_s.Connection = con_s.AbrirConexion();
+                com_s.CommandText = "UPDATE cajas_inventario SET cantidad_restante=0 where id_inventario='"+item+"' ";
+                com_s.ExecuteNonQuery();
+            }finally { con_s.CerrarConexion(); con_s.Dispose(); }
+        }
+        public void vaciar_inventario(int item){
+            Conexion con_s = new Conexion();
+            try{
+                SqlCommand com_s = new SqlCommand();
+                com_s.Connection = con_s.AbrirConexion();
+                com_s.CommandText = "UPDATE inventario SET total=0 where id_inventario='" + item + "' ";
+                com_s.ExecuteNonQuery();
+            }finally { con_s.CerrarConexion(); con_s.Dispose(); }
+        }
 
 
 

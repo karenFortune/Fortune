@@ -2,13 +2,17 @@
 
 @{
     ViewBag.Title = "Details Color";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    
 }
 
-<h2>Details</h2>
+<style>
+    #flecha {
+        cursor: auto;
+    }
+</style>
 
 <div>
-    <hr />
+
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.IdColor)
@@ -37,6 +41,8 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Editar", new { id = Model.IdColor }) |
-    @Html.ActionLink("Back to List", "Index")
+
+    @* <a href='@Url.Action("Editar", "Colores", new { id = Model.IdColor })'>
+            <img src='@Url.Content("~/Content/img/Edit.png")' id="flecha" title="Edit" />
+        </a>*@
 </p>

@@ -20,6 +20,9 @@ namespace FortuneSystem.Models.Almacen
         public int id_salida, id_inventario, cantidad;
         FuncionesInventarioGeneral consultas = new FuncionesInventarioGeneral();
 
+
+
+
         public List<lugares> lista_lugares_transfer()
         {
             List<lugares> listalugares = new List<lugares>();
@@ -176,14 +179,14 @@ namespace FortuneSystem.Models.Almacen
                 con_s.CerrarConexion(); con_s.Dispose();
             }
         }
-        public void guardar_items_inventario(int salida, string id, string cantidad, int po, int estilo, string cajas)
+        public void guardar_items_inventario(int salida, string id, string cantidad, int po, int estilo, string cajas,string codigo)
         {
             Conexion con_c = new Conexion();
             try
             {
                 SqlCommand com_c = new SqlCommand();
                 com_c.Connection = con_c.AbrirConexion();
-                com_c.CommandText = "INSERT INTO salidas_items(id_salida,id_inventario,cantidad,id_pedido,id_estilo,cajas) VALUES ('" + salida + "','" + id + "','" + cantidad + "','" + po + "','" + estilo + "','"+cajas+"')";
+                com_c.CommandText = "INSERT INTO salidas_items(id_salida,id_inventario,cantidad,id_pedido,id_estilo,cajas,codigo) VALUES ('" + salida + "','" + id + "','" + cantidad + "','" + po + "','" + estilo + "','"+cajas+"','"+codigo+"')";
                 com_c.ExecuteNonQuery();
             }
             finally
@@ -232,48 +235,50 @@ namespace FortuneSystem.Models.Almacen
             }
             return listalugares;
         }
-        public void aprobar_transferencia_inventario(string salida)
-        {
+        public void aprobar_transferencia_inventario(string salida){
             Conexion con_s = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_s = new SqlCommand();
                 com_s.Connection = con_s.AbrirConexion();
                 com_s.CommandText = "UPDATE salidas SET estado_aprobacion=1 WHERE id_salida='" + salida + "'  ";
                 com_s.ExecuteNonQuery();
-            }
-            finally
-            {
-                con_s.CerrarConexion(); con_s.Dispose();
-            }
+            }finally{ con_s.CerrarConexion(); con_s.Dispose();}
         }
+
         int id_caja, cantidad_restante;
-        public void aprobar_transferencia_items(string id_salida)
-        {
-            //BUSCAR SALIDAS ITEM DE ESTA SALIDA
+        public void aprobar_transferencia_items(string id_salida){//BUSCAR SALIDAS ITEM DE ESTA SALIDA
             Conexion con = new Conexion();
-            try
-            {
+            string codigo;
+            try{
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
-                com.CommandText = "SELECT id_inventario,cantidad from salidas_items where id_salida='" + id_salida + "' ";
+                com.CommandText = "SELECT id_inventario,cantidad,codigo from salidas_items where id_salida='" + id_salida + "' ";
                 leer = com.ExecuteReader();
-                while (leer.Read())
-                {
+                while (leer.Read()){
+                    codigo = Convert.ToString(leer["codigo"]);
                     id_inventario = Convert.ToInt32(leer["id_inventario"]);
                     cantidad = Convert.ToInt32(leer["cantidad"]);
                     restar_inventario(id_inventario, cantidad);
-                    buscar_datos_cajas(id_inventario, cantidad);
-
-                }
-                leer.Close();
-            }
-            finally
-            {
-                con.CerrarConexion(); con.Dispose();
-            }
+                    if (codigo.Contains("caja")){
+                        actualizar_caja_cantidad(codigo,cantidad); 
+                    }else {
+                        buscar_datos_cajas(id_inventario, cantidad);
+                    }
+                }leer.Close();
+            }finally{ con.CerrarConexion(); con.Dispose(); }
         }
+        public void actualizar_caja_cantidad(string codigo, int cantidad){
+            string[] caja = codigo.Split('_');
+            Conexion con_sri = new Conexion();
+            try{
+                SqlCommand com_sri = new SqlCommand();
+                com_sri.Connection = con_sri.AbrirConexion();
+                com_sri.CommandText = "UPDATE cajas_inventario SET cantidad_restante=cantidad_restante-" + cantidad + "  WHERE id_caja='" + caja[1] + "'  ";
+                com_sri.ExecuteNonQuery();
+            }finally{ con_sri.CerrarConexion(); con_sri.Dispose(); }
+        }
+
         public void restar_inventario_cajas(int caja, int qty)
         {
             Conexion con_sri = new Conexion();
@@ -361,19 +366,16 @@ namespace FortuneSystem.Models.Almacen
                 con_s.CerrarConexion(); con_s.Dispose();
             }
         }
-        public List<salidas> obtener_informacion_transferencia(string id_salida)
-        {
+        public List<salidas> obtener_informacion_transferencia(string id_salida){
             List<salidas> listasalidas = new List<salidas>();
             Conexion con_oit = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_oit = new SqlCommand();
                 SqlDataReader leer_oit = null;
                 com_oit.Connection = con_oit.AbrirConexion();
                 com_oit.CommandText = "SELECT id_salida,fecha,total,id_usuario,id_origen,id_destino,estado_aprobacion,estado_entrega,sello,responsable,id_envio,fecha_solicitud,driver,pallet from salidas where id_salida='" + id_salida + "' ";
                 leer_oit = com_oit.ExecuteReader();
-                while (leer_oit.Read())
-                {
+                while (leer_oit.Read()){
                     salidas l = new salidas();
                     List<salidas_item> items = new List<salidas_item>();
                     l.id_salida = Convert.ToInt32(leer_oit["id_salida"]);
@@ -531,33 +533,26 @@ namespace FortuneSystem.Models.Almacen
 
 
 
-        public List<salidas_item> buscar_lista_items_transferencia(string id_salida)
-        {
+        public List<salidas_item> buscar_lista_items_transferencia(string id_salida){
             List<salidas_item> lista_items = new List<salidas_item>();
             Conexion connn = new Conexion();
-            try
-            {
+            try{
                 SqlCommand commm = new SqlCommand();
                 SqlDataReader leerrr = null;
                 commm.Connection = connn.AbrirConexion();
-                commm.CommandText = "SELECT s.id_inventario,s.cantidad,i.mill_po,i.descripcion,s.id_inventario,s.id_pedido,s.id_estilo from salidas_items s,inventario i where s.id_salida='" + id_salida + "' and s.id_inventario=i.id_inventario";
+                commm.CommandText = "SELECT s.id_inventario,s.cantidad,i.mill_po,i.descripcion,s.id_inventario,s.id_pedido,s.id_estilo,s.codigo from salidas_items s,inventario i where s.id_salida='" + id_salida + "' and s.id_inventario=i.id_inventario";
                 leerrr = commm.ExecuteReader();
-                while (leerrr.Read())
-                {
+                while (leerrr.Read()){
                     salidas_item l = new salidas_item();
                     l.cantidad = Convert.ToInt32(leerrr["cantidad"]);
                     l.descripcion = consultas.buscar_descripcion_item(Convert.ToInt32(leerrr["id_inventario"]));
                     l.po = consultas.buscar_po_item(Convert.ToInt32(leerrr["id_inventario"]));
                     l.estilo = consultas.obtener_estilo(Convert.ToInt32(leerrr["id_inventario"]));
                     l.summary = consultas.obtener_po_summary(Convert.ToInt32(leerrr["id_pedido"]), Convert.ToInt32(leerrr["id_estilo"]));
+                    l.codigo = Convert.ToString(leerrr["codigo"]);
                     lista_items.Add(l);
-                }
-                leerrr.Close();
-            }
-            finally
-            {
-                connn.CerrarConexion(); connn.Dispose();
-            }
+                }leerrr.Close();
+            }finally{ connn.CerrarConexion(); connn.Dispose(); }
             return lista_items;
         }
         public IEnumerable<Inventario> obtener_informacion_inventario(int id)
@@ -800,11 +795,9 @@ namespace FortuneSystem.Models.Almacen
             }
             return temp;
         }
-        public void agregar_inventario_desde_transferencia(Inventario i, int sucursal, int total)
-        {
+        public void agregar_inventario_desde_transferencia(Inventario i, int sucursal, int total){
             Conexion con_s = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_s = new SqlCommand();
                 com_s.Connection = con_s.AbrirConexion();
                 com_s.CommandText = "INSERT INTO inventario(id_sucursal,id_pedido,id_pais,id_fabricante,id_categoria_inventario,id_color,id_body_type,id_genero,id_fabric_type,id_location," +
@@ -813,11 +806,7 @@ namespace FortuneSystem.Models.Almacen
                     " '" + i.id_genero + "','" + i.id_fabric_type + "','" + i.id_location + "','" + cantidad + "','" + i.id_size + "','" + i.id_customer + "', '" + i.id_final_customer + "','" + i.minimo + "','" + i.notas + "'" +
                     " ,'" + i.id_fabric_percent + "','" + i.stock + "','" + i.date_comment + "','" + i.comment + "','" + i.id_family_trim + "','" + i.id_unit + "','" + i.id_trim + "','" + i.descripcion + "','" + i.id_estilo + "'  )";
                 com_s.ExecuteNonQuery();
-            }
-            finally
-            {
-                con_s.CerrarConexion(); con_s.Dispose();
-            }
+            }finally{con_s.CerrarConexion(); con_s.Dispose();}
         }
         public void actualizar_transferencia(int usuario, int salida)
         {
@@ -996,134 +985,181 @@ namespace FortuneSystem.Models.Almacen
             finally { con.CerrarConexion(); con.Dispose(); }
             return Lista;
         }
-
-        public String obtener_lista_grafica_transferencias()
-        {
+        public String obtener_lista_grafica_transferencias(){
             Conexion con = new Conexion();
             string Lista = Convert.ToString(grafica_hoy_trans()) + "*" + Convert.ToString(grafica_ayer_trans()) + "*" + Convert.ToString(grafica_semana_trans()) + "*" + Convert.ToString(grafica_mes_trans()) + "*" + Convert.ToString(grafica_year_trans());
             return Lista;
         }
-
-        public int grafica_hoy_trans()
-        {
+        public int grafica_hoy_trans(){
             string[] fecha = (DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")).Split(' ');
             Conexion con = new Conexion();
             int Lista = 0;
-            try
-            {
+            try{
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
                 com.CommandText = "SELECT total from salidas where fecha between '" + fecha[0] + " 00:00:00' and '" + fecha[0] + " 23:59:59'  ";
                 leer = com.ExecuteReader();
-                while (leer.Read())
-                {
+                while (leer.Read()){
                     Lista += Convert.ToInt32(leer["total"]);
-                }
-                leer.Close();
-            }
-            finally { con.CerrarConexion(); con.Dispose(); }
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
             return Lista;
         }
-
-        public int grafica_ayer_trans()
-        {
+        public int grafica_ayer_trans(){
             string[] fecha = (DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")).Split(' ');
             Conexion con = new Conexion();
             int Lista = 0;
-            try
-            {
+            try{
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
                 com.CommandText = "SELECT total from salidas where fecha>= dateadd(day,datediff(day,1,GETDATE()),0) and fecha< dateadd(day,datediff(day,0,GETDATE()),0)";
                 leer = com.ExecuteReader();
-                while (leer.Read())
-                {
+                while (leer.Read()){
                     Lista += Convert.ToInt32(leer["total"]);
-                }
-                leer.Close();
-            }
-            finally { con.CerrarConexion(); con.Dispose(); }
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
             return Lista;
         }
-        public int grafica_semana_trans()
-        {
+        public int grafica_semana_trans(){
             string[] fecha = (DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")).Split(' ');
             Conexion con = new Conexion();
             int Lista = 0;
-            try
-            {
+            try{
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
                 com.CommandText = "SELECT total from salidas where fecha>= dateadd(day,datediff(day,7,GETDATE()),0) and fecha< dateadd(day,datediff(day,0,GETDATE()),0)";
                 leer = com.ExecuteReader();
-                while (leer.Read())
-                {
+                while (leer.Read()){
                     Lista += Convert.ToInt32(leer["total"]);
-                }
-                leer.Close();
-            }
-            finally { con.CerrarConexion(); con.Dispose(); }
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
             return Lista;
         }
-        public int grafica_mes_trans()
-        {
+        public int grafica_mes_trans(){
             string[] fecha = (DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")).Split(' ');
             Conexion con = new Conexion();
             int Lista = 0;
-            try
-            {
+            try{
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
                 //com.CommandText = "SELECT total from staging where fecha>= dateadd(day,datediff(day,30,GETDATE()),0) and fecha< dateadd(day,datediff(day,0,GETDATE()),0)";
                 com.CommandText = "SELECT total from salidas where YEAR(fecha)=YEAR('" + DateTime.Now + "') and MONTH(fecha)=MONTH('" + DateTime.Now + "')";
                 leer = com.ExecuteReader();
-                while (leer.Read())
-                {
+                while (leer.Read()){
                     Lista += Convert.ToInt32(leer["total"]);
-                }
-                leer.Close();
-            }
-            finally { con.CerrarConexion(); con.Dispose(); }
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
             return Lista;
         }
-        public int grafica_year_trans()
-        {
+        public int grafica_year_trans(){
             Conexion con = new Conexion();
             int Lista = 0;
-            try
-            {
+            try{
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
                 com.CommandText = "SELECT total from salidas where YEAR(fecha)=YEAR('" + DateTime.Now + "')";
                 leer = com.ExecuteReader();
-                while (leer.Read())
-                {
+                while (leer.Read()){
                     Lista += Convert.ToInt32(leer["total"]);
-                }
-                leer.Close();
-            }
-            finally { con.CerrarConexion(); con.Dispose(); }
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
             return Lista;
         }
+        /*QR PRUEBA*//*QR PRUEBA*/
+        /*QR PRUEBA*//*QR PRUEBA*/
+        public List<int> qrs(){
+            List<int> listalugares = new List<int>();
+            Conexion con_lt = new Conexion();
+            try{
+                SqlCommand com_lt = new SqlCommand();
+                SqlDataReader leer_lt = null;
+                com_lt.Connection = con_lt.AbrirConexion();
+                com_lt.CommandText = "SELECT id_ubicacion,ubicacion from ubicaciones ";
+                leer_lt = com_lt.ExecuteReader();
+                while (leer_lt.Read()){
+                    listalugares.Add(Convert.ToInt32(leer_lt["id_ubicacion"]));
+                }leer_lt.Close();
+            }finally{con_lt.CerrarConexion(); con_lt.Dispose();}
+            return listalugares;
+        }
+        /*QR PRUEBA*//*QR PRUEBA*/
+        /*QR PRUEBA*//*QR PRUEBA*//*QR PRUEBA*/
+        public List<Inventario> buscar_lista_productos_ubicacion(string ubicacion){
+            List<Inventario> listInventario = new List<Inventario>();
+            Conexion con_ois = new Conexion();
+            try{
+                SqlCommand com_ois = new SqlCommand();
+                SqlDataReader leer_ois = null;
+                com_ois.Connection = con_ois.AbrirConexion();
+                com_ois.CommandText = "SELECT id_inventario,id_pedido,total,descripcion,id_sucursal " +
+                    " from inventario where id_location='"+ubicacion+"' ";
+                leer_ois = com_ois.ExecuteReader();
+                while (leer_ois.Read()){
+                    Inventario i = new Inventario();
+                    i.id_inventario = Convert.ToInt32(leer_ois["id_inventario"]);
+                    i.po = consultas.obtener_po_id(Convert.ToString(leer_ois["id_pedido"]));
+                    i.total = Convert.ToInt32(leer_ois["total"]);
+                    i.descripcion = Convert.ToString(leer_ois["descripcion"]);
+                    i.id_sucursal= Convert.ToInt32(leer_ois["id_sucursal"]);
+                    listInventario.Add(i);
+                }leer_ois.Close();
+            }finally{ con_ois.CerrarConexion(); con_ois.Dispose(); }
+            return listInventario;
+        }
 
+        public List<Inventario> buscar_lista_productos_cajas(string caja){
+            List<Inventario> listInventario = new List<Inventario>();
+            Conexion con_ois = new Conexion();
+            try{
+                SqlCommand com_ois = new SqlCommand();
+                SqlDataReader leer_ois = null;
+                com_ois.Connection = con_ois.AbrirConexion();
+                com_ois.CommandText = "SELECT i.id_inventario,i.id_pedido,i.descripcion,i.id_sucursal,ci.cantidad_restante " +
+                    " from inventario i,cajas_inventario ci where ci.id_caja='" + caja + "' and i.id_inventario=ci.id_inventario ";
+                leer_ois = com_ois.ExecuteReader();
+                while (leer_ois.Read()){
+                    Inventario i = new Inventario();
+                    i.id_inventario = Convert.ToInt32(leer_ois["id_inventario"]);
+                    i.po = consultas.obtener_po_id(Convert.ToString(leer_ois["id_pedido"]));
+                    i.total = Convert.ToInt32(leer_ois["cantidad_restante"]);
+                    i.descripcion = Convert.ToString(leer_ois["descripcion"]);
+                    i.id_sucursal = Convert.ToInt32(leer_ois["id_sucursal"]);
+                    listInventario.Add(i);
+                }leer_ois.Close();
+            }finally { con_ois.CerrarConexion(); con_ois.Dispose(); }
+            return listInventario;
+        }
 
+        public void cambiar_id_inventario_caja(int inventario, string caja){
+            Conexion con_s = new Conexion();
+            try{
+                SqlCommand com_s = new SqlCommand();
+                com_s.Connection = con_s.AbrirConexion();
+                com_s.CommandText = "UPDATE cajas_inventario SET id_inventario='" + inventario + "' WHERE id_caja='" + caja + "' ";
+                com_s.ExecuteNonQuery();
+            }finally{ con_s.CerrarConexion(); con_s.Dispose(); }
+        }
 
-
-
-
-
-
-
-
-
-
-
-
+        public int obtener_contenido_caja(int caja){
+            Conexion con = new Conexion();
+            int Lista = 0;
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT cantidad_restante from cajas_inventario where id_caja='"+caja+"'";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    Lista = Convert.ToInt32(leer["cantidad_restante"]);
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
+            return Lista;
+        }
 
 
 

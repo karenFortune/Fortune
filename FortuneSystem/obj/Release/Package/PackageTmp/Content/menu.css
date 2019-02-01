@@ -7,6 +7,7 @@
 	vertical-align: middle;
 	font-size: 20px;
 }
+
 .main-menu {
 	background: rgb(52, 121, 191);
 	border-right:1px solid #e5e5e5;
@@ -88,6 +89,13 @@ li.has-subnav:hover ul, li.has-subnav.active ul{
 	position:absolute;
 	left:0;
 	bottom:0;
+}
+
+.main-menu > ul.user {
+    position: absolute;
+    left: 0;
+    bottom: 100px;
+    float: right;
 }
 .no-touch .scrollable.hover {
 	overflow-y:hidden;

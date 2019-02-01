@@ -6,8 +6,6 @@ using System.Web.Mvc;
 using FortuneSystem.Models.Almacen;
 using FortuneSystem.Models.Shipping;
 using FortuneSystem.Models.Fantasy;
-using Excel = Microsoft.Office.Interop.Excel;
-using FortuneSystem.Models.Items;
 using System.Web.UI.WebControls;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -19,6 +17,7 @@ using ClosedXML.Excel;
 using ZXing.Common;
 using ZXing.QrCode;
 using System.Text.RegularExpressions;
+
 
 namespace FortuneSystem.Controllers
 {

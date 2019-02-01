@@ -4,8 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FortuneSystem.Models.Almacen;
-using Excel = Microsoft.Office.Interop.Excel;
-using FortuneSystem.Models.Items;
 using System.Web.UI.WebControls;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -16,6 +14,8 @@ using System.Data;
 using ClosedXML.Excel;
 using ZXing.Common;
 using ZXing.QrCode;
+using System.Data.SqlClient;
+
 
 namespace FortuneSystem.Controllers.Catalogos
 {
@@ -35,16 +35,23 @@ namespace FortuneSystem.Controllers.Catalogos
             Session["id_usuario"] = 2;
             if (Session["usuario"] == null){
                 bool isExcelInstalled = Type.GetTypeFromProgID("Excel.Application") != null ? true : false;
-                return View(di.ListaInventario());
+                //return View(di.ListaInventario());
             }else {
                 bool isExcelInstalled = Type.GetTypeFromProgID("Excel.Application") != null ? true : false;
-                return View(di.ListaInventario());
+                //return View(di.ListaInventario());
             }
-        }
-        public ActionResult recibo_items()
-        {
             return View();
         }
+        public ActionResult recibo_items(){
+            return View();
+        }
+
+
+        public JsonResult buscar_items_tabla_inventario(string busqueda){
+            return Json(di.ListaInventario(busqueda), JsonRequestBehavior.AllowGet);
+        }
+
+
         public ActionResult nueva_transferencia()
         {
             return View();
@@ -172,7 +179,6 @@ namespace FortuneSystem.Controllers.Catalogos
         public ActionResult lista_pos(string term) {
             return Json(consultas.Lista_po_abiertos(), JsonRequestBehavior.AllowGet);
         }
-
         [HttpPost]
         public ActionResult lista_estilos_dropdown(string ID) {
             //var items = di.Lista_po();
@@ -181,12 +187,15 @@ namespace FortuneSystem.Controllers.Catalogos
             return Json(consultas.Lista_estilos_dropdown(ID), JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult lista_lugares() {
+        public JsonResult lista_lugares(){
+            List<int> lista = dt.qrs();
+            foreach (int i in lista) {
+                GenerateMyQCCode("ubicacion_"+Convert.ToString(i));
+            }
             return Json(dt.lista_lugares_transfer(), JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult lista_lugares_destino(string ID)
-        {
+        public JsonResult lista_lugares_destino(string ID){
             return Json(dt.lista_lugares_transfer_destino(ID), JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
@@ -204,15 +213,16 @@ namespace FortuneSystem.Controllers.Catalogos
             return Json(consultas.buscar_sello_nuevo(Convert.ToInt32(ID)), JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult guardar_transferencia(string ids, string cantidades, string fecha, string persona, string sello, string origen, string destino, string driver, string pallet, string envio, string id_sello, string pos, string estilos,string caja,string carro,string placas)
+        public JsonResult guardar_transferencia(string ids, string cantidades, string fecha, string persona, string sello, string origen, string destino, string driver, string pallet, string envio, string id_sello, string pos, string estilos,string caja,string carro,string placas,string codigos)
         {
             int id_transferencia = 0, total = 0, id_sucursal = 0;
-            string[] Cantidades, Ids, Pos, Estilos,Cajas;
+            string[] Cantidades, Ids, Pos, Estilos,Cajas,Codigo;
             Cantidades = cantidades.Split('*');
             Ids = ids.Split('*');
             Pos = pos.Split('*');
             Estilos = estilos.Split('*');
             Cajas = caja.Split('*');
+            Codigo= codigos.Split('*');
             for (int i = 1; i < Cantidades.Length; i++) {
                 total += Convert.ToInt32(Cantidades[i]);
             }
@@ -224,10 +234,11 @@ namespace FortuneSystem.Controllers.Catalogos
             for (int i = 1; i < Cantidades.Length; i++) {
                 int pedido = consultas.buscar_pedido(Pos[i]);
                 int estilo = consultas.obtener_estilo_id(Estilos[i]);
-                dt.guardar_items_inventario(id_transferencia, Ids[i], Cantidades[i], pedido, estilo,Cajas[i]);
+                dt.guardar_items_inventario(id_transferencia, Ids[i], Cantidades[i], pedido, estilo,Cajas[i],Codigo[i]);
             }
             return Json("0", JsonRequestBehavior.AllowGet);
         }
+
         [ChildActionOnly]
         public ActionResult lista_transferencias() {
             return PartialView(dt.ListaTransferencias());
@@ -239,8 +250,7 @@ namespace FortuneSystem.Controllers.Catalogos
             return PartialView();
         }
         [HttpPost]
-        public JsonResult aprobar_transferencia(string ID)
-        {
+        public JsonResult aprobar_transferencia(string ID){
             dt.aprobar_transferencia_inventario(ID);
             GenerateMyQCCode("transferencia_" + ID);
             dt.aprobar_transferencia_items(ID);
@@ -309,11 +319,10 @@ namespace FortuneSystem.Controllers.Catalogos
             return PartialView(dt.lista_transferencias_por_recibir(id_sucursal));
         }
         [HttpPost]
-        public JsonResult aceptar_transferencia(string ID)
-        {
+        public JsonResult aceptar_transferencia(string ID){
             int id_destino = 0, existencia = 0;
             List<salidas> transferencia = dt.obtener_informacion_transferencia(ID);
-            foreach (salidas item in transferencia) {
+            foreach (salidas item in transferencia){
                 id_destino = item.id_destino;
                 foreach (salidas_item i in item.lista_salidas_item) {
                     Inventario inventario = new Inventario();
@@ -321,12 +330,17 @@ namespace FortuneSystem.Controllers.Catalogos
                     //buscar si en el destino de la transferencia ya existen esos item
                     existencia = dt.comparar_inventario(inventario, id_destino);
                     if (existencia != 0) {
-                        //update_stock(int inventario, int cantidad,int sucursal)
                         //si existen se suma 
                         di.update_stock(existencia, i.cantidad, id_destino);
                     } else {
                         //si no se agregan con la  sucursal de destino
                         dt.agregar_inventario_desde_transferencia(inventario, id_destino, i.cantidad);
+                        existencia = di.obtener_ultimo_inventario();
+                    }
+                    string[] codigo = (i.codigo).Split('_');
+                    int cantidad_caja = dt.obtener_contenido_caja(Convert.ToInt32(codigo[1]));
+                    if ((i.codigo).Contains("caja") && (cantidad_caja==i.cantidad)) {                        
+                        dt.cambiar_id_inventario_caja(existencia,codigo[1]);
                     }
                 }
             }
@@ -339,8 +353,7 @@ namespace FortuneSystem.Controllers.Catalogos
         }
         /******************************************************************************************************************************************/
         [HttpPost]
-        public JsonResult agregar_item_catalogo(string actionData)
-        {
+        public JsonResult agregar_item_catalogo(string actionData){
             string[] datos = actionData.Split('*');
             for (int i = 0; i < datos.Length; i++) {
                 if (datos[i] == "" || datos[i].Contains("'") || datos[i].Contains(",") || datos[i].Contains(";")) {
@@ -355,14 +368,12 @@ namespace FortuneSystem.Controllers.Catalogos
             }
             return Json("0", JsonRequestBehavior.AllowGet);
         }
-
         [HttpGet]
         public ActionResult formulario_recibo() {
             string id_sucursal = consultas.obtener_sucursal_id_usuario(Convert.ToInt32(Session["id_usuario"]));
             Session["id_sucursal"] = id_sucursal;
             return PartialView();
         }
-
         //BUSQUEDA DINAMICA
         public JsonResult busqueda_dinamica_items(string item,string descripcion,string color, string size,string gender) {
             return Json(di.lista_items_para_recibir(item,descripcion,color,size,gender), JsonRequestBehavior.AllowGet);
@@ -413,14 +424,11 @@ namespace FortuneSystem.Controllers.Catalogos
                             }
                         }*/
                         existencia = di.buscar_existencia_trim_inventario();
-                        if (existencia == 0)
-                        {
+                        if (existencia == 0){
                             di.guardar_trim_po();
                             di.id_inventario = di.obtener_ultimo_inventario();
                             ids_inventario += "*" + di.id_inventario.ToString();
-                        }
-                        else
-                        {
+                        }else{
                             di.sumar_existencia_trim(existencia);
                             ids_inventario += "*" + existencia.ToString();
                         }
@@ -492,7 +500,7 @@ namespace FortuneSystem.Controllers.Catalogos
             };
             var result = QCwriter.Write(QCText);
             string path = Server.MapPath("~/Content/img/QR/" + QCText + ".jpg");
-            string nombre = "caja_" + QCText + ".jpg";
+            //string nombre = "caja_" + QCText + ".jpg";
             var barcodeBitmap = new Bitmap(result, new Size(200, 200));
             using (MemoryStream memory = new MemoryStream()) {
                 using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite)) {
@@ -688,6 +696,14 @@ namespace FortuneSystem.Controllers.Catalogos
         public JsonResult buscar_datos_grafica_transferencias()
         {
             return Json(dt.obtener_lista_grafica_transferencias(), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult buscar_productos_ubicacion(string ID){
+            string[] cadena = ID.Split('_');
+            return Json(dt.buscar_lista_productos_ubicacion(cadena[1]), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult buscar_productos_caja(string ID){
+            string[] cadena = ID.Split('_');
+            return Json(dt.buscar_lista_productos_cajas(cadena[1]), JsonRequestBehavior.AllowGet);
         }
 
 

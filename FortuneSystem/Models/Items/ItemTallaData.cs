@@ -75,7 +75,7 @@ namespace FortuneSystem.Models.Item
                         Estilo = leer["ITEM_STYLE"].ToString()
                         
                     };
-                    calidad = Convert.ToInt32(leer["CANTIDAD"]) + Convert.ToInt32(leer["EJEMPLOS"]);
+                    calidad = Convert.ToInt32(leer["CANTIDAD"]) + Convert.ToInt32(leer["EXTRAS"]);
 
                     tallas.Cantidad = calidad;
                     listTallas.Add(tallas);
@@ -87,6 +87,49 @@ namespace FortuneSystem.Models.Item
                 conn.CerrarConexion();
                 conn.Dispose();
             }         
+
+            return listTallas;
+        }
+
+        //Muestra la lista de tallas por estilo para reporte
+        public IEnumerable<ItemTalla> ListadoTallasPorEstilo(int? id)
+        {
+            Conexion conn = new Conexion();
+            List<ItemTalla> listTallas = new List<ItemTalla>();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Lista_Tallas_Por_Estilo";
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Id", id);
+                leer = comando.ExecuteReader();
+                int calidad = 0;
+                while (leer.Read())
+                {
+                    ItemTalla tallas = new ItemTalla()
+                    {
+                        Talla = leer["TALLA"].ToString(),
+                        IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]),
+                        Cantidad = Convert.ToInt32(leer["CANTIDAD"]),
+                        Extras = Convert.ToInt32(leer["EXTRAS"]),
+                        Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
+                        Estilo = leer["ITEM_STYLE"].ToString()
+
+                    };
+                    calidad = Convert.ToInt32(leer["CANTIDAD"]) + Convert.ToInt32(leer["EXTRAS"]);
+
+                    tallas.Cantidad = calidad;
+                    listTallas.Add(tallas);
+                }
+                leer.Close();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
 
             return listTallas;
         }

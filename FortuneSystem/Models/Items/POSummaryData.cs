@@ -1,6 +1,8 @@
 ﻿using FortuneSystem.Models.Catalogos;
+using FortuneSystem.Models.Item;
 using FortuneSystem.Models.Items;
 using FortuneSystem.Models.Packing;
+using FortuneSystem.Models.Pedidos;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,8 +15,10 @@ namespace FortuneSystem.Models.POSummary
     public class DescripcionItemData
     {
         PackingData objPacking = new PackingData();
+        PedidosData objPedido = new PedidosData();
+        ItemTallaData objTallas = new ItemTallaData();
         //Muestra la lista de PO Summary Por PO
-          public IEnumerable<POSummary> ListaItemsPorPO(int? id)
+        public IEnumerable<POSummary> ListaItemsPorPO(int? id)
           {
                 Conexion conn = new Conexion();
             List<POSummary> listSummary = new List<POSummary>();
@@ -56,6 +60,57 @@ namespace FortuneSystem.Models.POSummary
               return listSummary;
           }
 
+        public IEnumerable<POSummary> ListadoInfEstilo(int? id)
+        {
+            Conexion conn = new Conexion();
+            List<POSummary> listSummary = new List<POSummary>();
+            OrdenesCompra listaPO = new OrdenesCompra();
+            List<ItemTalla> listaTallas = new List<ItemTalla>();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "Listar_Item_Por_Pedido";//Info_Estilo
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Id", id);
+                leer = comando.ExecuteReader();
+
+                while (leer.Read())
+                {
+                    POSummary ItemSummary = new POSummary();
+                    ItemDescripcion Desc = new ItemDescripcion();
+                    CatColores colores = new CatColores();
+                    CatEspecialidades Especialidad = new CatEspecialidades();
+                    Desc.Descripcion = leer["DESCRIPCION_ITEM"].ToString();
+                    colores.CodigoColor = leer["CODIGO_COLOR"].ToString();
+                    colores.DescripcionColor = leer["DESCRIPCION"].ToString();
+                    Especialidad.Especialidad = leer["SPECIALTIES"].ToString();
+                    ItemSummary.EstiloItem = leer["ITEM_STYLE"].ToString();
+                    ItemSummary.Cantidad = Convert.ToInt32(leer["QTY"]);
+                    ItemSummary.Price = leer["PRICE"].ToString();
+                    ItemSummary.Total = leer["TOTAL"].ToString();
+                    ItemSummary.IdItems = Convert.ToInt32(leer["ID_PO_SUMMARY"]);
+                    ItemSummary.CatColores = colores;
+                    ItemSummary.ItemDescripcion = Desc;
+                    ItemSummary.CatEspecialidades = Especialidad;
+                    ItemSummary.PedidosId = Convert.ToInt32(leer["ID_PEDIDOS"]);
+                    listaPO = objPedido.ConsultarListaPO(ItemSummary.PedidosId);
+                    listaTallas = objTallas.ListadoTallasPorEstilo(ItemSummary.IdItems).ToList();
+                    ItemSummary.Pedidos = listaPO;
+                    ItemSummary.ListarTallasPorEstilo = listaTallas;         
+                    listSummary.Add(ItemSummary);
+
+                }
+                leer.Close();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
+            return listSummary;
+        }
 
         //Muestra la lista estilos de Por PO
         public IEnumerable<POSummary> ListaEstilosPorPO(int? id)
@@ -164,6 +219,7 @@ namespace FortuneSystem.Models.POSummary
                 comando.Parameters.AddWithValue("@IdGenero", items.IdGenero);
                 comando.Parameters.AddWithValue("@IdTela", items.IdTela);
                 comando.Parameters.AddWithValue("@TipoCamiseta", items.TipoCamiseta);
+                comando.Parameters.AddWithValue("@IdEspecialidad", items.IdEspecialidad);
 
                 comando.ExecuteNonQuery();
             }

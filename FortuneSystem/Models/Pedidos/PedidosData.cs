@@ -336,7 +336,15 @@ namespace FortuneSystem.Models.Pedidos
                     pedidos.TotalUnidades = Convert.ToInt32(leerF["TOTAL_UNITS"]);
                     pedidos.IdStatus = Convert.ToInt32(leerF["ID_STATUS"]);
                     pedidos.Usuario = Convert.ToInt32(leerF["ID_USUARIO"]);
-
+                    DateTime fecha = pedidos.FechaCancel;
+                    DateTime dt = fecha;
+                    for (int k = 0; k < 2; k++)
+                    {
+                        dt = dt.AddDays(-1);
+                    }
+                    if (dt.DayOfWeek == DayOfWeek.Saturday) { dt = dt.AddDays(-1); }
+                    if (dt.DayOfWeek == DayOfWeek.Sunday) { dt = dt.AddDays(-2); }
+                    pedidos.FechaFinalOrden = dt;
                 }
                 leerF.Close();
             }

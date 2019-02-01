@@ -53,74 +53,84 @@
 
         <ul>
 
-            <li><a href="@Url.Action("Index","home")" id="opc"><i class="glyphicon glyphicon-home fa_menu"></i> <span class="nav-text">Home</span></a></li>
-            <p class="text-small menu-title text-center"></p>
-
-            @if (Session["idCargo"] == null || (int)Session["idCargo"] == 0  )
+            @*<li><a><i class="glyphicon glyphicon-home fa_menu"></i> <span class="nav-text">Customer Service</span></a></li>
+        <p class="text-small menu-title text-center"></p>*@
+            <br />
+            <br />
+            @if (Session["idCargo"] == null || (int)Session["idCargo"] == 0)
             {
-            <script type="text/javascript">
+                <script type="text/javascript">
                 var url = '@Url.Action("Login", "Login")';
                 window.location.href = url;
-            </script>
-            }else if ((int)Session["idCargo"] == 1)
+                </script>
+            }
+            else if ((int)Session["idCargo"] == 1)
             {
-            <li class="has-subnav"><a href="@Url.Action("Index", "catalogos")" id="opc"> <i class="glyphicon glyphicon-book fa_menu"></i> <span class="nav-text">Catalogs</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "usuarios")" id="opc"> <i class="glyphicon glyphicon-user fa_menu"></i> <span class="nav-text">Users</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "roles")" id="opc"> <i class="glyphicon glyphicon-cog fa_menu"></i> <span class="nav-text">Roles</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "pedidos")" id="opc"> <i class="glyphicon  glyphicon-list-alt fa_menu"></i> <span class="nav-text">Reception PO</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "recibos")"> <i class="glyphicon glyphicon-download-alt fa_menu"></i> <span class="nav-text">Receipts</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="opc"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">PrintShop</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "pnl")" id="opc"> <i class="fa fa-wpforms fa-lg fa_menu"></i> <span class="nav-text">PNL</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="opc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "arte")" id="opc"> <i class="fa fa-paint-brush fa-lg fa_menu"></i> <span class="nav-text">Art</span></a></li>
+
+                <li class="has-subnav"><a href="@Url.Action("Index", "catalogos")" id="opc"> <i class="glyphicon glyphicon-book fa_menu"></i> <span class="nav-text">Catalogs</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "usuarios")" id="opc"> <i class="glyphicon glyphicon-user fa_menu"></i> <span class="nav-text">Users</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "roles")" id="opc"> <i class="glyphicon glyphicon-cog fa_menu"></i> <span class="nav-text">Roles</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "pedidos")" id="opc"> <i class="glyphicon  glyphicon-list-alt fa_menu"></i> <span class="nav-text">Reception PO</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "almacen")"> <i class="glyphicon glyphicon-download-alt fa_menu"></i> <span class="nav-text">Storehouse</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="opc"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">PrintShop</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "pnl")" id="opc"> <i class="fa fa-wpforms fa-lg fa_menu"></i> <span class="nav-text">PNL</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="opc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "arte")" id="opc"> <i class="fa fa-paint-brush fa-lg fa_menu"></i> <span class="nav-text">Art</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "fantasy")" id="opc"> <i class="glyphicon glyphicon-list-alt fa-lg fa_menu"></i> <span class="nav-text">Fantasy</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "staging")" id="opc"> <i class="glyphicon glyphicon-equalizer fa-lg fa_menu"></i> <span class="nav-text">Stagging</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "shipping")" id="opc"> <i class="glyphicon glyphicon-envelope fa-lg fa_menu"></i> <span class="nav-text">Shipping</span></a></li>
             }
             else if ((int)Session["idCargo"] == 4)
             {
-            <li class="has-subnav"><a href="@Url.Action("Index", "recibos")"> <i class="glyphicon glyphicon-download-alt fa_menu"></i> <span class="nav-text">Receipts</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "recibos")"> <i class="glyphicon glyphicon-download-alt fa_menu"></i> <span class="nav-text">Receipts</span></a></li>
             }
             else if ((int)Session["idCargo"] == 5)
             {
-            <li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">PrintShop</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "pnl")" id="menuOpc"> <i class="fa fa-wpforms fa-lg fa_menu"></i> <span class="nav-text">PNL</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="menuOpc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">PrintShop</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "pnl")" id="menuOpc"> <i class="fa fa-wpforms fa-lg fa_menu"></i> <span class="nav-text">PNL</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="menuOpc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
             }
             else if ((int)Session["idCargo"] == 6)
             {
-            <li class="has-subnav"><a href="@Url.Action("Index", "shipping")"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">Shipping</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "shipping")"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">Shipping</span></a></li>
             }
             else if ((int)Session["idCargo"] == 7)
             {
-            <li class="has-subnav"><a href="@Url.Action("Index", "staging")"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">Staging</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "staging")"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">Staging</span></a></li>
             }
             else if ((int)Session["idCargo"] == 8)
             {
-            <li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">PrintShop</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "pnl")" id="menuOpc"> <i class="fa fa-wpforms fa-lg fa_menu"></i> <span class="nav-text">PNL</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="menuOpc">  <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">PrintShop</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "pnl")" id="menuOpc"> <i class="fa fa-wpforms fa-lg fa_menu"></i> <span class="nav-text">PNL</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="menuOpc">  <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
 
             }
             else if ((int)Session["idCargo"] == 9)
             {
-            <li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">PrintShop</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "pnl")" id="menuOpc"> <i class="fa fa-wpforms fa-lg fa_menu"></i> <span class="nav-text">PNL</span></a></li>
-            <li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="menuOpc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">PrintShop</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "pnl")" id="menuOpc"> <i class="fa fa-wpforms fa-lg fa_menu"></i> <span class="nav-text">PNL</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="menuOpc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
             }
             else if ((int)Session["idCargo"] == 12)
             {
-            <li class="has-subnav"><a href="@Url.Action("Index", "arte")" id="menuOpc"> <i class="fa fa-paint-brush fa-lg fa_menu"></i> <span class="nav-text">Art</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "arte")" id="menuOpc"> <i class="fa fa-paint-brush fa-lg fa_menu"></i> <span class="nav-text">Art</span></a></li>
+            }
+            else if ((int)Session["idCargo"] == 15)
+            {
+                <li class="has-subnav"><a href="@Url.Action("Index", "pedidos")" id="opc"> <i class="glyphicon  glyphicon-list-alt fa_menu"></i> <span class="nav-text">Reception PO</span></a></li>
             }
             else
             {
-            <script type="text/javascript">
+                <script type="text/javascript">
                 var url = '@Url.Action("Login", "Login")';
                 window.location.href = url;
-            </script>
+                </script>
             }
         </ul>
         <ul class="user">
             <li>
                 <a>
-                    <i class="fa fa-user-circle-o fa-3x fa_menu"></i><span class="nav-text">@Session["nombre"]</span>
+                    <i class="fa fa-user-circle-o fa-3x fa_menu"></i><span class="nav-text">@Session["nombre"] <br /> Dept. @Session["rolUser"]</span>
                 </a>
             </li>
         </ul>
@@ -326,6 +336,10 @@
 
                 $("#selectTipoCamiseta").select2({
                         placeholder: "Select a type of shirt"
+                });
+
+                $("#selectEspecialidad").select2({
+                    placeholder: "Select a specialtyt"
                 });
 
                 $("#selectFechas").select2({

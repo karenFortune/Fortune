@@ -1,6 +1,7 @@
 ﻿using FortuneSystem.Models;
 using FortuneSystem.Models.Catalogos;
 using FortuneSystem.Models.Login;
+using FortuneSystem.Models.Roles;
 using FortuneSystem.Models.Usuarios;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace FortuneSystem.Controllers
 
         CatUsuarioData objUsr = new CatUsuarioData();
         CatSucursalData objSucursal = new CatSucursalData();
+        CatRolesData objCaRoles = new CatRolesData();
         // GET: Login
         public ActionResult Index()
         {
@@ -51,13 +53,15 @@ namespace FortuneSystem.Controllers
                     int noEmpleado = objUsr.Obtener_Datos_Usuarios(empleado);
                     Session["id_Empleado"] = noEmpleado;
                     Session["idCargo"] = usuario.Cargo;
+                    usuario.CatRoles = objCaRoles.ConsultarListaRoles(usuario.Cargo);
+                    Session["rolUser"] = usuario.CatRoles.Rol;
                     string pass = objUsr.Obtener_Contraseña_Usuario(empleado);
                     if (noEmpleado != 0 && pass.CompareTo(usuario.Contrasena)==0)
                     {
                         if (usuario.Cargo == 1)
                         {
                             actionName = "Index";
-                            nameController = "Usuarios";
+                            nameController = "Pedidos";
 
                         }
                         else if (usuario.Cargo == 4)
@@ -100,6 +104,12 @@ namespace FortuneSystem.Controllers
                         {
                             actionName = "Index";
                             nameController = "Arte";
+
+                        }
+                        else if (usuario.Cargo == 15)
+                        {
+                            actionName = "Index";
+                            nameController = "Pedidos";
 
                         }
                         else if (usuario.Cargo == 0)

@@ -105,6 +105,7 @@ namespace FortuneSystem.Models.Shipping
         public string store { get; set; }
         public int id_talla { get; set; }
         public string talla { get; set; }
+        public string description { get; set; }
         public int piezas { get; set; }
         public List<Cantidades_Estilos> lista_cantidades { get; set; }
     }
