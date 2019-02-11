@@ -553,9 +553,9 @@
                             <br />
                         </div>
                         <div class="container-fluid">
-                            <div id="div_titulo" style="visibility:hidden; "></div>
-                            <div id="listaTallaBatch" style=" overflow:auto; height: 150px;"></div>
-                            <div id="opciones" style="visibility:hidden;">
+                            <div id="div_titulo" style="display:none; "></div>
+                            <div id="listaTallaBatch" style=" overflow:auto; height: 150px; display:none;"></div>
+                            <div id="opciones" style="display:none; ">
                                 <div class="form-row">
                                     <div class="form-group col-sm-12 tipoP">
                                         @Html.LabelFor(model => model.Packing.PackingTypeSize.TipoEmpaque, htmlAttributes: new { @class = "control-label " })
@@ -570,13 +570,13 @@
                             <button type="button" id="btnAddP" class="btn btn-xs btn-primary classAdd">+ Add Size</button>
                             <br />
                             <div id="listaTallaP"></div>
-                            <div id="div_estilo_pack" style="visibility:hidden;"></div>
+                            <div id="div_estilo_pack" style="display:none;"></div>
                             <button type="button" class="btn btn-primary" id="registrarNuevo" data-toggle="modal">
                                 <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> ADD NEW BATCH
                             </button>
                             <br />
                             <br />
-                            <div id="opcionesPack" style="visibility:hidden;">
+                            <div id="opcionesPack" style="display:none;">
                                 <div class="container-fluid">
                                     <div class="row">
                                         <div class="col-xs-4 col-md-4" style="width: 150px;">

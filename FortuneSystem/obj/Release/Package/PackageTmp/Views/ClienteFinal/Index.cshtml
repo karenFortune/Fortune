@@ -28,6 +28,15 @@
         font-size: 15px;
         font-weight: 600;
     }
+
+    .edit_driver {
+    }
+
+        .edit_driver:hover {
+            color: white !important;
+            background: #3479bf !important;
+            border-radius: 15px;
+        }
 </style>
 @{
     if (TempData["clienteOK"] != null)
@@ -170,9 +179,9 @@
                             @Html.DisplayFor(modelItem => item.NombreCliente)
                         </td>
                         <td>
-                            <a href="#" class="btn btn-default glyphicon glyphicon-edit btnEdit" data-value="@item.CustomerFinal " title="Edit Customer Order"></a> |
-                            <a href="#" class="btn btn-default glyphicon glyphicon-search btnSearch" data-value="@item.CustomerFinal " title="Details Customer Order"></a> |
-                            <a href="#" class="btn btn-default glyphicon glyphicon-trash btnDelete" data-value="@item.CustomerFinal " title="Delete Customer Order"></a>
+                            <a href="#" class="btn edit_driver edicion_driver btnEdit" data-value="@item.CustomerFinal " title="Edit Customer Order"><span class="glyphicon glyphicon-edit " aria-hidden="true" style="padding: 0px !important;"></span></a>
+                            <a href="#" class="btn edit_driver edicion_driver btnSearch" data-value="@item.CustomerFinal " title="Details Customer Order"><span class="glyphicon glyphicon-search " aria-hidden="true" style="padding: 0px !important;"></span></a>
+                            <a href="#" class="btn edit_driver edicion_driver btnDelete" data-value="@item.CustomerFinal " title="Delete Customer Order"><span class="glyphicon glyphicon-trash " aria-hidden="true" style="padding: 0px !important;"></span></a>
                         </td>
                     </tr>
                 }

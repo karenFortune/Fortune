@@ -11,6 +11,7 @@ namespace FortuneSystem.Models
     {
         private static readonly object objectLock = new object();
         private bool _disposed;
+        //private SqlConnection conn = new SqlConnection("Server=localhost;Database=FortuneTest;User Id=administrator; Password=A!3$$traFoR7un3; Connection Timeout=10000;");
         private SqlConnection conn = new SqlConnection("Server=tcp:fortunesp.database.windows.net,1433;Initial Catalog=FortuneTest;Persist Security Info=False;User ID=AdminFB;Password=Admin@2018;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=5000;");
         //private SqlConnection conn = new SqlConnection("Server=W_KAREN;Database=FortuneTest;Integrated Security =true");
         public SqlConnection AbrirConexion()

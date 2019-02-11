@@ -24,7 +24,7 @@
         select: function (event, ui) {
             var estilo = ui.item.value;
             var nuevoEstilo = estilo.trim();
-            var numero = validarEstilo(nuevoEstilo);  
+            //var numero = validarEstilo(nuevoEstilo);  
             var item = $("#ItemDescripcion_Descripcion").val(ui.item.descripcion);
             if (item !== "") {
                 $('#nuevoEstilo').attr('disabled', true);

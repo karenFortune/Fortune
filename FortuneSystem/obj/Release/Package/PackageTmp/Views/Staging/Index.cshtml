@@ -79,12 +79,12 @@
         $("#loading_staging").css('display', 'inline');
         obtener_staging();
         obtener_pedidos_estilos();
-        obtener_charts();
-        cambiar_info_tabla();
+        //obtener_charts();
+        //cambiar_info_tabla();
     });
     var datos;
     function obtener_charts() {
-        $.ajax({
+        /*$.ajax({
             url: "/Staging/buscar_datos_grafica",
             type: "POST",
             contentType: "application/json;charset=utf-8",
@@ -134,11 +134,10 @@
             }
         });
 
-        
+        */
 
     }
     function obtener_pedidos_estilos() {
-
         $.ajax({
             url: "/Staging/buscar_pedidos_inicio",
             type: "POST",
@@ -367,7 +366,10 @@
         });
     }
     //<div style="width:250px;float:right; height:250px;"><canvas id="staging_chart" width="50" height="50"> </canvas></div>
-
+    $(document).on("click", "a", function () {
+        //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
+        $("#loading").css('display', 'none');
+    });
 
 
 </script>
@@ -485,6 +487,24 @@
         .x:after {
             transform: rotate(-45deg);
             transform-origin: center;
+        }
+    .boton_menu {
+        border: none;
+        color: white;
+        background: #69984c;
+        width: 100%;
+        text-align: left;
+        font-size: 1.2em;
+        padding: 0.5em
+    }
+
+        .boton_menu:hover {
+            border: none;
+            background: #f3f3f3;
+            color: #69984c;
+            width: 100%;
+            text-align: left;
+            font-size: 1.2em;
         }
 </style>
 

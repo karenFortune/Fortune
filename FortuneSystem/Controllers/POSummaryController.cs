@@ -6,6 +6,7 @@ using FortuneSystem.Models.Pedidos;
 using FortuneSystem.Models.POSummary;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -25,6 +26,7 @@ namespace FortuneSystem.Controllers
         CatTelaData objTela = new CatTelaData();
         CatTipoCamisetaData objTipoC = new CatTipoCamisetaData();
         ArteData objArte = new ArteData();
+        CatEspecialidadesData objEspecialidad = new CatEspecialidadesData();
 
         public int IdPedido;
         // GET: POSummary
@@ -62,14 +64,34 @@ namespace FortuneSystem.Controllers
 
         [HttpGet]
         public ActionResult RegistrarNuevoEstilo()
-        {
-            
+        {      
 
             POSummary summary = new POSummary();
             ListaGenero(summary);
             ListaTela(summary);
             ListaTipoCamiseta(summary);
+            ListaEspecialidades(summary);
             summary.PedidosId = Convert.ToInt32(Session["idPedidoRevision"]);
+
+            if (summary == null)
+            {
+
+                return View();
+            }
+
+            return PartialView(summary);
+
+        }
+
+        [HttpGet]
+        public ActionResult RegistrarNuevoEstiloPo()
+        {
+            POSummary summary = new POSummary();
+            ListaGenero(summary);
+            ListaTela(summary);
+            ListaTipoCamiseta(summary);
+            ListaEspecialidades(summary);
+            //summary.PedidosId = IDPO;
 
             if (summary == null)
             {
@@ -108,17 +130,15 @@ namespace FortuneSystem.Controllers
 
         }
 
-        [HttpGet]
-        public ActionResult RegistrarItem([Bind] POSummary descItem, string EstiloItem, string IdColor, int Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad)
+        public void ListaEspecialidades(POSummary summary)
         {
-            int PedidosId = Convert.ToInt32(Session["idPedido"]);
-            descItem.PedidosId = PedidosId;                           
-            objItems.AgregarItems(descItem);  
-            Session["IdItems"]= objItems.Obtener_Utlimo_Item();
-            this.RegistrarArte(EstiloItem);
+            List<CatEspecialidades> listaEspecialidades = summary.ListaEspecialidades;
+            listaEspecialidades = objEspecialidad.ListaEspecialidades().ToList();
+            ViewBag.listEspecialidad = new SelectList(listaEspecialidades, "IdEspecialidad", "Especialidad", summary.IdEspecialidad);
 
-            return View(descItem);
         }
+
+
 
         public void RegistrarArte(string EstiloItem)
         {
@@ -142,14 +162,29 @@ namespace FortuneSystem.Controllers
                 arte = objArte.BuscarEstiloArteImagen(idEstilo);
                 objArte.AgregarArte(arte.IdImgArte, IdItems);
             }
+            Session["IdArte"]=arte.extensionArte;
         }
 
         [HttpGet]
-        public ActionResult RegistrarItemsRev([Bind] POSummary descItem, string EstiloItem, string IdColor, int Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta)
+        public ActionResult RegistrarItemsRev([Bind] POSummary descItem, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad)
         {
             descItem.PedidosId = Convert.ToInt32(Session["idPedidoRevision"]);
+            descItem.Cantidad = Int32.Parse(Cantidad);
             objItems.AgregarItems(descItem);
             Session["IdItemsRev"] = objItems.Obtener_Utlimo_Item();
+            return View(descItem);
+        }
+
+        [HttpGet]
+        public ActionResult RegistrarItem([Bind] POSummary descItem, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad)
+        {
+            int PedidosId = Convert.ToInt32(Session["idPedido"]);
+            descItem.PedidosId = PedidosId;
+            descItem.Cantidad = Int32.Parse(Cantidad);
+            objItems.AgregarItems(descItem);
+            Session["IdItems"] = objItems.Obtener_Utlimo_Item();
+            this.RegistrarArte(EstiloItem);
+
             return View(descItem);
         }
 
@@ -436,7 +471,34 @@ namespace FortuneSystem.Controllers
             return View();
         }
 
+        [HttpPost]        
+        public ActionResult FileUpload(POSummary arte, HttpPostedFileBase FileArte)
+        {
+            if (arte.ExtensionArte == null)
+            {
+                FileArte = arte.FileArte;
+                if (FileArte != null)
+                {
+                    string ext = Path.GetFileName(FileArte.FileName);
+                    string path = Path.Combine(Server.MapPath("~/Content/imagenesEstilos"), ext);
+                    arte.ExtensionArte = ext;
+                    FileArte.SaveAs(path);
+                    TempData["imagArteOK"] = "The Art image was registered correctly.";
+                }
+            }
 
+           /* ObtenerEstadosPorId(Arte);
+
+            if (ModelState.IsValid)
+            {
+                db.Entry(Arte).State = EntityState.Modified;
+                db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }*/
+
+            return View();
+        }
 
 
     }

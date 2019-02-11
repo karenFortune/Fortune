@@ -15,9 +15,9 @@
     $(function () {
 
     });
-    $(document).on("input", ".numeric", function () {
+    $(document).on("input", "#l-cantidad", function () {
         this.value = this.value.replace(/\D/g, '');
-        $(".numeric").on("keydown keyup change", function () {
+        $("#l-cantidad").on("keydown keyup change", function () {
             debugger
             var value = $(this).val();
             if (value.length < minLength) {
@@ -148,10 +148,12 @@
                             });
                             $("#nuevoUPC").hide();
                         } else {
+                            var cont = 0;
                             $.each(listaT, function (key, item) {
-                                html += '<tr>';
+                                cont = cont + 1;
+                                html += '<tr id="pallet' + cont + '">';
                                 html += '<td><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '" readonly/></td>';
-                                html += '<td><input type="text" name="l-cantidad" id="l-cantidad" class="form-control numeric " /><span class="msj"></span></td>';
+                                html += '<td><input type="text" name="l-cantidad" id="l-cantidad" class="form-control numeric' + cont +'" /><span class="msj"></span></td>';
 
                                 html += '</tr>';
 
@@ -257,7 +259,7 @@
     function enviarListaTalla(cadena, error) {
 
         if (error != 0) {
-            var alert = alertify.alert("Mensaje", 'Todos los campos son obligatorios.').set('label', 'Aceptar');
+            var alert = alertify.alert("Message", 'All fields are required.').set('label', 'Aceptar');
             alert.set({ transition: 'zoom' });
             alert.set('modal', false);
         } else {
@@ -272,13 +274,13 @@
                 success: function (data) {
                     $("#btnRegister").removeAttr('disabled');
                     alertify.set('notifier', 'position', 'top-right');
-                    alertify.notify('Se registro correctamente el UPC.', 'success', 5, null);
-
+                    alertify.notify('The UPC was registered correctly.', 'success', 5, null);
+                    $("#nuevoUPC").hide();
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     showError(xhr.status, xhr.responseText);
                     if (data.error == 1) {
-                        alertify.notify('Verificar.', 'error', 5, null);
+                        alertify.notify('Check.', 'error', 5, null);
                     }
                 }
             });
@@ -377,22 +379,15 @@
                 </div>
             </div>
             <div class="form-group">
-
                 <div class="col-md-10">
-
-
                     <div class="col-md-10">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         @Html.LabelFor(model => model.StatusPNL, htmlAttributes: new { @class = "control-label " })
                         @Html.RadioButtonFor(model => model.EstadosPNL, EstatusPNL.APPROVED, new { @class = "form-radio", Checked = "checked" }) APPROVED
                         @Html.RadioButtonFor(model => model.EstadosPNL, EstatusPNL.REVIEWED, new { @class = "form-radio" }) REVIEWED
                         @Html.RadioButtonFor(model => model.EstadosPNL, EstatusPNL.PENDING, new { @class = "form-radio" }) PENDING
-
-
                     </div>
                 </div>
-
-
             </div>
 
 
@@ -402,7 +397,7 @@
 
                 <div class="form-group">
                     <div class="container-fluid">
-                        <h2 style="text-align:center">SAVE UPC</h2>
+                        <h2 style="text-align:center">UPC</h2>
                         <div id="listaTalla"></div>
                         <div id="botonUPC" style="visibility:hidden;">
                             <button type="button" id="nuevoUPC" class="btn btn-success btn-md pull-right btn-sm">Save UPC</button>

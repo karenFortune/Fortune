@@ -69,9 +69,7 @@
                 border: 0px solid #337ab7;
             }
 
-        #tablaSize.table-bordered > thead > tr > th {
-            border: 0px solid #337ab7;
-        }
+   
 
         table.table-bordered > tbody > tr > td {
             border: 1px solid #0c0c0c;
@@ -79,7 +77,18 @@
 
         table.table-bordered > tbody > tr > th {
             border: 1px solid #0c0c0c;
+        } 
+
+        #tablaSize > tbody > tr > th {
+            border: 1px solid #0c0c0c;
+            width: 190px;
         }
+
+        #tablaSize > tbody > tr > td {
+            border: 1px solid #0c0c0c;
+            width: 190px;
+        }
+     
 
         .cabecera_inventario {
             color: white;
@@ -98,45 +107,36 @@
 </head>
 <body>
     @{ //VARIABLES
-        int cantQty = 0, cantExtra = 0, totalPcs = 0;
-       
+        int cantQty = 0, cantExtra = 0, totalPcs = 0, numCTN = 0, numUPC = 0;
+
     }
+
+    @foreach (var item in Model)
+    {
     <div class="container-fluid">
-        @*Informacion de datos para encabezado*@
-        @foreach (var item in Model)
-        {
+        @*Informacion de datos para encabezado *@
+        <div style="margin: 0 auto;">
+            <div class="col-md-1" style=" float:left; width: 100px;">
 
-            <div>
-                <div class="col-md-1" style=" float:left; width: 170px;">
 
-                    @foreach (var itemS in Model)
-                    {
-                        foreach (var item_Tallas in itemS.ListarTallasPorEstilo)
-                        {
+                @foreach (var item_Tallas in item.ListarTallasPorEstilo)
+                {
 
-                            totalPcs += @item_Tallas.Cantidad;
-                        }
-                    }
-                    <p style="font-size:35px; font-family:'Times New Roman', Times, serif; font-weight:normal;text-shadow: 0px 1px 2px #777;">@totalPcs</p>
-                </div>
-                <div class="col-md-8" style="width:800px; float:left;">
-                    <p><center><h2 style=" font-size:35px; font-family:'Times New Roman', Times, serif; font-weight:normal;text-shadow: 0px 1px 2px #777;">@Html.DisplayFor(modelItem => item.Pedidos.PO)</h2></center></p>
-                </div>
-                <div class="col-md-2" style="width:170px; float:left; ">
+                    totalPcs += @item_Tallas.Cantidad;
+                }
 
-                    <p style="font-size:35px; font-family:'Times New Roman', Times, serif; font-weight:normal;text-shadow: 0px 1px 2px #777;"> @Html.DisplayFor(modelItem => item.Pedidos.FechaFinalOrden)</p>
-                </div>
+                <p style="font-size:35px; font-family:'Times New Roman', Times, serif; font-weight:normal;text-shadow: 0px 1px 2px #777;">@totalPcs</p>
             </div>
-        }
+            <div class="col-md-8" style="width:650px; float:left;">
+                <p><center><h2 style=" font-size:35px; font-family:'Times New Roman', Times, serif; font-weight:normal;text-shadow: 0px 1px 2px #777;">@Html.DisplayFor(modelItem => item.Pedidos.PO)</h2></center></p>
+            </div>
+            <div class="col-md-2" style="width:100px; float:left; ">
 
-        @*Descripcion de especialidad
-        @foreach (var item in Model)
-        {
-            <center><h2 class="esp"> @Html.DisplayFor(modelItem => item.CatEspecialidades.Especialidad)</h2></center>
-        }
-        *@
+                <p style="font-size:35px; font-family:'Times New Roman', Times, serif; font-weight:normal;text-shadow: 0px 1px 2px #777;"> @Html.DisplayFor(modelItem => item.Pedidos.FechaFinalOrden)</p>
+            </div>
+        </div>
         @*Tabla de informacion del estilo*@
-        <table class="table table-bordered" id="tablaRepEstilo">
+        <table class="table table-bordered" id="tablaRepEstilo" style="padding: 20px; margin: 5px auto;">
             <thead class="cabecera_inventario">
                 <tr>
                     <th class="encabezado">
@@ -154,95 +154,130 @@
                     <th class="encabezado">
                         @Html.DisplayNameFor(model => model.Cantidad)
                     </th>
-                    <th class="encabezado">
-                        @Html.DisplayNameFor(model => model.Price)
-                    </th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td class="texto_t">
-                            @Html.DisplayFor(modelItem => item.EstiloItem)
-                        </td>
-                        <td  class="texto_t">
-                            @Html.DisplayFor(modelItem => item.ItemDescripcion.Descripcion)
-                        </td>
-                        <td  class="texto_t">
-                            @Html.DisplayFor(modelItem => item.CatColores.CodigoColor)
-                        </td>
-                        <td  class="texto_t">
-                            @Html.DisplayFor(modelItem => item.CatColores.DescripcionColor)
-                        </td>
-                        <td  class="texto_t">
-                            @Html.DisplayFor(modelItem => item.Cantidad)
-                        </td>
-                        <td  class="texto_t">
-                            @Html.DisplayFor(modelItem => item.Price)
-                        </td>
-                    </tr>
-                }
+                <tr>
+                    <td class="texto_t">
+                        @Html.DisplayFor(modelItem => item.EstiloItem)
+                    </td>
+                    <td class="texto_t">
+                        @Html.DisplayFor(modelItem => item.ItemDescripcion.Descripcion)
+                    </td>
+                    <td class="texto_t">
+                        @Html.DisplayFor(modelItem => item.CatColores.CodigoColor)
+                    </td>
+                    <td class="texto_t">
+                        @Html.DisplayFor(modelItem => item.CatColores.DescripcionColor)
+                    </td>
+                    <td class="texto_t">
+                        @Html.DisplayFor(modelItem => item.Cantidad)
+                    </td>
+                </tr>
             </tbody>
-        </table>        
+        </table>
         <div class="row">
-            <div class="col-md-1" style=" float:left; width: 1000px; height: 500px;  ">
-                <br />
+            <div class="col-md-1" style=" float:left; width: 750px; height: 250px; border: 0px solid #0c0c0c; ">
+                @*Tabla de informacion de datos del estilo*@
+                <table class="table table-bordered" id="tablaDatEstilo" style="padding: 25px; margin: 0 auto;">
+                    <thead class="cabecera_inventario">
+                        <tr>
+                            <th class="encabezado">
+                                FABRIC TYPE
+                            </th>
+                            <th class="encabezado">
+                                FIBER
+                            </th>
+                            <th class="encabezado">
+                                YARN SIZE
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td class="texto_t">
+                                -
+                            </td>
+                            <td class="texto_t">
+                                -
+                            </td>
+                            <td class="texto_t">
+                                -
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                 @*Descripcion de especialidad*@
-                @foreach (var item in Model)
-                {
-                    <center><h2 class="esp"> @Html.DisplayFor(modelItem => item.CatEspecialidades.Especialidad)</h2></center>
-                }
-                @*Tabla de lista de tallas*@
-                <table class="table table-bordered" id="tablaSize">
+                    <center><h3 class="esp"> @Html.DisplayFor(modelItem => item.CatEspecialidades.Especialidad)</h3></center>
+                 @*Tabla de lista de tallas*@
+                <table class="" id="tablaSize" style="padding: 20px; margin: 5px auto;" >
                     <thead>  </thead>
                     <tbody>
                         <tr>
-                            <th class="cabecera_inventario" width="190px;" style="text-align:right; ">SIZE:</th>
-                            @foreach (var itemT in Model)
+                            <th class="cabecera_inventario"  style="text-align:right; ">SIZE:</th>
+
+                            @foreach (var item_Tallas in item.ListarTallasPorEstilo)
                             {
-                                foreach (var item_Tallas in itemT.ListarTallasPorEstilo)
-                                {
-                                    <th class="cabecera_inventario">@item_Tallas.Talla </th>
-                                }
+                                <th class="cabecera_inventario">@item_Tallas.Talla </th>
                             }
-                            <th class="cabecera_inventario"> TOTAL </th>
+
+                            <th class="cabecera_inventario" > TOTAL </th>
                         </tr>
                         <tr>
-                            <th class="cabecera_inventario" width="190px;" style="text-align:right">QUANTITY:</th>
-                            @foreach (var itemT in Model)
+                            <th class="cabecera_inventario" width="190px;"  style="text-align:right">QUANTITY:</th>
+
+                            @foreach (var item_Tallas in item.ListarTallasPorEstilo)
                             {
-                                foreach (var item_Tallas in itemT.ListarTallasPorEstilo)
-                                {
-                                    <th class="texto_t">@item_Tallas.Cantidad </th>
-                                    cantQty += @item_Tallas.Cantidad;
-                                }
+                                <th class="texto_t" >@item_Tallas.Cantidad </th>
+                                cantQty += @item_Tallas.Cantidad;
                             }
-                            <td  class="texto_t">@cantQty</td>
+
+                            <td class="texto_t">@cantQty</td>
                         </tr>
                         <tr>
                             <th class="cabecera_inventario" width="190px;" style="text-align:right">EXTRAS/DAÑADAS:</th>
-                            @foreach (var itemT in Model)
+
+                            @foreach (var item_Tallas in item.ListarTallasPorEstilo)
                             {
-                                foreach (var item_Tallas in itemT.ListarTallasPorEstilo)
-                                {
-                                    <th class="texto_t">@item_Tallas.Extras </th>
-                                    cantExtra += @item_Tallas.Extras;
-                                }
+                                <th class="texto_t">@item_Tallas.Extras </th>
+                                cantExtra += @item_Tallas.Extras;
                             }
-                            <td  class="texto_t">@cantExtra</td>
+
+                            <td class="texto_t">@cantExtra</td>
+                        </tr>
+                        <tr>
+                            <th class="cabecera_inventario" width="190px;" style="text-align:right">QTY/CTN:</th>
+
+                            @foreach (var item_Tallas in item.ListarTallasPorEstilo)
+                            {
+                                <th class="texto_t">0 </th>
+                                numCTN += 0;
+                            }
+
+                            <td class="texto_t">@numCTN</td>
+                        </tr>
+                        <tr>
+                            <th class="cabecera_inventario" width="190px;" style="text-align:right">UPC:</th>
+
+                            @foreach (var item_Tallas in item.ListarTallasPorEstilo)
+                            {
+                                <th class="texto_t">0 </th>
+                                numUPC += 0;
+                            }
+
+                            <td class="texto_t">@numUPC</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="col-md-1" style="width:200px; height:400px; float:left;">
-                @foreach (var item in Model)
-                {
-                    <img src="@Url.Action("ConvertirImagenArteEstilo", "Arte", new {nombreEstilo= item.EstiloItem})" style="width:100%;height:50%;" />
-                }
-
+            <div class="col-md-1" style="width: 200px; height: 250px; float:left; border: 0px solid #0c0c0c;">
+                <br />
+                <img src="@Url.Action("ConvertirImagenArteEstilo", "Arte", new {nombreEstilo= item.EstiloItem})" style="width:180px;height:200px;" />
             </div>
         </div>
+
     </div>
+    }
 </body>
 </html>

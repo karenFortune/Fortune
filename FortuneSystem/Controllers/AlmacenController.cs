@@ -31,8 +31,8 @@ namespace FortuneSystem.Controllers.Catalogos
 
         public ActionResult Index()
         {
-            Session["id_usuario"] = consultas.buscar_id_usuario(Convert.ToString(Session["usuario"]));
-            Session["id_usuario"] = 2;
+            //Session["id_usuario"] = consultas.buscar_id_usuario(Convert.ToString(Session["usuario"]));
+            //Session["id_usuario"] = 2;
             if (Session["usuario"] == null){
                 bool isExcelInstalled = Type.GetTypeFromProgID("Excel.Application") != null ? true : false;
                 //return View(di.ListaInventario());
@@ -45,7 +45,10 @@ namespace FortuneSystem.Controllers.Catalogos
         public ActionResult recibo_items(){
             return View();
         }
-
+        public ActionResult formulario_nuevo_item()
+        {
+            return View();
+        }
 
         public JsonResult buscar_items_tabla_inventario(string busqueda){
             return Json(di.ListaInventario(busqueda), JsonRequestBehavior.AllowGet);
@@ -337,10 +340,13 @@ namespace FortuneSystem.Controllers.Catalogos
                         dt.agregar_inventario_desde_transferencia(inventario, id_destino, i.cantidad);
                         existencia = di.obtener_ultimo_inventario();
                     }
+                    //dt.agregar_id_inventario_nuevo_transferencia(i.id_salida_item,existencia);
                     string[] codigo = (i.codigo).Split('_');
-                    int cantidad_caja = dt.obtener_contenido_caja(Convert.ToInt32(codigo[1]));
-                    if ((i.codigo).Contains("caja") && (cantidad_caja==i.cantidad)) {                        
-                        dt.cambiar_id_inventario_caja(existencia,codigo[1]);
+                    if ((i.codigo).Contains("caja")) { 
+                        int cantidad_caja = dt.obtener_contenido_caja(Convert.ToInt32(codigo[1]));
+                        if ((i.codigo).Contains("caja") && (cantidad_caja==i.cantidad)) {                        
+                            dt.cambiar_id_inventario_caja(existencia,codigo[1]);
+                        }
                     }
                 }
             }
@@ -457,14 +463,11 @@ namespace FortuneSystem.Controllers.Catalogos
                             }
                         }*/
                         existencia = di.buscar_existencia_blank_inventario();
-                        if (existencia == 0)
-                        {
+                        if (existencia == 0){
                             di.guardar_blank();
                             di.id_inventario = di.obtener_ultimo_inventario();
                             ids_inventario += "*" + di.id_inventario.ToString();
-                        }
-                        else
-                        {
+                        }else{
                             di.sumar_existencia_blank(existencia);
                             ids_inventario += "*" + existencia.ToString();
                         }
@@ -528,7 +531,7 @@ namespace FortuneSystem.Controllers.Catalogos
         public JsonResult obtener_recibos_lista() {
             return Json(di.Listarecibos(), JsonRequestBehavior.AllowGet);
         }
-        //guardar_mp_recibo
+        
         public JsonResult guardar_mp_recibo(string recibo, string mp)
         {
             di.agregar_mp_recibo(recibo, mp);

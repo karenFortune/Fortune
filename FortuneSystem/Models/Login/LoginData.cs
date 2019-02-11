@@ -64,6 +64,7 @@ namespace FortuneSystem.Models.Login
             comando.CommandType = CommandType.StoredProcedure;
             comando.Parameters.AddWithValue("@Usuario", _username);
             comando.Parameters.AddWithValue("@Password",_password);
+
            
 
             leer = comando.ExecuteReader();
@@ -73,6 +74,7 @@ namespace FortuneSystem.Models.Login
             {
 
                 usuario.Cargo = Convert.ToInt32(leer["Cargo"]);
+                usuario.Id = Convert.ToInt32(leer["id"]);
                 PrivilegioUsuario(usuario);
             }
             if (leer.HasRows)

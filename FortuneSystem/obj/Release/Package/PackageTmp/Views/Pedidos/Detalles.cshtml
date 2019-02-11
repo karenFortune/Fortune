@@ -17,6 +17,16 @@
             background: #3479bf !important;
             border-radius: 15px;
         }
+
+    #nuevo-estilo {
+        margin-left: 30px;
+        margin-top: 1px;
+        width: 180px;
+        height: 40px;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
 </style>
 <script>
 
@@ -44,7 +54,7 @@
             success: function (jsonData) {
                 var html = '';
                 var lista_estilo = jsonData.Data.listaItem;
-
+                var totalUnitsReg = 0;
                 $.each(lista_estilo, function (key, item) {
                     html += '<tr  onclick="probar(' + item.IdItems + ')">';
                     html += '<td>' + item.EstiloItem + '</td>';
@@ -54,10 +64,13 @@
                     html += '<td>' + item.Cantidad + '</td>';
                     html += '<td>' + item.Price + '</td>';
                     html += '<td>' + item.Total + '</td>';
-                    html += '<td><a href="#" onclick="obtener_tallas_item(' + item.IdItems + ');" class = "btn edit_driver edicion_driver l1s" style = "padding:0px 5px 0px 5px;" Title = "Sizes"> <span class="glyphicon glyphicon-search" aria-hidden="true" style="padding: 0px !important;"></span></a>';
-                    html += '<a class="btn edit_driver edicion_driver " Title="Report" onclick="imprimir_reporte_po(' + item.IdItems+')"> <span class="fa fa-file-pdf-o fa-lg" aria-hidden="true" style="padding: 0px !important;"></span></a></td>';
+                    totalUnitsReg += item.Cantidad;
+
+                    html += '<td><a href="#" onclick="obtener_tallas_item(' + item.IdItems + ');" class = "btn edit_driver edicion_driver l1s"  Title = "Sizes"> <span class="glyphicon glyphicon-search" aria-hidden="true" style="padding: 0px !important;"></span></a>';
+                    //html += '<a class="btn edit_driver edicion_driver " Title="Report" onclick="imprimir_reporte_po(' + item.IdItems+')"> <span class="fa fa-file-pdf-o fa-lg" aria-hidden="true" style="padding: 0px !important;"></span></a></td>';
                     html += '</tr>';
                 });
+                $("#RegTotalUnits").text(totalUnitsReg);
                 if (Object.keys(lista_estilo).length === 0) {
                     html += '<tr class="odd"><td valign="middle" align="center" colspan="10" class="dataTables_empty">No styles were found for the PO.</td></tr>';
 
@@ -68,7 +81,7 @@
             error: function (errormessage) { alert(errormessage.responseText); }
         });
     }
-
+    //$("#RegTotalUnits").append("some Text");
     function imprimir_reporte_po(id) {
         $.ajax({
             url: "/Pedidos/Imprimir_Reporte_PO/",
@@ -171,85 +184,125 @@
         </div>
     </div>
 </div>
-<div class="container-fluid" style="padding-left:20em; padding-right:10em;">
-    <div>
-
-        <div class="panel panel-primary" id="consultaPO">
-            <div class="panel-heading">
-                <h2>Orden de Referencia: @Html.DisplayFor(model => model.PO, new { @class = "control-label col-md-6" })  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      Orden de Compra: @Html.DisplayFor(model => model.VPO, new { @class = "control-label col-md-6" })</h2>
-            </div>
-            @Html.HiddenFor(model => model.IdPedido)
-
-        </div>
-        <div class="container-fluid">
-            <div class="form-row">
-                <div class="form-group col-sm-4 estilo">
-                    <label style="font-size: x-large; font-weight: 500">
-                        @Html.LabelFor(model => model.CatCliente.Nombre, new { @class = "control-label" }):
-                        <label style="font-size: x-large; font-weight: 500">@Html.DisplayFor(model => model.CatCliente.Nombre, new { @class = "control-label col-md-6" })</label>
-                    </label>
+<div class="modal fade" id="nuevoEstiloModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="nuevoEstiloModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel">REGISTER STYLES</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="form-group col-sm-7 estilo">
-                    <label style="font-size: x-large; font-weight: 500">
-                        @Html.LabelFor(model => model.CatClienteFinal.NombreCliente, new { @class = "control-label" }):
-                        <label style="font-size: x-large; font-weight: 300">@Html.DisplayFor(model => model.CatClienteFinal.NombreCliente, new { @class = "control-label col-md-6" })</label>
-                    </label>
+                <div class="modal-body">                  
+                    <div id="infPedido"> <label style="font-size: x-large; font-weight: 500">PO
+                        @Html.LabelFor(model => model.IdPedido, new { @class = "control-label" })
+                        <label style="font-size: x-large; font-weight: 500">@Html.DisplayFor(model => model.IdPedido, new { @class = "control-label col-md-6" })</label>
+                    </label></div>
+                    <div id="Contenedor"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btnCancel" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
-        <div class="panel panel-primary" id="consultaPO">
-            <div class="panel-heading">
-                <h4>STYELS</h4>
-            </div>
-            <div id="div_tabla_estilos" style="width: 100%; height:300px; overflow:auto; ">
-                <table id="tabless" class="table table-sm table-striped table-hover ">
-                    <thead>
-                        <tr>
-
-                            <th>ITEM</th>
-                            <th>ITEM DESCRIPTION</th>
-                            <th>COLOR CODE</th>
-                            <th>COLOR DESCRIPTION</th>
-                            <th>QTY</th>
-                            <th>PRICE</th>
-                            <th>TOTAL</th>
-                            @* <th>ACTIONS</th>*@
-                        </tr>
-                    </thead>
-                    <tbody class="tbody"></tbody>
-                </table>
-            </div>
-
-        </div>
-
-        <br />
-        <br />
-        <div class="panel panel-primary" id="consultaTalla" style="visibility:hidden;">
-            <div class="panel-heading">
-                <h4>SIZES</h4>
-            </div>
-            <div id="div_tabla_tallas" style="width: 100%; height:210px; overflow:auto;  ">
-                <div id="div_estilo" style=" overflow:auto; visibility:hidden; ">
-                </div>
-                <table class="table table-sm table-striped table-hover ">
-                    <thead class="encabezado"></thead>
-                    <tbody class="tbodys"></tbody>
-                </table>
-            </div>
-
-        </div>
-
-
-
     </div>
-    <br />
-    <br />
-    <br />
+    <div class="container-fluid" style="padding-left:20em; padding-right:10em;">
+        <div>
 
-    <a href='@Url.Action("Index", "Pedidos")'>
-        <img src='@Url.Content("~/Content/img/backToPage.png")' id="flecha" title="Go Back" />
-    </a>
-</div>
+            <div class="panel panel-primary" id="consultaPO">
+                <div class="panel-heading">
+                    <h2>Orden de Referencia: @Html.DisplayFor(model => model.PO, new { @class = "control-label col-md-6" })  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      Orden de Compra: @Html.DisplayFor(model => model.VPO, new { @class = "control-label col-md-6" })</h2>
+                </div>
+                @Html.HiddenFor(model => model.IdPedido)
+
+            </div>
+            <div class="container-fluid">
+                <div class="form-row">
+                    <div class="form-group col-sm-4 estilo">
+                        <label style="font-size: x-large; font-weight: 500">
+                            @Html.LabelFor(model => model.CatCliente.Nombre, new { @class = "control-label" }):
+                            <label style="font-size: x-large; font-weight: 500">@Html.DisplayFor(model => model.CatCliente.Nombre, new { @class = "control-label col-md-6" })</label>
+                        </label>
+                    </div>
+                    <div class="form-group col-sm-7 estilo">
+                        <label style="font-size: x-large; font-weight: 500">
+                            @Html.LabelFor(model => model.CatClienteFinal.NombreCliente, new { @class = "control-label" }):
+                            <label style="font-size: x-large; font-weight: 300">@Html.DisplayFor(model => model.CatClienteFinal.NombreCliente, new { @class = "control-label col-md-6" })</label>
+                        </label>
+                    </div>
+                </div>
+                <!--<br />
+                    <p>
+                        <a href="#" class="btn btn-primary  btnNuevo" title="ADD NEW STYLE" id="nuevo-estilo"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> ADD NEW STYLE</a>
+                </p>-->
+            </div>
+            <div class="panel panel-primary" id="consultaPO">
+                <div class="panel-heading">
+                    <h4>STYELS</h4>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-sm-4 estilo">
+                        <label style="font-size: x-large; font-weight: 500">
+                            @Html.LabelFor(model => model.TotalUnidades, new { @class = "control-label" }):
+                            <label style="font-size: x-large; font-weight: 500">@Html.DisplayFor(model => model.TotalUnidades, new { @class = "control-label col-md-6" })</label>
+                        </label>
+                    </div>
+                    <div class="form-group col-sm-7 estilo">
+                        <label style="font-size: x-large; font-weight: 500">
+                            @Html.LabelFor(model => model.TotalUnidadesReg, new { @class = "control-label" }):
+                            <label style="font-size: x-large; font-weight: 300" id="RegTotalUnits">@Html.DisplayFor(model => model.TotalUnidadesReg, new { @class = "control-label col-md-6" })</label>
+                        </label>
+                    </div>
+                </div>
+                <div id="div_tabla_estilos" style="width: 100%; height:300px; overflow:auto; ">
+                    <table id="tabless" class="table table-sm table-striped table-hover ">
+                        <thead>
+                            <tr>
+
+                                <th>ITEM</th>
+                                <th>ITEM DESCRIPTION</th>
+                                <th>COLOR CODE</th>
+                                <th>COLOR DESCRIPTION</th>
+                                <th>QTY</th>
+                                <th>PRICE</th>
+                                <th>TOTAL</th>
+                                @* <th>ACTIONS</th>*@
+                            </tr>
+                        </thead>
+                        <tbody class="tbody"></tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <br />
+            <br />
+            <div class="panel panel-primary" id="consultaTalla" style="visibility:hidden;">
+                <div class="panel-heading">
+                    <h4>SIZES</h4>
+                </div>
+                <div id="div_tabla_tallas" style="width: 100%; height:210px; overflow:auto;  ">
+
+                    <div id="div_estilo" style=" overflow:auto; visibility:hidden; ">
+                    </div>
+                    <table class="table table-sm table-striped table-hover ">
+                        <thead class="encabezado"></thead>
+                        <tbody class="tbodys"></tbody>
+                    </table>
+                </div>
+
+            </div>
+
+
+
+        </div>
+        <br />
+        <br />
+        <br />
+
+        <a href='@Url.Action("Index", "Pedidos")'>
+            <img src='@Url.Content("~/Content/img/backToPage.png")' id="flecha" title="Go Back" />
+        </a>
+    </div>
     <script>
         $('#tabless tr').click(function (e) {
             $('#tabless tr').removeClass('highlighted');
@@ -261,6 +314,13 @@
             var id = $(this).data("value");
             $('#reporteModal').modal('show');
             //$("#ContenedorModal").load("/Colores/Detalles/" + id, function () {
-        //});
-    });
+            //});
+        });
+
+        $(document).on('click', '.btnNuevo', function () {
+            $("#loading").css('display', 'none');            
+            $("#nuevoEstiloModal").modal("show"); 
+            $("#Contenedor").load("/POSummary/RegistrarNuevoEstiloPo", function () {
+            });
+        });
     </script>

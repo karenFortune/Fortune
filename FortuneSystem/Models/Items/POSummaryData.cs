@@ -37,6 +37,8 @@ namespace FortuneSystem.Models.POSummary
                     POSummary ItemSummary = new POSummary();
                     ItemDescripcion Desc = new ItemDescripcion();
                     CatColores colores = new CatColores();
+                    CatEspecialidades Especialidad = new CatEspecialidades();
+                    Especialidad.Especialidad = leer["SPECIALTIES"].ToString();                    
                     Desc.Descripcion = leer["DESCRIPCION_ITEM"].ToString();
                     colores.CodigoColor = leer["CODIGO_COLOR"].ToString();
                     colores.DescripcionColor = leer["DESCRIPCION"].ToString();
@@ -45,6 +47,7 @@ namespace FortuneSystem.Models.POSummary
                     ItemSummary.Price = leer["PRICE"].ToString();
                     ItemSummary.Total = leer["TOTAL"].ToString();
                     ItemSummary.IdItems = Convert.ToInt32(leer["ID_PO_SUMMARY"]);
+                    ItemSummary.CatEspecialidades = Especialidad;
                     ItemSummary.CatColores = colores;
                     ItemSummary.ItemDescripcion = Desc;
                     listSummary.Add(ItemSummary);
@@ -133,6 +136,9 @@ namespace FortuneSystem.Models.POSummary
                     CatColores colores = new CatColores();
                     CatTipoCamiseta tipoCamiseta = new CatTipoCamiseta();
                     CatGenero genero = new CatGenero();
+                    CatEspecialidades especial = new CatEspecialidades();
+                    especial.Especialidad = leer["SPECIALTIES"].ToString();
+                    especial.IdEspecialidad = Convert.ToInt32(leer["ID_SPECIALTIES"]);
                     colores.CodigoColor = leer["CODIGO_COLOR"].ToString();
                     ItemSummary.EstiloItem = leer["ITEM_STYLE"].ToString();
                     ItemSummary.Cantidad = Convert.ToInt32(leer["QTY"]);
@@ -144,6 +150,7 @@ namespace FortuneSystem.Models.POSummary
                     ItemSummary.IdTela = Convert.ToInt32(leer["ID_TELA"]);
                     ItemSummary.CatColores = colores;
                     ItemSummary.CatTipoCamiseta = tipoCamiseta;
+                    ItemSummary.CatEspecialidades = especial;
                     ItemSummary.CatGenero = genero;
                     listSummary.Add(ItemSummary);
 
@@ -186,6 +193,7 @@ namespace FortuneSystem.Models.POSummary
                     estilos.Cantidad = Convert.ToInt32(leerF["QTY"]);
                     estilos.PedidosId = Convert.ToInt32(leerF["ID_PEDIDOS"]);
                     estilos.Precio = Convert.ToDouble(leerF["PRICE"]);
+                    estilos.IdEspecialidad = Convert.ToInt32(leerF["ID_SPECIALTIES"]);
 
 
                 }

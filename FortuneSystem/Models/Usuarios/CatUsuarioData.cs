@@ -61,6 +61,8 @@ namespace FortuneSystem.Models.Usuarios
             comando.Parameters.AddWithValue("@Cargo", usuarios.Cargo);
             comando.Parameters.AddWithValue("@Email", usuarios.Email);
             comando.Parameters.AddWithValue("@Contrasena", usuarios.Contrasena);
+            comando.Parameters.AddWithValue("@Sucursal", usuarios.IdSucursal);
+            comando.Parameters.AddWithValue("@Turno", usuarios.TipoTurno);
 
             comando.ExecuteNonQuery();
             conn.CerrarConexion();
@@ -89,6 +91,7 @@ namespace FortuneSystem.Models.Usuarios
                 usuarios.Email = leerFilas["Email"].ToString();
                 usuarios.Contrasena = leerFilas["Contrasena"].ToString();
                 usuarios.IdSucursal = Convert.ToInt32(leerFilas["id_sucursal"]);
+                usuarios.TipoTurno = Convert.ToInt32(leerFilas["turno"]);
 
             }
             return usuarios;
@@ -109,6 +112,8 @@ namespace FortuneSystem.Models.Usuarios
             comando.Parameters.AddWithValue("@Cargo", usuarios.Cargo);
             comando.Parameters.AddWithValue("@Email", usuarios.Email);
             comando.Parameters.AddWithValue("@Contrasena", usuarios.Contrasena);
+            comando.Parameters.AddWithValue("@Sucursal", usuarios.IdSucursal);
+            comando.Parameters.AddWithValue("@Turno", usuarios.TipoTurno);
 
             comando.ExecuteNonQuery();
             conn.CerrarConexion();

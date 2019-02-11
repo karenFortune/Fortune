@@ -39,6 +39,9 @@ namespace FortuneSystem.Models.POSummary
         [Required]
         [Display(Name = "QTY")]
         public int Cantidad { get; set; }
+        [Required]
+        [Display(Name = "QTY")]
+        public string CantidadT { get; set; }
 
         [Required]
         [Display(Name = "PRICE")]
@@ -95,6 +98,11 @@ namespace FortuneSystem.Models.POSummary
         public string Total { get; set; }
 
         public List<OrdenesCompra> ListaPO { get; set; }
+        public virtual IMAGEN_ARTE ImagenArte { get; set; }
+        public string ExtensionArte { get; set; }
+        public HttpPostedFileBase FileArte { get; set; }
+        [Display(Name = "ART IMAGE")]
+        public byte[] ImgArte { get; set; }
 
 
 

@@ -227,11 +227,8 @@ function obtTotalPiezas(numBoxPPK) {
         var numPiezas = $(nombreP).val();
         var tot = numCajas * numPiezas;
         var numCartons = $("#Packing_TotalCartonsPPK").val();
-        var numBoxPPK = $("#Packing_TotalCartonesFaltPPK").val();
-        var resta = parseInt(numBoxPPK) - parseInt(numCajas);
-        if (resta !== 0) {
-            $("#Packing_TotalCartonesFaltPPK").val(resta);
-        } 
+        /*var numMBoxPPK = $("#Packing_TotalCartonesFaltPPK").val();
+         */
 
         $(nombreT).val(tot);
         if (tot > pCalidad) {
@@ -242,6 +239,11 @@ function obtTotalPiezas(numBoxPPK) {
             $(nombreT).css('border', '1px solid #cccccc');
             $("#nuevoPallet").prop('disabled', false);
         }
+    }
+    var numMBoxPPK = $("#Packing_TotalCartonesFaltPPK").val();
+    var resta = parseInt(numMBoxPPK) - parseInt(numBoxPPK);
+    if (resta !== 0) {
+        $("#Packing_TotalCartonesFaltPPK").val(resta);
     }
 
 

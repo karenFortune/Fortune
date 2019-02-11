@@ -31,8 +31,8 @@ namespace FortuneSystem.Controllers
 
         public ActionResult Index()
         {
-            Session["id_usuario"] = 2;
-            Session["id_usuario"] = consultas.buscar_id_usuario(Convert.ToString(Session["usuario"]));
+            //Session["id_usuario"] = 2;
+            //Session["id_usuario"] = consultas.buscar_id_usuario(Convert.ToString(Session["usuario"]));
             if (Session["usuario"] == null){
                 return View();
             }else {
@@ -466,7 +466,8 @@ namespace FortuneSystem.Controllers
 
                     //IMAGEN AL CENTRO
                     ws.Range(1, 7, 1, 10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                    var imagePath = @"C:\Users\melissa\source\repos\FortuneSys----\FortuneSystem\Content\img\LOGO FORTUNE.png";
+                    var imagePath = Server.MapPath("/") + "/Content/img/LOGO FORTUNE.png";
+                    //var imagePath = @"C:\Users\melissa\source\repos\FortuneSys----\FortuneSystem\Content\img\LOGO FORTUNE.png";
                     var image = ws.AddPicture(imagePath).MoveTo(ws.Cell("E1")).Scale(0.30);
                     //PK ABAJO DE LA IMAGEN
                     ws.Cell("D7").Value = "PK: ";
@@ -890,8 +891,7 @@ namespace FortuneSystem.Controllers
                 int estilos_total = 0, rows = 0, tarima_contador = 0, total_ratio, contador, r, c, total_cajas = 0, filas = 0, columnas = 0, tallas_id, piezas_estilo = 0;
 
                 var ws = libro_trabajo.Worksheets.Add("PK");
-                foreach (Pk item in lista)
-                {
+                foreach (Pk item in lista){
                     //item.tipo_empaque = 2;                    
                     clave_packing = item.packing;
                     /*****INICIO CON DIRECCIONES, LOGO, ETC******/
@@ -908,40 +908,32 @@ namespace FortuneSystem.Controllers
                     ws.Cell("B7").Value = item.customer;
 
                     int ex_label = ds.contar_labels(item.id_packing_list);
-                    if (ex_label != 0)
-                    {
+                    if (ex_label != 0){
                         List<Labels> lista_etiquetas = new List<Labels>();
                         lista_etiquetas = ds.obtener_etiquetas(item.id_packing_list);
                         ws.Cell("A8").Value = "P.O.: ";
                         string label = Regex.Replace(item.pedido, @"\s+", " ") + "(PO# ";
                         foreach (Labels l in lista_etiquetas) { label += " " + l.label; }
-                        if (ex_label == 1)
-                        {
+                        if (ex_label == 1){
                             label += " )" + " With UCC Labels " + item.parte;
-                        }
-                        else
-                        {
+                        }else{
                             label += " )" + " With TPM Labels " + item.parte;
                         }
                         ws.Cell("B8").Value = label;
-                    }
-                    else
-                    {
+                    }else{
                         ws.Cell("A8").Value = "P.O.: ";
                         ws.Cell("B8").Value = Regex.Replace(item.pedido, @"\s+", " ") + " Without UCC Labels " + item.parte;
                     }
-
                     ws.Cell("A9").Value = "RETAILER: ";
                     ws.Cell("B9").Value = item.customer_po;
-                    if (item.tipo != "1")
-                    {
+                    if (item.tipo != "1"){
                         ws.Cell("A10").Value = "EXAMPLES ";
                         ws.Cell("A10").Style.Font.FontSize = 14;
                     }
-
                     //IMAGEN AL CENTRO
                     ws.Range(1, 7, 1, 10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                    var imagePath = @"C:\Users\melissa\source\repos\FortuneSys----\FortuneSystem\Content\img\LOGO FORTUNE.png";
+                    var imagePath = Server.MapPath("/") + "/Content/img/LOGO FORTUNE.png";
+                    //var imagePath = @"C:\Users\melissa\source\repos\FortuneSys----\FortuneSystem\Content\img\LOGO FORTUNE.png";
                     var image = ws.AddPicture(imagePath).MoveTo(ws.Cell("E1")).Scale(0.30);
                     //PK ABAJO DE LA IMAGEN
                     ws.Cell("D7").Value = "PK: ";
@@ -969,22 +961,16 @@ namespace FortuneSystem.Controllers
                     var headers = new List<String[]>();
                     List<String> titulos = new List<string>();//=  "ID", "P.O. NUM", "TYPE", "COLOR", "DESCRIPTION";
                     titulos.Add("ID"); titulos.Add("P.O. NUM"); titulos.Add("TYPE"); titulos.Add("STYLE"); titulos.Add("COLOR"); titulos.Add("DESCRIPTION");
-                    foreach (Tarima t in item.lista_tarimas)
-                    {
-                        foreach (estilos e in t.lista_estilos)
-                        {
+                    foreach (Tarima t in item.lista_tarimas){
+                        foreach (estilos e in t.lista_estilos){
                             if (e.store != "N/A" && e.store != "NA") { tiendas++; }
                         }
                     }
                     if (tiendas != 0) { titulos.Add("STORE"); }
-                    foreach (Tarima t in item.lista_tarimas)
-                    {
-                        foreach (estilos e in t.lista_estilos)
-                        {
-                            if (contador_cabeceras == 0 && e.tipo != "EXT" && e.tipo != "DMG" && e.tipo != "RPLN" && e.tipo != "ECOM")
-                            {
-                                foreach (ratio_tallas ra in e.lista_ratio)
-                                {
+                    foreach (Tarima t in item.lista_tarimas){
+                        foreach (estilos e in t.lista_estilos){
+                            if (contador_cabeceras == 0 && e.tipo != "EXT" && e.tipo != "DMG" && e.tipo != "RPLN" && e.tipo != "ECOM"){
+                                foreach (ratio_tallas ra in e.lista_ratio){
                                     titulos.Add(ra.talla);
                                 }
                                 contador_cabeceras++;
@@ -997,8 +983,7 @@ namespace FortuneSystem.Controllers
                     ws.Cell(11, 1).Value = headers;
                     ws.Column(2).AdjustToContents();
                     ws.Column(5).AdjustToContents();
-                    for (int i = 1; i <= total_titulos; i++)
-                    {
+                    for (int i = 1; i <= total_titulos; i++){
                         ws.Cell(11, i).Style.Font.Bold = true;
                         ws.Cell(11, i).Style.Fill.BackgroundColor = XLColor.FromArgb(217, 217, 217);
                         ws.Cell(11, i).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -1383,7 +1368,8 @@ namespace FortuneSystem.Controllers
 
                     //IMAGEN AL CENTRO
                     ws.Range(1, 7, 1, 10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                    var imagePath = @"C:\Users\melissa\source\repos\karen\FortuneSystem\Content\img\LOGO FORTUNE.png";
+                    var imagePath = Server.MapPath("/") + "/Content/img/LOGO FORTUNE.png";
+                    //var imagePath = @"C:\Users\melissa\source\repos\karen\FortuneSystem\Content\img\LOGO FORTUNE.png";
                     var image = ws.AddPicture(imagePath).MoveTo(ws.Cell("E1")).Scale(0.30);
                     //PK ABAJO DE LA IMAGEN
                     ws.Cell("D7").Value = "PK: ";

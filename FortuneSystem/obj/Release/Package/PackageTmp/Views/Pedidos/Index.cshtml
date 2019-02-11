@@ -127,16 +127,20 @@
         </div>
         <br />
 
-        <p>
-            <a href="@Url.Action("CrearPO")">
-                <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
-                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> ADD NEW PO
-                </button>
-            </a>
-            <br />
-            <br />
-        </p>
 
+        @if ((int)Session["idCargo"] == 1 || (int)Session["idCargo"] == 6)
+        {
+            <p>
+                <a href="@Url.Action("CrearPO")">
+                    <button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> ADD NEW PO
+                    </button>
+                </a>
+
+                <br />
+                <br />
+            </p>
+        }
         <p id="date_filter">
             <span id="date-label-from" class="date-label">
                 &nbsp;&nbsp; Range Date:<select id="selectFechas">
@@ -150,9 +154,9 @@
         </p>
 
         @*<p id="date_filter_fo">
-                     <span id="date-label-from_fo" class="date-label">From Range Date Orden: </span><input class="date_range_filter date" type="text" id="datepicker_from_fo" />
-                    <span id="date-label-to_fo" class="date-label">To:<input class="date_range_filter date" type="text" id="datepicker_to_fo" />
-            </p>*@
+                 <span id="date-label-from_fo" class="date-label">From Range Date Orden: </span><input class="date_range_filter date" type="text" id="datepicker_from_fo" />
+                <span id="date-label-to_fo" class="date-label">To:<input class="date_range_filter date" type="text" id="datepicker_to_fo" />
+        </p>*@
 
 
         <div id="botones"></div>
@@ -209,15 +213,18 @@
                             </td>
                             <td>
                                 <a href="@Url.Action("Detalles", "Pedidos",  new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Details Style"> <span class="glyphicon glyphicon-search " aria-hidden="true" style="padding: 0px !important;"></span></a>
-                                <a href="@Url.Action("Revision", "Pedidos",  new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Check PO" onclick="event.preventDefault();ConfirmRev(this)"> <span class="glyphicon glyphicon-check " aria-hidden="true" style="padding: 0px !important;"></span></a>
-                                <a href="@Url.Action("CancelarPO", "Pedidos",  new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Cancel PO" onclick="event.preventDefault();ConfirmCancel(this)"> <span class="glyphicon glyphicon-ban-circle " aria-hidden="true" style="padding: 0px !important;"></span></a>
-
-                                @if (item.Historial == 1)
+                                @if ((int)Session["idCargo"] == 15 || (int)Session["idCargo"] == 1)
                                 {
-                                    <a href="@Url.Action("HistorialPedidos", "Pedidos",  new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Record PO" onclick="event.preventDefault();ConfirmCancel(this)"> <span class="glyphicon glyphicon-share " aria-hidden="true" style="padding: 0px !important;"></span></a>
-                                }
-                                    
+                                    <a href="@Url.Action("Revision", "Pedidos", new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Check PO" onclick="event.preventDefault();ConfirmRev(this)"> <span class="glyphicon glyphicon-check " aria-hidden="true" style="padding: 0px !important;"></span></a>
+                                    <a href="@Url.Action("CancelarPO", "Pedidos", new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Cancel PO" onclick="event.preventDefault();ConfirmCancel(this)"> <span class="glyphicon glyphicon-ban-circle " aria-hidden="true" style="padding: 0px !important;"></span></a>
 
+                                    if (item.Historial == 1)
+                                    {
+                                        <a href="@Url.Action("HistorialPedidos", "Pedidos", new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Record PO" onclick="event.preventDefault();ConfirmCancel(this)"> <span class="glyphicon glyphicon-share " aria-hidden="true" style="padding: 0px !important;"></span></a>
+                                    }
+
+                                    //@Html.ActionLink(" ", null, new { id = item.IdPedido }, new { @class = "btn edit_driver edicion_driver fa fa-file-pdf-o fa-lg", @Title = "Report", onclick = "imprimir_reporte_po('" + item.IdPedido + " ')" })
+                                }
                             </td>
                         </tr>
                     }
@@ -253,6 +260,25 @@
             }).set({
                 title: "Confirmation"
             });
+    }
+
+    function imprimir_reporte_po(id) {
+        $.ajax({
+            url: "/Pedidos/Imprimir_Reporte_PO/",
+            data: "{'id':'" + id + "'}",
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'post',
+            success: function () {
+                imprimir_reporte();
+            }
+        });
+    }
+    function imprimir_reporte() {
+        var h = screen.height - 100;
+        var w = screen.width - 30;
+        window.open('/PDF/Imprimir_Reporte_PO', '_blank', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');
+        $("#loading").css('display', 'none');
     }
 
 

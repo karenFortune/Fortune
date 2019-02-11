@@ -42,8 +42,17 @@ namespace FortuneSystem.Controllers
 
             List<CatRoles> listaRoles = usuario.ListaRoles;
             listaRoles = objCaRoles.ListaRoles().ToList();
+            usuario.CatRoles = objCaRoles.ConsultarListaRoles(usuario.Cargo);
+            usuario.CatRoles.Id = usuario.Cargo;
             ViewBag.listRoles = new SelectList(listaRoles, "Id", "rol", usuario.Cargo);
-         
+
+            List<CatSucursal> listaSucursal = usuario.ListaSucursal;
+            listaSucursal = objSucursal.ListaSucursales().ToList();
+            usuario.CatSucursal = objSucursal.ConsultarListaSucursal(usuario.IdSucursal);
+            usuario.CatSucursal.IdSucursal = usuario.IdSucursal;
+            ViewBag.listSucursal = new SelectList(listaSucursal, "IdSucursal", "Sucursal", usuario.IdSucursal);
+
+           
             return View(usuario);
         }
 
@@ -53,18 +62,32 @@ namespace FortuneSystem.Controllers
         {
             string rol = Request.Form["listRoles"].ToString();
             usuario.Cargo = Int32.Parse(rol);
-            if (ModelState.IsValid)
+            string suc = Request.Form["listSucursal"].ToString();
+            usuario.IdSucursal = Int32.Parse(suc);
+            usuario.CatRoles = objCaRoles.ConsultarListaRoles(usuario.Cargo);
+            usuario.CatSucursal = objSucursal.ConsultarListaSucursal(usuario.IdSucursal);
+            usuario.Turnos.ToString();
+            /* if (ModelState.IsValid)
+             { */
+            string infTurno = usuario.Turnos.ToString();
+            
+            if(infTurno == "First")
             {
-                
-               usuario.CatRoles= objCaRoles.ConsultarListaRoles(usuario.Cargo);
-                objCatUser.AgregarUsuarios(usuario);
+                usuario.TipoTurno = 1;
+            }
+            else
+            {
+                usuario.TipoTurno = 2;
+            }
+
+            objCatUser.AgregarUsuarios(usuario);
                 TempData["usuarioOK"] = "The user was registered correctly.";
                 return RedirectToAction("Index");
-            }else
+           /* }else
             {
                 TempData["usuarioError"] = "The user can not be registered, try it later.";
-            }
-            return View(usuario);
+            }*/
+           // return View(usuario);
         }       
 
 
@@ -78,8 +101,18 @@ namespace FortuneSystem.Controllers
 
             CatUsuario usuario = objCatUser.ConsultarListaUsuarios(id);
             usuario.CatRoles = objCaRoles.ConsultarListaRoles(usuario.Cargo);
-
             usuario.CatSucursal = objSucursal.ConsultarListaSucursal(usuario.IdSucursal);
+
+          
+            usuario.Turnos = (Turno)usuario.TipoTurno;
+            /*if (usuario.TipoTurno == 1)
+            {
+                usuario.Turnos.ToString();
+            }
+            else
+            {
+                usuario.Turnos.ToString();
+            }*/
 
             if (usuario == null)
             {
@@ -112,6 +145,8 @@ namespace FortuneSystem.Controllers
             usuario.CatSucursal.IdSucursal = usuario.IdSucursal;
             ViewBag.listSucursal = new SelectList(listaSucursal, "IdSucursal", "Sucursal", usuario.IdSucursal);
 
+            usuario.Turnos = (Turno)usuario.TipoTurno;
+
             if (usuario == null)
             {
                
@@ -136,7 +171,18 @@ namespace FortuneSystem.Controllers
                 usuarios.Cargo = Int32.Parse(rol);
                 string sucursal = Request.Form["Sucursal"].ToString();
                 usuarios.IdSucursal = Int32.Parse(sucursal);
+                usuarios.Turnos.ToString();
                 //usuario.CatRoles = objCaRoles.ConsultarListaRoles(usuario.Cargo);
+                string infTurno = usuarios.Turnos.ToString();
+
+                if (infTurno == "First")
+                {
+                    usuarios.TipoTurno = 1;
+                }
+                else
+                {
+                    usuarios.TipoTurno = 2;
+                }
                 objCatUser.ActualizarUsuarios(usuarios);
                 TempData["usuarioEditar"] = "The user was modified correctly.";
                 return RedirectToAction("Index");
@@ -158,6 +204,8 @@ namespace FortuneSystem.Controllers
 
             CatUsuario usuarios = objCatUser.ConsultarListaUsuarios(id);
             usuarios.CatRoles = objCaRoles.ConsultarListaRoles(usuarios.Cargo);
+            usuarios.CatSucursal = objSucursal.ConsultarListaSucursal(usuarios.IdSucursal);
+            usuarios.Turnos = (Turno)usuarios.TipoTurno;
             if (usuarios == null)
             {
                 return View();

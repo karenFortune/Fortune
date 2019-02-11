@@ -10,9 +10,9 @@
             var rowCount = $('.data-Talla').length + 1;
             var tallasdiv = '<tr class="data-Talla">' +
                 '<td><input type="text"  name="f-talla" id="f-talla" class="form-control talla"  /></td>' +
-                '<td><input type="text" id="l-cantidad" name="l-cantidad" class="form-control l-name01"  /></td>' +
-                '<td><input type="text" id="e-extras"  name="e-extras" class="form-control e-name01" value="' + 0 + '"/></td>' +
-                '<td><input type="text" id="s-ejemplo" name="s-ejemplo" class="form-control s-name01" value="' + 0 + '"/></td>' +
+                '<td><input type="text" id="l-cantidad" name="l-cantidad" class="form-control l-name01 numCantTall"  /></td>' +
+                '<td><input type="text" id="e-extras"  name="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>' +
+                '<td><input type="text" id="s-ejemplo" name="s-ejemplo" class="form-control s-name01 numEjmTall" value="' + 0 + '"/></td>' +
                 '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
 
                 '</tr>';
@@ -128,13 +128,14 @@
                 $("#crearTallas").show();
                 var EstiloItem = $("#ItemDescripcion_ItemEstilo").val();
                 var IdColor = $("#CatColores_CodigoColor").val();
-                var Cantidad = $("#Cantidad").val();
+                var Cantidad = $("#CantidadT").val();
                 var Precio = $("#Precio").val();
                 var IdGenero = $("#selectGenero option:selected").val();
                 var IdTela = $("#selectTela option:selected").val();
                 var TipoCamiseta = $("#selectTipoCamiseta option:selected").val();
+                var Especialidad = $("#selectEspecialidad option:selected").val();
                 $.ajax('@Url.Action("RegistrarItemsRev", "POSummary")', {
-                    data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela },
+                    data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela, IdEspecialidad: Especialidad },
                 method: 'get',
                 async: true,
                 success: function (data) {
@@ -161,7 +162,6 @@
                         var html = '';
                         html +='<table class="table" id="tablaTallas"><thead>' +
                             '  <tr>' +
-
                             '<th>Size</th>' +
                             ' <th>Quantity</th>' +
                             ' <th>Extra</th>' +
@@ -171,10 +171,10 @@
                         $.each(result, function (key, item) {
                             html += '<tr>';
                             //html += '<td><input type="text" name="talla" id="f-talla" class="form-control" /></td>';
-                            html += '<td><input type="text" id="f-talla" class="form-control" value="' + item.CatTallaItem.Talla + '"/></td>';
-                            html += '<td><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 "  /></td>';
-                            html += '<td><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 " value="' + 0 + '"/></td>';
-                            html += '<td><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 "  value="' + 0 + '"/></td>';
+                            html += '<td><input type="text" id="f-talla" class="form-control talla" value="' + item.CatTallaItem.Talla + '"/></td>';
+                            html += '<td><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 numCantTall "  /></td>';
+                            html += '<td><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>';
+                            html += '<td><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 numEjmTall"  value="' + 0 + '"/></td>';
                             html += '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
                             html += '</tr>';
                         });
@@ -332,11 +332,41 @@
         $('#ItemDescripcion_Descripcion').val('');
         $('#CatColores_CodigoColor').val('');
         $('#CatColores_DescripcionColor').val('');
-        $('#Cantidad').val('');
+        $('#CantidadT').val('');
         $('#Precio').val('');
         $("#nuevoColor").prop("disabled", false);
         $("#nuevoEstilo").prop("disabled", false);
+        limpiarInptCant();
+        limpiarInptExt();
+        limpiarInptEjm();
     }
+    function limpiarInptCant() {
+        $(".numCantTall").each(function () {
+            $(this).val('');
+        });
+    }
+
+    function limpiarInptExt() {
+        $(".numExtTall").each(function () {
+            $(this).val('0');
+        });
+    }
+
+    function limpiarInptEjm() {
+        $(".numEjmTall").each(function () {
+            $(this).val('0');
+        });
+    }
+
+    //Sumar cantidades
+    var rep;
+    document.addEventListener("blur", function (event) {
+        var val = document.getElementById("CantidadT").value;
+        if (val !== "") {
+            rep = eval(val);
+            document.getElementById("CantidadT").value = rep;
+        }
+    }, true);
 </script>
 <style>
     .ui-autocomplete {
@@ -416,15 +446,21 @@
             <div class="form-row">
 
                 <div class="form-group col-sm-5">
-                    @Html.LabelFor(model => model.Cantidad, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Cantidad, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
-                    @Html.ValidationMessageFor(model => model.Cantidad, "", new { @class = "text-danger" })
+                    @Html.LabelFor(model => model.CantidadT, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.CantidadT, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
+                    @Html.ValidationMessageFor(model => model.CantidadT, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group col-sm-5">
                     @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label" })
                     @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
                     @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="form-group col-sm-4">
+                    @Html.LabelFor(model => model.CatEspecialidades.Especialidad, htmlAttributes: new { @class = "control-label " }) <br />
+                    @Html.DropDownList("listEspecialidad", (SelectList)ViewBag.listEspecialidad, string.Empty, new { @class = "form-control nuevo_item", @id = "selectEspecialidad", @name = "state", @style = "width: 60%;" })
+                    @Html.ValidationMessageFor(model => model.IdEspecialidad, "", new { @class = "text-danger" })
 
                 </div>
 

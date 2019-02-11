@@ -128,7 +128,7 @@
         <br />
 
 
-        @if ((int)Session["idCargo"] == 1)
+        @if ((int)Session["idCargo"] == 1 || (int)Session["idCargo"] == 6)
         {
             <p>
                 <a href="@Url.Action("CrearPO")">
@@ -223,7 +223,7 @@
                                         <a href="@Url.Action("HistorialPedidos", "Pedidos", new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Record PO" onclick="event.preventDefault();ConfirmCancel(this)"> <span class="glyphicon glyphicon-share " aria-hidden="true" style="padding: 0px !important;"></span></a>
                                     }
 
-                                    @Html.ActionLink(" ", null, new { id = item.IdPedido }, new { @class = "btn edit_driver edicion_driver fa fa-file-pdf-o fa-lg", @Title = "Report", onclick = "imprimir_reporte_po('" + item.IdPedido + " ')" })
+                                    //@Html.ActionLink(" ", null, new { id = item.IdPedido }, new { @class = "btn edit_driver edicion_driver fa fa-file-pdf-o fa-lg", @Title = "Report", onclick = "imprimir_reporte_po('" + item.IdPedido + " ')" })
                                 }
                             </td>
                         </tr>

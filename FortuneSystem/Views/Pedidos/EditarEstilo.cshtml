@@ -21,9 +21,9 @@
             var rowCount = $('.data-Talla').length + 1;
             var tallasdiv = '<tr class="data-Talla">' +
                 '<td><input type="text"  name="f-talla" id="f-talla" class="form-control talla" autocomplete="off" /></td>' +
-                '<td><input type="text" id="l-cantidad" name="l-cantidad" class="form-control l-name01"  /></td>' +
-                '<td><input type="text" id="e-extras"  name="e-extras" class="form-control e-name01" value="' + 0 + '"/></td>' +
-                '<td><input type="text" id="s-ejemplo" name="s-ejemplo" class="form-control s-name01" value="' + 0 + '"/></td>' +
+                '<td><input type="text" id="l-cantidad" name="l-cantidad" class="form-control l-name01 numCantTall"  /></td>' +
+                '<td><input type="text" id="e-extras"  name="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>' +
+                '<td><input type="text" id="s-ejemplo" name="s-ejemplo" class="form-control s-name01 numEjmTall" value="' + 0 + '"/></td>' +
                 '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
                 '</tr>';
             $('#tablaTallas').append(tallasdiv);
@@ -221,8 +221,9 @@
                 var IdGenero = $("#selectGenero option:selected").val();
                 var IdTela = $("#selectTela option:selected").val();
                 var TipoCamiseta = $("#selectTipoCamiseta option:selected").val();
+                var Especialidad = $("#selectEspecialidad option:selected").val();
                 $.ajax('@Url.Action("RegistrarItem", "POSummary")', {
-                    data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela },
+                    data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela, IdEspecialidad: Especialidad },
                 method: 'get',
                 async: true,
                 success: function (data) {
@@ -292,9 +293,9 @@
                 $.each(listaT, function (key, item) {
                     html += '<tr>';
                     html += '<td><input type="text" id="f-talla" class="form-control talla" autocomplete="off" value="' + item.Talla + '"/></td>';
-                    html += '<td><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 " value="' + item.Cantidad + '"/></td>';
-                    html += '<td><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 " value="' + item.Ejemplos + '"/></td>';
-                    html += '<td><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 "  value="' + item.Extras + '"/></td>';
+                    html += '<td><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 numCantTall" value="' + item.Cantidad + '"/></td>';
+                    html += '<td><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 numExtTall " value="' + item.Ejemplos + '"/></td>';
+                    html += '<td><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 numEjmTall"  value="' + item.Extras + '"/></td>';
                     html += '<td><button type="button" id="btnDelete"  class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
                     html += '</tr>';
                 });
@@ -471,6 +472,26 @@
         $('#Precio').val(0);
         $("#nuevoColor").prop("disabled", false);
         $("#nuevoEstilo").prop("disabled", false);
+        limpiarInptCant();
+        limpiarInptExt();
+        limpiarInptEjm();
+    }
+    function limpiarInptCant() {
+        $(".numCantTall").each(function () {
+            $(this).val('');
+        });
+    }
+
+    function limpiarInptExt() {
+        $(".numExtTall").each(function () {
+            $(this).val('0');
+        });
+    }
+
+    function limpiarInptEjm() {
+        $(".numEjmTall").each(function () {
+            $(this).val('0');
+        });
     }
 </script>
 <style>
@@ -556,6 +577,12 @@
                     @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label" })
                     @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
                     @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="form-group col-sm-4">
+                    @Html.LabelFor(model => model.CatEspecialidades.Especialidad, htmlAttributes: new { @class = "control-label " }) <br />
+                    @Html.DropDownList("Especialidad", (SelectList)ViewBag.listEspecialidad, string.Empty, new { @class = "form-control nuevo_item", @id = "selectEspecialidad", @name = "state", @style = "width: 60%;" })
+                    @Html.ValidationMessageFor(model => model.IdEspecialidad, "", new { @class = "text-danger" })
 
                 </div>
             </div>

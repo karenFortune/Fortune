@@ -336,7 +336,18 @@ namespace FortuneSystem.Controllers
             ListaEspecialidades(summary);
             return View();
         }
-       
+        [HttpPost]
+        public ActionResult RegistrarPO([Bind] OrdenesCompra ordenCompra, string po, string VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades)
+        {
+            ListaEstados(ordenCompra);
+            int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
+            ordenCompra.Usuario = noEmpleado;          
+            objPedido.AgregarPO(ordenCompra);
+            Session["idPedido"] = objPedido.Obtener_Utlimo_po();
+
+            return View(ordenCompra);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CrearPO([Bind] OrdenesCompra ordenCompra)
@@ -453,6 +464,7 @@ namespace FortuneSystem.Controllers
                 estilos.IdTela = item.IdTela;
                 estilos.TipoCamiseta = item.CatTipoCamiseta.TipoProducto;
                 estilos.IdItems = item.IdItems;
+                estilos.IdEspecialidad = item.CatEspecialidades.IdEspecialidad;
                 Session["id_estilo"] = estilos.IdItems;
                 int? idEstilo = Convert.ToInt32(Convert.ToInt32(Session["id_estilo"]));
                 estilos.PedidosId = Convert.ToInt32(Session["idPedidoNuevo"]);
@@ -567,12 +579,15 @@ namespace FortuneSystem.Controllers
             ListaGenero(items);
             ListaTela(items);
             ListaTipoCamiseta(items);
+            ListaEspecialidades(items);
             items.CatColores = objColores.ConsultarListaColores(items.ColorId);
             items.ItemDescripcion = objEst.ConsultarListaItemDesc(items.IdItems);
+            items.CatEspecialidades = objEspecialidad.ConsultarListaEspecialidad(items.IdEspecialidad);
             items.PedidosId = items.PedidosId;            
             SeleccionarGenero(items);
             SeleccionarTela(items);
             SeleccionarTipoCamiseta(items);
+            SeleccionarTipoEspecialidad(items);
 
 
             if (items == null)
@@ -626,17 +641,7 @@ namespace FortuneSystem.Controllers
             return View();
         }
 
-        [HttpPost]     
-        public ActionResult RegistrarPO([Bind] OrdenesCompra ordenCompra,string po, int VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades)
-        {
-            ListaEstados(ordenCompra);
-            int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
-            ordenCompra.Usuario = noEmpleado;
-            objPedido.AgregarPO(ordenCompra);    
-            Session["idPedido"]= objPedido.Obtener_Utlimo_po();
-
-            return View(ordenCompra);
-        }
+   
 
         public void SeleccionarClientes(OrdenesCompra pedido)
         {
@@ -689,6 +694,16 @@ namespace FortuneSystem.Controllers
             items.CatTipoCamiseta = objTipoC.ConsultarListaCamisetas(items.IdCamiseta);
             items.CatTipoCamiseta.IdTipo= items.IdCamiseta;           
             ViewBag.listTipoCamiseta = new SelectList(listaTipoCamiseta, "TipoProducto", "DescripcionTipo", items.CatTipoCamiseta.TipoProducto);
+        }
+
+        public void SeleccionarTipoEspecialidad(POSummary items)
+        {
+
+            List<CatEspecialidades> listaEspecialidades = items.ListaEspecialidades;
+            listaEspecialidades = objEspecialidad.ListaEspecialidades().ToList();
+            items.CatEspecialidades = objEspecialidad.ConsultarListaEspecialidad(items.IdEspecialidad);
+            items.CatEspecialidades.IdEspecialidad= items.IdEspecialidad;
+            ViewBag.listEspecialidad = new SelectList(listaEspecialidades, "IdEspecialidad", "Especialidad", items.CatEspecialidades.Especialidad);
         }
 
         public void ListasClientes(OrdenesCompra pedido)

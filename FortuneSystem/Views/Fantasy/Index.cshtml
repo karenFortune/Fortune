@@ -660,7 +660,10 @@
     }
 
 //***********************************************************************************************************************************************
-
+    $(document).on("click", "a", function () {
+        //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
+        $("#loading").css('display', 'none');
+    });
 
 
 
@@ -676,7 +679,24 @@
 </script>
 <a id="imprimir_batch" href="@Url.Action("batch_excel", "Fantasy")" style="visibility:hidden;">Descargar</a>
 <style>
+    .boton_menu {
+        border: none;
+        color: white;
+        background: #69984c;
+        width: 100%;
+        text-align: left;
+        font-size: 1.2em;
+        padding: 0.5em
+    }
 
+        .boton_menu:hover {
+            border: none;
+            background: #f3f3f3;
+            color: #69984c;
+            width: 100%;
+            text-align: left;
+            font-size: 1.2em;
+        }
     td { text-align: center; padding:4px; }
     .clientescbx, .estiloscbx {
         width: 1.5em;

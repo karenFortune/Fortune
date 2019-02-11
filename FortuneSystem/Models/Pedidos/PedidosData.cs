@@ -40,7 +40,7 @@ namespace FortuneSystem.Models.Pedidos
                     {
                         IdPedido = Convert.ToInt32(leer["ID_PEDIDO"]),
                         PO = leer["PO"].ToString(),
-                        VPO = Convert.ToInt32(leer["VPO"]),
+                        VPO = leer["VPO"].ToString(),             
                         Cliente = Convert.ToInt32(leer["CUSTOMER"]),
                         ClienteFinal = Convert.ToInt32(leer["CUSTOMER_FINAL"]),
                         FechaCancel = Convert.ToDateTime(leer["DATE_CANCEL"]),
@@ -203,7 +203,7 @@ namespace FortuneSystem.Models.Pedidos
                         {
                             IdPedido = Convert.ToInt32(leerF["ID_PEDIDO"]),
                             PO = leerF["PO"].ToString(),
-                            VPO = Convert.ToInt32(leerF["VPO"]),
+                            VPO = leerF["VPO"].ToString(),               
                             Cliente = Convert.ToInt32(leerF["CUSTOMER"]),
                             ClienteFinal = Convert.ToInt32(leerF["CUSTOMER_FINAL"]),
                             FechaCancel = Convert.ToDateTime(leerF["DATE_CANCEL"]),
@@ -273,7 +273,7 @@ namespace FortuneSystem.Models.Pedidos
                     {
                         IdPedido = Convert.ToInt32(leerF["ID_PEDIDO"]),
                         PO = leerF["PO"].ToString(),
-                        VPO = Convert.ToInt32(leerF["VPO"]),
+                        VPO = leerF["VPO"].ToString(),
                         Cliente = Convert.ToInt32(leerF["CUSTOMER"]),
                         ClienteFinal = Convert.ToInt32(leerF["CUSTOMER_FINAL"]),
                         FechaCancel = Convert.ToDateTime(leerF["DATE_CANCEL"]),
@@ -328,7 +328,7 @@ namespace FortuneSystem.Models.Pedidos
 
                     pedidos.IdPedido = Convert.ToInt32(leerF["ID_PEDIDO"]);
                     pedidos.PO = leerF["PO"].ToString();
-                    pedidos.VPO = Convert.ToInt32(leerF["VPO"]);
+                    pedidos.VPO = leerF["VPO"].ToString();
                     pedidos.Cliente = Convert.ToInt32(leerF["CUSTOMER"]);
                     pedidos.ClienteFinal = Convert.ToInt32(leerF["CUSTOMER_FINAL"]);
                     pedidos.FechaCancel = Convert.ToDateTime(leerF["DATE_CANCEL"]);
@@ -370,8 +370,8 @@ namespace FortuneSystem.Models.Pedidos
                 comando.CommandText = "AgregarPedido";
                 comando.CommandType = CommandType.StoredProcedure;
 
-                comando.Parameters.AddWithValue("@idPO", ordenCompra.PO);
-                comando.Parameters.AddWithValue("@idPOF", ordenCompra.VPO);
+                comando.Parameters.AddWithValue("@idPO", ordenCompra.PO.ToUpper());
+                comando.Parameters.AddWithValue("@idPOF", ordenCompra.VPO.ToUpper());
                 comando.Parameters.AddWithValue("@Customer", ordenCompra.Cliente);
                 comando.Parameters.AddWithValue("@CustomerF", ordenCompra.ClienteFinal);
                 comando.Parameters.AddWithValue("@datecancel", ordenCompra.FechaCancel);

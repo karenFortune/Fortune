@@ -21,11 +21,11 @@
 <script type="text/javascript">
     
     $(document).ready(function () {
-        $("#PO").on('input', function () {
+       /* $("#PO").on('input', function () {
             var val = this.value;
             this.value = val.replace(/[^A-Z\u00f1\u00d1\u0020\s\^0-9]/g, '');
-        });
-        $("#VPO,#TotalUnidades").on('input', function () {
+        });*/
+        $("#TotalUnidades").on('input', function () {
             var val = this.value;
             this.value = val.replace(/[^0-9]/g, '');
         });
@@ -102,6 +102,9 @@
     }
 
 
+    
+
+   
 
 </script>
 <style>
@@ -111,7 +114,7 @@
         overflow-x: hidden;
     }
 </style>
-<h2>PURCHASE ORDER REGISTRATION</h2>
+
 </div>
 @*@using (Ajax.BeginForm("CrearPO", "Pedidos", new AjaxOptions { HttpMethod = "POST" }))*@
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formPO" }))
@@ -123,6 +126,7 @@
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="container-fluid" style="padding-left:20em; padding-right:10em;">
+        <h2 style="text-align:center;">PURCHASE ORDER REGISTRATION</h2>
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4>Reception of Purchase Order</h4>
@@ -132,12 +136,12 @@
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         @Html.LabelFor(model => model.PO, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.PO, new { htmlAttributes = new { @class = "form-control nuevo_po" } })
+                        @Html.EditorFor(model => model.PO, new { htmlAttributes = new { @class = "form-control nuevo_po", @style = "text-transform:uppercase" } })
                         @Html.ValidationMessageFor(model => model.PO, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group col-md-4">
                         @Html.LabelFor(model => model.VPO, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.VPO, new { htmlAttributes = new { @class = "form-control nuevo_po" } })
+                        @Html.EditorFor(model => model.VPO, new { htmlAttributes = new { @class = "form-control nuevo_po", @style = "text-transform:uppercase" } })
                         @Html.ValidationMessageFor(model => model.VPO, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group col-md-4">
@@ -179,6 +183,7 @@
                         </button>
                     </div>
                 </div>
+  
 
             </div>
         </div>
@@ -192,7 +197,6 @@
     </div>
     </div>
     }
-
 
    
     @Scripts.Render("~/bundles/jqueryval")

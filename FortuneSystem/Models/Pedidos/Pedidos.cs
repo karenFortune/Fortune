@@ -26,9 +26,9 @@ namespace FortuneSystem.Models.Pedidos
         [Display(Name = "ORDEN REF")]
         public string PO { get; set; }
 
-        [Required]
+        
         [Display(Name = "PO")]
-        public int VPO { get; set; }
+        public string VPO { get; set; }
 
         [Required]
         [Display(Name = "CUSTOMER")]
@@ -81,6 +81,8 @@ namespace FortuneSystem.Models.Pedidos
         [Display(Name = "TOTAL UNITS")]
         public int TotalUnidades { get; set; }
 
+        [Display(Name = "TOTAL UNITS REGISTERED")]
+        public int TotalUnidadesReg { get; set; }
         public List<CatCliente> ListaClientes { get; set; }
 
         public List<CatClienteFinal> ListaClientesFinal { get; set; }

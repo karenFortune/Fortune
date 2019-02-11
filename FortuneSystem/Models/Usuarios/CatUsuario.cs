@@ -50,17 +50,27 @@ namespace FortuneSystem.Models.Usuarios
         public string Contrasena { get; set; }
 
         public string NombreCompleto { get; set; }
-
+        [ForeignKey("id_sucursal")]
+        [Column("id_sucursal")]
         [Display(Name = "FACTORY")]
         public int IdSucursal { get; set; }
         [Display(Name = "FACTORY")]
         public string Sucursal { get; set; }
-
+        [Display(Name = "TURN")]
+        public Turno Turnos { get; set; }
+        public int TipoTurno { get; set; }
+        public string TurnoT { get; set; }
         public virtual CatSucursal CatSucursal { get; set; }
         public List<CatSucursal> ListaSucursal { get; set; }
 
     }
 
-
+    public enum Turno
+    {
+        [Display(Name = "1st Turn")]
+        First = 1,
+        [Display(Name = "2nd Turn")]
+        Second = 2
+    }
 
 }

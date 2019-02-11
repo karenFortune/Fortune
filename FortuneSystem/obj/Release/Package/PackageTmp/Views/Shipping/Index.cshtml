@@ -46,6 +46,10 @@
         }
         this.setSelectionRange(c, c);
     });
+
+    $("a").on('click', function () {
+        $("#loading").css('display','none');
+    });
     //INICIO
     function busqueda_pk() {
         obtener_pks($("#caja_buscar_pk").val());
@@ -1442,7 +1446,10 @@
             return false;
         }
     }
-
+    $(document).on("click", "a", function () {
+        //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
+        $("#loading").css('display', 'none');
+    });
     /*********************************************************************************************************************************************/
     /*********************************************************************************************************************************************/
     /*********************************************************************************************************************************************/
@@ -1457,6 +1464,23 @@
 <a id="reporte_estado_orden" href="@Url.Action("excel_reporte_status_orden", "Shipping")" style="visibility:hidden;">Daily</a>
 <a id="reporte_historial_ordenes" href="@Url.Action("estados_pedidos", "Shipping")" style="visibility:hidden;">Daily</a>
 <style>
+    .boton_menu {
+        border: none;
+        color: white;
+        background: #69984c;
+        width: 100%;
+        text-align: left;
+        font-size: 1.2em;
+        padding:0.5em
+    }
+        .boton_menu:hover {
+            border: none;
+            background: #f3f3f3;
+            color: #69984c;
+            width: 100%;
+            text-align: left;
+            font-size: 1.2em;
+        }
     th {
         text-align: center;
     }
@@ -1543,7 +1567,7 @@
 
     .menu {
         background: #3479bf;
-        border-radius: 5px;
+        border-radius: 5px; 
         border: solid 1px #3479bf;
         margin-bottom: .5em;
         margin: 1em;
@@ -1632,11 +1656,11 @@
     <div class="row">
         <div class="menu">
             <!-------------------- <div class="dropdown">
-                <button class="dropbtn">DC</button>
-                <div class="dropdown-content">
-                    <a href="#modal_agregar_dc" data-toggle="modal" style="cursor:pointer;">Add DC</a>
-                </div>
-            </div>---------------------->
+        <button class="dropbtn">DC</button>
+        <div class="dropdown-content">
+            <a href="#modal_agregar_dc" data-toggle="modal" style="cursor:pointer;">Add DC</a>
+        </div>
+    </div>---------------------->
 
             <div class="dropdown">
                 <button class="dropbtn" type="button" id="boton_recibo_fantasy" href="#modal_drivers" data-toggle="modal">
@@ -1669,8 +1693,8 @@
                     <a href="#modal_estado_envio_estilos" data-toggle="modal">Order state</a>
                     <a href="#modal_pos_mismo_estilo" data-toggle="modal">Orders with same styles</a>
                     <a href="@Url.Action("listado_diario", "Shipping")">Packing daily list</a>
-                    <a href="#modal_packing_fecha" data-toggle="modal">Packing list by year</a>                    
-                    <a id="link" href="#" >Orders list</a>
+                    <a href="#modal_packing_fecha" data-toggle="modal">Packing list by year</a>
+                    <a id="link" href="#">Orders list</a>
                 </div>
             </div>
         </div>

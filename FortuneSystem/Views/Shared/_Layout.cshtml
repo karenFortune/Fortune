@@ -10,32 +10,30 @@
 
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/Content/jquery-ui-1.12.1.custom/jquery-3.3.1.min.js")
     <link type="text/css" href="~/Content/DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css" rel="stylesheet" />
     <link type="text/css" href="~/Content/DataTables/DataTables-1.10.18/css/jquery.dataTables.css" rel="stylesheet" />
     <link type="text/css" href="~/Content/DataTables/Buttons-1.5.2/css/buttons.dataTables.min.css" rel="stylesheet" />
     <link type="text/css" href="~/Content/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
     <link type="text/css" href="~/Content/load.css" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/Content/select2-4.0.5/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="~/Content/select2-4.0.5/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="~/Content/alertifyjs/css/alertify.min.css" />
     <link rel="stylesheet" href="~/Content/alertifyjs/css/themes/default.min.css" />
     <script src="~/Content/alertifyjs/alertify.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/locale/bootstrap-table-zh-CN.min.js"></script>
+    <link rel="stylesheet" href="~/Content/bootstrap-table-master/dist/bootstrap-table.min.css" />
+    <script src="~/Content/bootstrap-table-master/dist/bootstrap-table.min.js"></script>
+    <script src="~/Content/bootstrap-table-master/dist/locale/bootstrap-table-zh-CN.min.js"></script>
 
     <style>
         footer {
             width: 79%;
-           height: 5%;
-            position:relative;
+            height: 5%;
+            position: relative;
             bottom: 20%;
             left: 15%;
-            
         }
-
     </style>
 
 
@@ -92,11 +90,15 @@
             }
             else if ((int)Session["idCargo"] == 6)
             {
+                <li class="has-subnav"><a href="@Url.Action("Index", "pedidos")" id="opc"> <i class="glyphicon  glyphicon-list-alt fa_menu"></i> <span class="nav-text">Reception PO</span></a></li>
                 <li class="has-subnav"><a href="@Url.Action("Index", "shipping")"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">Shipping</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="menuOpc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
             }
             else if ((int)Session["idCargo"] == 7)
             {
+                <li class="has-subnav"><a href="@Url.Action("Index", "pedidos")" id="opc"> <i class="glyphicon  glyphicon-list-alt fa_menu"></i> <span class="nav-text">Reception PO</span></a></li>
                 <li class="has-subnav"><a href="@Url.Action("Index", "staging")"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">Staging</span></a></li>
+                <li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="menuOpc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
             }
             else if ((int)Session["idCargo"] == 8)
             {

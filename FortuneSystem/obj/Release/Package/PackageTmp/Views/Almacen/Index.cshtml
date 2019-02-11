@@ -123,12 +123,13 @@
     }
     $(document).ready(function () {
         $("#loading").css('display','inline');
-        obtener_charts();
-        obtener_charts_transferencias();
-        busqueda_items("");        
+        //obtener_charts();
+        //obtener_charts_transferencias();
+        busqueda_items("");  
+        
     });
     function obtener_charts() {
-        $.ajax({
+        /*$.ajax({
             url: "/Almacen/buscar_datos_grafica",
             type: "POST",
             contentType: "application/json;charset=utf-8",
@@ -169,13 +170,13 @@
             error: function (errormessage) {
                 alert(errormessage.responseText);
             }
-        });
+        });*/
 
 
 
     }
     function obtener_charts_transferencias() {
-        $.ajax({
+        /*$.ajax({
             url: "/Almacen/buscar_datos_grafica_transferencias",
             type: "POST",
             contentType: "application/json;charset=utf-8",
@@ -216,7 +217,7 @@
             error: function (errormessage) {
                 alert(errormessage.responseText);
             }
-        });
+        });*/
     }
     /********************************************************************************************************************************************************************** */
     function busqueda_items_almacen() {
@@ -252,6 +253,12 @@
             error: function (errormessage) { alert(errormessage.responseText); }
         });
     }
+
+    $(document).on("click", "a", function () {
+        //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
+        $("#loading").css('display', 'none'); 
+    });
+
 </script>
 <link href="~/Content/base_m.css" rel="stylesheet" />
 
@@ -308,6 +315,7 @@
         background-color: #3479bf;
         color: white;
         padding: 16px;
+        /*padding: 0.40em;*/
         font-size: 18px;
         border: none;
     }
@@ -403,12 +411,27 @@
             border: 2px solid white;
             background: #71bb73;
         }
-        
+    .boton_menu {
+        border: none;
+        color: black;
+        background: white;
+        width: 100%;
+        text-align: left;
+        padding: 0.5em
+    }
+
+        .boton_menu:hover {
+            border: none;
+            background: #61b363;
+            color: white;
+            width: 100%;
+            text-align: left;
+        } 
 </style>
 
 <div class="container-fluid" style="padding-left:7em; padding-right:3em;">
     <h3>Storehouse</h3>
-    <div id="graficas" style="width:90%;height:50%; position:absolute; z-index:99; background:white; border-radius:35px; border:5px solid #61b363; padding-left:2em; margin-top:5em;">
+    <div id="graficas" style="width:90%;height:50%; display:none; position:absolute; z-index:99; background:white; border-radius:35px; border:5px solid #61b363; padding-left:2em; margin-top:5em;">
         <div class="x" id="boton_cerrar_graficas" onclick="cerrar_graficas()" style="">x</div>
 
         <div style="width:45% !important; height:45% !important; float:left;">
