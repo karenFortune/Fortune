@@ -430,7 +430,7 @@
 </style>
 
 <div class="container-fluid" style="padding-left:7em; padding-right:3em;">
-    <h3>Storehouse</h3>
+    <h3>Warehouse</h3>
     <div id="graficas" style="width:90%;height:50%; display:none; position:absolute; z-index:99; background:white; border-radius:35px; border:5px solid #61b363; padding-left:2em; margin-top:5em;">
         <div class="x" id="boton_cerrar_graficas" onclick="cerrar_graficas()" style="">x</div>
 
@@ -452,10 +452,10 @@
             </div>
 
             <div class="dropdown">
-                <button class="dropbtn">Receives</button>
+                <button class="dropbtn">Receive</button>
                 <div class="dropdown-content">
                     <a href="@Url.Action("recibo_items", "Almacen")">New receive</a>
-                    <a href="#modal_listado_recibos" data-toggle="modal" class="btn_abrir_lista_recibos">See receives</a>
+                    <a href="#modal_listado_recibos" data-toggle="modal" class="btn_abrir_lista_recibos">Receive list</a>
                 </div>
             </div>
 
@@ -463,7 +463,7 @@
                 <button class="dropbtn">Transfers </button>
                 <div class="dropdown-content">
                     <a href="@Url.Action("nueva_transferencia", "Almacen")">New transfer</a>
-                    <a href="@Url.Action("nueva_transferencia_qr", "Almacen")">New transfer scanning</a>
+                    <a href="@Url.Action("nueva_transferencia_qr", "Almacen")">New transfer scan</a>
                     <a href="#modal_nuevos_sellos" data-toggle="modal">New seal package</a>
                     <a href="#modal_aprobar_transferencia" data-toggle="modal">See transfers</a>
                     <a href="#modal_recibir_transferencias" data-toggle="modal" class="btn_recibir_transferencia">Receive transfers</a>
@@ -478,174 +478,174 @@
             </div>
 
             <div class="dropdown">
-                <button class="dropbtn" type="button" onclick="abrir_graficas()">
-                    Chart
-                </button>
-            </div>
+            <button class="dropbtn" type="button" onclick="abrir_graficas()">
+                
+            </button>
         </div>
+    </div>
 
 
-        <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
 
 
-        <div class="modal fade" id="modal_nuevos_sellos" data-target="#modal_nuevos_sellos">
-            <div class="modal-dialog" style="width:30% !important; height:15% !important;">
-                <div class="modal-content">
-                    <div class="modal-header orange modal-header-primary">
-                        <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title"><strong></strong>Add seal package</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <div class="form-group col-3">
-                                <label for="caja_inicio">First seal </label>
-                                <input type="text" class="form-control numeric must " maxlength="10" onkeydown="upperCaseF(this)" id="caja_inicio">
-                            </div>
-                            <div class="form-group col-3">
-                                <label for="caja_final">Last seal</label>
-                                <input type="text" class="form-control numeric  must " maxlength="10" onkeydown="upperCaseF(this)" id="caja_final">
-                            </div>
-                            <div class="form-group col-3">
-                                <label for="caja_sucursal">Branch office </label>
-                                <select type="text" class="form-control" id="caja_sucursal">
-                                    <option>Select</option>
-                                    <option value="1">Fortune</option>
-                                    <option value="2">Lucky one</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-3">
-                                <br />
-                                <button type="button" class="btn btn-primary mb-2" id="boton_guardar_sello" onclick="guardar_sellos_index(event);">Save</button>
+            <div class="modal fade" id="modal_nuevos_sellos" data-target="#modal_nuevos_sellos">
+                <div class="modal-dialog" style="width:30% !important; height:15% !important;">
+                    <div class="modal-content">
+                        <div class="modal-header orange modal-header-primary">
+                            <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title"><strong></strong>Add seal package</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="form-group col-3">
+                                    <label for="caja_inicio">First seal </label>
+                                    <input type="text" class="form-control numeric must " maxlength="10" onkeydown="upperCaseF(this)" id="caja_inicio">
+                                </div>
+                                <div class="form-group col-3">
+                                    <label for="caja_final">Last seal</label>
+                                    <input type="text" class="form-control numeric  must " maxlength="10" onkeydown="upperCaseF(this)" id="caja_final">
+                                </div>
+                                <div class="form-group col-3">
+                                    <label for="caja_sucursal">Branch office </label>
+                                    <select type="text" class="form-control" id="caja_sucursal">
+                                        <option>Select</option>
+                                        <option value="1">Fortune</option>
+                                        <option value="2">Lucky one</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-3">
+                                    <br />
+                                    <button type="button" class="btn btn-primary mb-2" id="boton_guardar_sello" onclick="guardar_sellos_index(event);">Save</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="modal fade" id="modal_listado_recibos" data-target="#modal_listado_recibos">
-            <div class="modal-dialog" style="width:90% !important; padding:0px;">
-                <div class="modal-content" style="overflow:auto; width:100% !important; height:100% !important;">
-                    <div class="modal-header orange  modal-header-primary">
-                        <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title"><strong></strong>Receives and details</h4>
+            <div class="modal fade" id="modal_listado_recibos" data-target="#modal_listado_recibos">
+                <div class="modal-dialog" style="width:90% !important; padding:0px;">
+                    <div class="modal-content" style="overflow:auto; width:100% !important; height:100% !important;">
+                        <div class="modal-header orange  modal-header-primary">
+                            <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title"><strong></strong>Receives and details</h4>
+                        </div>
+                        <div class="modal-body " id="contenedor_modal_listado_recibos">
+
+                            @{
+                                Html.RenderAction("lista_recibos", "Almacen");
+                            }
+
+                        </div>
                     </div>
-                    <div class="modal-body " id="contenedor_modal_listado_recibos">
+                </div>
+            </div>
 
-                        @{
-                            Html.RenderAction("lista_recibos", "Almacen");
-                        }
+            <div class="modal fade" id="modal_formulario_nuevo_item" data-target="#modal_formulario_nuevo_item">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="overflow:auto;">
+                        <div class="modal-header orange modal-header-primary">
+                            <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
 
+                            </button>
+                            <h4 class="modal-title"><strong></strong>New item</h4>
+
+                        </div>
+                        <div class="modal-body">
+                            @{
+                                Html.RenderPartial("formulario_nuevo_item");
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modal_formulario_recibo" data-target="#modal_formulario_recibo">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="overflow:auto; width:100% !important; height:100% !important;">
+                        <div class="modal-header orange modal-header-primary">
+                            <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title"><strong></strong>New receive</h4>
+                        </div>
+                        <div class="modal-body " id="contenedor_modal_recibos">
+                            @{
+                                //Html.RenderPartial("formulario_recibo");
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modal_aprobar_transferencia" data-target="#modal_aprobar_transferencia">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="overflow:auto; width:100% !important; height:100% !important;">
+                        <div class="modal-header orange modal-header-primary">
+                            <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title"><strong></strong>Approval of transfers</h4>
+                        </div>
+                        <div class="modal-body ">
+
+                            @{
+                                Html.RenderAction("lista_transferencias", "Almacen");
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modal_editar_inventario" data-target="#modal_editar_inventario">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="overflow:auto; width:100% !important; height:100% !important;">
+                        <div class="modal-header orange modal-header-primary">
+                            <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title"><strong></strong>Modify inventory item</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div id="ContenedorModal"></div>
+                            @{
+                                //Html.RenderAction("edicion_inventario", "Almacen");
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modal_recibir_transferencias" data-target="#modal_recibir_transferencias">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="overflow:auto; width:100% !important; height:100% !important;">
+                        <div class="modal-header orange modal-header-primary">
+                            <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title"><strong></strong>Receive transfer</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div id="contenedor_modal_recibir_transferencia"></div>
+                            @{
+                                //Html.RenderAction("edicion_inventario","Almacen");
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="modal fade" id="modal_formulario_nuevo_item" data-target="#modal_formulario_nuevo_item">
-            <div class="modal-dialog">
-                <div class="modal-content" style="overflow:auto;">
-                    <div class="modal-header orange modal-header-primary">
-                        <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-
-                        </button>
-                        <h4 class="modal-title"><strong></strong>New item</h4>
-
-                    </div>
-                    <div class="modal-body">
-                        @{
-                            Html.RenderPartial("formulario_nuevo_item");
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="modal_formulario_recibo" data-target="#modal_formulario_recibo">
-            <div class="modal-dialog">
-                <div class="modal-content" style="overflow:auto; width:100% !important; height:100% !important;">
-                    <div class="modal-header orange modal-header-primary">
-                        <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title"><strong></strong>New receive</h4>
-                    </div>
-                    <div class="modal-body " id="contenedor_modal_recibos">
-                        @{
-                            //Html.RenderPartial("formulario_recibo");
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="modal_aprobar_transferencia" data-target="#modal_aprobar_transferencia">
-            <div class="modal-dialog">
-                <div class="modal-content" style="overflow:auto; width:100% !important; height:100% !important;">
-                    <div class="modal-header orange modal-header-primary">
-                        <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title"><strong></strong>Approval of transfers</h4>
-                    </div>
-                    <div class="modal-body ">
-
-                        @{
-                            Html.RenderAction("lista_transferencias", "Almacen");
-                        }
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="modal_editar_inventario" data-target="#modal_editar_inventario">
-            <div class="modal-dialog">
-                <div class="modal-content" style="overflow:auto; width:100% !important; height:100% !important;">
-                    <div class="modal-header orange modal-header-primary">
-                        <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title"><strong></strong>Modify inventory item</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div id="ContenedorModal"></div>
-                        @{
-                            //Html.RenderAction("edicion_inventario", "Almacen");
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="modal_recibir_transferencias" data-target="#modal_recibir_transferencias">
-            <div class="modal-dialog">
-                <div class="modal-content" style="overflow:auto; width:100% !important; height:100% !important;">
-                    <div class="modal-header orange modal-header-primary">
-                        <button type="button" class="close x" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title"><strong></strong>Receive transfer</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div id="contenedor_modal_recibir_transferencia"></div>
-                        @{
-                            //Html.RenderAction("edicion_inventario","Almacen");
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <!----LISTADO DE INVENTARIO----->
    
-    <div class="panel panel-default panel-primary ">
+    <div class="panel panel-default panel-primary " style="margin-left:7em; margin-right:3em;">
         <div class="panel-heading"><h4>Inventory</h4> </div>
-        <div class=" " style=" width: 100%; margin-top:1em;  ">
+        <div class=" " style=" margin-top:1em;  ">
             <b style="left:0em; float:left; padding-top:.5em; padding-left:1em; ">Search </b>
             <input type="text" class="search_po form-control validacion" onkeyup="busqueda_items_almacen()" placeholder="Type to search" id="caja_buscar_item" style="width: 15em; float:left; margin-top: 0px; margin-left:1em; margin-bottom:1em; ">
         </div><br /><br /><br />

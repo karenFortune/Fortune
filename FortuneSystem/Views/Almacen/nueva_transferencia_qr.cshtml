@@ -11,6 +11,10 @@
 <link href="~/Content/base_m.css" rel="stylesheet" />
 <script>
     var rows_seleccionados;
+    $(document).on("click", "a", function () {
+        //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
+        $("#loading").css('display', 'none');
+    });
     $(document).on("input", ".numeric", function () {
         this.value = this.value.replace(/\D/g, '');
     });
@@ -593,7 +597,7 @@
         <br />
         <button type="button" class="btn btn-danger mb-2" style="display:inline; margin:1em;" id="boton_guardar_transferencia_qr" onclick="crear_transferencia_qr(event)" >Save</button>
     </div>  <br /> <br />
-    <a type="button" class="btn btn-secondary btn-sm " id="boton_regresar_inventario" href="@Url.Action("Index", "Almacen")" style="float:left; ">Back to inventory</a>
+    <a type="button" class="btn btn-secondary btn-sm " id="boton_regresar_inventario" href="@Url.Action("Index", "Almacen")" style="float:left; "> << Back</a>
 
 
 

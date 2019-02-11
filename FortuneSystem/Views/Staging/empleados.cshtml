@@ -26,6 +26,11 @@
         });
     });
 
+
+    $(document).on("click", "a", function () {
+        //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
+        $("#loading").css('display', 'none');
+    });
     function load_inicial() {
        /* $("#loading_recibos").css('display', 'inline');
         $.ajax({

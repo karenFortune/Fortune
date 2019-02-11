@@ -6,6 +6,10 @@
 
 <link href="~/Content/base_m.css" rel="stylesheet" />
 <script>
+    $(document).on("click", "a", function () {
+        //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
+        $("#loading").css('display', 'none');
+    });
     var qr;
     $(document).on("input", ".numeric", function () {
         this.value = this.value.replace(/\D/g, '');
@@ -180,7 +184,6 @@
 
     var ids, cantidades,pos,estilos,cajas,codigos;
     function crear_transferencia(event) {
-
         var contador = 0;
         var error = 0;
         ids = ''; cantidades = ''; pos = ""; estilos = ""; codigos = '';
@@ -242,7 +245,6 @@
             type: 'post',
             success: function (jsonData) {
                 limpiar_formulario();
-
                 alertify.success('Success!');
                 alertify.set('notifier', 'position', 'top-right'); 
                 redireccionarPagina_trans();
@@ -281,20 +283,29 @@
         }
     });
     function agregar_row() {
-        var rows = '<tr role="row">' +
-            '<td  role="cell"><input readonly style="width:4em !important; border: none; background: none; box-shadow:none;" class="validacion form-control lectura" value="' + id_temp + '" /></td>' +
-            '<td role="cell"><input readonly style="border: none; background: none; box-shadow:none;" class="validacion form-control lectura"  value="' + description_temp + '" /></td>' +
-            '<td role="cell"><input readonly style="border: none; background: none; box-shadow:none;" class="numeric form-control check_item"  value="' + available_temp + '" /></td>' +
-            '<td role="cell"><input ondrop="return false;" onpaste="return false;"  maxlength="10" class="numeric form-control check_item"  value="' + available_temp + '" /></td>' +
-            '<td role="cell"><input ondrop="return false;" onpaste="return false;"  maxlength="30" class="validacion form-control po "  value="' + order_temp + '" /></td>' +
-            '<td role="cell"><input ondrop="return false;" onpaste="return false;"  maxlength="100" class="validacion form-control estilo "  /></td>' +
-            '<td role="cell"><input ondrop="return false;" onpaste="return false;"  maxlength="100" class="numeric form-control  "  /></td>' +
-            '<td role="cell"><button type="button" class="btn btn-light delete_row"><b>-</b></button></td></tr>';
-        $('#tabla_transferencia_temporal').append(rows);
-        $('#div_tabla_transferencia_temporal').css('visibility', 'visible');
-        rows_seleccionados++;
-        $("#boton_guardar_transferencia").css('display', 'inline');
-
+        $.ajax({
+            url: '/Almacen/buscar_estilo_cajas',  
+            data: "{'inventario':'" + id_temp+"'}",
+            contentType: 'application/json',
+            dataType: 'json',
+            type: 'post',
+            success: function (result) {
+                var data = result.split('*');
+                var rows = '<tr role="row">' +
+                    '<td  role="cell"><input readonly style="width:4em !important; border: none; background: none; box-shadow:none;" class="validacion form-control lectura" value="' + id_temp + '" /></td>' +
+                    '<td role="cell"><input readonly style="border: none; background: none; box-shadow:none;" class="validacion form-control lectura"  value="' + description_temp + '" /></td>' +
+                    '<td role="cell"><input readonly style="border: none; background: none; box-shadow:none;" class="numeric form-control check_item"  value="' + available_temp + '" /></td>' +
+                    '<td role="cell"><input ondrop="return false;" onpaste="return false;"  maxlength="10" class="numeric form-control check_item"  value="' + available_temp + '" /></td>' +
+                    '<td role="cell"><input ondrop="return false;" onpaste="return false;"  maxlength="30" class="validacion form-control po "  value="' + order_temp + '" /></td>' +
+                    '<td role="cell"><input ondrop="return false;" onpaste="return false;"  maxlength="100" class="validacion form-control estilo " value="'+data[0]+'" /></td>' +
+                    '<td role="cell"><input ondrop="return false;" onpaste="return false;"  maxlength="100" class="numeric form-control  " value="'+data[1]+'" /></td>' +
+                    '<td role="cell"><button type="button" class="btn btn-light delete_row"><b>-</b></button></td></tr>';
+                $('#tabla_transferencia_temporal').append(rows);
+                $('#div_tabla_transferencia_temporal').css('visibility', 'visible');
+                rows_seleccionados++;
+                $("#boton_guardar_transferencia").css('display', 'inline');
+            }
+        }); 
     }
     //BORRAR ELEMENTO DEL TRANSFER LIST
     $(document).on("click", ".delete_row", function () {
@@ -617,9 +628,9 @@
 
     </div>
 
-    <button type="button" class="btn btn-primary mb-2" style="display:none;" id="boton_guardar_transferencia" onclick="crear_transferencia(event)">Finish and save</button>
+    <button type="button" class="btn btn-primary mb-2" style="display:none;" id="boton_guardar_transferencia" onclick="crear_transferencia(event)">Save</button>
     <br /> <br />
-    <a type="button" class="btn btn-secondary btn-sm " id="boton_regresar_inventario" href="@Url.Action("Index", "Almacen")" style="float:left; ">Back to inventory</a>
+    <a type="button" class="btn btn-secondary btn-sm " id="boton_regresar_inventario" href="@Url.Action("Index", "Almacen")" style="float:left; "> << Back </a>
 
 
 
@@ -635,7 +646,7 @@
                 <div class="modal-body " id="contenedor_modal_lugares">
                     <div class="form-group">
                         <label for="caja_nombre_lugar">Location name</label>
-                        <input type="text" class="form-control" id="caja_nombre_lugar" maxlength="150" placeholder="Enter location name">
+                        <input type="text" class="form-control" id="caja_nombre_lugar" maxlength="150" placeholder="Enter name">
                     </div>
                     <div class="form-group">
                         <label for="caja_direccion_lugar">Address</label>

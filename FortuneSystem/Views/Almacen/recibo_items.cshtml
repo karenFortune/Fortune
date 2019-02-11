@@ -8,6 +8,10 @@
     $(document).ready(function () {
         test_busqueda();
     });
+    $(document).on("click", "a", function () {
+        //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
+        $("#loading").css('display', 'none');
+    });
     $(document).on("input", ".po", function () { $('.po').autocomplete({ source: '@Url.Action("Autocomplete_po")'         }); });
     $(document).on("input", ".pais", function () { $('.pais').autocomplete({ source: '@Url.Action("Autocomplete_paises")' }); });
     $(document).on("input", ".customer", function () { $('.customer').autocomplete({ source: '@Url.Action("Autocomplete_customer_name")' }); });
@@ -20,8 +24,8 @@
         var data = ID.split("&");
         var rowCount = $('.data-Talla').length + 1;
         var rows = '<tr class="data-Talla">' +
-            '<td><input readonly  ondrop="return false;" onpaste="return false;"  maxlength="10"  class="validacion form-control lectura" id="id_'+data[1]+'" value="' + data[1] + '" /></td>' +
-            '<td><input readonly  ondrop="return false;" onpaste="return false;"  maxlength="20" class="validacion form-control lectura" id="" value="'+data[0]+'" /></td>' +
+            '<td style="visibility:hidden;"><input readonly style="width:.5em; " ondrop="return false;" onpaste="return false;"  maxlength="10"  class="validacion form-control lectura" id="id_'+data[1]+'" value="' + data[1] + '" /></td>' +
+            '<td><input readonly style=width:20em;  ondrop="return false;" onpaste="return false;" class="validacion form-control lectura" id="" value="'+data[2]+'" /></td>' +
            // '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="10" class="numeric form-control check_item" id="" /></td>' +
             '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="30" class="validacion form-control po " id="" /></td>' +
             '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="100" class="validacion form-control estilo " id="" /></td>' +
@@ -33,13 +37,13 @@
         $('#tabla_recibos_temporal').css('visibility', 'visible');
         rows_seleccionados++;
         $("#boton_guardar_recibo").css('display', 'inline');
-        generar_tabla_cajas(data[1],data[0]);
+        generar_tabla_cajas(data[1],data[0],data[2]);
     }
 
-    function generar_tabla_cajas(id, item) {
+    function generar_tabla_cajas(id, item,descripcion) {
 
         html = '<div id="panel_cajas_' + id +'" class="panel_cajas grid-column-start: auto;">'+
-            '<center><p style="color:#337ab7; margin:0px; "><b> #' + id + ' ' + item +'</b></p></center>' +
+            '<center><p style="color:#337ab7; margin:0px; "><b> #' + id + ' ' + descripcion +'</b></p></center>' +
                 '<table id="tabla_cajas_' + id + '" class="data-cajas-' + id +' table table-hover" style="">' +
                     '<thead>' +
                         '<tr>' +
@@ -222,7 +226,7 @@
         var row = this.rowIndex;
         //alert($('#items_recibos tr:eq('+row+') td:eq(0)').html()); //empieza las columas desde 0
         //alert($('#items_recibos tr:eq(' + row + ') td:nth-child(2)').html());     //empieza las columnas desde 1
-        agregar_row($('#items_recibos tr:eq(' + row + ') td:eq(1)').html() + "&" + $('#items_recibos tr:eq(' + row + ') td:eq(0)').html());
+        agregar_row($('#items_recibos tr:eq(' + row + ') td:eq(1)').html() + "&" + $('#items_recibos tr:eq(' + row + ') td:eq(0)').html() + "&" + $('#items_recibos tr:eq(' + row + ') td:eq(2)').html() + " " + $('#items_recibos tr:eq(' + row + ') td:eq(4)').html());
     });
     //CAMBIAR LOS ROW DE COLOR
     $(document).on("click", "#items_recibos tr", function () {
@@ -278,7 +282,7 @@
                         '<td>' + item.fabric_type+'</td> '+
                         '<td>'+item.fabric_percent+'</td> '+
                         '<td>' + item.yarn+'</td> '+
-                        '<td> <button type="button" id="boton_agregar_row" class="btn btn-success  classAdd agregar" onclick="agregar_row( \''+item.item_nombre+'&'+item.id_item+ '\' )" style="padding:0px 10px !important; margin:0px;"><b style="font-size:1.5em;">+</b></button> </td> '+
+                        '<td> <button type="button" id="boton_agregar_row" class="btn btn-success  classAdd agregar" onclick="agregar_row( \''+item.item_nombre+'&'+item.id_item+'&'+item.descripcion+' '+item.size+ '\' )" style="padding:0px 10px !important; margin:0px;"><b style="font-size:1.5em;">+</b></button> </td> '+
                     ' </tr>';
                 });
                 $(".resultados_items_recibo").html(html);
@@ -418,7 +422,7 @@
 @Html.Hidden("RedirectTo", Url.Action("Index", "Almacen"));
       <div class="container-fluid" style="padding-left:8em; padding-right:3em;">
 
-          <h3 style="color:#3479bf;">Receives</h3>
+          <h3 style="color:#3479bf;">Receive</h3>
           <h4>Search item</h4>         
           <div class="row" style="padding:0em 0em 0em 0em;">             
                   <div class="form-group col-sm-2 ">
@@ -470,18 +474,18 @@
               <div id="tabla_recibos_temporal" class="row panel panel-default panel-primary" style="visibility:hidden; border:none; ">
                   <div class="panel-heading"><b>Transfer list</b></div>
                   <div class="row" style="padding:1em 0em 0em 1em;">
-                      <div class="form-group col-md-3 ">
+                      <div class="form-group col-md-1 ">
                           <label class=" col-form-label">Mill PO</label>
                           <!--<input type="text" class=" form-control validacion" ondrop="return false;" onpaste="return false;" maxlength="20" id="caja_recibo_mill_po">--->
                       </div>
-                      <div class="form-group col-md-3 ">
+                      <div class="form-group col-md-2 ">
                           <input type="text" class=" form-control validacion" ondrop="return false;" onpaste="return false;" maxlength="20" id="caja_recibo_mill_po">
                       </div>
-                      <div class="form-group col-md-3 ">
+                      <div class="form-group col-md-1">
                           <label class=" col-form-label">PO Reference</label>
                           <!--<input type="text" class=" form-control validacion" ondrop="return false;" onpaste="return false;" maxlength="20" id="caja_recibo_mill_po">-->
                         </div>
-                        <div class="form-group col-md-3  ">
+                        <div class="form-group col-md-2  ">
                             <input type="text" class=" form-control validacion" ondrop="return false;" onpaste="return false;" maxlength="20" id="caja_recibo_po_referencia">
                         </div>
                     </div>
@@ -490,7 +494,7 @@
                 <table id="tabla_items_recibos" class="data-Talla table   table-hover" >
                     <thead>
                         <tr style="/*color:#f9f9f9; background:#4f9a51;*/">
-                            <th>#</th>
+                            <th style="width:.5em; visibility:hidden;"></th>
                             <th>Item</th>
                             <th>PO</th>
                             <th>Style</th>
@@ -512,7 +516,7 @@
         <br />
         <button type="button" class="btn btn-primary btn-lg mb-2" id="boton_guardar_recibo" onclick="guardar_items_recibo(event);" style="float:right; display:none; margin:1em;">Receive</button>
         <br />
-        <a type="button" class="btn btn-secondary btn-sm " id="boton_regresar_inventario" href="@Url.Action("Index", "Almacen")" style="float:left; ">Back to inventory</a>
+        <a type="button" class="btn btn-secondary btn-sm " id="boton_regresar_inventario" href="@Url.Action("Index", "Almacen")" style="float:left; "> << Return</a>
 
         <div class="modal fade" id="modal_formulario_nuevo_item" data-target="#modal_formulario_nuevo_item">
             <div class="modal-dialog">

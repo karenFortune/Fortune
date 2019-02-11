@@ -9,6 +9,7 @@ using System.Globalization;
 using FortuneSystem.Models.Almacen;
 using FortuneSystem.Models.Staging;
 using FortuneSystem.Models.Shipping;
+//using FortuneSystem.Models.Trims;
 using FortuneSystem.Models.POSummary;
 
 namespace FortuneSystem.Controllers
@@ -19,10 +20,11 @@ namespace FortuneSystem.Controllers
 
         DatosInventario di = new DatosInventario();
         DatosTransferencias dt = new DatosTransferencias();
+       //DatosTrims dtr = new DatosTrims();
+        DescripcionItemData de = new DescripcionItemData();
         DatosStaging ds = new DatosStaging();
         DatosShipping dsh = new DatosShipping();
         StagingGeneral sg = new StagingGeneral();
-        DescripcionItemData de = new DescripcionItemData();
         string filename, footer_alineacion, footer_size,vista;
                 
         public ActionResult Index(){            
@@ -68,7 +70,9 @@ namespace FortuneSystem.Controllers
                     CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
                 };
             }
-        }       
+
+        }
+       
         [AllowAnonymous]
         public ActionResult papeleta_staging_vacias()
         {
@@ -110,8 +114,7 @@ namespace FortuneSystem.Controllers
         }
         //*************************
         [AllowAnonymous]
-        public ActionResult imprimir_bol()
-        {
+        public ActionResult imprimir_bol(){
             //return View("bol", dsh.obtener_packing_list(Convert.ToInt32(Session["pk"])));
             return new ViewAsPdf("bol", dsh.obtener_packing_list(Convert.ToInt32(Session["pk"])))
             {
@@ -122,6 +125,18 @@ namespace FortuneSystem.Controllers
                 CustomSwitches = "--page-offset 0  ",
             };
         }
+       /* [AllowAnonymous]
+        public ActionResult trim_card(){
+            //return View("bol", dsh.obtener_packing_list(Convert.ToInt32(Session["pk"])));
+            return new ViewAsPdf("trim_card", dtr.obtener_datos_trim_card(Convert.ToString(Session["po_trim"]), Convert.ToString(Session["id_usuario"])))
+            {
+                FileName = filename,
+                PageOrientation = Rotativa.Options.Orientation.Landscape,
+                PageSize = Rotativa.Options.Size.Letter,
+                PageMargins = new Rotativa.Options.Margins(5, 5, 5, 5),
+                CustomSwitches = "--page-offset 0  ",
+            };
+        }*/
 
         [AllowAnonymous]
         public ActionResult Imprimir_Reporte_PO()
@@ -135,12 +150,8 @@ namespace FortuneSystem.Controllers
                 PageMargins = new Rotativa.Options.Margins(5, 10, 15, 10),
                 CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
             };
-           
+
         }
-
-
-
-
 
 
 

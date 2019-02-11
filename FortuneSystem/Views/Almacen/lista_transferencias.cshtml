@@ -23,7 +23,10 @@
             else { $('.no-result').hide(); }
         });
     });
-
+    $(document).on("click", "a", function () {
+        //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
+        $("#loading").css('display', 'none');
+    });
     function aprobar_transferencia(ID) {
         $("#loading_lt").css('display', 'inline');
         $.ajax({
@@ -277,7 +280,7 @@
             @{
                 if (item.estado_aprobacion == 0)
                 {
-                    <td>Waiting for response</td>
+                    <td>Waiting</td>
                 }
                 if (item.estado_aprobacion == 1)
                 {

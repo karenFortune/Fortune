@@ -34,13 +34,16 @@ namespace FortuneSystem.Controllers
         int sm, md, lg, xl, xx, registro,total,id_estilo;
         string[] tallas = { "SM", "MD", "LG", "XL", "2X" };
         public ActionResult Index() {
-           // Session["id_usuario"] = 2;
-           // Session["id_usuario"] = consultas.buscar_id_usuario(Convert.ToString(Session["usuario"]));
-            if (Session["usuario"] != null){
+            // Session["id_usuario"] = 2;
+            // Session["id_usuario"] = consultas.buscar_id_usuario(Convert.ToString(Session["usuario"]));
+            /*if (Session["usuario"] != null){
                 return View();
             }else {
                 return View();
-            }               
+            }  */
+            int id_usuario = Convert.ToInt32(Session["idUsuario"]);
+            Session["id_usuario"] = id_usuario;
+            return View();
         }
 
         public JsonResult buscar_clientes_fantasy(){

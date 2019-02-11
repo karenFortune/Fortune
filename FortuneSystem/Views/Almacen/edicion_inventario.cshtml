@@ -32,6 +32,10 @@
         }
         this.setSelectionRange(c, c);
     });
+    $(document).on("click", "a", function () {
+        //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
+        $("#loading").css('display', 'none');
+    });
     var id_estilo_editar;
     function load_datos_item() {
        $("#loading_edicion_inventario").css('display','inline');

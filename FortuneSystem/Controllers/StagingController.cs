@@ -20,7 +20,9 @@ namespace FortuneSystem.Controllers
         public ActionResult Index(){
             //Session["id_usuario"] = consultas.buscar_id_usuario(Convert.ToString(Session["usuario"]));
             //Session["id_usuario"] = 2;
-            Session["id_sucursal"] = consultas.obtener_sucursal_id_usuario(Convert.ToInt32(Session["id_usuario"]));
+            //Session["id_sucursal"] = consultas.obtener_sucursal_id_usuario(Convert.ToInt32(Session["id_usuario"]));
+            int id_usuario = Convert.ToInt32(Session["idUsuario"]);
+            Session["id_usuario"] = id_usuario;
             Session["turno"] = consultas.obtener_turno_usuario(Convert.ToInt32(Session["id_usuario"]));            
             return View();
         }

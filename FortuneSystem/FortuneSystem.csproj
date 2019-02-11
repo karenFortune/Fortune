@@ -2795,6 +2795,7 @@
     <Content Include="Scripts\general\obtenerListadoPnl.js" />
     <Content Include="Scripts\general\obtenerListado.js" />
     <Content Include="Scripts\general\obtenerListaTallasPorGenero.js" />
+    <Content Include="Scripts\instascan.min.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -2811,6 +2812,39 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\webcodecamjs-master\.gitattributes" />
+    <Content Include="Scripts\webcodecamjs-master\.gitignore" />
+    <Content Include="Scripts\webcodecamjs-master\audio\beep.mp3" />
+    <Content Include="Scripts\webcodecamjs-master\AUTHORS.txt" />
+    <Content Include="Scripts\webcodecamjs-master\barcode.png" />
+    <Content Include="Scripts\webcodecamjs-master\compatibility.jpg" />
+    <Content Include="Scripts\webcodecamjs-master\css\949320192f43b9d8.png" />
+    <Content Include="Scripts\webcodecamjs-master\css\bootstrap.min.css" />
+    <Content Include="Scripts\webcodecamjs-master\css\Chrome_Canary_Icon.png" />
+    <Content Include="Scripts\webcodecamjs-master\css\firefox-dev.png" />
+    <Content Include="Scripts\webcodecamjs-master\css\google-chrome.png" />
+    <Content Include="Scripts\webcodecamjs-master\css\Internet_Explorer_9.png" />
+    <Content Include="Scripts\webcodecamjs-master\css\mozilla_firefox.png" />
+    <Content Include="Scripts\webcodecamjs-master\css\opera.png" />
+    <Content Include="Scripts\webcodecamjs-master\css\safari-icon.png" />
+    <Content Include="Scripts\webcodecamjs-master\css\style.css" />
+    <Content Include="Scripts\webcodecamjs-master\demo.jpg" />
+    <Content Include="Scripts\webcodecamjs-master\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Scripts\webcodecamjs-master\index.html" />
+    <Content Include="Scripts\webcodecamjs-master\js\DecoderWorker.js" />
+    <Content Include="Scripts\webcodecamjs-master\js\filereader.js" />
+    <Content Include="Scripts\webcodecamjs-master\js\jquery.js" />
+    <Content Include="Scripts\webcodecamjs-master\js\main.js" />
+    <Content Include="Scripts\webcodecamjs-master\js\mainjquery.js" />
+    <Content Include="Scripts\webcodecamjs-master\js\qrcodelib.js" />
+    <Content Include="Scripts\webcodecamjs-master\js\webcodecamjquery.js" />
+    <Content Include="Scripts\webcodecamjs-master\js\webcodecamjs.js" />
+    <Content Include="Scripts\webcodecamjs-master\MIT-License.txt" />
+    <Content Include="Scripts\webcodecamjs-master\simple.html" />
+    <Content Include="Scripts\webcodecamjs-master\simple_buildselect.html" />
+    <Content Include="Scripts\webcodecamjs-master\simple_buildselect_jquery.html" />
+    <Content Include="Scripts\webcodecamjs-master\simple_jquery.html" />
+    <Content Include="Scripts\webcodecamjs-master\simple_localimage.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -2937,6 +2971,13 @@
     <Content Include="Views\PDF\transfer_ticket_contratista.cshtml" />
     <Content Include="Views\PDF\Imprimir_Reporte_PO.cshtml" />
     <Content Include="Views\POSummary\RegistrarNuevoEstiloPo.cshtml" />
+    <Content Include="Scripts\webcodecamjs-master\composer.json" />
+    <Content Include="Scripts\webcodecamjs-master\css\bootstrap.css.map" />
+    <Content Include="Scripts\webcodecamjs-master\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Scripts\webcodecamjs-master\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Scripts\webcodecamjs-master\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Scripts\webcodecamjs-master\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Scripts\webcodecamjs-master\README.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

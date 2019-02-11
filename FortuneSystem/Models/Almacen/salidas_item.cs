@@ -22,9 +22,11 @@ namespace FortuneSystem.Models.Almacen
         public string codigo { get; set; }
         public string po { get; set; }
         public string mill_po { get; set; }
+        public string mp_number { get; set; }
         public string color { get; set; }
         public int summary { get; set; }
         public int cajas { get; set; }
+        public string po_number { get; set; }
         
     }
 }

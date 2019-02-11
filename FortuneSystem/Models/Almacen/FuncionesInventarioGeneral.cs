@@ -1613,27 +1613,19 @@ namespace FortuneSystem.Models.Almacen
             }
             return s;
         }
-        public string buscar_nombre_usuario(string usuario)
-        {
+        public string buscar_nombre_usuario(string usuario){
             string temp = "";
             Conexion con = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
                 com.CommandText = "SELECT Nombres,Apellidos from Usuarios where Id='" + usuario + "'";
                 leer = com.ExecuteReader();
-                while (leer.Read())
-                {
+                while (leer.Read()){
                     temp = leer["Nombres"].ToString() + " " + leer["Apellidos"].ToString();
-                }
-                leer.Close();
-            }
-            finally
-            {
-                con.CerrarConexion(); con.Dispose();
-            }
+                }leer.Close();
+            }finally{con.CerrarConexion(); con.Dispose();}
             return temp;
         }
         public string buscar_nombres_lugares(string id)
@@ -2142,9 +2134,32 @@ namespace FortuneSystem.Models.Almacen
             }finally { con_u_r.CerrarConexion(); con_u_r.Dispose(); }
             return temp;
         }
+        public int obtener_id_pedido_summary(int summary){
+            int temp = 0;
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT ID_PEDIDOS from PO_SUMMARY where ID_PO_SUMMARY='" + summary + "'";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    temp = Convert.ToInt32(leer["ID_PEDIDOS"]);
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
+            return temp;
+        }
 
-
-
+        public void insertar_registro(int inventario,int usuario,string registro,string tipo){
+            Conexion con_c = new Conexion();
+            try{
+                SqlCommand com_c = new SqlCommand();
+                com_c.Connection = con_c.AbrirConexion();
+                com_c.CommandText = "INSERT INTO registros(id_usuario,tipo,fecha,id_inventario,registro) VALUES "
+                    +"('" + usuario+ "','"+tipo+"','"+ DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "','"+inventario+"','"+registro+"')";
+                com_c.ExecuteNonQuery();
+            }finally{con_c.CerrarConexion(); con_c.Dispose();}
+        }
 
 
 

@@ -25,7 +25,10 @@
             else { $('.no-result').hide(); }
         });
     });
-
+    $(document).on("click", "a", function () {
+        //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
+        $("#loading").css('display', 'none');
+    });
     function load_recibos() {
         $("#loading_recibos").css('display', 'inline');
         $.ajax({

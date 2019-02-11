@@ -79,6 +79,7 @@
         $("#loading_staging").css('display', 'inline');
         obtener_staging();
         obtener_pedidos_estilos();
+        $("#loading_staging").css('display', 'none');
         //obtener_charts();
         //cambiar_info_tabla();
     });
@@ -154,12 +155,13 @@
                     html += '</tr>';
                 });
                 $(".body_tabla_inicio").html(html);
-                $("#loading_staging").css('display', 'none');
+                
             },
             error: function (errormessage) {
                 alert(errormessage.responseText);
             }
         });
+        $("#loading_staging").css('display', 'none');
     }
     function obtener_staging() {
         $.ajax({

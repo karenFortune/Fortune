@@ -52,7 +52,7 @@ namespace FortuneSystem.Models.Almacen
         [Display(Name = "# PALLET")]
         public string pallet { get; set; }
         public string sucursal { get; set; }
-
+        public string po_number { get; set; }
         public string direccion_origen { get; set; }
         public string direccion_destino { get; set; }
 

@@ -23,12 +23,17 @@
             }
         });
     }
+    $(document).on("click", "a", function () {
+        //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
+        $("#loading").css('display', 'none');
+    });
     $(document).on("input", "#caja_po", function () { $('#caja_po').autocomplete({ source: '@Url.Action("Autocomplete_po")'         }); });
     $(document).on("input", "#caja_pais", function () { $('#caja_pais').autocomplete({ source: '@Url.Action("Autocomplete_paises")' }); });
     $(document).on("input", "#caja_fabricante", function () { $('#caja_fabricante').autocomplete({ source: '@Url.Action("Autocomplete_fabricantes")' }); });
     $(document).on("input", "#caja_color", function () { $('#caja_color').autocomplete({ source: '@Url.Action("Autocomplete_colores_codigos")' }); });
     $(document).on("input", "#caja_body_type", function () { $('#caja_body_type').autocomplete({ source: '@Url.Action("Autocomplete_body_type")' }); });
     $(document).on("input", "#caja_size", function () { $('#caja_size').autocomplete({ source: '@Url.Action("Autocomplete_tallas")' }); });
+    $(document).on("input", ".size_item", function () { $('.size_item').autocomplete({ source: '@Url.Action("Autocomplete_tallas")' }); });
     $(document).on("input", "#caja_genero", function () { $('#caja_genero').autocomplete({ source: '@Url.Action("Autocomplete_generos")' }); });
     $(document).on("input", "#caja_fabric_type", function () { $('#caja_fabric_type').autocomplete({ source: '@Url.Action("Autocomplete_telas")' }); });
     $(document).on("input", "#caja_fabric_percent", function () { $('#caja_fabric_percent').autocomplete({ source: '@Url.Action("Autocomplete_percents")' }); });
@@ -131,7 +136,16 @@
                 } else {
                     $("#" + id).css('border', '1px solid #cccccc');
                 }
-            });           
+            });    
+            $(".size_item").each(function () {
+                var id = $(this).attr('id');
+                if ($(this).val() == '') {
+                    $(this).css('border', '2px solid #e03f3f');
+                    error++;
+                } else {
+                    $(this).css('border', '1px solid #cccccc');
+                }
+            });    
         }
         if ($('#caja_tipo_recibo').val() == 2) {
             $(".must_trim").each(function () {
@@ -170,7 +184,8 @@
             if ($("#caja_fabric_percent").val() == "") { fabric_percent = "N/A"; } else { fabric_percent = $("#caja_fabric_percent").val(); }
             if ($("#caja_division").val() == "") { division = "N/A"; } else { division = $("#caja_division").val();}
             if ($("#caja_yarn").val() == "") { yarn = "N/A"; } else { yarn = $("#caja_yarn").val(); }
-            descripcion = manufacturer + " " + gender+" "+body_type+" "+color;
+            descripcion = manufacturer + " " + gender + " " + body_type + " " + color;
+            $(".size_item").each(function () { size += "+" + $(this).val(); });   
         }
         if ($("#caja_tipo_recibo").val() == 2) {
             if ($("#caja_tipo_recibo").val() == "") { type = "N/A"; } else { type = $("#caja_tipo_recibo").val(); }
@@ -190,7 +205,7 @@
             dataType: 'json',
             type: 'post',
             success: function (jsonData) {
-                if (jsonData == "0") {
+                //if (jsonData == "0") {
                     $(window).scrollTop(tempScrollTop);
                     $("#loading_nuevo_item").css('display', 'none');
                     limpiar_formularios();
@@ -198,12 +213,21 @@
                     $("#caja_tipo_recibo").val('Select');
                     alertify.success('Succes!');
                     alertify.set('notifier', 'position', 'top-right');
-                } else {
-                    alertify.alert('Error!', 'This item already exists, please check the information');
-                }
+               // } else {
+                 //   alertify.alert('Error!', 'This item already exists, please check the information');
+                //}
             }
         });
     }
+    //size_item
+    //cuerpo_tabla_tallas_item
+    function agregar_talla_item() {
+        html = '<tr style="margin-top:0.5em;"><td><input type="text" ondrop="return false;" onpaste="return false;" class="form-control validacion  must_blank size_item" style="width:75%; margin-top:0.5em;" maxlength="150" onkeydown="upperCaseF(this)" id="caja_size"></td>';
+        html += '<td><button type="button" class="btn btn-warning deleteRowItem"><b>-</b></button></td>';
+        html += '</tr>';
+        $(".cuerpo_tabla_tallas_item").append(html);
+    }
+    $(document).on("click", ".deleteRowItem", function () { $(this).closest("tr").remove(); });
 </script>
 <style>
     .ui-autocomplete {
@@ -257,8 +281,6 @@
 </div>
 <div class="container-fluid">
     <div id="formulario_campos_01" class="row" style="margin-top:2em;">
-
-
         <div class="form-group col-sm-3 categorias">
 
         </div>
@@ -271,49 +293,60 @@
             </div>
             <div class="form-group col-sm-4">
                 <label for="caja_fabricante">Manufacturer</label>
-                <input type="text"  ondrop="return false;" onpaste="return false;" class="form-control validacion  must_blank " maxlength="100" onkeydown="upperCaseF(this)" id="caja_fabricante">
+                <input type="text" ondrop="return false;" onpaste="return false;" class="form-control validacion  must_blank " maxlength="100" onkeydown="upperCaseF(this)" id="caja_fabricante">
             </div>
             <div class="form-group col-sm-4">
                 <label for="caja_color">Color</label>
-                <input type="text" ondrop="return false;" onpaste="return false;"  class="form-control validacion must_blank  " maxlength="50" onkeydown="upperCaseF(this)" id="caja_color">
+                <input type="text" ondrop="return false;" onpaste="return false;" class="form-control validacion must_blank  " maxlength="50" onkeydown="upperCaseF(this)" id="caja_color">
             </div>
 
-            <div class="form-group col-sm-4">
-                <label for="caja_size" class=" col-form-label">Size</label>
-                <input type="text" ondrop="return false;" onpaste="return false;"  class="form-control validacion  must_blank " maxlength="150" onkeydown="upperCaseF(this)" id="caja_size">
-            </div>
+
             <div class="form-group col-sm-4">
                 <label for="caja_body_type" class=" col-form-label">Body type </label>
-                <input type="text" ondrop="return false;" onpaste="return false;"  class="form-control validacion  must_blank " maxlength="50" onkeydown="upperCaseF(this)" id="caja_body_type">
+                <input type="text" ondrop="return false;" onpaste="return false;" class="form-control validacion  must_blank " maxlength="50" onkeydown="upperCaseF(this)" id="caja_body_type">
             </div>
             <div class="form-group col-sm-4">
                 <label for="caja_genero" class=" col-form-label">Gender</label>
-                <input type="text" ondrop="return false;" onpaste="return false;"  class="form-control validacion must_blank  " maxlength="50" onkeydown="upperCaseF(this)" id="caja_genero">
+                <input type="text" ondrop="return false;" onpaste="return false;" class="form-control validacion must_blank  " maxlength="50" onkeydown="upperCaseF(this)" id="caja_genero">
             </div>
             <div class="form-group col-sm-4">
                 <label for="caja_fabric_type" class=" col-form-label">Fabric type</label>
-                <input type="text"  ondrop="return false;" onpaste="return false;" class="form-control validacion  must_blank " maxlength="50" onkeydown="upperCaseF(this)" id="caja_fabric_type">
+                <input type="text" ondrop="return false;" onpaste="return false;" class="form-control validacion  must_blank " maxlength="50" onkeydown="upperCaseF(this)" id="caja_fabric_type">
             </div>
-
 
             <div class="form-group col-sm-4">
                 <label for="caja_fabric_percent" class=" col-form-label">Fabric % </label>
-                <input type="text" ondrop="return false;" onpaste="return false;"  class="form-control validacion  must_blank " maxlength="50" onkeydown="upperCaseF(this)" id="caja_fabric_percent">
+                <input type="text" ondrop="return false;" onpaste="return false;" class="form-control validacion  must_blank " maxlength="50" onkeydown="upperCaseF(this)" id="caja_fabric_percent">
             </div>
             <div class="form-group col-sm-4">
                 <label for="caja_yarn" class=" col-form-label">Yarn</label>
-                <input type="text" ondrop="return false;" onpaste="return false;"  class="form-control validacion  must_blank " maxlength="50" onkeydown="upperCaseF(this)" id="caja_yarn">
+                <input type="text" ondrop="return false;" value="100-POLY" onpaste="return false;" class="form-control validacion  must_blank " maxlength="50" onkeydown="upperCaseF(this)" id="caja_yarn">
             </div>
             <div class="form-group col-sm-4">
                 <label for="caja_division" class=" col-form-label">Division</label>
-                <input type="text"  ondrop="return false;" onpaste="return false;" class="form-control validacion  must_blank " maxlength="50" onkeydown="upperCaseF(this)" id="caja_division">
+                <input type="text" ondrop="return false;" value="MECORE" onpaste="return false;" class="form-control validacion  must_blank " maxlength="50" onkeydown="upperCaseF(this)" id="caja_division">
             </div>
+
+            <div class="form-group col-sm-4" id="div_talla_item">
+                <table id="tabla_tallas_item" class="">
+                    <thead><tr><td><label for="caja_size" class=" col-form-label">Size</label></td><td></td></tr></thead>
+                    <tbody class="cuerpo_tabla_tallas_item">
+                        <tr>
+                            <td><input type="text" ondrop="return false;" onpaste="return false;" class="form-control validacion  must_blank " style="width:75%;" maxlength="150" onkeydown="upperCaseF(this)" id="caja_size"></td>
+                            <td><button type="button" class="btn btn-danger mb-2" id="boton_tallas_items" onclick="agregar_talla_item()"><b>+</b></button></td>
+                        </tr>
+                    </tbody>
+                </table>                
+            </div>
+
+        </div>
+
             <div class="form-group col-sm-4">
                 <br />
                 <button type="button" class="btn btn-primary mb-2" id="boton_guardar" onclick="recibir(event);">Save</button>
             </div>
         </div>
-
+<!-------------------------------------------------------------------TRIM-FORM-------------------------------------------------------------------------------->
         
         <div class="form-group" id="trims_form" style="display:none;">
             <div class="form-group col-sm-3">
