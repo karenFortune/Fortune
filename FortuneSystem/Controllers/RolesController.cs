@@ -33,7 +33,7 @@ namespace FortuneSystem.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CrearRoles([Bind] CatRoles roles)
         {
-            if (ModelState.IsValid)
+            if (roles.Id == 0)
             {
                 objCatRol.AgregarRoles(roles);
                 TempData["rolesOK"] = "The role was registered correctly.";

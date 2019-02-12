@@ -29,7 +29,7 @@ namespace FortuneSystem.Controllers.Catalogos
         [ValidateAntiForgeryToken]
         public ActionResult CrearTalla([Bind] CatTallaItem tallas)
         {
-            if (ModelState.IsValid)
+            if (tallas.Id == 0)
             {
                 objTalla.AgregarTallas(tallas);
                 TempData["tallaOK"] = "The size was registered correctly.";

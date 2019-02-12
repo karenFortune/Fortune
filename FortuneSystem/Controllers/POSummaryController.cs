@@ -176,6 +176,16 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpGet]
+        public ActionResult RegistrarNuevoItems([Bind] POSummary descItem, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad, int IdPedido)
+        {
+            descItem.PedidosId = IdPedido;
+            descItem.Cantidad = Int32.Parse(Cantidad);
+            objItems.AgregarItems(descItem);
+            Session["IdItemsNuevo"] = objItems.Obtener_Utlimo_Item();
+            return View(descItem);
+        }
+
+        [HttpGet]
         public ActionResult RegistrarItem([Bind] POSummary descItem, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad)
         {
             int PedidosId = Convert.ToInt32(Session["idPedido"]);
@@ -267,6 +277,62 @@ namespace FortuneSystem.Controllers
                 objTalla.RegistroTallas(tallaItem);
         
                 
+            }
+            return Json("0", JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpPost]
+        public JsonResult Registrar_Lista_Tallas(List<string> ListTalla)
+        {
+            ItemTalla tallaItem = new ItemTalla();
+            List<string> tallas = ListTalla[0].Split('*').ToList();
+            List<string> cantidad = ListTalla[1].Split('*').ToList();
+            List<string> extras = ListTalla[2].Split('*').ToList();
+            List<string> ejemplos = ListTalla[3].Split('*').ToList();
+            int i = 0;
+            foreach (var item in tallas)
+            {
+                i++;
+            }
+
+            i = i - 1;
+            for (int v = 0; v < i; v++)
+            {
+                tallaItem.Talla = tallas[v];
+
+                string cantidadT = cantidad[v];
+                if (cantidadT == "")
+                {
+                    cantidadT = "0";
+                }
+                tallaItem.Cantidad = Int32.Parse(cantidadT);
+
+                string extraT = extras[v];
+                if (extraT == "")
+                {
+                    extraT = "0";
+                }
+                tallaItem.Extras = Int32.Parse(extraT);
+
+                string ejemploT = ejemplos[v];
+                if (ejemploT == "")
+                {
+                    ejemploT = "0";
+                }
+                tallaItem.Ejemplos = Int32.Parse(ejemploT);
+
+                int IdItems = Convert.ToInt32(Session["IdItemsNuevo"]);                
+                if (IdItems != 0)
+                {
+                    tallaItem.IdSummary = IdItems;
+                }           
+
+
+
+                objTalla.RegistroTallas(tallaItem);
+
+
             }
             return Json("0", JsonRequestBehavior.AllowGet);
 

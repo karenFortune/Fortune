@@ -37,6 +37,21 @@
             }
         });
 
+        $('#selectEspecialidad').select2({
+            placeholder: "Select a specialty",
+            language: {
+
+                noResults: function () {
+
+                    return "There is no result";
+                },
+                searching: function () {
+
+                    return "Searching..";
+                }
+            }
+        });
+
         $('#selectTela').select2({
             placeholder: "Select a type of fabric",
             language: {
@@ -126,16 +141,17 @@
             } else {
                 $("#nuevoItem").prop("disabled", true);
                 $("#crearTallas").show();
+                var IdPedido = $("#IdPedido").val();
                 var EstiloItem = $("#ItemDescripcion_ItemEstilo").val();
                 var IdColor = $("#CatColores_CodigoColor").val();
-                var Cantidad = $("#Cantidad").val();
+                var Cantidad = $("#CantidadT").val();
                 var Precio = $("#Precio").val();
                 var IdGenero = $("#selectGenero option:selected").val();
                 var IdTela = $("#selectTela option:selected").val();
                 var TipoCamiseta = $("#selectTipoCamiseta option:selected").val();
                 var Especialidad = $("#selectEspecialidad option:selected").val();
-                $.ajax('@Url.Action("RegistrarItemsRev", "POSummary")', {
-                    data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela, IdEspecialidad: Especialidad },
+                $.ajax('@Url.Action("RegistrarNuevoItems", "POSummary")', {
+                    data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela, IdEspecialidad: Especialidad, IdPedido: IdPedido },
                 method: 'get',
                 async: true,
                 success: function (data) {
@@ -289,7 +305,7 @@
             alert.set('modal', false);
         } else {
             $.ajax({
-                url: "/POSummary/Obtener_Lista_Tallas",
+                url: "/POSummary/Registrar_Lista_Tallas",
                 datatType: 'json',
                 data: JSON.stringify({ ListTalla: cadena }),
                 cache: false,
@@ -311,9 +327,9 @@
                     });
                     confirm.set('oncancel', function () {                       
                         $("#loading").css('display', 'none');                        
-                        var ID = $("#PedidosId").val(); //Revisar id de pedido                       
-                        $("#nuevoEstiloModal").modal("hide");
-                        buscar_estilos_rev(ID);
+                        var ID = $("#IdPedido").val();                   
+                        $("#nuevoEstiloModal").modal("hide");    
+                        buscar_estilos(ID);
                     });
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -332,7 +348,7 @@
         $('#ItemDescripcion_Descripcion').val('');
         $('#CatColores_CodigoColor').val('');
         $('#CatColores_DescripcionColor').val('');
-        $('#Cantidad').val('');
+        $('#CantidadT').val('');
         $('#Precio').val('');
         $("#nuevoColor").prop("disabled", false);
         $("#nuevoEstilo").prop("disabled", false);
@@ -457,12 +473,15 @@
                     @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
 
                 </div>
-                <div class="form-group col-sm-4">
-                    @Html.LabelFor(model => model.CatEspecialidades.Especialidad, htmlAttributes: new { @class = "control-label " }) <br />
-                    @Html.DropDownList("listEspecialidad", (SelectList)ViewBag.listEspecialidad, string.Empty, new { @class = "form-control nuevo_item", @id = "selectEspecialidad", @name = "state", @style = "width: 60%;" })
-                    @Html.ValidationMessageFor(model => model.IdEspecialidad, "", new { @class = "text-danger" })
+
+                <div class="form-group col-sm-5">
+                    @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
+                    @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
 
                 </div>
+
+ 
 
             </div>
         </div>
