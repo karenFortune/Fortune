@@ -165,6 +165,31 @@ namespace FortuneSystem.Controllers
             Session["IdArte"]=arte.extensionArte;
         }
 
+        public void RegistrarArteNuevo(string EstiloItem)
+        {
+            IMAGEN_ARTE arte = new IMAGEN_ARTE();
+            int idEstilo = objItemsDes.ObtenerIdEstilo(EstiloItem);
+            int busquedaId = objArte.BuscarIdEstiloArteImagen(idEstilo);
+            int IdItems = Convert.ToInt32(Session["IdItemsNuevo"]);
+            if (busquedaId == 0)
+            {
+                arte.StatusArte = 3;
+                arte.StatusPNL = 3;
+                //arte.extensionArte = "";
+                //arte.extensionPNL = "";
+                arte.IdEstilo = idEstilo;
+                objArte.AgregarArteImagen(arte);
+                arte = objArte.BuscarEstiloArteImagen(idEstilo);
+                objArte.AgregarArte(arte.IdImgArte, IdItems);
+            }
+            else
+            {
+                arte = objArte.BuscarEstiloArteImagen(idEstilo);
+                objArte.AgregarArte(arte.IdImgArte, IdItems);
+            }
+            Session["IdArte"] = arte.extensionArte;
+        }
+
         [HttpGet]
         public ActionResult RegistrarItemsRev([Bind] POSummary descItem, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad)
         {
@@ -182,6 +207,7 @@ namespace FortuneSystem.Controllers
             descItem.Cantidad = Int32.Parse(Cantidad);
             objItems.AgregarItems(descItem);
             Session["IdItemsNuevo"] = objItems.Obtener_Utlimo_Item();
+            this.RegistrarArteNuevo(EstiloItem);
             return View(descItem);
         }
 
@@ -194,7 +220,6 @@ namespace FortuneSystem.Controllers
             objItems.AgregarItems(descItem);
             Session["IdItems"] = objItems.Obtener_Utlimo_Item();
             this.RegistrarArte(EstiloItem);
-
             return View(descItem);
         }
 
@@ -395,6 +420,110 @@ namespace FortuneSystem.Controllers
             return Json("0", JsonRequestBehavior.AllowGet);
 
         }
+
+        [HttpGet]
+        public ActionResult Actualizar_Edicion_Estilo_Rev([Bind] POSummary items, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad, string IdEstilo, string PedidoId)
+        {
+            items.IdItems = Int32.Parse(IdEstilo);
+            items.PedidosId = Int32.Parse(PedidoId);
+            items.Id_Genero = objGenero.ObtenerIdGenero(IdGenero);
+            items.IdCamiseta = objTipoC.ObtenerIdTipoCamiseta(TipoCamiseta);
+            items.IdEstilo = objItemsDes.ObtenerIdEstilo(EstiloItem);
+            items.ColorId = objColores.ObtenerIdColor(IdColor);
+            if (items.IdItems != 0)
+            {
+                objItems.ActualizarEstilos(items);
+                TempData["itemEditar"] = "The style was modified correctly.";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["itemEditarError"] = "The style could not be modified, try it later.";
+            }
+            return View(items);
+        }
+
+        [HttpPost]
+        public JsonResult Actualizar_Info_Estilo(List<string> ListTalla, string IdEstilo)
+        {
+            ItemTalla tallaItem = new ItemTalla();
+            List<string> tallas = ListTalla[0].Split('*').ToList();
+            List<string> cantidad = ListTalla[1].Split('*').ToList();
+            List<string> extras = ListTalla[2].Split('*').ToList();
+            List<string> ejemplos = ListTalla[3].Split('*').ToList();
+            int i = 0;
+            foreach (var item in tallas)
+            {
+                i++;
+            }
+
+            i = i - 1;
+            for (int v = 0; v < i; v++)
+            {
+                tallaItem.Talla = tallas[v];
+
+                tallaItem.IdSummary = Int32.Parse(IdEstilo); ;
+
+                string cantidadT = cantidad[v];
+                if (cantidadT == "")
+                {
+                    cantidadT = "0";
+                }
+                tallaItem.Cantidad = Int32.Parse(cantidadT);
+
+                string extraT = extras[v];
+                if (extraT == "")
+                {
+                    extraT = "0";
+                }
+                tallaItem.Extras = Int32.Parse(extraT);
+
+                string ejemploT = ejemplos[v];
+                if (ejemploT == "")
+                {
+                    ejemploT = "0";
+                }
+                tallaItem.Ejemplos = Int32.Parse(ejemploT);
+                tallaItem.IdTalla = objTalla.ObtenerIdTalla(tallaItem.Talla, tallaItem.IdSummary);
+                tallaItem.Id = objTalla.ObtenerIdTallaEstilo(tallaItem.Talla, tallaItem.IdSummary);
+
+                if (tallaItem.IdTalla == 0 && tallaItem.Id == 0)
+                {
+
+                    objTalla.RegistroTallas(tallaItem);
+                }
+                else
+                {
+                    objTalla.Actualizar_Tallas_Estilo(tallaItem);
+                }
+            }
+
+            return Json("0", JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpGet]
+        public ActionResult Actualizar_Edicion_Estilo([Bind] POSummary items, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad, string IdEstilo, string PedidoId)
+        {
+            items.IdItems = Int32.Parse(IdEstilo);
+            items.PedidosId = Int32.Parse(PedidoId);
+            items.Id_Genero = objGenero.ObtenerIdGenero(IdGenero);
+            items.IdCamiseta = objTipoC.ObtenerIdTipoCamiseta(TipoCamiseta); 
+            items.IdEstilo = objItemsDes.ObtenerIdEstilo(EstiloItem);
+            items.ColorId = objColores.ObtenerIdColor(IdColor);
+            if (items.IdItems != 0)
+            {
+                objItems.ActualizarEstilos(items);
+                TempData["itemEditar"] = "The style was modified correctly.";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["itemEditarError"] = "The style could not be modified, try it later.";
+            }
+            return View(items);
+        }
+
 
         [HttpPost]
         public JsonResult Obtener_Lista_Tallas_UPC(List<string> ListTalla, int IdSummary)

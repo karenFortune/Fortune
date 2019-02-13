@@ -67,8 +67,8 @@
                     html += '<td>' + item.Price + '</td>';
                     html += '<td>' + item.Total + '</td>';
                     totalUnitsReg += item.Cantidad;
-
                     html += '<td><a href="#" onclick="obtener_tallas_item(' + item.IdItems + ');" class = "btn edit_driver edicion_driver l1s"  Title = "Sizes"> <span class="glyphicon glyphicon-search" aria-hidden="true" style="padding: 0px !important;"></span></a>';
+                    html += '<a href="#" data-value="' + item.IdItems + '" class = "btn edit_driver edicion_driver btnEdit"  Title = "Edit Style"> <span class="glyphicon glyphicon-edit" aria-hidden="true" style="padding: 0px !important;"></span></a></td>';
                     //html += '<a class="btn edit_driver edicion_driver " Title="Report" onclick="imprimir_reporte_po(' + item.IdItems+')"> <span class="fa fa-file-pdf-o fa-lg" aria-hidden="true" style="padding: 0px !important;"></span></a></td>';
                     html += '</tr>';
                 });
@@ -182,6 +182,22 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editarEstiloModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="editarEstiloModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">STYLE</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="ContenedorEditarModal"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary " data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -313,6 +329,14 @@
             $('#reporteModal').modal('show');
             //$("#ContenedorModal").load("/Colores/Detalles/" + id, function () {
             //});
+        });
+
+        $(document).on('click', '.btnEdit', function () {
+            var id = $(this).data("value");
+            $("#ContenedorEditarModal").load("/Pedidos/EditarEstiloNuevo/" + id, function () {
+                $("#IdItems").val(id);
+                $("#editarEstiloModal").modal("show");
+            });
         });
 
         $(document).on('click', '.btnNuevo', function () {

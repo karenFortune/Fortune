@@ -374,6 +374,7 @@ namespace FortuneSystem.Models.POSummary
                 comando.Parameters.AddWithValue("@IdGenero", items.Id_Genero);
                 comando.Parameters.AddWithValue("@IdTela", items.IdTela);
                 comando.Parameters.AddWithValue("@TipoCamiseta", items.IdCamiseta);
+                comando.Parameters.AddWithValue("@IdEspecialidad", items.IdEspecialidad);
 
                 comando.ExecuteNonQuery();
             }

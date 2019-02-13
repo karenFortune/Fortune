@@ -6,12 +6,9 @@ $(document).ready(function () {
   
 });
 
-function select(id) {
-    $('#tabless tr').on('click', function (e) {
-        $('#tabless tr').removeClass('highlighted');
-        $(this).addClass('highlighted');
-    });
-    obtenerListaTallas(id);
+function select(id, estilo) {
+   
+    obtenerListaTallas(id, estilo);
 }
 
 
@@ -60,7 +57,7 @@ function buscar_estilos(ID) {
             var lista_estilo = jsonData.Data.listaItem;
 
             $.each(lista_estilo, function (key, item) {
-                html += '<tr  onclick="select(' + item.IdItems + ');">';
+                html += '<tr  onclick="select(' + item.IdItems + ',\'' + item.EstiloItem + '\');">';
                 html += '<td>' + item.EstiloItem + '</td>';
                 html += '<td>' + item.ItemDescripcion.Descripcion + '</td>';
                 html += '<td>' + item.CatColores.CodigoColor + '</td>';
@@ -88,7 +85,7 @@ var numTipoPack;
 var listaPsc;
 var listCantTalla;
 var numBoxPPK;
-function obtenerListaTallas(EstiloId) {
+function obtenerListaTallas(EstiloId, estiloN) {
    $("#loading").css('display', 'inline');   
     $("#panelPacking").css('display', 'inline');
     $("#consultaTalla").css('width', '100%');
@@ -121,6 +118,7 @@ function obtenerListaTallas(EstiloId) {
                         $("#registrarNuevo").hide();
                         $("#tableTallasBulk").hide();
                         $("#titulo_Tipo_Empaque").css('display', 'none');
+                        $("#div_Desc_Estilo").html("<h1>Style- " + estiloN + "</h1>");                                           
                         $("#div_estilo").html("<h3>REGISTER 1rst QUALITY OF SIZES</h3>");
                         html += '<table class="table" id="tablaTallas"><thead>';
                         html += '<tr><th>Size</th>' +
@@ -170,7 +168,8 @@ function obtenerListaTallas(EstiloId) {
                     $.each(listaEmpaque, function (key, item) {
                         tipoEmp = item.NombreTipoPak;
                     });
-                    $("#titulo_Tipo_Empaque").css('display', 'inline');
+                    $("#div_Desc_Estilo").html("<h1>Style- " + estiloN + "</h1>"); 
+                    $("#titulo_Tipo_Empaque").css('display', 'inline');                      
                     $("#titulo_Tipo_Empaque").html("<h1> Packing- " + tipoEmp +"</h1>");
                     $("#div_estilo").html("<h3>QUALITY OF SIZES</h3>");
                     html += '<tr> <th width="30%"> Size </th>';

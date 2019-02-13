@@ -630,7 +630,71 @@ namespace FortuneSystem.Controllers
                 TempData["itemEditarError"] = "The style could not be modified, try it later.";
             }
           return View(items);
-        }     
+        }
+
+        [HttpGet]
+        public ActionResult EditarEstiloNuevo(int? id)
+        {
+            if (id == null)
+            {
+                return View();
+            }
+            
+            POSummary items = objItems.ConsultarListaEstilos(id);
+            ListaGenero(items);
+            ListaTela(items);
+            ListaTipoCamiseta(items);
+            ListaEspecialidades(items);
+            items.CatColores = objColores.ConsultarListaColores(items.ColorId);
+            items.ItemDescripcion = objEst.ConsultarListaItemDesc(items.IdItems);
+            items.CatEspecialidades = objEspecialidad.ConsultarListaEspecialidad(items.IdEspecialidad);
+            items.PedidosId = items.PedidosId;
+            SeleccionarGenero(items);
+            SeleccionarTela(items);
+            SeleccionarTipoCamiseta(items);
+            SeleccionarTipoEspecialidad(items);
+
+            if (items == null)
+            {
+
+                return View();
+            }
+
+            return PartialView(items);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditarEstiloNuevo(int id, [Bind] POSummary items)
+        {
+            items.IdItems = id;
+            /* if (id != items.IdItems)
+             {
+                 return View();
+             }*/
+            string genero = Request.Form["Genero"].ToString();
+            items.Id_Genero = objGenero.ObtenerIdGenero(genero);
+            string tipoCamiseta = Request.Form["DescripcionTipo"].ToString();
+            items.IdCamiseta = objTipoC.ObtenerIdTipoCamiseta(tipoCamiseta);
+            string tela = Request.Form["Tela"].ToString();
+            items.IdTela = Int32.Parse(tela);
+            string estilo = items.ItemDescripcion.ItemEstilo;
+            items.IdEstilo = objEst.ObtenerIdEstilo(estilo);
+            string color = items.CatColores.CodigoColor;
+            items.ColorId = objColores.ObtenerIdColor(color);
+            if (items.IdItems != 0)
+            {
+                objItems.ActualizarEstilos(items);
+                TempData["itemEditar"] = "The style was modified correctly.";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["itemEditarError"] = "The style could not be modified, try it later.";
+            }
+            return View(items);
+        }
 
         [HttpPost]
         public ActionResult Eliminar(int? id)
@@ -703,7 +767,7 @@ namespace FortuneSystem.Controllers
             listaEspecialidades = objEspecialidad.ListaEspecialidades().ToList();
             items.CatEspecialidades = objEspecialidad.ConsultarListaEspecialidad(items.IdEspecialidad);
             items.CatEspecialidades.IdEspecialidad= items.IdEspecialidad;
-            ViewBag.listEspecialidad = new SelectList(listaEspecialidades, "IdEspecialidad", "Especialidad", items.CatEspecialidades.Especialidad);
+            ViewBag.listEspecialidad = new SelectList(listaEspecialidades, "IdEspecialidad", "Especialidad", items.IdEspecialidad);
         }
 
         public void ListasClientes(OrdenesCompra pedido)

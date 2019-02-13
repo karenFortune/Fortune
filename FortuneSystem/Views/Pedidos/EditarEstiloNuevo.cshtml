@@ -50,8 +50,8 @@
             }
         });
 
-        $('#selectTela').select2({
-            placeholder: "Select a type of fabric",
+        $('#selectEspecialidad').select2({
+            placeholder: "Select a specialty",
             language: {
                 noResults: function () {
                     return "There is no result";
@@ -62,8 +62,8 @@
             }
         });
 
-        $('#selectEspecialidad').select2({
-            placeholder: "Select a specialty",
+        $('#selectTela').select2({
+            placeholder: "Select a type of fabric",
             language: {
                 noResults: function () {
                     return "There is no result";
@@ -406,40 +406,40 @@
     function redireccionarPagina() {
         window.location = '/pedidos/Index';
     }
-    function enviarListaTalla(cadena, error) {
-        var IDEstilo = $("#IdItems").val();
+    function enviarListaTalla(cadena, error) {        
+        var IDEstilo = $("#IdItems").val();  
         var IDPEDIDO = $("#PedidosId").val();
-        actualizar_Datos_Estilo_Rev(IDEstilo, IDPEDIDO);
+        actualizar_Datos_Estilo(IDEstilo, IDPEDIDO);
         if (error != 0) {
             var alert = alertify.alert("Mensaje", 'All fields are required.').set('label', 'Aceptar');
             alert.set({ transition: 'zoom' });
             alert.set('modal', false);
         } else {
             $.ajax({
-                url: "/POSummary/Actualizar_Lista_Tallas",
+                url: "/POSummary/Actualizar_Info_Estilo",
                 datatType: 'json',
-                data: JSON.stringify({ ListTalla: cadena }),
+                data: JSON.stringify({ ListTalla: cadena, IdEstilo: IDEstilo }),
                 cache: false,
                 type: 'POST',
                 contentType: 'application/json',
                 success: function (data) {
                     var ID = $("#PedidosId").val();                    
-                    $("#myModal").modal("hide");   //Revisar por que se muestran tantos mensajes de notificacion 
-                    buscar_estilos_rev(ID);
+                    $("#editarEstiloModal").modal("hide");   //Revisar por que se muestran tantos mensajes de notificacion 
+                    buscar_estilos(ID);
                     alertify.notify('The sizes were updated correctly.', 'success', 5, null);
                    // setTimeout("redireccionarPagina()", 900);
-                },
+                }/*,
                 error: function (xhr, ajaxOptions, thrownError) {
-                    showError(xhr.status, xhr.responseText);
+                   // showError(xhr.status, xhr.responseText);
                     if (data.error == 1) {
                         alertify.notify('Verificar.', 'error', 5, null);
                     }
-                }
+                }*/
             });
         }
     }
 
-        function actualizar_Datos_Estilo_Rev(IDEstilo, IDPEDIDO) {
+    function actualizar_Datos_Estilo(IDEstilo, IDPEDIDO) {
             var error = 0;
             $(".nuevo_item").each(function () {
                 error;
@@ -467,7 +467,7 @@
                 var IdTela = $("#selectTela option:selected").val();
                 var TipoCamiseta = $("#selectTipoCamiseta option:selected").val();
                 var Especialidad = $("#selectEspecialidad option:selected").val();
-                $.ajax('@Url.Action("Actualizar_Edicion_Estilo_Rev", "POSummary")', {
+                $.ajax('@Url.Action("Actualizar_Edicion_Estilo", "POSummary")', {
                     data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela, IdEspecialidad: Especialidad, IdEstilo: IDEstilo, PedidoId: IDPEDIDO },
                 method: 'get',
                 async: true,

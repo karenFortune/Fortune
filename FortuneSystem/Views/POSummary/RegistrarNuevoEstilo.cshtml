@@ -37,6 +37,18 @@
             }
         });
 
+        $('#selectEspecialidad').select2({
+            placeholder: "Select a specialty",
+            language: {
+                noResults: function () {
+                    return "There is no result";
+                },
+                searching: function () {
+                    return "Searching..";
+                }
+            }
+        });
+
         $('#selectTela').select2({
             placeholder: "Select a type of fabric",
             language: {
