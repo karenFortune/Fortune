@@ -24,6 +24,18 @@
           <Property Name="extensionArte" Type="varchar" MaxLength="100" />
           <Property Name="extensionPNL" Type="varchar" MaxLength="100" />
         </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'FortuneTest.dbo.IMAGEN_ARTE_PNL' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="IMAGEN_ARTE_PNL">
+          <Key>
+            <PropertyRef Name="IdImgArtePNL" />
+          </Key>
+          <Property Name="IdImgArtePNL" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdEstilo" Type="int" />
+          <Property Name="StatusPNL" Type="int" />
+          <Property Name="extensionPNL" Type="varchar" MaxLength="100" />
+          <Property Name="IdSummary" Type="int" />
+        </EntityType>
         <EntityType Name="UPC">
           <Key>
             <PropertyRef Name="IdUPC" />
@@ -49,6 +61,8 @@
           <EntitySet Name="ARTE" EntityType="Self.ARTE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IMAGEN_ARTE" EntityType="Self.IMAGEN_ARTE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UPC" EntityType="Self.UPC" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IMAGEN_ARTE_PNL" EntityType="Self.IMAGEN_ARTE_PNL" store:Type="Tables" Schema="dbo">
+          </EntitySet>
           <AssociationSet Name="FK__ARTE__IdImgArte__467D75B8" Association="Self.FK__ARTE__IdImgArte__467D75B8">
             <End Role="IMAGEN_ARTE" EntitySet="IMAGEN_ARTE" />
             <End Role="ARTE" EntitySet="ARTE" />
@@ -108,7 +122,18 @@
             <End Role="IMAGEN_ARTE" EntitySet="IMAGEN_ARTE" />
             <End Role="ARTE" EntitySet="ARTEs" />
           </AssociationSet>
+          <EntitySet Name="IMAGEN_ARTE_PNL" EntityType="FortuneTestModel.IMAGEN_ARTE_PNL" />
         </EntityContainer>
+        <EntityType Name="IMAGEN_ARTE_PNL">
+          <Key>
+            <PropertyRef Name="IdImgArtePNL" />
+          </Key>
+          <Property Name="IdImgArtePNL" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdEstilo" Type="Int32" />
+          <Property Name="StatusPNL" Type="Int32" />
+          <Property Name="ExtensionPNL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IdSummary" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -143,6 +168,17 @@
                 <ScalarProperty Name="IdTalla" ColumnName="IdTalla" />
                 <ScalarProperty Name="IdSummary" ColumnName="IdSummary" />
                 <ScalarProperty Name="UPC1" ColumnName="UPC" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IMAGEN_ARTE_PNL">
+            <EntityTypeMapping TypeName="FortuneTestModel.IMAGEN_ARTE_PNL">
+              <MappingFragment StoreEntitySet="IMAGEN_ARTE_PNL">
+                <ScalarProperty Name="IdSummary" ColumnName="IdSummary" />
+                <ScalarProperty Name="ExtensionPNL" ColumnName="extensionPNL" />
+                <ScalarProperty Name="StatusPNL" ColumnName="StatusPNL" />
+                <ScalarProperty Name="IdEstilo" ColumnName="IdEstilo" />
+                <ScalarProperty Name="IdImgArtePNL" ColumnName="IdImgArtePNL" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -27,6 +27,8 @@ namespace FortuneSystem.Models.Almacen
         public int summary { get; set; }
         public int cajas { get; set; }
         public string po_number { get; set; }
+
+        public int total_inventario { get; set; }
         
     }
 }

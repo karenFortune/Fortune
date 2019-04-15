@@ -90,9 +90,19 @@
     }
 
     #modificarBatch {
-        margin-left: 1100px;
+        margin-left: 1000px;
         margin-top: 1px;
         width: 120px;
+        height: 40px;
+        border: none;
+        font-size: 20px;
+        font-weight: 600;
+    }
+    
+    #modificarPack {
+        margin-left: 1100px;
+        margin-top: 1px;
+        width: 180px;
         height: 40px;
         border: none;
         font-size: 20px;
@@ -310,7 +320,6 @@
                 <h2 class="modal-title" id="exampleModalLabel">PACKING QUANTITIES</h2>
               
             </div>
-
                 <div class="modal-footer">
                 
                 </div>
@@ -362,6 +371,7 @@
             <table id="tabless" class="table table-sm table-striped table-hover ">
                 <thead>
                     <tr>
+                        <th style="border-top-left-radius:0px !important;">#</th>
                         <th>ITEM</th>
                         <th>ITEM DESCRIPTION</th>
                         <th>COLOR CODE</th>
@@ -408,7 +418,8 @@
                         <br />
                     </div>
                     <div class="container-fluid" style=" overflow:auto;">
-                        <div id="div_titulo_Bulk" style=" overflow:auto; visibility:hidden; "></div>
+                        <div id="div_titulo_Bulk" style=" overflow:auto; display:none; "></div>
+                        <div id="listaBatchHT" style="overflow: auto; height: 100px; display:none;"></div>
                         <div id="listaTallaBatchHT" style="overflow: auto; height: 100px; display:none;"></div>
                         <br />
                         <div id="opciones" style="display: none;">
@@ -434,7 +445,7 @@
                         </div>
                     </div>
                     <div class="container-fluid">
-                        <div id="div_titulo_Register" style=" overflow:auto; visibility:hidden; "></div>
+                        <div id="div_titulo_Register" style=" overflow:auto; display:none; "></div>
                         <div class="form-row" id="opcionesRegistro" style="display:none; ">
                             <div class="col-sm-5">
                                 @Html.LabelFor(model => model.Packing.PackingTypeSize.TipoEmpaque, htmlAttributes: new { @class = "control-label " })
@@ -468,7 +479,7 @@
                         <div class="form-row">
                             <div class="col-sm-4">
                                 <br />
-                                @Html.LabelFor(model => model.Packing.PackingTypeSize.TotalUnits, htmlAttributes: new { @class = "control-label " })
+                                @Html.LabelFor(model => model.Packing.PackingTypeSize.TotalUnits, htmlAttributes: new { @class = "control-label ", id = "numTotalUnitLabel" })
                                 @Html.EditorFor(model => model.Packing.PackingTypeSize.TotalUnits, new { htmlAttributes = new { @class = "form-control", id = "numTotalUnit" } })
                                 @Html.ValidationMessageFor(model => model.Packing.PackingTypeSize.TotalUnits, "", new { @class = "text-danger" })
                             </div>
@@ -499,7 +510,7 @@
                 </div>
             </div>
             <div class="col-sm-1">
-                <div class="panel panel-primary" id="arte" style=" display:none; width:150px; height: 420px; ">
+                <div class="panel panel-primary" id="arte" style=" display:none; width:150px; height: 450px; ">
                     <div class="panel-heading">
                         <h4>ART</h4>
                     </div>
@@ -519,7 +530,7 @@
     {
         <div class="row" style="display:none;" id="panelPacking">
             <div class="col-sm-10">
-                <div class="panel panel-primary" id="consultaTalla" style="visibility:hidden; width: 100%; height: 1300px;">
+                <div class="panel panel-primary" id="consultaTalla" style="visibility:hidden; width: 100%; height: 1350px;">
                     <div class="panel-heading">
                         <h4>PACKING</h4>
                     </div>
@@ -541,6 +552,7 @@
                             <br />
                             <div id="div_Desc_Estilo" style="background-color:lightblue; text-align:center"></div>
                             <div id="titulo_Tipo_Empaque" style="display:none; text-align:center"></div>
+                            <button type="button" class="btn btn-success btn-md pull-right btn-sm" id="modificarPack" onclick="event.preventDefault(); ConfirmCambioPack(this);"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Change Pack</button>
                             <div id="div_estilo"></div>
                             <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAddQ">+ Add Size</button>
                             <br />
@@ -554,7 +566,7 @@
                         </div>
                         <div class="container-fluid">
                             <div id="div_titulo" style="display:none; "></div>
-                            <div id="listaTallaBatch" style=" overflow:auto; height: 150px; display:none;"></div>
+                            <div id="listaTallaBatch" style=" overflow:auto; height: 120px; display:none;"></div>
                             <div id="opciones" style="display:none; ">
                                 <div class="form-row">
                                     <div class="form-group col-sm-12 tipoP">
@@ -569,7 +581,7 @@
                             </div>
                             <button type="button" id="btnAddP" class="btn btn-xs btn-primary classAdd">+ Add Size</button>
                             <br />
-                            <div id="listaTallaP"></div>
+                            <div id="listaTallaP"></div>                            
                             <div id="div_estilo_pack" style="display:none;"></div>
                             <button type="button" class="btn btn-primary" id="registrarNuevo" data-toggle="modal">
                                 <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> ADD NEW BATCH
@@ -604,7 +616,7 @@
                             </div>
                             <br />
                             <div id="listaTallaPacking"></div>
-                            <button type="button" id="nuevoPallet" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Pallet</button>
+                            <button type="button" id="nuevoPallet" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save</button>
                             <button type="button" class="btn btn-success btn-md pull-right btn-sm" id="modificarBatch" onclick="event.preventDefault(); ConfirmRev(this);"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Modify</button>
                         </div>
                     </div>
@@ -749,7 +761,7 @@
                 </div>
             </div>
             <div class="col-sm-1">
-                <div class="panel panel-primary" id="arte" style=" display:none; width:150px; height: 420px; ">
+                <div class="panel panel-primary" id="arte" style=" display:none; width:150px; height: 450px; ">
                     <div class="panel-heading">
                         <h4>ART</h4>
                     </div>

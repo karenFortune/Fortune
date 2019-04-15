@@ -104,6 +104,13 @@ namespace FortuneSystem.Models.POSummary
         [Display(Name = "ART IMAGE")]
         public byte[] ImgArte { get; set; }
 
+        public string NombreEstilo { get; set; }
+        public int IdUsuario { get; set; }
+        public string NombreUsuario { get; set; }
+
+        public DateTime FechaUCC { get; set; } 
+        public int IdEstado { get; set; }
+
 
 
 

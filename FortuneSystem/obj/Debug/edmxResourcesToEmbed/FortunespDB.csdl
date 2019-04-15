@@ -50,5 +50,16 @@
       <End Role="IMAGEN_ARTE" EntitySet="IMAGEN_ARTE" />
       <End Role="ARTE" EntitySet="ARTEs" />
     </AssociationSet>
+    <EntitySet Name="IMAGEN_ARTE_PNL" EntityType="FortuneTestModel.IMAGEN_ARTE_PNL" />
   </EntityContainer>
+  <EntityType Name="IMAGEN_ARTE_PNL">
+    <Key>
+      <PropertyRef Name="IdImgArtePNL" />
+    </Key>
+    <Property Name="IdImgArtePNL" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IdEstilo" Type="Int32" />
+    <Property Name="StatusPNL" Type="Int32" />
+    <Property Name="ExtensionPNL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="IdSummary" Type="Int32" />
+  </EntityType>
 </Schema>

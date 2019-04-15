@@ -32,5 +32,16 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="IMAGEN_ARTE_PNL">
+      <EntityTypeMapping TypeName="FortuneTestModel.IMAGEN_ARTE_PNL">
+        <MappingFragment StoreEntitySet="IMAGEN_ARTE_PNL">
+          <ScalarProperty Name="IdSummary" ColumnName="IdSummary" />
+          <ScalarProperty Name="ExtensionPNL" ColumnName="extensionPNL" />
+          <ScalarProperty Name="StatusPNL" ColumnName="StatusPNL" />
+          <ScalarProperty Name="IdEstilo" ColumnName="IdEstilo" />
+          <ScalarProperty Name="IdImgArtePNL" ColumnName="IdImgArtePNL" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

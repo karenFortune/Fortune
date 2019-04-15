@@ -20,9 +20,6 @@ namespace FortuneSystem.Models.Almacen
         public int id_salida, id_inventario, cantidad;
         FuncionesInventarioGeneral consultas = new FuncionesInventarioGeneral();
 
-
-
-
         public List<lugares> lista_lugares_transfer(){
             List<lugares> listalugares = new List<lugares>();
             Conexion con_lt = new Conexion();
@@ -67,43 +64,32 @@ namespace FortuneSystem.Models.Almacen
             }
             return listalugares;
         }
-        public List<Inventario> obtener_inventario_sucursal(string origen, string busqueda)
-        {
+        public List<Inventario> obtener_inventario_sucursal(string origen, string busqueda){
             List<Inventario> listInventario = new List<Inventario>();
             Conexion con_ois = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_ois = new SqlCommand();
                 SqlDataReader leer_ois = null;
-
-
                 com_ois.Connection = con_ois.AbrirConexion();
                 com_ois.CommandText = "SELECT top 50 i.id_inventario,i.id_pedido,i.total,i.descripcion" +
                     " from inventario i,sucursales s where i.id_sucursal=s.id_sucursal and i.total!=0 and"+
                     " i.id_sucursal='" + origen + "' and i.descripcion like '%" + busqueda + "%'";
                 leer_ois = com_ois.ExecuteReader();
-                while (leer_ois.Read())
-                {
+                while (leer_ois.Read()){
                     Inventario i = new Inventario();
                     i.id_inventario = Convert.ToInt32(leer_ois["id_inventario"]);
                     i.po = consultas.obtener_po_id(Convert.ToString(leer_ois["id_pedido"]));
                     i.total = Convert.ToInt32(leer_ois["total"]);
                     i.descripcion = Convert.ToString(leer_ois["descripcion"]);
                     listInventario.Add(i);
-                }
-                leer_ois.Close();
-            }
-            finally
-            {
-                con_ois.CerrarConexion(); con_ois.Dispose();
-            }
+                }leer_ois.Close();
+            }finally{con_ois.CerrarConexion(); con_ois.Dispose();}
             return listInventario;
         }
         public void guardar_transferencia_inventario(string fecha, string persona, string sello, string origen, string destino, string driver, string pallet, string envio, int total, int id_usuario, string id_sello,string carro,string placas)
         {
             Conexion con_gti = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_gti = new SqlCommand();
                 string id_sucursal = consultas.obtener_sucursal_id_usuario(id_usuario);
                 Conexion con_c = new Conexion();
@@ -112,33 +98,37 @@ namespace FortuneSystem.Models.Almacen
                 com_gti.CommandText = "INSERT INTO salidas(fecha,total,id_usuario,id_origen,id_destino,estado_aprobacion,estado_entrega,sello,responsable,id_envio,fecha_solicitud,driver,pallet,id_sello,id_sucursal,auto,placas) VALUES " +
                     " ('" + fecha + " 00:00:00','" + total + "','" + id_usuario + "','" + origen + "','" + destino + "','0','0','" + sello + "','" + persona + "','" + envio + "','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "','" + driver + "','" + pallet + "','" + id_sello + "','" + id_sucursal + "','"+carro+"','"+placas+"')";
                 com_gti.ExecuteNonQuery();
-            }
-            finally
-            {
-                con_gti.CerrarConexion(); con_gti.Dispose();
-            }
+            }finally{con_gti.CerrarConexion(); con_gti.Dispose();}
         }
-        public int obtener_ultima_transferencia()
+        public void guardar_edicion_transferencia_inventario(int salida,string fecha, string persona, string sello, string origen, string destino, string driver, string pallet, string envio, int total, int id_usuario, string id_sello, string carro, string placas)
         {
+            Conexion con_gti = new Conexion();
+            try{
+                SqlCommand com_gti = new SqlCommand();
+                string id_sucursal = consultas.obtener_sucursal_id_usuario(id_usuario);
+                Conexion con_c = new Conexion();
+                SqlCommand com_c = new SqlCommand();
+                com_gti.Connection = con_gti.AbrirConexion();
+                com_gti.CommandText = "UPDATE salidas SET fecha='" + fecha + " 00:00:00',total='" + total + "',id_usuario='" + id_usuario + "',id_origen='" + origen + "',id_destino='" + destino +
+                    "', sello='" + sello + "',responsable='" + persona + "',id_envio='" + envio + "',fecha_solicitud='" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") +
+                    "', driver='" + driver + "',pallet='" + pallet + "',id_sello='" + id_sello + "',id_sucursal='" + id_sucursal + "',auto='" + carro + "',placas='" + placas + "' where id_salida='"+salida+"'";
+                com_gti.ExecuteNonQuery();
+            }finally { con_gti.CerrarConexion(); con_gti.Dispose(); }
+        }
+
+        public int obtener_ultima_transferencia(){
             int id_salida = 0;
             Conexion con_u_r_i = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_u_r_i = new SqlCommand();
                 SqlDataReader leer_u_r_i = null;
                 com_u_r_i.Connection = con_u_r_i.AbrirConexion();
                 com_u_r_i.CommandText = "SELECT TOP 1 id_salida FROM salidas order by id_salida desc ";
                 leer_u_r_i = com_u_r_i.ExecuteReader();
-                while (leer_u_r_i.Read())
-                {
+                while (leer_u_r_i.Read()){
                     id_salida = Convert.ToInt32(leer_u_r_i["id_salida"]);
-                }
-                leer_u_r_i.Close();
-            }
-            finally
-            {
-                con_u_r_i.CerrarConexion(); con_u_r_i.Dispose();
-            }
+                }leer_u_r_i.Close();
+            }finally{con_u_r_i.CerrarConexion(); con_u_r_i.Dispose();}
             return id_salida;
         }
         public void aumentar_sellos(string sello, int sucursal)
@@ -281,44 +271,31 @@ namespace FortuneSystem.Models.Almacen
             }finally{ con_sri.CerrarConexion(); con_sri.Dispose(); }
         }
 
-        public void buscar_datos_cajas(int inventario, int cantidad)
-        {
+        public void buscar_datos_cajas(int inventario, int cantidad){
             //BUSCAR SALIDAS ITEM DE ESTA SALIDA
             int cantidad_total = cantidad;
             Conexion con_bdc = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_bdc = new SqlCommand();
                 SqlDataReader leer_bdc = null;
                 com_bdc.Connection = con_bdc.AbrirConexion();
                 com_bdc.CommandText = "SELECT id_caja,cantidad_restante from cajas_inventario where id_inventario='" + inventario + "' and cantidad_restante>0 order by id_caja ";
                 leer_bdc = com_bdc.ExecuteReader();
-                while (leer_bdc.Read())
-                {
+                while (leer_bdc.Read()){
                     id_caja = Convert.ToInt32(leer_bdc["id_caja"]);
                     cantidad_restante = Convert.ToInt32(leer_bdc["cantidad_restante"]);
-                    if (cantidad_restante <= cantidad_total)
-                    {
+                    if (cantidad_restante <= cantidad_total){
                         cantidad_total -= cantidad_restante;
                         restar_inventario_cajas(id_caja, 0);
-                    }
-                    else
-                    {
-                        if (cantidad_total > 0)
-                        {
+                    }else{
+                        if (cantidad_total > 0){
                             cantidad_restante -= cantidad_total;
                             restar_inventario_cajas(id_caja, cantidad_restante);
                             cantidad_total = 0;
                         }
                     }
-
-                }
-                leer_bdc.Close();
-            }
-            finally
-            {
-                con_bdc.CerrarConexion(); con_bdc.Dispose();
-            }
+                }leer_bdc.Close();
+            }finally{con_bdc.CerrarConexion(); con_bdc.Dispose();}
         }
 
 
@@ -332,26 +309,16 @@ namespace FortuneSystem.Models.Almacen
                 com_s.Connection = con_s.AbrirConexion();
                 com_s.CommandText = "UPDATE inventario SET total=total-" + qty + "  WHERE id_inventario='" + inventario + "'  ";
                 com_s.ExecuteNonQuery();
-            }
-            finally
-            {
-                con_s.CerrarConexion(); con_s.Dispose();
-            }
+            }finally{con_s.CerrarConexion(); con_s.Dispose();}
         }
-        public void negar_transferencia_inventario(string salida)
-        {
+        public void negar_transferencia_inventario(string salida){
             Conexion con_s = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_s = new SqlCommand();
                 com_s.Connection = con_s.AbrirConexion();
                 com_s.CommandText = "UPDATE salidas SET estado_aprobacion=2 WHERE id_salida='" + salida + "'  ";
                 com_s.ExecuteNonQuery();
-            }
-            finally
-            {
-                con_s.CerrarConexion(); con_s.Dispose();
-            }
+            }finally{con_s.CerrarConexion(); con_s.Dispose();}
         }
         public List<salidas> obtener_informacion_transferencia(string id_salida){
             List<salidas> listasalidas = new List<salidas>();
@@ -360,7 +327,7 @@ namespace FortuneSystem.Models.Almacen
                 SqlCommand com_oit = new SqlCommand();
                 SqlDataReader leer_oit = null;
                 com_oit.Connection = con_oit.AbrirConexion();
-                com_oit.CommandText = "SELECT id_salida,fecha,total,id_usuario,id_origen,id_destino,estado_aprobacion,estado_entrega,sello,responsable,id_envio,fecha_solicitud,driver,pallet from salidas where id_salida='" + id_salida + "' ";
+                com_oit.CommandText = "SELECT id_salida,fecha,total,id_usuario,id_origen,id_destino,estado_aprobacion,estado_entrega,sello,responsable,id_envio,fecha_solicitud,driver,pallet,auto,placas from salidas where id_salida='" + id_salida + "' ";
                 leer_oit = com_oit.ExecuteReader();
                 while (leer_oit.Read()){
                     salidas l = new salidas();
@@ -382,32 +349,26 @@ namespace FortuneSystem.Models.Almacen
                     l.usuario = consultas.buscar_nombre_usuario(Convert.ToString(leer_oit["id_usuario"]));
                     l.origen = consultas.buscar_nombres_lugares(Convert.ToString(leer_oit["id_origen"]));
                     l.destino = consultas.buscar_nombres_lugares(Convert.ToString(leer_oit["id_destino"]));
+                    l.auto= Convert.ToString(leer_oit["auto"]);
+                    l.placas= Convert.ToString(leer_oit["placas"]);
                     items = buscar_lista_items_transferencia(id_salida);
                     l.lista_salidas_item = items;
                     listasalidas.Add(l);
-                }
-                leer_oit.Close();
-            }
-            finally
-            {
-                con_oit.CerrarConexion(); con_oit.Dispose();
-            }
+                }leer_oit.Close();
+            }finally{ con_oit.CerrarConexion(); con_oit.Dispose(); }
             return listasalidas;
         }
         /**************************************PDF TRANSFERENCIA***************************************/
-        public IEnumerable<salidas> lista_transfer_ticket(int id_salida)
-        {
+        public IEnumerable<salidas> lista_transfer_ticket(int id_salida){
             List<salidas> listasalidas = new List<salidas>();
             Conexion con_oit = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_oit = new SqlCommand();
                 SqlDataReader leer_oit = null;
                 com_oit.Connection = con_oit.AbrirConexion();
                 com_oit.CommandText = "SELECT id_salida,fecha,total,id_usuario,id_origen,id_destino,estado_aprobacion,estado_entrega,sello,responsable,id_envio,fecha_solicitud,driver,pallet,id_usuario_recibio,auto,placas from salidas where id_salida='" + id_salida + "' ";
                 leer_oit = com_oit.ExecuteReader();
-                while (leer_oit.Read())
-                {
+                while (leer_oit.Read()){
                     salidas l = new salidas();
                     List<salidas_item> items = new List<salidas_item>();
                     l.id_salida = Convert.ToInt32(leer_oit["id_salida"]);
@@ -435,13 +396,8 @@ namespace FortuneSystem.Models.Almacen
                     l.direccion_destino = consultas.buscar_direccion_lugar(Convert.ToInt32(leer_oit["id_destino"]));
                     l.direccion_origen= consultas.buscar_direccion_lugar(Convert.ToInt32(leer_oit["id_origen"]));
                     listasalidas.Add(l);
-                }
-                leer_oit.Close();
-            }
-            finally
-            {
-                con_oit.CerrarConexion(); con_oit.Dispose();
-            }
+                }leer_oit.Close();
+            }finally{con_oit.CerrarConexion(); con_oit.Dispose();}
             return listasalidas;
         }
         //consultar_item
@@ -482,13 +438,10 @@ namespace FortuneSystem.Models.Almacen
             return lista_items;
         }
 
-        public List<Inventario> consultar_item_transfer(int id)
-        {
+        public List<Inventario> consultar_item_transfer(int id){
             List<Inventario> lista = new List<Inventario>();
-            
             Conexion con_ci = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_ci = new SqlCommand();
                 SqlDataReader leer_ci = null;
                 com_ci.Connection = con_ci.AbrirConexion();
@@ -496,8 +449,7 @@ namespace FortuneSystem.Models.Almacen
                     "id_location,total,id_size,id_customer,id_customer_final,minimo,notas,id_fabric_percent,date_comment,comment,id_family_trim,id_unit,id_trim,stock,descripcion,id_item  " +
                     " from inventario  where id_inventario='" + id + "' ";
                 leer_ci = com_ci.ExecuteReader();
-                while (leer_ci.Read())
-                {
+                while (leer_ci.Read()){
                     Inventario i = new Inventario();
                     i.amt_item = consultas.buscar_amt_item(Convert.ToString(leer_ci["id_item"]));
                     i.id_inventario = Convert.ToInt32(leer_ci["id_inventario"]);
@@ -508,17 +460,10 @@ namespace FortuneSystem.Models.Almacen
                     i.fabric_type = consultas.obtener_fabric_type_id(Convert.ToString(leer_ci["id_fabric_type"]));
                     i.size = consultas.obtener_size_id(Convert.ToString(leer_ci["id_size"]));
                     lista.Add(i);
-                }
-                leer_ci.Close();
-            }
-            finally
-            {
-                con_ci.CerrarConexion(); con_ci.Dispose();
-            }
+                }leer_ci.Close();
+            }finally{con_ci.CerrarConexion(); con_ci.Dispose();}
             return lista;
         }
-
-
 
         public List<salidas_item> buscar_lista_items_transferencia(string id_salida){
             List<salidas_item> lista_items = new List<salidas_item>();
@@ -527,7 +472,7 @@ namespace FortuneSystem.Models.Almacen
                 SqlCommand commm = new SqlCommand();
                 SqlDataReader leerrr = null;
                 commm.Connection = connn.AbrirConexion();
-                commm.CommandText = "SELECT s.id_salida_item,s.id_inventario,s.cantidad,i.mill_po,i.descripcion,s.id_inventario,s.id_pedido,s.id_estilo,s.codigo from salidas_items s,inventario i where s.id_salida='" + id_salida + "' and s.id_inventario=i.id_inventario";
+                commm.CommandText = "SELECT s.id_salida_item,s.id_inventario,s.cantidad,i.mill_po,i.descripcion,s.id_inventario,s.id_pedido,s.id_estilo,s.codigo,s.cajas from salidas_items s,inventario i where s.id_salida='" + id_salida + "' and s.id_inventario=i.id_inventario";
                 leerrr = commm.ExecuteReader();
                 while (leerrr.Read()){
                     salidas_item l = new salidas_item();
@@ -539,45 +484,38 @@ namespace FortuneSystem.Models.Almacen
                     l.estilo = consultas.obtener_estilo(Convert.ToInt32(leerrr["id_inventario"]));
                     l.summary = consultas.obtener_po_summary(Convert.ToInt32(leerrr["id_pedido"]), Convert.ToInt32(leerrr["id_estilo"]));
                     l.codigo = Convert.ToString(leerrr["codigo"]);
+                    l.total_inventario = consultas.buscar_total_inventario(l.id_inventario);
+                    l.cajas= Convert.ToInt32(leerrr["cajas"]);
                     lista_items.Add(l);
                 }leerrr.Close();
             }finally{ connn.CerrarConexion(); connn.Dispose(); }
             return lista_items;
         }
-        public IEnumerable<Inventario> obtener_informacion_inventario(int id)
-        {
+
+        public IEnumerable<Inventario> obtener_informacion_inventario(int id){
             List<Inventario> listInventario = new List<Inventario>();
             Conexion con_oii = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_oii = new SqlCommand();
                 SqlDataReader leer_oii = null;
                 com_oii.Connection = con_oii.AbrirConexion();
                 com_oii.CommandText = "SELECT i.id_inventario,i.id_sucursal,i.id_pedido,i.mill_po,i.id_categoria_inventario,i.total,i.minimo,i.notas,i.descripcion,c.categoria,s.sucursal" +
                     " from inventario i,categorias_inventarios c,sucursales s where i.id_categoria_inventario=c.id_categoria and i.id_sucursal=s.id_sucursal and i.total!=0 and i.id_inventario='" + id + "' ";
                 leer_oii = com_oii.ExecuteReader();
-                while (leer_oii.Read())
-                {
+                while (leer_oii.Read()){
                     Inventario i = new Inventario();
                     i.id_inventario = Convert.ToInt32(leer_oii["id_inventario"]);
                     i.sucursal = consultas.obtener_po_id(Convert.ToString(leer_oii["id_sucursal"]));
-
                     listInventario.Add(i);
-                }
-                leer_oii.Close();
-            }
-            finally
-            {
-                con_oii.CerrarConexion(); con_oii.Dispose();
-            }
+                }leer_oii.Close();
+            }finally{con_oii.CerrarConexion(); con_oii.Dispose();}
             return listInventario;
         }
-        public List<Inventario> obtener_item_editar(int id)
-        {
+
+        public List<Inventario> obtener_item_editar(int id){
             List<Inventario> listInventario = new List<Inventario>();
             Conexion con_oie = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_oie = new SqlCommand();
                 SqlDataReader leer_oie = null;
                 com_oie.Connection = con_oie.AbrirConexion();
@@ -585,8 +523,7 @@ namespace FortuneSystem.Models.Almacen
                     "id_location,total,id_size,id_customer,id_customer_final,minimo,notas,id_fabric_percent,date_comment,comment,id_family_trim,id_unit,id_trim " +
                     " from inventario  where id_inventario='" + id + "' ";
                 leer_oie = com_oie.ExecuteReader();
-                while (leer_oie.Read())
-                {
+                while (leer_oie.Read()){
                     Inventario i = new Inventario();
                     i.id_inventario = Convert.ToInt32(leer_oie["id_inventario"]);
                     i.id_pedido = Convert.ToInt32(leer_oie["id_pedido"]);
@@ -615,68 +552,47 @@ namespace FortuneSystem.Models.Almacen
                     i.trim = consultas.obtener_trim_id(Convert.ToString(leer_oie["id_trim"]));
                     i.id_estilo = Convert.ToInt32(leer_oie["id_estilo"]);
                     listInventario.Add(i);
-                }
-                leer_oie.Close();
-            }
-            finally
-            {
-                con_oie.CerrarConexion(); con_oie.Dispose();
-            }
+                }leer_oie.Close();
+            }finally{con_oie.CerrarConexion(); con_oie.Dispose();}
             return listInventario;
         }
-        public salidas obtener_datos_cambio_sello(string id_salida)
-        {
+
+        public salidas obtener_datos_cambio_sello(string id_salida){
             salidas s = new salidas();
             Conexion con = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
                 com.CommandText = "SELECT id_sucursal,id_sello,sello from salidas where id_salida='" + id_salida + "' ";
                 leer = com.ExecuteReader();
-                while (leer.Read())
-                {
+                while (leer.Read()){
                     s.id_sucursal = Convert.ToInt32(leer["id_sucursal"]);
                     s.id_sello = Convert.ToInt32(leer["id_sello"]);
                     s.sello = Convert.ToInt32(leer["sello"]);
-                }
-                leer.Close();
-            }
-            finally
-            {
-                con.CerrarConexion(); con.Dispose();
-            }
+                }leer.Close();
+            }finally{con.CerrarConexion(); con.Dispose();}
             return s;
         }
-        public void cambiar_sello(int salida, int sello, int id_sello)
-        {
+        public void cambiar_sello(int salida, int sello, int id_sello){
             Conexion con_s = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_s = new SqlCommand();
                 com_s.Connection = con_s.AbrirConexion();
                 com_s.CommandText = "UPDATE salidas SET sello='" + sello + "',id_sello='" + id_sello + "' WHERE id_salida='" + salida + "' ";
                 com_s.ExecuteNonQuery();
-            }
-            finally
-            {
-                con_s.CerrarConexion(); con_s.Dispose();
-            }
+            }finally{con_s.CerrarConexion(); con_s.Dispose();}
         }
-        public IEnumerable<salidas> lista_transferencias_por_recibir(string sucursal)
-        {
+        public IEnumerable<salidas> lista_transferencias_por_recibir(string sucursal){
             List<salidas> listalugares = new List<salidas>();
             Conexion con_ltpr = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_ltpr = new SqlCommand();
                 SqlDataReader leer_ltpr = null;
                 com_ltpr.Connection = con_ltpr.AbrirConexion();
                 com_ltpr.CommandText = "SELECT id_salida,fecha,total,id_usuario,id_origen,id_destino,estado_aprobacion,estado_entrega,sello,responsable,id_envio,fecha_solicitud,driver,pallet from salidas where estado_entrega=0 and estado_aprobacion=1 and id_destino='" + sucursal + "' ";
                 leer_ltpr = com_ltpr.ExecuteReader();
-                while (leer_ltpr.Read())
-                {
+                while (leer_ltpr.Read()){
                     salidas l = new salidas();
                     l.id_salida = Convert.ToInt32(leer_ltpr["id_salida"]);
                     l.fecha = (Convert.ToDateTime(leer_ltpr["fecha"])).ToString("MMM dd yyyy");
@@ -696,30 +612,22 @@ namespace FortuneSystem.Models.Almacen
                     l.origen = consultas.buscar_nombres_lugares(Convert.ToString(leer_ltpr["id_origen"]));
                     l.destino = consultas.buscar_nombres_lugares(Convert.ToString(leer_ltpr["id_destino"]));
                     listalugares.Add(l);
-                }
-                leer_ltpr.Close();
-            }
-            finally
-            {
-                con_ltpr.CerrarConexion(); con_ltpr.Dispose();
-            }
+                }leer_ltpr.Close();
+            }finally{con_ltpr.CerrarConexion(); con_ltpr.Dispose();}
             return listalugares;
         }
-        public Inventario consultar_item(int id)
-        {
+        public Inventario consultar_item(int id){
             Inventario i = new Inventario();
             Conexion con_ci = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_ci = new SqlCommand();
                 SqlDataReader leer_ci = null;
                 com_ci.Connection = con_ci.AbrirConexion();
-                com_ci.CommandText = "SELECT id_estilo,id_inventario,id_pedido,id_pais,id_fabricante,id_categoria_inventario,id_color,id_body_type,id_genero,id_fabric_type," +
+                com_ci.CommandText = "SELECT id_item,id_estilo,id_inventario,id_pedido,id_pais,id_fabricante,id_categoria_inventario,id_color,id_body_type,id_genero,id_fabric_type," +
                     "id_location,total,id_size,id_customer,id_customer_final,minimo,notas,id_fabric_percent,date_comment,comment,id_family_trim,id_unit,id_trim,stock,descripcion " +
                     " from inventario  where id_inventario='" + id + "' ";
                 leer_ci = com_ci.ExecuteReader();
-                while (leer_ci.Read())
-                {
+                while (leer_ci.Read()){
                     i.id_inventario = Convert.ToInt32(leer_ci["id_inventario"]);
                     i.id_pedido = Convert.ToInt32(leer_ci["id_pedido"]);
                     i.id_pedido = Convert.ToInt32(leer_ci["id_pedido"]);
@@ -748,14 +656,11 @@ namespace FortuneSystem.Models.Almacen
                     i.stock = Convert.ToString(leer_ci["stock"]);
                     i.descripcion = Convert.ToString(leer_ci["descripcion"]);
                     i.id_estilo = Convert.ToInt32(leer_ci["id_estilo"]);
+                    i.id_item= Convert.ToInt32(leer_ci["id_item"]);
                     //listInventario.Add(i);
                 }
                 leer_ci.Close();
-            }
-            finally
-            {
-                con_ci.CerrarConexion(); con_ci.Dispose();
-            }
+            }finally{con_ci.CerrarConexion(); con_ci.Dispose();}
             return i;
         }
         public int comparar_inventario(Inventario i, int destino){
@@ -1181,6 +1086,85 @@ namespace FortuneSystem.Models.Almacen
             }finally { con.CerrarConexion(); con.Dispose(); }
             return Convert.ToString(Lista);
         }
+        public salidas_item obtener_datos_salida_item(int salida){
+            salidas_item l = new salidas_item();
+            Conexion connn = new Conexion();
+            try{
+                SqlCommand commm = new SqlCommand();
+                SqlDataReader leerrr = null;
+                commm.Connection = connn.AbrirConexion();
+                commm.CommandText = "SELECT s.id_salida_item,s.id_inventario,s.cantidad,i.mill_po,i.descripcion,s.id_inventario,s.id_pedido,s.id_estilo,s.codigo,s.cajas from salidas_items s,inventario i where s.id_salida_item='" + salida + "' and s.id_inventario=i.id_inventario";
+                leerrr = commm.ExecuteReader();
+                while (leerrr.Read()){
+                    l.id_salida_item = Convert.ToInt32(leerrr["id_salida_item"]);
+                    l.cantidad = Convert.ToInt32(leerrr["cantidad"]);
+                    l.id_inventario = Convert.ToInt32(leerrr["id_inventario"]);
+                    /*l.descripcion = consultas.buscar_descripcion_item(Convert.ToInt32(leerrr["id_inventario"]));
+                    l.po = consultas.buscar_po_item(Convert.ToInt32(leerrr["id_inventario"]));
+                    l.estilo = consultas.obtener_estilo(Convert.ToInt32(leerrr["id_inventario"]));
+                    l.summary = consultas.obtener_po_summary(Convert.ToInt32(leerrr["id_pedido"]), Convert.ToInt32(leerrr["id_estilo"]));
+                    l.codigo = Convert.ToString(leerrr["codigo"]);
+                    l.total_inventario = consultas.buscar_total_inventario(l.id_inventario);
+                    l.cajas = Convert.ToInt32(leerrr["cajas"]);*/
+                }leerrr.Close();
+            }finally { connn.CerrarConexion(); connn.Dispose(); }
+            return l;
+        }
+
+        public void regresar_datos_cajas(int inventario, int cantidad)        {
+            //BUSCAR SALIDAS ITEM DE ESTA SALIDA
+            int cantidad_total = cantidad;
+            int cantidad_inicial;
+            Conexion con_bdc = new Conexion();
+            try{
+                SqlCommand com_bdc = new SqlCommand();
+                SqlDataReader leer_bdc = null;
+                com_bdc.Connection = con_bdc.AbrirConexion();
+                com_bdc.CommandText = "SELECT id_caja,cantidad_restante,cantidad_inicial from cajas_inventario where id_inventario='" + inventario + "' and cantidad_restante!=cantidad_inicial order by id_caja DESC";
+                leer_bdc = com_bdc.ExecuteReader();
+                while (leer_bdc.Read()){
+                    id_caja = Convert.ToInt32(leer_bdc["id_caja"]);
+                    cantidad_restante = Convert.ToInt32(leer_bdc["cantidad_restante"]);
+                    cantidad_inicial= Convert.ToInt32(leer_bdc["cantidad_inicial"]);
+                    if (cantidad_total >cantidad_inicial){
+                        restar_inventario_cajas(id_caja, cantidad_inicial);
+                        cantidad_total = cantidad_total - (cantidad_inicial-cantidad_restante);
+                    }else{
+                        if (cantidad_total > 0){
+                            restar_inventario_cajas(id_caja, (cantidad_total+cantidad_restante));
+                            cantidad_total = 0;
+                        }
+                    }
+                }leer_bdc.Close();
+            }finally { con_bdc.CerrarConexion(); con_bdc.Dispose(); }
+        }
+        public void eliminar_salida_item(int salida_item){
+            Conexion con_s = new Conexion();
+            try{
+                SqlCommand com_s = new SqlCommand();
+                com_s.Connection = con_s.AbrirConexion();
+                com_s.CommandText = "DELETE FROM salidas_items WHERE id_salida_item='" + salida_item + "' ";
+                com_s.ExecuteNonQuery();
+            }finally { con_s.CerrarConexion(); con_s.Dispose(); }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

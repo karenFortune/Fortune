@@ -67,7 +67,7 @@ namespace FortuneSystem.Controllers
                         else if (usuario.Cargo == 4)
                         {
                             actionName = "Index";
-                            nameController = "Recibos";
+                            nameController = "Almacen";
 
                         }
                         else if (usuario.Cargo == 5)

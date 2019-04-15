@@ -33,6 +33,8 @@ namespace FortuneSystem.Models.PNL
         public Boolean EstadoPallet { get; set; }
         public int IdBatch { get; set; }
         public string Status { get; set; }
+        [Display(Name = "COMMENTS")]
+        public string Comentarios { get; set; }
 
         public List<Pnl> Batch { get; set; }
 

@@ -41,7 +41,7 @@ namespace FortuneSystem.Controllers
             }else {
                 return View();
             }  */
-            int id_usuario = Convert.ToInt32(Session["idUsuario"]);
+            int id_usuario = Convert.ToInt32(Session["id_Empleado"]);
             Session["id_usuario"] = id_usuario;
             return View();
         }

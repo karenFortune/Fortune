@@ -183,9 +183,9 @@ namespace FortuneSystem.Models.PNL
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leer = null;               
                 comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PNL T " +
+                comando.CommandText = "SELECT T.ID_TALLA,S.TALLA, S.ORDEN FROM PNL T " +
                     "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                    "WHERE T.ID_SUMMARY= '" + id + "'";
+                    "WHERE T.ID_SUMMARY= '" + id + "' ORDER by cast(S.ORDEN AS int) ASC";
                 leer = comando.ExecuteReader();
                 int total = 0;
                 while (leer.Read())
@@ -221,9 +221,9 @@ namespace FortuneSystem.Models.PNL
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leer = null;               
                 comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PNL T " +
+                comando.CommandText = "SELECT T.ID_TALLA,S.TALLA, S.ORDEN FROM PNL T " +
                     "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                    "WHERE T.ID_SUMMARY= '" + id + "'";
+                    "WHERE T.ID_SUMMARY= '" + id + "' ORDER by cast(S.ORDEN AS int) ASC";
                 leer = comando.ExecuteReader();
                 int totalMisPrint = 0;
                 while (leer.Read())
@@ -258,9 +258,9 @@ namespace FortuneSystem.Models.PNL
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leer = null;               
                 comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PNL T " +
+                comando.CommandText = "SELECT T.ID_TALLA,S.TALLA, S.ORDEN FROM PNL T " +
                     "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                    "WHERE T.ID_SUMMARY= '" + id + "'";
+                    "WHERE T.ID_SUMMARY= '" + id + "' ORDER by cast(S.ORDEN AS int) ASC";
                 leer = comando.ExecuteReader();
                 int totalDefect = 0;
                 while (leer.Read())
@@ -295,9 +295,9 @@ namespace FortuneSystem.Models.PNL
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leer = null;                
                 comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PNL T " +
+                comando.CommandText = "SELECT T.ID_TALLA,S.TALLA, S.ORDEN FROM PNL T " +
                     "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                    "WHERE T.ID_SUMMARY= '" + id + "'";
+                    "WHERE T.ID_SUMMARY= '" + id + "' ORDER by cast(S.ORDEN AS int) ASC";
                 leer = comando.ExecuteReader();
                 int totalRepair = 0;
                 while (leer.Read())
@@ -363,9 +363,9 @@ namespace FortuneSystem.Models.PNL
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leer = null;               
                 comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "SELECT distinct (T.ID_TALLA), S.TALLA FROM PNL T " +
+                comando.CommandText = "SELECT T.ID_TALLA,S.TALLA, S.ORDEN FROM PNL T " +
                     "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                    "WHERE T.ID_SUMMARY= '" + id + "'";
+                    "WHERE T.ID_SUMMARY= '" + id + "' ORDER by cast(S.ORDEN AS int) ASC";
                 leer = comando.ExecuteReader();
                 int totalPrinted = 0;
                 while (leer.Read())
@@ -405,7 +405,7 @@ namespace FortuneSystem.Models.PNL
                 leerF = com.ExecuteReader();               
                 while (leerF.Read())
                 {
-                    suma += Convert.ToInt32(leerF["PRINTED"]) + Convert.ToInt32(leerF["MISPRINT"]) + Convert.ToInt32(leerF["DEFECT"]) + Convert.ToInt32(leerF["REPAIR"]);
+                    suma += Convert.ToInt32(leerF["PRINTED"]) + Convert.ToInt32(leerF["MISPRINT"]) + Convert.ToInt32(leerF["DEFECT"]);
 
                 }
                 leerF.Close();
@@ -533,6 +533,7 @@ namespace FortuneSystem.Models.PNL
                         ObtenerNombreMaquina(tallas);
                         tallas.NombreUsrModif = item.NombreUsrModif;
                         tallas.Status = item.Status;
+                        tallas.Comentarios = item.Comentarios;
                     }
 
 
@@ -594,7 +595,34 @@ namespace FortuneSystem.Models.PNL
                     break;
             }
         }
+        //Permite obtener el idUsuario del batch registrado
+        public int ObtenerIdUsuarioPorBatchPNLEstilo(int idBatch, int idSummary, int idTalla)
+        {
 
+            int idUsuario = 0;
+            Conexion conex = new Conexion();
+            try
+            {
+                SqlCommand coman = new SqlCommand();
+                SqlDataReader leerF = null;
+                coman.Connection = conex.AbrirConexion();
+                coman.CommandText = "SELECT ID_USUARIO FROM PNL WHERE ID_BATCH='" + idBatch + "' AND ID_SUMMARY='" + idSummary + "' AND ID_TALLA='" + idTalla + "' ";
+                leerF = coman.ExecuteReader();
+                while (leerF.Read())
+                {
+                    idUsuario += Convert.ToInt32(leerF["ID_USUARIO"]);
+
+
+                }
+                leerF.Close();
+            }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+            return idUsuario;
+        }
         //Muestra la lista de tallas de UN Batch por estilo y id Batch seleccionado
         public IEnumerable<Pnl> ListaCantidadesTallaPorIdBatchEstilo(int? idEstilo, int idBatch)
         {
@@ -646,11 +674,11 @@ namespace FortuneSystem.Models.PNL
                 SqlDataReader leerF = null;  
                 c.Connection = conex.AbrirConexion();
                 c.CommandText = "SELECT P.ID_PNL, P.ID_SUMMARY, P.ID_BATCH, CONCAT(U.Nombres,' ',U.Apellidos)AS NOMBRE, P.TURNO,P.MAQUINA, P.ID_USUARIO_MODIF, P.STATUS_PALLET, " +
-                    " P.ID_TALLA, S.TALLA, P.PRINTED, P.MISPRINT, P.DEFECT,P.REPAIR, sum(PRINTED+MISPRINT+DEFECT+REPAIR)AS TOTAL FROM PNL P " +
+                    " P.ID_TALLA, S.TALLA, P.PRINTED, P.MISPRINT, P.DEFECT,P.REPAIR, sum(PRINTED+MISPRINT+DEFECT+REPAIR)AS TOTAL,P.COMENTARIOS FROM PNL P " +
                     "INNER JOIN CAT_ITEM_SIZE S ON S.ID=P.ID_TALLA " +
                     "INNER JOIN USUARIOS U ON U.Id=P.ID_USUARIO " +
                     "WHERE P.ID_BATCH='" + batch + "' AND P.ID_SUMMARY='" + id + "'  GROUP BY P.ID_PNL,P.ID_SUMMARY, P.ID_BATCH, P.ID_TALLA, S.TALLA, " +
-                    "P.PRINTED, P.MISPRINT, P.DEFECT,P.REPAIR, U.Nombres, U.Apellidos, P.TURNO,P.MAQUINA, P.ID_USUARIO_MODIF,P.STATUS_PALLET,S.ORDEN ORDER by cast(S.ORDEN AS int) ASC ";
+                    "P.PRINTED, P.MISPRINT, P.DEFECT,P.REPAIR, U.Nombres, U.Apellidos, P.TURNO,P.MAQUINA, P.ID_USUARIO_MODIF,P.STATUS_PALLET,P.COMENTARIOS,S.ORDEN ORDER by cast(S.ORDEN AS int) ASC ";
                 leerF = c.ExecuteReader();
 
                 while (leerF.Read())
@@ -666,7 +694,8 @@ namespace FortuneSystem.Models.PNL
                         Printed = Convert.ToInt32(leerF["PRINTED"]),
                         MisPrint = Convert.ToInt32(leerF["MISPRINT"]),
                         Defect = Convert.ToInt32(leerF["DEFECT"]),
-                        Total = Convert.ToInt32(leerF["TOTAL"])
+                        Total = Convert.ToInt32(leerF["TOTAL"]),
+                        Comentarios = leerF["COMENTARIOS"].ToString()
                     };
                     if (!Convert.IsDBNull(leerF["REPAIR"]))
                     {
@@ -742,6 +771,7 @@ namespace FortuneSystem.Models.PNL
                 com.Parameters.AddWithValue("@idStatus", pnl.EstadoPallet);
                 com.Parameters.AddWithValue("@idUsr", pnl.Usuario);
                 com.Parameters.AddWithValue("@idUsrAct", pnl.UsuarioModif);
+                com.Parameters.AddWithValue("@coment", pnl.Comentarios);
 
                 com.ExecuteNonQuery();
             }
@@ -778,6 +808,7 @@ namespace FortuneSystem.Models.PNL
                 com.Parameters.AddWithValue("@idStatus", pnl.EstadoPallet);
                 com.Parameters.AddWithValue("@idUsr", pnl.Usuario);
                 com.Parameters.AddWithValue("@idUsrAct", pnl.UsuarioModif);
+                com.Parameters.AddWithValue("@coment", pnl.Comentarios);
 
                 com.ExecuteNonQuery();
             }

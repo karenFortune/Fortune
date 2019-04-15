@@ -55,7 +55,7 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr onclick="location.href = '@(Url.Action("Detalles", "Packing", new { id = item.IdPedido }))'">
+                        <tr ondblclick="location.href = '@(Url.Action("Detalles", "Packing", new { id = item.IdPedido }))'">
                             <td>
                                 @Html.DisplayFor(modelItem => item.IdPedido)
                             </td>

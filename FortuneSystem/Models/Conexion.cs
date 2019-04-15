@@ -11,9 +11,11 @@ namespace FortuneSystem.Models
     {
         private static readonly object objectLock = new object();
         private bool _disposed;
-        //private SqlConnection conn = new SqlConnection("Server=FORTUNE;Database=FortuneTest;User Id=administrator; Password=A!3$$traFoR7un3; Connection Timeout=10000;");
-        private SqlConnection conn = new SqlConnection("Server=tcp:fortunesp.database.windows.net,1433;Initial Catalog=FortuneTest;Persist Security Info=False;User ID=AdminFB;Password=Admin@2018;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=5000;");
-        //private SqlConnection conn = new SqlConnection("Server=W_KAREN;Database=FortuneTest;Integrated Security =true");
+        //private SqlConnection conn = new SqlConnection("Server=tcp:189.213.233.1,1433;Database=FFB;User Id=administrator; Password=A!3$$traFoR7un3; Connection Timeout=10000;");
+       private SqlConnection conn = new SqlConnection("Server=tcp:fortunesp.database.windows.net,1433;Initial Catalog=FortuneTest;Persist Security Info=False;User ID=AdminFB;Password=Admin@2018;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=10000;");
+      // private SqlConnection conn = new SqlConnection("Server=W_KAREN;Database=FFB;Integrated Security =true"); //FortuneTest
+     // private SqlConnection conn = new SqlConnection("Server=tcp:10.8.1.128,1433;Database=FFB;Integrated Security =true; Connection Timeout=10000;");
+
         public SqlConnection AbrirConexion()
         {
             if (conn.State == ConnectionState.Closed)

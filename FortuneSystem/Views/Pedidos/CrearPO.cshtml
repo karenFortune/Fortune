@@ -29,6 +29,8 @@
             var val = this.value;
             this.value = val.replace(/[^0-9]/g, '');
         });
+        $("#selectClienteFinal").val('32');
+        $("#selectClienteFinal").trigger('change');
 
         $('#nuevoPO').click(function (e) {
             var error = 0;
@@ -56,8 +58,9 @@
                 var FechaOrden = $("#FechaOrden").val();
                 var Cliente = $("#selectCliente option:selected").val();
                 var ClienteFinal = $("#selectClienteFinal option:selected").val();
+                var TipoOrden = $("#selectTipoOrden option:selected").val();
                 var TotalUnidades = $("#TotalUnidades").val();
-                enviarPO(po, VPO, FechaCancel, FechaOrden, Cliente, ClienteFinal, TotalUnidades);
+                enviarPO(po, VPO, FechaCancel, FechaOrden, Cliente, ClienteFinal, TotalUnidades, TipoOrden);
                 alertify.set('notifier', 'position', 'top-right');
                 alertify.notify('The purchase order was correctly registered.', 'success', 5, null);
                
@@ -73,6 +76,7 @@
         $("#FechaOrden").prop('disabled', true);
         $("#selectCliente").prop('disabled', 'disabled');
         $("#selectClienteFinal").prop('disabled', 'disabled');
+        $("#selectTipoOrden").prop('disabled', 'disabled');
         $("#TotalUnidades").prop('disabled', true);
     }
 
@@ -87,10 +91,10 @@
     }
 
 
-    function enviarPO(po, VPO, FechaCancel, FechaOrden, Cliente, ClienteFinal, TotalUnidades) {
+    function enviarPO(po, VPO, FechaCancel, FechaOrden, Cliente, ClienteFinal, TotalUnidades, TipoOrden) {
         $.ajax({
             url: "/Pedidos/RegistrarPO",
-            data: { po: po, VPO: VPO, FechaCancel: FechaCancel, FechaOrden: FechaOrden, Cliente: Cliente, ClienteFinal: ClienteFinal, TotalUnidades: TotalUnidades },
+            data: { po: po, VPO: VPO, FechaCancel: FechaCancel, FechaOrden: FechaOrden, Cliente: Cliente, ClienteFinal: ClienteFinal, TotalUnidades: TotalUnidades, IdTipoOrden: TipoOrden },
             cache: false,
             type: 'POST',
             async: true,
@@ -100,10 +104,6 @@
             }
         });
     }
-
-
-    
-
    
 
 </script>
@@ -168,13 +168,25 @@
                         @Html.DropDownList("listClienteFinal", (IEnumerable<System.Web.Mvc.SelectListItem>)ViewData["listClienteFinal"], new { @class = "form-control nuevo_po", @id = "selectClienteFinal", @name = "state" })
                         @Html.ValidationMessageFor(model => model.ClienteFinal, "", new { @class = "text-danger" })
                     </div>
-                    <div class="form-group col-md-11">
+                </div>
+
+            </div>
+            <div class="container-fluid">
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.IdTipoOrden, htmlAttributes: new { @class = "control-label" }) <br />
+                        @Html.DropDownList("listTipoOrden", (IEnumerable<System.Web.Mvc.SelectListItem>)ViewData["listTipoOrden"], new { @class = "form-control nuevo_po", @id = "selectTipoOrden", @name = "state" })
+                        @Html.ValidationMessageFor(model => model.ClienteFinal, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-4">
                         @Html.LabelFor(model => model.TotalUnidades, htmlAttributes: new { @class = "control-label" })
                         @Html.EditorFor(model => model.TotalUnidades, new { htmlAttributes = new { @class = "form-control nuevo_po" } })
                         @Html.ValidationMessageFor(model => model.TotalUnidades, "", new { @class = "text-danger" })
                     </div>
 
                 </div>
+
 
                 <div class="form-group row">
                     <div class="text-center margin-bottom col-sm-12">
@@ -183,8 +195,6 @@
                         </button>
                     </div>
                 </div>
-  
-
             </div>
         </div>
         <div class="container-fluid" id="crearItems" style="visibility:hidden;">

@@ -6,11 +6,19 @@ $(document).ready(function () {
   
 });
 
-function select(id, estilo) {
-   
-    obtenerListaTallas(id, estilo);
+function select(id) {
+    $('#tabless tr').on('click', function (e) {
+        $('#tabless tr').removeClass('highlighted');
+        $(this).addClass('highlighted');
+    });
 }
 
+$(document).on("dblclick", "#tabless tr", function () {
+    var row = this.rowIndex;
+    var numEstilo = $('#tabless tr:eq(' + row + ') td:eq(0)').html();
+    //var estilo = $('#tabless tr:eq(' + row + ') td:eq(2)').html();
+    obtenerListaTallas(numEstilo);
+});
 
 $(document).on("input", ".numeric", function () {
     this.value = this.value.replace(/\D/g, '');
@@ -57,7 +65,8 @@ function buscar_estilos(ID) {
             var lista_estilo = jsonData.Data.listaItem;
 
             $.each(lista_estilo, function (key, item) {
-                html += '<tr  onclick="select(' + item.IdItems + ',\'' + item.EstiloItem + '\');">';
+                html += '<tr  onclick="select(' + item.IdItems +');">';
+                html += '<td>' + item.IdItems + '</td>';
                 html += '<td>' + item.EstiloItem + '</td>';
                 html += '<td>' + item.ItemDescripcion.Descripcion + '</td>';
                 html += '<td>' + item.CatColores.CodigoColor + '</td>';
@@ -84,17 +93,18 @@ var tipoEmp = "";
 var numTipoPack;
 var listaPsc;
 var listCantTalla;
-var numBoxPPK;
-function obtenerListaTallas(EstiloId, estiloN) {
+var numBoxPPK =0;
+function obtenerListaTallas(EstiloId) {
    $("#loading").css('display', 'inline');   
     $("#panelPacking").css('display', 'inline');
     $("#consultaTalla").css('width', '100%');
     estiloId = EstiloId;
         $.ajax({
-            url: "/Packing/Lista_Tallas_Por_Estilo/" + EstiloId,
+            url: "/Packing/Lista_Tallas_Por_Estilo_Packing/" + EstiloId,
         method: 'POST',
         dataType: "json",
-            success: function (jsonData) {                
+            success: function (jsonData) {  
+               
                 var listaT = jsonData.Data.lista;
                 var listaPacking = jsonData.Data.listaPackingS;
                 var listaEmpaque = jsonData.Data.listaEmpaqueTallas;
@@ -116,10 +126,17 @@ function obtenerListaTallas(EstiloId, estiloN) {
                         $("#nuevoPallet").hide();
                         $("#modificarBatch").hide();
                         $("#registrarNuevo").hide();
-                        $("#tableTallasBulk").hide();
+                        $("#tableTallasBulk").hide();                       
                         $("#titulo_Tipo_Empaque").css('display', 'none');
-                        $("#div_Desc_Estilo").html("<h1>Style- " + estiloN + "</h1>");                                           
+                        var lista_estilo_Desc = jsonData.Data.lista;
+                        $.each(lista_estilo_Desc, function (key, item) {
+
+                            EstiloDescription = item.DescripcionEstilo;
+
+                        });
+                        $("#div_Desc_Estilo").html("<h2>Item: " + estilos + "-" + $.trim(EstiloDescription) + "</h2>");                                           
                         $("#div_estilo").html("<h3>REGISTER 1rst QUALITY OF SIZES</h3>");
+                        $("#modificarPack").hide();
                         html += '<table class="table" id="tablaTallas"><thead>';
                         html += '<tr><th>Size</th>' +
                             ' <th>1rst QTY</th>' +
@@ -154,7 +171,7 @@ function obtenerListaTallas(EstiloId, estiloN) {
                     if (cargo !== 1 || cargo !== 9) {
                         $("#div_estilo").show();
                         $("#panelNoEstilosBPPK").css('display', 'none');
-                        $("#consultaTalla").css('height', '1300px');
+                        $("#consultaTalla").css('height', '1380px');
 
                     } else {
                         $("#consultaTalla").css('height', '1600px');
@@ -167,8 +184,15 @@ function obtenerListaTallas(EstiloId, estiloN) {
                     $("#modificarBatch").hide();       
                     $.each(listaEmpaque, function (key, item) {
                         tipoEmp = item.NombreTipoPak;
+                    });                    
+                    var lista_estilo_Descrip = jsonData.Data.lista;
+                    var EstiloDescrip;
+                    $.each(lista_estilo_Descrip, function (key, item) {
+
+                        EstiloDescrip = item.DescripcionEstilo;
+
                     });
-                    $("#div_Desc_Estilo").html("<h1>Style- " + estiloN + "</h1>"); 
+                    $("#div_Desc_Estilo").html("<h2>Item: " + estilos + "-" + $.trim(EstiloDescrip) + "</h2>"); 
                     $("#titulo_Tipo_Empaque").css('display', 'inline');                      
                     $("#titulo_Tipo_Empaque").html("<h1> Packing- " + tipoEmp +"</h1>");
                     $("#div_estilo").html("<h3>QUALITY OF SIZES</h3>");
@@ -254,7 +278,7 @@ function obtenerListaTallas(EstiloId, estiloN) {
 
                         cantidadesTBox += item;
                     });
-                    html += '<td>' + cantidadesTBox + '</td>';
+                    html += '<td>' + cantidadesTBox + '</td>';                    
                     html += '</tr><tr>';
                     if (tipoEmp === "BULK") {
                         html += '<td class="cajasQty">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Box</td>';
@@ -282,6 +306,13 @@ function obtenerListaTallas(EstiloId, estiloN) {
                                     html += '<td>' + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Box# -" + item + '</td>';
                                     numBoxPPK = item;
                                 }
+                            } else {
+                                if (listaPBatch === 0) {
+                                    item = 0;                                  
+                                    numBoxPPK = item;
+                                } else {                                   
+                                    numBoxPPK = item;
+                                }
                             }
                         } else {
                             if (listaPBatch === 0) {
@@ -293,15 +324,41 @@ function obtenerListaTallas(EstiloId, estiloN) {
                         }
                         // cantidadesPrinted += item;
                     });
+                    var lista_Partial = jsonData.Data.listaPartial;
+                    var listaPartBatch = 0;
+                    $.each(lista_Partial, function (key, item) {
+                        listaPartBatch++;
+                    });
+                    if (listaPartBatch === 0) {
+                        lista_Partial = listaPacking;
+                    } else {
+                        lista_Partial;
+                    }
+                    if (tipoEmp === "BULK") {
+                        html += '</tr><tr><td width="30%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Partial</td>';                       
+                 
+                        $.each(lista_Partial, function (key, item) {        
+                                             
+                            if (listaPartBatch === 0) {
+                                item = 0;
+                                html += '<td>' + item + '</td>';
+                            } else {
+                                html += '<td>' + item + '</td>';
+                            }
+                            
+                        });
+                      
+                    }
+                    
                     var sumaTotal = 0;
-                    html += '</tr><tr><td width="30%">+/-</td>';
+                    html += '</tr><tr><td width="30%" >+/-</td>';
                     var totales = 0;
                     var i = 1;
                     $.each(listaTCajas, function (key, item) {
                         if (listaTBatch === 0) {
                             item = 0;
                         }
-                        var resta = parseInt(cantidades_array[i]) - parseInt(item);
+                        var resta = parseInt(item) - parseInt(cantidades_array[i]);
 
                         if (resta === 0) {
                             html += '<td class="faltante" style="color:black;">' + resta + '</td>';
@@ -327,6 +384,7 @@ function obtenerListaTallas(EstiloId, estiloN) {
                             $("#listaTallaBatch").hide();
                             $("#tablaTallasPallet").hide();
                             $("#modificarBatch").hide();
+                            $("#modificarPack").hide();
                             $('#Packing_PackingTypeSize_NombreTipoPak').hide();
                             $("#div_estilo_pack").css("display", "none");
                             $("#opcionesPack").css("display", "none");
@@ -344,16 +402,20 @@ function obtenerListaTallas(EstiloId, estiloN) {
                         }
                     }
 
-                }
+                } 
             //}
             $("#consultaTalla").css("visibility", "visible"); 
             $("#arte").css("display", "inline-block");
-            obtenerImagenPNL(estilos);
-            obtenerImagenArte(estilos);
-            obtener_bacth_estilo_pack(EstiloId);
+           obtenerImagenPNL(estilos);
+           obtenerImagenArte(estilos);
+           obtener_bacth_estilo_pack(EstiloId);
             $("#packAssort").hide(); 
             $("#packBPPK").show();
-            $("#loading").css('display', 'none');
+                //$("#loading").css('display', 'none');
+    
+            setTimeout(function () { $("#loading").css('display', 'none'); }, 3000);
+
+
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -390,9 +452,10 @@ function ocultarOpciones() {
 $(document).on("keyup", "input.cantBox", function () {
     obtTotalPiezas(numBoxPPK);
 });
+var tipoPacking = ""; 
 function registrarPallet(EstiloId) {
     $.ajax({
-        url: "/Packing/Lista_Tallas_Por_Estilo/" + EstiloId,
+        url: "/Packing/Lista_Tallas_Por_Estilo_BULK/" + EstiloId,
         method: 'POST',
         dataType: "json",
         success: function (jsonData) {
@@ -410,6 +473,7 @@ function registrarPallet(EstiloId) {
             $.each(listaEmpaque, function (key, item) {
                 tipoEmp = item.NombreTipoPak;
             });
+           
             $('#Packing_PackingTypeSize_NombreTipoPak').show(); 
             $('#Packing_PackingTypeSize_NombreTipoPak').val(tipoEmp);
                 $('label[for="Packing_CantBox"]').hide();
@@ -425,9 +489,10 @@ function registrarPallet(EstiloId) {
                     '<th> Size</th> ' +
                     '<th>Box#</th>' +
                     '<th>CantxBox#</th>' +
-                    '<th>TotalPieces#</th>' +
-                    '<th>TotalBox#</th>' +
-                    ' <th>TotalFaltante#</th>' +            
+                    '<th>PartialBox#</th>' +
+                    '<th>TotalPieces#</th>' +                    
+                    '<th>TotalBox#</th>' +                    
+                    ' <th>BoxFaltante#</th>' +            
                     '</tr>' +
                     '</thead><tbody>';                   
                
@@ -439,16 +504,39 @@ function registrarPallet(EstiloId) {
            
             $.each(listaEmpaque, function (key, item) {              
                 cont = cont + 1;
+
                 var valorCalidad = $(".calidad").parent("tr").find("td").eq(cont).text();
                 var pCalidad = parseInt(valorCalidad);
                 var numTotalBox = pCalidad / item.Pieces;
                 var totalBox = Math.floor(numTotalBox);
-                var valorCajas = $(".cajasQty").parent("tr").find("td").eq(cont).text();
+                var valorCajas = $(".cajasQty").parent("tr").find("td").eq(cont).text();           
                 var nCajas = parseInt(valorCajas);
-                var resta = parseInt(totalBox) - nCajas;
+                var totalCajas = parseInt(totalBox);
+                var resta = 0;
+                if (numTotalBox < 1) {
+                    totalCajas = 1;
+                    resta = parseInt(totalCajas) - nCajas;
+                }
+                var partial = parseInt(totalCajas);               
+                if (pCalidad > item.Pieces) {
+                    if (numTotalBox  < 1) {
+                        totalBox = totalBox;
+                    } if (numTotalBox % 1 === 0) {
+                        totalBox = totalBox;
+                    }else {                        
+                        totalBox = totalBox + 1;
+                    }
+                    resta = parseInt(totalBox) - nCajas;
+                }
+                /*var numCajas = parseInt(valorCajas);
+                if (numCajas === totalBox) {
+                    totalBox = 0;
+                }*/
+                
                 html += '<tr id="pallet' + cont + '" class="pallet">';
                 html += '<td width="1" style="visibility:hidden;"><input type="text" id="f-id" class="form-control" value="' + item.IdPackingTypeSize + '" /></td>';
                 html += '<td width="250"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '" readonly/></td>'; //onChange="calcular_TotalPiezas()"
+
                 if (resta !== 0) {
                     html += '<td width="250" class="cBox"><input type="text" name="l-cantidadBox" id="l-cantidadBox" class="form-control numeric cantCajas"  onkeyup="obtTotalMat(' + cont + ')" value="' + 0 + '"></td>';
                 } else {
@@ -457,17 +545,24 @@ function registrarPallet(EstiloId) {
                 }
                 
                 html += '<td width="250"><input type="text" name="l-piezas" id="l-piezas" class="form-control numeric cant" value="' + item.Pieces + '"  readonly/></td>';
-                cantidadesEmp += item.Pieces;                  
-                html += '<td width="250"><input type="text" name="l-totalPiezas" id="l-totalPiezas" class="form-control numeric totalPiezas" value="' + 0 + '" readonly/></td>';
-                html += '<td width="250"><input type="text" name="l-totBox" id="l-totBox" class="form-control numeric totBox" value="' + totalBox + '" readonly/></td>';
-               
-                if (parseInt(valorCajas) === 0) {
-                    html += '<td width="250" class="tFalB"><input type="text" name="l-totFaltantes" id="l-totFaltantes" class="form-control numeric totFaltantes" value="' + totalBox + '" readonly/></td>';
+                cantidadesEmp += item.Pieces;  
+                if (resta !== 0) {
+                    html += '<td width="250"><input type="text" name="l-totBoxPartial" id="l-totBoxPartial" class="form-control numeric totBoxPartial" onblur="ActualizarPiezasPackingBulk(' + cont + ')" value="' + 0 + '" /></td>';
                 } else {
-                    html += '<td width="250" class="tFalB"><input type="text" name="l-totFaltantes" id="l-totFaltantes" class="form-control numeric totFaltantes" value="' + resta + '" readonly/></td>';
+                    html += '<td width="250"><input type="text" name="l-totBoxPartial" id="l-totBoxPartial" class="form-control numeric totBoxPartial" onblur="ActualizarPiezasPackingBulk(' + cont + ')" value="' + 0 + '" readonly/></td>';
+
                 }
+                
+                html += '<td width="250"><input type="text" name="l-totalPiezas" id="l-totalPiezas" class="form-control numeric totalPiezas" value="' + 0 + '" readonly/></td>';
+                html += '<td width="250"><input type="text" name="l-totBox" id="l-totBox" class="form-control numeric totBox" value="' + resta + '" readonly/></td>';
+               /* if (parseInt(valorCajas) === 0) {
+                    html += '<td width="250" class="tFalB"><input type="text" name="l-totFaltantes" id="l-totFaltantes" class="form-control numeric totFaltantes" value="' + totalBox + '" readonly/></td>';
+                } else { }*/
+                    html += '<td width="250" class="tFalB"><input type="text" name="l-totFaltantes" id="l-totFaltantes" class="form-control numeric totFaltantes" value="' + resta + '" readonly/></td>';
+                
                
-                html += '</tr>';                 
+                html += '</tr>';  
+                $(".totBoxPartial").val(partial);
             });
            
             html += '</tbody> </table>';
@@ -490,8 +585,12 @@ function registrarPallet(EstiloId) {
 }
 
 function registrarPalletPPK(EstiloId) {
+    $('label[for="Packing_TotalCartonsPPK"]').show();
+    $("#Packing_TotalCartonsPPK").show();
+    $('label[for="Packing_TotalCartonesFaltPPK"]').show();
+    $("#Packing_TotalCartonesFaltPPK").show();
     $.ajax({
-        url: "/Packing/Lista_Tallas_Por_Estilo/" + EstiloId,
+        url: "/Packing/Lista_Tallas_Por_Estilo_PPK/" + EstiloId,
         method: 'POST',
         dataType: "json",
         success: function (jsonData) {
@@ -511,18 +610,21 @@ function registrarPalletPPK(EstiloId) {
             var pCalidad = parseInt(valorCalidad);
             var numRatio = parseInt(valorRatio);
             var numTotalCart = pCalidad / numRatio;
+            var numBox = parseInt(numBoxPPK);
+           // var numBox = parseInt($("#Packing_CantBox").val());
             $("#Packing_TotalCartonsPPK").val(numTotalCart);
             
-            if (parseInt(numBoxPPK) === 0) {
+            if (numBox === 0) {
                 $("#Packing_TotalCartonesFaltPPK").val(numTotalCart);
             } else {
-                var restar = parseInt(numTotalCart) - parseInt(numBoxPPK);
+                var restar = parseInt(numTotalCart) - parseInt(numBox);
                 $("#Packing_TotalCartonesFaltPPK").val(restar);
             } 
 
             $.each(listaEmpaque, function (key, item) {
                 tipoEmp = item.NombreTipoPak;
             });
+            
             $('#Packing_PackingTypeSize_NombreTipoPak').show();
             $('#Packing_PackingTypeSize_NombreTipoPak').val(tipoEmp);
             $('label[for="Packing_CantBox"]').show();
@@ -786,7 +888,7 @@ function obtener_bacth_estilo_pack(IdEstilo) {
             });
             if (numBatch === 0) {
                 $.each(size, function (key, item) {
-                    // html += '<th>' + item.Talla + '</th>';
+                     html += '<th>' + item.Talla + '</th>';
                 });
             } else {
                 $.each(size, function (key, item) {
@@ -798,7 +900,7 @@ function obtener_bacth_estilo_pack(IdEstilo) {
             //html += '<th> Total </th>';
                 if (tipoEmpaque === 2) {
                     html += '<th> Box# </th>';
-                }
+                } 
             html += '<th> Type Packing </th>';
             html += '<th> User </th>';
             html += '<th> Turn </th>';
@@ -816,8 +918,12 @@ function obtener_bacth_estilo_pack(IdEstilo) {
                     //html += '<td class="total" >' + i.TotalPiezas + '</td>';               
                 });
                 if (item.TipoEmpaque === 2) {
+                    
                     $.each(item.Batch, function (key, i) {
-                        if (key === 1) {
+                       /* if (key === 1) {
+                            html += '<td>' + i.CantBox + '</td>';
+                        } else */
+                        if (key === 0) {
                             html += '<td>' + i.CantBox + '</td>';
                         }
                         
@@ -854,6 +960,7 @@ function obtener_bacth_estilo_pack(IdEstilo) {
                 $('#listaTallaBatch').html(html);
                 $('#listaTallaBatch').show();
                 $("#div_titulo").css("display", "inline");
+                $("#modificarPack").prop("disabled", true);
             // $("#loading").css('display', 'none');
                 $(window).scrollTop(tempScrollTop);
             }            
@@ -873,14 +980,47 @@ function obtenerImagenArte(nombreEstilo) {
 function ConfirmRev(a) {
     alertify.confirm("Are you sure you want to modify the pallet?", function (result) {
         actualizarPallet();
+        $("#modificarBatch").prop("disabled", true);
     }).set({
         title: "Confirmation"
     });
 }
 
+function ConfirmCambioPack(a) {
+    alertify.confirm("Are you sure to change the type of packing?", function (result) {
+        CambiarTipoPacking();
+    }).set({
+        title: "Confirmation"
+    });
+}
+
+function CambiarTipoPacking() {
+    var tipoEmpaque = $('#Packing_PackingTypeSize_NombreTipoPak').val();
+    var idEmpaque = 0;
+    if (tipoEmpaque === "BULK") {
+        idEmpaque = 1;
+    } else if (tipoEmpaque === "PPK") {
+        idEmpaque = 2;
+    } else {
+        idEmpaque = 3;
+    }
+    $.ajax({
+        url: "/Packing/Actualizar_Tipo_Packing",
+        datatType: 'json',
+        data: JSON.stringify({ EstiloID: estiloId, TipoEmpaque: idEmpaque }),
+        cache: false,
+        type: 'POST',
+        contentType: 'application/json',
+        success: function (data) {
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify('The type of packing has been changed correctly.', 'success', 5, null);
+            obtenerListaTallas(estiloId);
+        }
+    });
+}
+
+
 //Registrar tallas
-
-
     $(document).on("click", "#nuevaTalla", function () {
         var error = 0;
         var r = 0; var c = 0; var i = 0; var x = 1; var cadena = new Array(2);
@@ -971,12 +1111,6 @@ function enviarListaTalla(cadena, error, errorT) {
                 alertify.set('notifier', 'position', 'top-right');
                 alertify.notify('The sizes were correctly registered.', 'success', 5, null);
                 obtenerListaTallas(estiloId);
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                showError(xhr.status, xhr.responseText);
-                if (data.error === 1) {
-                    alertify.notify('Check.', 'error', 5, null);
-                }
             }
         });
     }
@@ -1042,12 +1176,6 @@ function enviarListaTallaBulk(cadena, error) {
                 alertify.set('notifier', 'position', 'top-right');
                 alertify.notify('The type of packaging is registered correctly.', 'success', 5, null);
                 obtenerListaTallas(estiloId);
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                showError(xhr.status, xhr.responseText);
-                if (data.error === 1) {
-                    alertify.notify('Check.', 'error', 5, null);
-                }
             }
         });
     }
@@ -1110,12 +1238,6 @@ function enviarListaTallaPPK(cadena, error) {
                 alertify.set('notifier', 'position', 'top-right');
                 alertify.notify('The type of packaging is registered correctly.', 'success', 5, null);
                 obtenerListaTallas(estiloId);
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                showError(xhr.status, xhr.responseText);
-                if (data.error === 1) {
-                    alertify.notify('Check.', 'error', 5, null);
-                }
             }
         });
     }
@@ -1143,7 +1265,7 @@ function enviarListaTallaPallet(cadena, error) {
         var alert = alertify.alert("Message", 'All fields are required.').set('label', 'Aceptar');
         alert.set({ transition: 'zoom' });
         alert.set('modal', false);
-    } else {
+    } else {        
         $.ajax({
             url: "/Packing/Obtener_Lista_Tallas_Packing_Pallet",
             datatType: 'json',
@@ -1157,12 +1279,6 @@ function enviarListaTallaPallet(cadena, error) {
                 alertify.notify('The packaging was registered correctly.', 'success', 5, null);
                 obtenerListaTallas(estiloId);
                
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                showError(xhr.status, xhr.responseText);
-                if (data.error === 1) {
-                    alertify.notify('Check.', 'error', 5, null);
-                }
             }
         });
     }
@@ -1188,7 +1304,7 @@ function enviarListaTallaPalletAct(cadena, error, batchID) {
         var alert = alertify.alert("Message", 'All fields are required.').set('label', 'Aceptar');
         alert.set({ transition: 'zoom' });
         alert.set('modal', false);
-    } else {
+    } else {       
         $.ajax({
             url: "/Packing/Actualizar_Lista_Tallas_Batch",
             datatType: 'json',
@@ -1220,6 +1336,7 @@ function obtenerTallas_Batch(idBatch, idTurno, idPacking, idTipoEmpaque) {
     $("#Packing_Turnos").val(idTurno);
     $('#Packing_Turnos').css('border', '');
     $("#div_titulo").css("display", "inline");
+    $("#modificarBatch").prop("disabled", false);
     if (idTipoEmpaque === 1) {
          actualizarEmpaqueBulk(idBatch);
     } else if (idTipoEmpaque === 2) {
@@ -1228,7 +1345,7 @@ function obtenerTallas_Batch(idBatch, idTurno, idPacking, idTipoEmpaque) {
                 
 }
 
-function actualizarEmpaqueBulk(idBatch) {
+function actualizarEmpaqueBulk(idBatch) {    
     batchID = idBatch;
     var actionData = "{'idEstilo':'" + estiloId + "','idBatch':'" + idBatch + "'}";
     $.ajax({
@@ -1261,9 +1378,10 @@ function actualizarEmpaqueBulk(idBatch) {
                 '<th> Size</th> ' +
                 '<th>Box#</th>' +
                 '<th>CantxBox#</th>' +
+                '<th>PartialBox#</th>' +
                 '<th>TotalPieces#</th>' +
                 '<th>TotalBox</th>' +
-                ' <th>TotalFaltante#</th>' +
+                '<th>BoxFaltante#</th>' +
                 '</tr>' +
                 '</thead><tbody>';     
 
@@ -1274,23 +1392,62 @@ function actualizarEmpaqueBulk(idBatch) {
             var cont = 0;
 
             $.each(listaEmpaque, function (key, item) {
-
-                var x = item.PackingM;
                 cont = cont + 1;
-                html += '<tr id="pallet' + cont + '" class="pallet">';
-                html += '<td width="1" style="visibility:hidden;"><input type="text" id="f-id" class="form-control " value="' + x.IdPacking + '"/></td>';
-                html += '<td width="250"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '" readonly/></td>';
-                html += '<td width="250" class="cBox"><input type="text" name="l-cantidadBox" id="l-cantidadBox" class="form-control numeric cantCajas" onkeyup="obtTotalMat(' + cont + ')" value="' + x.CantBox + '"></td>';
-                html += '<td width="250"><input type="text" name="l-piezas" id="l-piezas" class="form-control numeric cant"  value="' + item.Pieces + '"  readonly/></td>';
                 var valorCalidad = $(".calidad").parent("tr").find("td").eq(cont).text();
                 var pCalidad = parseInt(valorCalidad);
                 var numTotalBox = pCalidad / item.Pieces;
                 var totalBox = Math.floor(numTotalBox);
-                html += '<td width="250"><input type="text" name="l-totalPiezas" id="l-totalPiezas" class="form-control numeric totalPiezas" value="' + x.TotalPiezas + '" readonly/></td>';
-                html += '<td width="250"><input type="text" name="l-totBox" id="l-totBox" class="form-control numeric totBox" value="' + totalBox + '" readonly/></td>';
                 var valorCajas = $(".cajasQty").parent("tr").find("td").eq(cont).text();
                 var nCajas = parseInt(valorCajas);
-                var resta = parseInt(totalBox) - nCajas;
+                if (isNaN(nCajas)) {
+                    nCajas = 0;
+                }
+                var totalCajas = parseInt(totalBox);
+                var resta = 0;
+                if (numTotalBox < 1) {
+                    totalCajas = 1;
+                    resta = parseInt(totalCajas) - nCajas;
+                }
+                var partial = parseInt(totalCajas);
+                if (pCalidad > item.Pieces) {
+                    if (numTotalBox < 1) {
+                        totalBox = totalBox;
+                    } if (numTotalBox % 1 === 0) {
+                        totalBox = totalBox;
+                    } else {
+                        totalBox = totalBox + 1;
+                    }
+                    resta = parseInt(totalBox) - nCajas;
+                }
+                var x = item.PackingM;
+                
+                html += '<tr id="pallet' + cont + '" class="pallet">';
+                html += '<td width="1" style="visibility:hidden;"><input type="text" id="f-id" class="form-control " value="' + x.IdPacking + '"/></td>';
+                html += '<td width="250"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '" readonly/></td>';
+                if (x.CantBox === 0) {
+                    html += '<td width="250" class="cBox"><input type="text" name="l-cantidadBox" id="l-cantidadBox" class="form-control numeric cantCajas" onkeyup="obtTotalMat(' + cont + ')" value="' + x.CantBox + '" readonly></td>';
+                } else {
+                    html += '<td width="250" class="cBox"><input type="text" name="l-cantidadBox" id="l-cantidadBox" class="form-control numeric cantCajas" onkeyup="obtTotalMat(' + cont + ')" value="' + x.CantBox + '"></td>';
+                }
+                
+                html += '<td width="250"><input type="text" name="l-piezas" id="l-piezas" class="form-control numeric cant"  value="' + item.Pieces + '"  readonly/></td>';
+              //  var valorCalidad = $(".calidad").parent("tr").find("td").eq(cont).text();
+              //  var pCalidad = parseInt(valorCalidad);
+             //   var numTotalBox = pCalidad / item.Pieces;
+             //   var totalBox = Math.floor(numTotalBox);
+
+
+                if (x.Partial === 0) {
+                    html += '<td width="250"><input type="text" name="l-totBoxPartial" id="l-totBoxPartial" class="form-control numeric totBoxPartial" onblur="ActualizarPiezasPackingBulk(' + cont + ')" value="' + x.Partial + '" readonly/></td>';
+                } else {
+                    html += '<td width="250"><input type="text" name="l-totBoxPartial" id="l-totBoxPartial" class="form-control numeric totBoxPartial" onblur="ActualizarPiezasPackingBulk(' + cont + ')" value="' + x.Partial + '" /></td>';
+                }
+                
+                html += '<td width="250"><input type="text" name="l-totalPiezas" id="l-totalPiezas" class="form-control numeric totalPiezas" value="' + x.TotalPiezas + '" readonly/></td>';
+                html += '<td width="250"><input type="text" name="l-totBox" id="l-totBox" class="form-control numeric totBox" value="' + totalBox + '" readonly/></td>';
+               // var valorCajas = $(".cajasQty").parent("tr").find("td").eq(cont).text();
+               // var nCajas = parseInt(valorCajas);
+               // var resta = parseInt(totalBox) - nCajas;
                 if (parseInt(valorCajas) === 0) {
                     html += '<td width="250" class="tFalB"><input type="text" name="l-totFaltantes" id="l-totFaltantes" class="form-control numeric totFaltantes" value="' + totalBox + '" readonly/></td>';
                 } else {
@@ -1314,9 +1471,9 @@ function actualizarEmpaqueBulk(idBatch) {
     });
 }
 
-function actualizarEmpaquePPK(idBatch) {
+function actualizarEmpaquePPK(idBatch) {  
     batchID = idBatch;
-    var actionData = "{'idEstilo':'" + estiloId + "','idBatch':'" + idBatch + "'}";
+    var actionData = "{'idEstilo':'" + estiloId + "','idBatch':'" + idBatch + "'}";    
     $.ajax({
         url: "/Packing/Lista_Tallas_Packing_PPK_IdEstilo_IdBatch/",
         type: "POST",

@@ -58,18 +58,18 @@ h4 {
 }
 
 .load {
-    height: 500%;
     position: absolute;
+    z-index: 999;
+    background: white;
     border: 0;
     padding: .5em 1em;
     overflow: auto;
-    z-index: 999;
     top: 0%;
     left: 0%;
-    background: white;
+    height: 500%;
     width: 100%;
     display: none;
-    border:none;
+    border: none;
     opacity: 0.8;
 }
 .imagen_loading {
@@ -78,7 +78,10 @@ h4 {
     left: 43%;
     width: 398px;
     height: 398px;
-    background: url('../../Content/img/load.gif')
+    background: url('../../Content/img/load.gif');
 }
+
+
+
 
 

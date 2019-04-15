@@ -15,6 +15,7 @@ namespace FortuneSystem.Models
         }
     
         public DbSet<IMAGEN_ARTE> ImagenArte { get; set; }
+        public DbSet<IMAGEN_ARTE_PNL> ImagenArtePnl { get; set; }
 
         public DbSet<ARTE> Arte { get; set; }
 

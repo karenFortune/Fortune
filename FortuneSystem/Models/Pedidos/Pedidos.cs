@@ -1,16 +1,20 @@
-﻿using FortuneSystem.Models.Catalogos;
+﻿using FortuneSystem.Models.Almacen;
+using FortuneSystem.Models.Catalogos;
+using FortuneSystem.Models.Item;
 using FortuneSystem.Models.Items;
 using FortuneSystem.Models.Packing;
 using FortuneSystem.Models.PNL;
 using FortuneSystem.Models.POSummary;
 using FortuneSystem.Models.PrintShop;
 using FortuneSystem.Models.Revisiones;
+using FortuneSystem.Models.Trims;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+
 
 namespace FortuneSystem.Models.Pedidos
 {
@@ -25,8 +29,9 @@ namespace FortuneSystem.Models.Pedidos
         //[RegularExpression("/[^A-Z\u00f1\u00d1\u0020\0-9]/g", ErrorMessage = "El Orden Ref. debe contener sólo números y letras.")]
         [Display(Name = "ORDEN REF")]
         public string PO { get; set; }
+        public string NombrePO { get; set; }
 
-        
+
         [Display(Name = "PO")]
         public string VPO { get; set; }
 
@@ -48,33 +53,39 @@ namespace FortuneSystem.Models.Pedidos
         public virtual CatClienteFinal CatClienteFinal { get; set; }
         public List<CatClienteFinal> LClienteFinal { get; set; }
 
+        [Display(Name = "TYPE ORDEN")]
+        public int IdTipoOrden { get; set; }
+        public virtual CatTipoOrden CatTipoOrden { get; set; }
+        public List<CatTipoOrden> ListadoTipoOrden { get; set; }
+
         [Required]
         [Display(Name = "STATUS")]
         [ForeignKey("ID_STATUS")]
         [Column("ID_STATUS")]
         public int IdStatus { get; set; }
-
         public virtual CatStatus CatStatus { get; set; }
 
 
         [Required]
-        
-        [RegularExpression("^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$")]
+        [RegularExpression("^[0-1][0-9][- /.][0-3][0-9][- /.][0-9]{4}$", ErrorMessage = "Incorrect date format.")]
         [DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}")]
         [Display(Name = "CANCEL DATE")]
         public DateTime FechaCancel { get; set; }
+        public string FechaCancelada { get; set; }
 
-        [RegularExpression("^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$")]
+        [RegularExpression("^[0-1][0-9][- /.][0-3][0-9][- /.][0-9]{4}$", ErrorMessage = "Incorrect date format.")]
         [DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}")]
         [Display(Name = "DATE")]
         public DateTime FechaFinalOrden { get; set; }
+        public string FechaOrdenFinal { get; set; }
 
         [Required]
         // [RegularExpression("^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$", ErrorMessage = "Formato de fecha incorrecta.")]
-        [RegularExpression("^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$")]
+        [RegularExpression("^[0-1][0-9][- /.][0-3][0-9][- /.][0-9]{4}$", ErrorMessage = "Incorrect date format.")]
         [Display(Name = "REGISTRATION DATE")]
         [DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}")]
         public DateTime FechaOrden { get; set; }
+        public string FechaRecOrden { get; set; }
 
         //[Required(ErrorMessage = "Ingrese el total de unidades.")]
         [Required]
@@ -99,7 +110,7 @@ namespace FortuneSystem.Models.Pedidos
 
         public virtual Pnl PNL { get; set; }
 
-        public virtual PackingM Packing { get; set; }       
+        public virtual PackingM Packing { get; set; }
 
         public int Usuario { get; set; }
         public string NombreUsr { get; set; }
@@ -114,6 +125,90 @@ namespace FortuneSystem.Models.Pedidos
         [Display(Name = "STYLE")]
         public int IdEstilo { get; set; }
 
+        //posummary
+        public int IdSummaryOrden { get; set; }
+        public virtual InfoSummary InfoSummary { get; set; }
+        //comentarios
+        public virtual CatComentarios CatComentarios { get; set; }
+        public List<CatComentarios> ListaComentarios { get; set; }
+        public string FechaActComent { get; set; }
+        //Tipo Brand
+        public virtual CatTypeBrand CatTipoBrand { get; set; }
+        //Imagen
+        public virtual IMAGEN_ARTE ImagenArte { get; set; }
+        //Recibo
+        public virtual recibo Recibo { get; set; }
+        public string MillPO { get; set; }
+        public List<recibo> ListadoRecibosBlanks { get; set; }
+        public List<recibo> ListadoRecibos { get; set; }
+        public int TotalRecibo { get; set; }
+        public string TipoPartial { get; set; }
+        public int TotalRestante { get; set; }
+        public string TallaRecibo { get; set; }
+        //Printshop
+        public int TotalPrinted { get; set; }
+        public int RestaPrintshop { get; set; }
+        //SALIDAS ESTILOS 
+        public int DestinoSalida { get; set; }
+        //Trims
+        public virtual Trim_requests Trims { get; set; }
+        public virtual InfoPriceTickets InfoPriceTickets { get; set; }
+        //Shipped
+        public virtual Shipped Shipped { get; set; }
+        //Pack Instruction
+        public virtual InfoPackInstruction InfoPackInstruction { get; set; }
 
     }
+
+    public class InfoSummary
+    {
+        public int IdItems { get; set; }
+        public int CantidadEstilo { get; set; }
+        public int IdTalla { get; set; }
+        public string Talla { get; set; }
+        public int CantidadTalla { get; set; }
+        public int TotalEstilo { get; set; }
+        public virtual ItemDescripcion ItemDesc { get; set; }
+        public virtual CatColores CatColores { get; set; }
+        public virtual CatGenero CatGenero { get; set; }
+        public List<InfoSummary> ListSummary { get; set; }
+        public string FechaUCC { get; set; }
+
+    }
+
+    public class InfoPriceTickets
+    {
+        public int Id_request_pt { get; set; }
+        public string Estado { get; set; }
+        public int Restante { get; set; }
+        public string Descripcion { get; set; }
+        public int Id_talla { get; set; }
+        public int Total { get; set; }
+        public string Tipo_item { get; set; }
+        public string Talla { get; set; }
+        public string Fecha_recibo { get; set; }
+        public int Recibo { get; set; }
+    }
+
+    public class Shipped
+    {
+        public int Id_shipping { get; set; }
+        public int Cantidad { get; set; }
+        public int Id_summary { get; set; }
+        public int IdTalla { get; set; }
+        public List<Shipped> ListaShipped { get; set; }
+    }
+
+    public class InfoPackInstruction
+    {
+        public int IdInstructionPack { get; set; }
+        public int EstadoPack { get; set; }
+        public string Fecha_Pack { get; set; }
+        public DateTime Fecha_Rec_Pack { get; set; }
+    }
+
+  
+
+
+
 }

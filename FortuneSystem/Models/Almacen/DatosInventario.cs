@@ -108,8 +108,8 @@ namespace FortuneSystem.Models.Almacen
             try{
                 SqlCommand comTrim = new SqlCommand();
                 comTrim.Connection = conTrim.AbrirConexion();
-                comTrim.CommandText = "INSERT INTO inventario(id_sucursal,id_pedido,id_pais,id_fabricante,id_categoria_inventario,id_color,id_body_type,id_genero,id_fabric_type,id_location,total,id_size,id_customer,id_customer_final,minimo,notas,id_fabric_percent,stock,date_comment,comment,id_family_trim,id_unit,id_trim,descripcion,id_item) " +
-                "values('" + id_sucursal + "','" + id_pedido + "','0','0','" + id_tipo + "','0','0','0','0','0','" + total + "','0','" + id_customer + "','0','" + minimo_trim + "','N/A','0','N/A','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "','N/A','" + id_familia + "','" + id_unit + "','" + id_trim + "','" + descripcion + "','" + id_item + "' ) ";
+                comTrim.CommandText = "INSERT INTO inventario(id_estilo,id_sucursal,id_pedido,id_pais,id_fabricante,id_categoria_inventario,id_color,id_body_type,id_genero,id_fabric_type,id_location,total,id_size,id_customer,id_customer_final,minimo,notas,id_fabric_percent,stock,date_comment,comment,id_family_trim,id_unit,id_trim,descripcion,id_item) " +
+                "values('"+id_estilo+"','" + id_sucursal + "','" + id_pedido + "','0','0','" + id_tipo + "','0','0','0','0','0','" + total + "','0','" + id_customer + "','0','" + minimo_trim + "','N/A','0','N/A','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "','N/A','" + id_familia + "','" + id_unit + "','" + id_trim + "','" + descripcion + "','" + id_item + "' ) ";
                 comTrim.ExecuteNonQuery();
             }finally{conTrim.CerrarConexion();conTrim.Dispose();}
         }
@@ -214,6 +214,15 @@ namespace FortuneSystem.Models.Almacen
                 com_s.CommandText = "UPDATE inventario SET total=(total+'" + cantidad + "') WHERE id_inventario='" + inventario + "' and id_sucursal='" + sucursal + "' ";
                 com_s.ExecuteNonQuery();
             }finally{con_s.CerrarConexion();con_s.Dispose();}
+        }
+        public void update_inventario(int inventario, int cantidad){
+            Conexion con_s = new Conexion();
+            try{
+                SqlCommand com_s = new SqlCommand();
+                com_s.Connection = con_s.AbrirConexion();
+                com_s.CommandText = "UPDATE inventario SET total=(total+'" + cantidad + "') WHERE id_inventario='" + inventario + "'  ";
+                com_s.ExecuteNonQuery();
+            }finally { con_s.CerrarConexion(); con_s.Dispose(); }
         }
         /***********BLANKS******************************************************************************************************************************************************************************/
         public void obtener_datos_blank(int item, int usuario, string estilo, string tipo, string po, string pais, string fabricante, string color, string body_type, string size, string gender, string fabric_type, string percent, string customer, string location, int customer_final, string datecoment, string comments, string notas, string cajas, string cantidades)
@@ -360,15 +369,15 @@ namespace FortuneSystem.Models.Almacen
             }finally{con.CerrarConexion(); con.Dispose();}
             return temp;
         }
-        public void guardar_item_nuevo(string informacion,string talla){
+        public void guardar_item_nuevo(string informacion,string talla,string unit,string minimo){
             string[] datos = informacion.Split('*');
             Conexion con_s = new Conexion();
             try{
                 SqlCommand com_s = new SqlCommand();
                 com_s.Connection = con_s.AbrirConexion();
-                com_s.CommandText = "INSERT INTO items_catalogue(item,color,fabricante,size,descripcion,body_type,gender,fabric_type,fabric_percent,yarn,division,tipo) " +
+                com_s.CommandText = "INSERT INTO items_catalogue(item,color,fabricante,size,descripcion,body_type,gender,fabric_type,fabric_percent,yarn,division,tipo,unit,minimo) " +
                     "VALUES('" + datos[0] + "','" + datos[2] + "','" + datos[1] + "','" + talla + "','" + datos[11] + "','" + datos[4] + "','" + datos[5] +
-                    "' ,'" + datos[6] + "','" + datos[7] + "','" + datos[8] + "','" + datos[9] + "','" + datos[10] + "') ";
+                    "' ,'" + datos[6] + "','" + datos[7] + "','" + datos[8] + "','" + datos[9] + "','" + datos[10] + "','"+unit+"','"+minimo+"') ";
                 com_s.ExecuteNonQuery();
             }finally{con_s.CerrarConexion(); con_s.Dispose();}
         }
@@ -585,16 +594,7 @@ namespace FortuneSystem.Models.Almacen
             }finally { con.CerrarConexion(); con.Dispose(); }
             return temp;
         }
-        public void buscar_item_trim_request(int summary, int cantidad, int item,int recibo){
-            Conexion con_s = new Conexion();
-            try{
-                SqlCommand com_s = new SqlCommand();
-                com_s.Connection = con_s.AbrirConexion();
-                com_s.CommandText = "UPDATE trims_requests SET restante=restante-'" + cantidad + "',id_recibo='"+recibo+"' WHERE id_po_summary='" + summary + "' and id_item='" + item + "' ";
-                com_s.ExecuteNonQuery();
-            }finally { con_s.CerrarConexion(); con_s.Dispose(); }
-        }
-
+        
 
 
 

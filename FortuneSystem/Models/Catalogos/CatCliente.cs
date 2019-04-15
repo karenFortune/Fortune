@@ -9,7 +9,7 @@ namespace FortuneSystem.Models.Catalogos
 {
     public class CatCliente
     {
-        [Display(Name = "CUSTOMER#")] 
+        [Display(Name = "#")] 
         public int Customer { get; set; }
 
         [Required(ErrorMessage = "Please enter the customer's name.")]

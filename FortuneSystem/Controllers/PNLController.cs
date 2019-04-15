@@ -47,7 +47,7 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult Obtener_Lista_Tallas_Pnl(List<string> ListTalla, int TurnoID, int EstiloID, int MaquinaID, String StatusID)
+        public JsonResult Obtener_Lista_Tallas_Pnl(List<string> ListTalla, int TurnoID, int EstiloID, int MaquinaID, string StatusID, string Comentarios)
         {
             Pnl tallaItem = new Pnl();
             int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
@@ -55,6 +55,7 @@ namespace FortuneSystem.Controllers
             tallaItem.TipoTurno = TurnoID;
             tallaItem.IdSummary = EstiloID;
             tallaItem.Maquina = MaquinaID;
+            tallaItem.Comentarios = Comentarios;
             if (StatusID != null)
             {
                 tallaItem.EstadoPallet = Convert.ToBoolean(StatusID);
@@ -106,7 +107,7 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult Actualizar_Lista_Tallas_Batch(List<string> ListTalla, int TurnoID, int EstiloID, int IdBatch, int MaquinaID, string StatusID)
+        public JsonResult Actualizar_Lista_Tallas_Batch(List<string> ListTalla, int TurnoID, int EstiloID, int IdBatch, int MaquinaID, string StatusID, string Comentarios)
         {
             Pnl tallaItem = new Pnl();
             int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
@@ -115,6 +116,7 @@ namespace FortuneSystem.Controllers
             tallaItem.IdSummary = EstiloID;
             tallaItem.IdBatch = IdBatch;
             tallaItem.Maquina = MaquinaID;
+            tallaItem.Comentarios = Comentarios;
             if (StatusID != null)
             {
                 tallaItem.EstadoPallet = Convert.ToBoolean(StatusID);
@@ -152,7 +154,7 @@ namespace FortuneSystem.Controllers
                         tallaItem.Defect = Int32.Parse(defecto);
                         tallaItem.Repair = Int32.Parse(repair);
                         tallaItem.IdPnl = objPnl.ObtenerIdPnlPorBatchEstilo(tallaItem.IdBatch, tallaItem.IdSummary, tallaItem.IdTalla);
-                        tallaItem.Usuario = objPrint.ObtenerIdUsuarioPorBatchEstilo(tallaItem.IdBatch, tallaItem.IdSummary, tallaItem.IdTalla);
+                        tallaItem.Usuario = objPnl.ObtenerIdUsuarioPorBatchPNLEstilo(tallaItem.IdBatch, tallaItem.IdSummary, tallaItem.IdTalla);
                         objPnl.ActualizarTallasPnl(tallaItem);
 
                     }

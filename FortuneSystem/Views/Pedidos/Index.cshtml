@@ -10,12 +10,12 @@
         background: #b3e0ff;
     }
 
-    table thead {
+    #tablaPO thead {
         color: #fff;
         background-color: #006bb3;
     }
 
-    th {
+    #tablaPO th {
         color: #fff;
         background-color: #006bb3;
     }
@@ -27,6 +27,16 @@
         height: 40px;
         border: none;
         font-size: 14px;
+        font-weight: 600;
+    }
+
+    .btnPdf {
+        margin-left: 30px;
+        margin-top: 1px;
+        width: 70px;
+        height: 28px;
+        border: none;
+        font-size: 25px;
         font-weight: 600;
     }
 
@@ -68,6 +78,11 @@
             border-radius: 15px;
         }
 
+
+    body .editar {
+        width: 120% !important;
+        margin-left: -20% !important;
+    }
 </style>
 @{
     if (TempData["itemEditar"] != null)
@@ -95,6 +110,14 @@
 
         </script>
     }
+    if (TempData["cancelarStylePO"] != null)
+    {
+        <script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["cancelarStylePO"])), 'success', 5, null);
+
+        </script>
+    }
 
     <script type="text/javascript">
         function confirmar() {
@@ -119,6 +142,22 @@
 
 }
 
+</div>
+<div class="modal fade" id="editarEstiloModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="editarEstiloModal" style="width: 110% !important">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content editar">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">EDIT PO</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="ContenedorEditarModal"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary " data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="container-fluid" style="margin-left:20em; margin-right:10em; ">
     <div class="panel panel-primary" id="listaPO">
@@ -154,15 +193,15 @@
         </p>
 
         @*<p id="date_filter_fo">
-                 <span id="date-label-from_fo" class="date-label">From Range Date Orden: </span><input class="date_range_filter date" type="text" id="datepicker_from_fo" />
-                <span id="date-label-to_fo" class="date-label">To:<input class="date_range_filter date" type="text" id="datepicker_to_fo" />
-        </p>*@
+                     <span id="date-label-from_fo" class="date-label">From Range Date Orden: </span><input class="date_range_filter date" type="text" id="datepicker_from_fo" />
+                    <span id="date-label-to_fo" class="date-label">To:<input class="date_range_filter date" type="text" id="datepicker_to_fo" />
+            </p>*@
 
 
         <div id="botones"></div>
         <br />
         <br />
-        <div id="div_tabla_estilos" style="width: 100%; height:670px; overflow:auto; ">
+        <div id="div_tabla_estilos" style="width: 100%; height:650px; overflow:auto; ">
             <table align="center" class="table table-striped" id="tablaPO">
                 <thead>
                     <tr>
@@ -186,12 +225,13 @@
                             @Html.DisplayNameFor(model => model.TotalUnidades)
                         </th>
                         <th>ACTIONS</th>
+
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
+                        <tr ondblclick="location.href = '@(Url.Action("Detalles", "Pedidos", new { id = item.IdPedido }))'">
 
                             <td>
                                 @Html.DisplayFor(modelItem => item.PO)
@@ -212,19 +252,29 @@
                                 @Html.DisplayFor(modelItem => item.TotalUnidades)
                             </td>
                             <td>
-                                <a href="@Url.Action("Detalles", "Pedidos",  new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Details Style"> <span class="glyphicon glyphicon-search " aria-hidden="true" style="padding: 0px !important;"></span></a>
-                                @if ((int)Session["idCargo"] == 15 || (int)Session["idCargo"] == 1)
+                                @*<a href="@Url.Action("Detalles", "Pedidos",  new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Details Style"> <span class="glyphicon glyphicon-search " aria-hidden="true" style="padding: 0px !important;"></span></a>*@
+                                @if (/*(int)Session["idCargo"] == 15 ||*/ (int)Session["idCargo"] == 1 || (int)Session["idCargo"] == 6)
                                 {
-                                    <a href="@Url.Action("Revision", "Pedidos", new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Check PO" onclick="event.preventDefault();ConfirmRev(this)"> <span class="glyphicon glyphicon-check " aria-hidden="true" style="padding: 0px !important;"></span></a>
+
+                                    <a href="#" data-value="@item.IdPedido" class="btn edit_driver edicion_driver btnEdit" Title="Edit PO"> <span class="glyphicon glyphicon-check " aria-hidden="true" style="padding: 0px !important;"></span></a>
+                                    <a href="@Url.Action("Revision", "Pedidos", new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Check PO" onclick="event.preventDefault();ConfirmRev(this)"> <span class="glyphicon glyphicon-paste " aria-hidden="true" style="padding: 0px !important;"></span></a>
                                     <a href="@Url.Action("CancelarPO", "Pedidos", new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Cancel PO" onclick="event.preventDefault();ConfirmCancel(this)"> <span class="glyphicon glyphicon-ban-circle " aria-hidden="true" style="padding: 0px !important;"></span></a>
 
                                     if (item.Historial == 1)
                                     {
-                                        <a href="@Url.Action("HistorialPedidos", "Pedidos", new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Record PO" onclick="event.preventDefault();ConfirmCancel(this)"> <span class="glyphicon glyphicon-share " aria-hidden="true" style="padding: 0px !important;"></span></a>
+                                        <a href="@Url.Action("HistorialPedidos", "Pedidos", new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Record PO"> <span class="glyphicon glyphicon-share " aria-hidden="true" style="padding: 0px !important;"></span></a>
                                     }
 
                                     //@Html.ActionLink(" ", null, new { id = item.IdPedido }, new { @class = "btn edit_driver edicion_driver fa fa-file-pdf-o fa-lg", @Title = "Report", onclick = "imprimir_reporte_po('" + item.IdPedido + " ')" })
+
+                                } else if ((int)Session["idCargo"] == 15)
+                                {
+
+                                 
+                                    //@Html.ActionLink(" ", null, new { id = item.IdPedido }, new { @class = "btn edit_driver edicion_driver fa fa-file-pdf-o fa-lg", @Title = "Report", onclick = "imprimir_reporte_po('" + item.IdPedido + " ')" })
+
                                 }
+
                             </td>
                         </tr>
                     }
@@ -249,7 +299,7 @@
             });
 
 
-    }    
+    }
     function ConfirmCancel(a) {
 
         alertify.confirm("Are you sure you want to cancel PO ?", function (result) {
@@ -261,6 +311,15 @@
                 title: "Confirmation"
             });
     }
+
+    $(document).on('click', '.btnEdit', function () {
+        $("#loading").css('display', 'none');
+        var id = $(this).data("value");
+        $("#editarEstiloModal").modal("show");
+        $("#ContenedorEditarModal").load("/Pedidos/EditarPO/" + id, function () {
+            $("#IdPedido").val(id);
+        });
+    });
 
     function imprimir_reporte_po(id) {
         $.ajax({

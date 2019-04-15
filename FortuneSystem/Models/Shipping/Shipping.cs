@@ -49,7 +49,7 @@ namespace FortuneSystem.Models.Shipping
         public string seal { get; set; }
         public string replacement { get; set; }
         public string fecha { get; set; }
-        public int dc { get; set; }
+        public string dc { get; set; }
         public string parte { get; set; }
         public string number_po { get; set; }
         public List<Tarima> lista_tarimas { get; set; }
@@ -63,6 +63,12 @@ namespace FortuneSystem.Models.Shipping
 
         public int total_po { get; set; }
         public int total_enviado { get; set; }
+
+        public int total_tarimas { get; set; }
+        public int total_cajas { get; set; }
+        public int total_piezas { get; set; }
+        public string siglas_cliente { get; set; }
+        public List<Labels> lista_labels{ get; set; }
     }
 
     public class Tarima {
@@ -76,6 +82,7 @@ namespace FortuneSystem.Models.Shipping
         public int id_assortment { get; set; }
         public int cartones { get; set; }
         public string nombre { get; set; }
+        
         public int block { get; set; }
         public List<estilos> lista_estilos { get; set; }
         public int pk { get; set; }
@@ -93,12 +100,12 @@ namespace FortuneSystem.Models.Shipping
         public string estilo { get; set; }
         public int cajas { get; set; }
         public string descripcion { get; set; }
-        public string dc { get; set; }
+        
         public int boxes { get; set; }
         public int number_po { get; set; }
         public string descripcion_final { get; set; }
         public List<ratio_tallas> lista_ratio { get; set; }
-        public int tipo_empaque { get; set; }
+        
         public int id_shipping_id { get; set; }
         public int pk { get; set; }
         public string tipo { get; set; }
@@ -108,11 +115,22 @@ namespace FortuneSystem.Models.Shipping
         public string description { get; set; }
         public int piezas { get; set; }
         public List<Cantidades_Estilos> lista_cantidades { get; set; }
+
+        public string dc { get; set; }
+        
+        public string ext { get; set; }
+        public int tipo_empaque { get; set; }
+        public int index_dc { get; set; }
+        public int usado{ get; set; }
+        public Assortment assort { get; set; }
+        public string assort_nombre { get; set; }
+
     }
 
     public class ratio_tallas {
         public int id_estilo { get; set; }
         public int ratio { get; set; }
+        public int piezas { get; set; }
         public int id_talla { get; set; }
         public string talla { get; set; }
         public int total_talla { get; set; }
@@ -127,6 +145,11 @@ namespace FortuneSystem.Models.Shipping
         public int ejemplos { get; set; }
         public int extras { get; set; }
         public string tipo { get; set; }
+
+        public int id_packing_assort { get; set; }
+        public string packing_name { get; set; }
+        public string assort_name { get; set; }
+        public int tipo_empaque { get; set; }
 
     }
 
@@ -147,6 +170,39 @@ namespace FortuneSystem.Models.Shipping
         public int tipo_empaque { get; set; }
         public List<ratio_tallas> lista_ratio { get; set; }
     }
+
+
+
+    public class estilo_shipping{
+        public string nombre_entrega { get; set; }
+        public string nombre_recibe { get; set; }
+        public string po { get; set; }
+        public int id_pedido { get; set; }
+        public int id_estilo { get; set; }
+        public string estilo { get; set; }
+        public string descripcion { get; set; }
+        public int id_summary{ get; set; }
+        public int id_color { get; set; }
+        public string color { get; set; }
+        public int id_talla { get; set; }
+        public string talla { get; set; }
+        public int piezas { get; set; }
+        public int cajas { get; set; }
+        public int tipo_empaque { get; set; }
+        public List<ratio_tallas> lista_ratio { get; set; }
+        public List<Empaque> lista_empaque { get; set; }
+
+    }
+    public class Empaque{
+
+        public int tipo_empaque { get; set; }
+        public List<ratio_tallas> lista_ratio { get; set; }
+
+        public int id_packing_assort { get; set; }
+        public string packing_name { get; set; }        
+        public string assort_name { get; set; }        
+    }
+
 
     public class Drivers {
         public int id_driver { get; set; }
@@ -189,6 +245,9 @@ namespace FortuneSystem.Models.Shipping
         public int id_estilo { get; set; }
         public int id_assort { get; set; }
         public List<Talla> lista_tallas { get; set; }
+        public int cantidad_pedido { get; set; }
+        public int total_pedido { get; set; }
+        public int total_enviado { get; set; }
     }
 
     public class Talla{
@@ -263,6 +322,7 @@ namespace FortuneSystem.Models.Shipping
         public string estado { get; set; }
     }
 
+    
 
 
 

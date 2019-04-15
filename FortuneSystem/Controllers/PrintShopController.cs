@@ -45,13 +45,14 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult Obtener_Lista_Tallas_PrintShop(List<string> ListTalla, int TurnoID, int EstiloID, int MaquinaID, String StatusID)
+        public JsonResult Obtener_Lista_Tallas_PrintShop(List<string> ListTalla, int TurnoID, int EstiloID, int MaquinaID, string StatusID, string Comentarios)
         {
             PrintShopC tallaItem = new PrintShopC();
             int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
             tallaItem.Usuario = noEmpleado;
             tallaItem.TipoTurno = TurnoID;
             tallaItem.Maquina = MaquinaID;
+            tallaItem.Comentarios = Comentarios;
             if(StatusID != null)
             {
                 tallaItem.EstadoPallet = Convert.ToBoolean(StatusID);
@@ -104,7 +105,7 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult Actualizar_Lista_Tallas_Batch(List<string> ListTalla, int TurnoID, int EstiloID, int IdBatch, int MaquinaID, string StatusID)
+        public JsonResult Actualizar_Lista_Tallas_Batch(List<string> ListTalla, int TurnoID, int EstiloID, int IdBatch, int MaquinaID, string StatusID, string Comentarios)
         {
             
             PrintShopC tallaItem = new PrintShopC();
@@ -114,6 +115,7 @@ namespace FortuneSystem.Controllers
             tallaItem.IdSummary = EstiloID;
             tallaItem.IdBatch = IdBatch;
             tallaItem.Maquina = MaquinaID;
+            tallaItem.Comentarios = Comentarios;
             if (StatusID != null)
             {
                 tallaItem.EstadoPallet = Convert.ToBoolean(StatusID);

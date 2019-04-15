@@ -9,13 +9,23 @@ function probar(id) {
         $('#tabless tr').removeClass('highlighted');
         $(this).addClass('highlighted');     
     });  
-    obtener_tallas_item(id);
+    //obtener_tallas_item(id);
    
 }
 
+$(document).on("dblclick", "#tabless tr", function () {
+    var row = this.rowIndex;
+    var numEstilo = $('#tabless tr:eq(' + row + ') td:eq(0)').html();
+    //var estilo = $('#tabless tr:eq(' + row + ') td:eq(2)').html();
+    obtener_tallas_item(numEstilo);
+});
 
 
 $(document).on("input", ".numeric", function () {
+    this.value = this.value.replace(/\D/g, '');
+});
+
+$(document).on("input", ".number", function () {
     this.value = this.value.replace(/\D/g, '');
 });
 
@@ -49,7 +59,7 @@ $(document).on("input", ".numeric", function () {
 
             var valor = $(el).children().val();
 
-           if (valor === '0' || valor === '') {
+           if (valor === '') {
                 error++;
                 $(el).children().css('border', '2px solid #e03f3f');
 
@@ -84,7 +94,7 @@ function enviarListaTallaPrintShop(cadena, error) {
     var idTurno = $("#PrintShopC_Turnos option:selected").val();
     var idMaquina = $("#PrintShopC_Maquinas option:selected").val();
     var idStatus = $("input[name='PrintShopC.EstadoPallet']:checked").val();
-
+    var comentario = $("#PrintShopC_Comentarios").val();
       if (error !== 0) {
             var alert = alertify.alert("Message", 'All fields are required.').set('label', 'Aceptar');
             alert.set({ transition: 'zoom' });
@@ -93,14 +103,14 @@ function enviarListaTallaPrintShop(cadena, error) {
         $.ajax({
             url: "/PrintShop/Obtener_Lista_Tallas_PrintShop",
             datatType: 'json',
-            data: JSON.stringify({ ListTalla: cadena, TurnoID: idTurno, EstiloID: estiloId, MaquinaID: idMaquina, StatusID: idStatus }),
+            data: JSON.stringify({ ListTalla: cadena, TurnoID: idTurno, EstiloID: estiloId, MaquinaID: idMaquina, StatusID: idStatus, Comentarios: comentario }),
             cache: false,
             type: 'POST',
             contentType: 'application/json',
             success: function (data) {
                 alertify.set('notifier', 'position', 'top-right');
                 alertify.notify('The batch was correctly registered.', 'success', 5, null);
-                $('input[type="number"]').val('0');
+                $('.number').val('0');
                 obtener_tallas_item(estiloId);
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -174,6 +184,7 @@ function enviarListaTallaBatchPrintShop(cadena, error,batchID) {
     var idTurno = $("#PrintShopC_Turnos option:selected").val();
     var idMaquina = $("#PrintShopC_Maquinas option:selected").val();
     var idStatus = $("input[name='PrintShopC.EstadoPallet']:checked").val();
+    var comentario = $("#PrintShopC_Comentarios").val();
     if (error !== 0) {
         var alert = alertify.alert("Message", 'All fields are required.').set('label', 'Aceptar');
         alert.set({ transition: 'zoom' });
@@ -183,14 +194,15 @@ function enviarListaTallaBatchPrintShop(cadena, error,batchID) {
             url: "/PrintShop/Actualizar_Lista_Tallas_Batch",
             datatType: 'json',
             data: JSON.stringify({
-                ListTalla: cadena, TurnoID: idTurno, EstiloID: estiloId, IdBatch: batchID, MaquinaID: idMaquina, StatusID: idStatus}),
+                ListTalla: cadena, TurnoID: idTurno, EstiloID: estiloId, IdBatch: batchID, MaquinaID: idMaquina, StatusID: idStatus, Comentarios: comentario
+            }),
             cache: false,
             type: 'POST',
             contentType: 'application/json',
             success: function (data) {
                 alertify.set('notifier', 'position', 'top-right');
                 alertify.notify('The batch was modified correctly.', 'success', 5, null);
-                $('input[type="number"]').val('0');
+                $('.number').val('0');
                 obtener_tallas_item(estiloId);
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -219,6 +231,7 @@ function buscar_estilos(ID) {
 
             $.each(lista_estilo, function (key, item) {
                 html += '<tr  onclick="probar(' + item.IdItems + ')">';
+                html += '<td>' + item.IdItems + '</td>';
                 html += '<td>' + item.EstiloItem + '</td>';
                 html += '<td>' + item.ItemDescripcion.Descripcion + '</td>';
                 html += '<td>' + item.CatColores.CodigoColor + '</td>';
@@ -249,21 +262,48 @@ function obtener_tallas_item(IdEstilo) {
     var tempScrollTop = $(window).scrollTop(); 
     $("#panelPrintShop").css('display', 'inline');
     $("#loading").css('display', 'inline');
+    $("#InfoSummary_IdItems").val(IdEstilo);
     estiloId = IdEstilo;
     obtener_tallas_PO(IdEstilo);
     $.ajax({
-        url: "/Pedidos/Lista_Tallas_Estilo/" + IdEstilo,
+        url: "/Pedidos/Lista_Tallas_Estilo_PrintShop/" + IdEstilo,
         type: "POST",
         contentType: "application/json;charset=UTF-8",
         dataType: "json",
         success: function (jsonData) {
             var html = '';
             var estilos = jsonData.Data.estilos;
+            var EstiloDescription;
+            var lista_estilo_Desc = jsonData.Data.listaTalla;
+            $.each(lista_estilo_Desc, function (key, item) {
+
+                EstiloDescription = item.DescripcionEstilo;
+
+            });
+            var lista_Datos_Staging = jsonData.Data.listDatosStaging;
+            var datoColor="";
+            var datoPais="";
+            var datoPorc="";
+            $.each(lista_Datos_Staging, function (key, item) {
+
+                datoColor = item.NombreColor;
+                datoPais = item.Pais;
+                datoPorc = item.Porcentaje;
+
+            });
+            var datoColor2 = datoColor === "" ? "N/A" : datoColor;
+            var datoPais2 = datoPais === "" ? "N/A" : datoPais;
+            var datoPorc2 = datoPorc === "" ? "N/A" : datoPorc;
+    
+            var dt = $("#InfoSummary_IdItems").val();
             if (estilos !== '') {
-                $("#div_estilo").html("<h2>Item: " + estilos + "</h2>");
+                $("#div_datos_staging").html("<h3>Color:" + $.trim(datoColor2) + " ---" + " País:" + $.trim(datoPais2) + " --- %:" + $.trim(datoPorc2) + "</h3>");
+                $("#div_estilo").html("<h2>Item: " + estilos + "-" + $.trim(EstiloDescription) + "</h2>");
                 $("#div_estilo").show();
+                $("#div_datos_staging").show();
             } else {
                 $("#div_estilo").hide(); 
+                $("#div_datos_staging").hide(); 
             }
             
             var lista_estilo = jsonData.Data.listaTalla;
@@ -431,7 +471,7 @@ function obtener_tallas_item(IdEstilo) {
                 if (listaTBatch === 0) {
                     item = 0;
                 }
-                var resta = parseFloat(cantidades_array[i]) - parseFloat(item);
+                var resta = parseFloat(item) - parseFloat(cantidades_array[i]);
          
                 if (resta === 0) {
                     html += '<td class="restaPrint" style="color:black;">' + resta + '</td>';
@@ -453,6 +493,7 @@ function obtener_tallas_item(IdEstilo) {
             $('.tbodys').html(html);
             $("#consultaTalla").css("visibility", "visible");
             $("#div_estilo").css("visibility", "visible");
+            $("#div_datos_staging").css("visibility", "visible");
             $("#arte").css("visibility", "visible");
             obtenerImagenPNL(estilos);
             obtenerImagenArte(estilos);
@@ -513,6 +554,7 @@ function obtener_bacth_estilo(IdEstilo) {
            
             html += '<th> Total </th>';
             html += '<th> User </th>';
+            html += '<th> Comments </th>';
             html += '<th> Turn </th>';
             html += '<th> Machine </th>';
             html += '<th> User Modif </th>';
@@ -532,6 +574,13 @@ function obtener_bacth_estilo(IdEstilo) {
                 });
                 html += '<td>' + cantidad + '</td>';
                 html += '<td>' + item.NombreUsr + '</td>';
+                if (item.Comentarios === '') {
+                    item.Comentarios = 'N/A';
+                    html += '<td>' + item.Comentarios + '</td>';
+                } else {
+                    html += '<td>' + item.Comentarios + '</td>';
+                }
+                
                 if (item.TipoTurno === 1) {
                     html += '<td>First Turn</td>';
                 } else {
@@ -541,7 +590,7 @@ function obtener_bacth_estilo(IdEstilo) {
                 html += '<td>' + item.NombreUsrModif + '</td>';
                 html += '<td>' + item.Status + '</td>';
                 if (cargoUser === 5 || cargoUser === 1) {
-                    html += '<td><a href="#" onclick="obtenerTallas_Batch(' + item.IdBatch + ',' + item.TipoTurno + ',' + item.Maquina + ',' + item.IdPrintShop + ',\'' + item.Status + '\');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Details Bacth"></a></td>';
+                    html += '<td><a href="#" onclick="obtenerTallas_Batch(' + item.IdBatch + ',' + item.TipoTurno + ',' + item.Maquina + ',' + item.IdPrintShop + ',\'' + item.Comentarios +'\''+ ',\'' + item.Status + '\');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Details Bacth"></a></td>';
                 }
                
                 html += '</tr>';
@@ -556,6 +605,9 @@ function obtener_bacth_estilo(IdEstilo) {
             $("#div_estilo_batch").css("visibility", "visible");
             $("#loading").css('display', 'none');
             $(window).scrollTop(tempScrollTop); 
+            var IdEstiloInf = $("#InfoSummary_IdItems").val();
+            //Lista de Printshop
+            obtenerListaPrint(IdEstiloInf);
 
         },
         error: function (errormessage) { alert(errormessage.responseText); }
@@ -565,7 +617,7 @@ function obtener_bacth_estilo(IdEstilo) {
 
 function obtener_tallas_PO(IdEstilo) {
     $.ajax({
-        url: "/Pedidos/Lista_Tallas_Estilo/" + IdEstilo,
+        url: "/Pedidos/Lista_Tallas_Estilo_PrintShop/" + IdEstilo,
         type: "POST",
         contentType: "application/json;charset=UTF-8",
         dataType: "json",
@@ -613,6 +665,7 @@ function obtenerTallas_PrintShop(idEstilo) {
     var tempScrollTop = $(window).scrollTop(); 
     $("#PrintShopC_Turnos").val(0);
     $("#PrintShopC_Maquinas").val(0);
+    $("#PrintShopC_Comentarios").val('');
     //$("#loading").css('display', 'inline');
     CalcularTotal();
     calcular_Restantes();
@@ -689,7 +742,7 @@ function obtenerTallas_PrintShop(idEstilo) {
                 html += '<td class="printed"><input type="text" id="cantidad" class="txt form-control print numeric" onChange="calcular_Printed()" value="' + item.Printed + '"/></td>';
                 cantidades += item.Printed;
             });
-            html += '<td><input type="number" id="totalP" class="form-control "  value="' + cantidades + '" readonly/></td>';
+            html += '<td><input type="text" id="totalP" class="form-control number"  value="' + cantidades + '" readonly/></td>';
             html += '</tr><tr><td>MisPrint</td>';
             var misPrintCant = 0;
             $.each(lista_estilo_Tallas, function (key, item) {
@@ -701,7 +754,7 @@ function obtenerTallas_PrintShop(idEstilo) {
 
                 misPrintCant += item.MisPrint;
             });
-            html += '<td><input type="number" id="totalM" class="form-control totalM" value="' + misPrintCant + '" readonly/></td>';
+            html += '<td><input type="text" id="totalM" class="form-control number totalM" value="' + misPrintCant + '" readonly/></td>';
             html += '</tr><tr ><td class="dato">Defect</td>';
             var defectCant = 0;
 
@@ -714,7 +767,7 @@ function obtenerTallas_PrintShop(idEstilo) {
 
                 defectCant += item.Defect;
             });
-            html += '<td><input type="number" id="totalD" class="form-control totalD" value="' + defectCant + '" readonly/></td>';
+            html += '<td><input type="text" id="totalD" class="form-control number totalD" value="' + defectCant + '" readonly/></td>';
             html += '</tr><tr ><td class="dato">Repair</td>';
             var repairCant = 0;
 
@@ -727,19 +780,19 @@ function obtenerTallas_PrintShop(idEstilo) {
 
                 repairCant += item.Repair;
             });
-            html += '<td><input type="number" id="totalR" class="form-control totalR" value="' + repairCant + '" readonly/></td>';
+            html += '<td><input type="text" id="totalR" class="form-control number totalR" value="' + repairCant + '" readonly/></td>';
             html += '</tr><tr ><td class="total">+/-</td>';
             var total = 0;
             $.each(lista_estilo_Tallas, function (key, item) {
                 html += ' <div class="span7">';              
                     item.Defect = item.Talla;
                     item.Defect = 0;
-                    html += '<td ><input type="number" id="falt" class="form-control totalFal" value="' + item.Defect + '" readonly/></td>';
+                    html += '<td ><input type="text" id="falt" class="form-control number totalFal" value="' + item.Defect + '" readonly/></td>';
              
                 html += ' </div>';
                 total = cantidades + misPrintCant + defectCant + repairCant;
             });
-            html += '<td><input type="number" id="totalF" class="form-control totalF" value="' + total + '" readonly/></td>';
+            html += '<td><input type="text" id="totalF" class="form-control number totalF" value="' + total + '" readonly/></td>';
             html += '</tr>';
 
 
@@ -755,11 +808,12 @@ function obtenerTallas_PrintShop(idEstilo) {
 }
 
 
-function obtenerTallas_Batch(idBatch, idTurno, idMaquina, idPrintShop, idStatus) {
+function obtenerTallas_Batch(idBatch, idTurno, idMaquina, idPrintShop, comentario, idStatus) {
     var tempScrollTop = $(window).scrollTop(); 
     $("#div_tabla_print").show();
     $("#PrintShopC_Turnos").val(idTurno);
     $("#PrintShopC_Maquinas").val(idMaquina);
+    //$("#PrintShopC_Comentarios").val(comentario);
     if (idStatus === "C") {
         $("input[name='PrintShopC.EstadoPallet'][value='true']").prop("checked", true);
     } else {
@@ -852,7 +906,7 @@ function obtenerTallas_Batch(idBatch, idTurno, idMaquina, idPrintShop, idStatus)
 
                 cantidades += item.Printed;
             });
-            html += '<td><input type="number" id="totalP" class="form-control "  value="' + cantidades + '" readonly/></td>';
+            html += '<td><input type="text" id="totalP" class="form-control number"  value="' + cantidades + '" readonly/></td>';
             html += '</tr><tr><td>MisPrint</td>';
             var misPrintCant = 0;
             $.each(lista_estilo, function (key, item) {
@@ -866,7 +920,7 @@ function obtenerTallas_Batch(idBatch, idTurno, idMaquina, idPrintShop, idStatus)
 
                 misPrintCant += item.MisPrint;
             });
-            html += '<td><input type="number" id="totalM" class="form-control totalM" value="' + misPrintCant + '" readonly/></td>';
+            html += '<td><input type="text" id="totalM" class="form-control number totalM" value="' + misPrintCant + '" readonly/></td>';
             html += '</tr><tr ><td class="dato">Defect</td>';
             var defectCant = 0;
             $.each(lista_estilo, function (key, item) {
@@ -880,7 +934,7 @@ function obtenerTallas_Batch(idBatch, idTurno, idMaquina, idPrintShop, idStatus)
 
                 defectCant += item.Defect;
             });
-            html += '<td><input type="number" id="totalD" class="form-control totalD" value="' + defectCant + '" readonly/></td>';
+            html += '<td><input type="text" id="totalD" class="form-control number totalD" value="' + defectCant + '" readonly/></td>';
             html += '</tr><tr ><td class="dato">Repair</td>';
             var repairCant = 0;
             $.each(lista_estilo, function (key, item) {
@@ -894,7 +948,7 @@ function obtenerTallas_Batch(idBatch, idTurno, idMaquina, idPrintShop, idStatus)
 
                 repairCant += item.Repair;
             });
-            html += '<td><input type="number" id="totalR" class="form-control totalR" value="' + repairCant + '" readonly/></td>';
+            html += '<td><input type="text" id="totalR" class="form-control number totalR" value="' + repairCant + '" readonly/></td>';
            /* html += '</tr><tr ><td class="total">+/-</td>';
             var total = 0;
             $.each(lista_estilo, function (key, item) {
@@ -915,12 +969,12 @@ function obtenerTallas_Batch(idBatch, idTurno, idMaquina, idPrintShop, idStatus)
                 html += ' <div class="span7">';
                 item.Defect = item.Talla;
                 item.Defect = 0;
-                html += '<td ><input type="number" id="falt" class="form-control totalFal" value="' + item.Defect + '" readonly/></td>';
+                html += '<td ><input type="text" id="falt" class="form-control number totalFal" value="' + item.Defect + '" readonly/></td>';
 
                 html += ' </div>';
                 total = cantidades + misPrintCant + defectCant + repairCant;
             });
-            html += '<td><input type="number" id="totalF" class="form-control totalF" value="' + total + '" readonly/></td>';
+            html += '<td><input type="text" id="totalF" class="form-control number totalF" value="' + total + '" readonly/></td>';
             html += '</tr>';
 
             $('.tbodyprint').html(html);

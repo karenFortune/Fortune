@@ -63,6 +63,7 @@ namespace FortuneSystem.Models.Staging
 
     public class pedido_staging {
         public int id_pedido { get; set; }
+        public int id_summary{ get; set; }
         public string po { get; set; }
         public string customer { get; set; }
         public int id_customer { get; set; }
@@ -77,6 +78,7 @@ namespace FortuneSystem.Models.Staging
         public string descripcion { get; set; }
         public string fecha { get; set; }
         public string turno { get; set; }
+        public string tipo_stag { get; set; }
     }
 
     public class stag_conteo {
@@ -97,14 +99,28 @@ namespace FortuneSystem.Models.Staging
     }
 
     public class StagingD {
-
         public string talla { get; set; }
         public int id_talla { get; set; }
         public int total { get; set; }
 
     }
+    public class Talla_staging{
+        public int id_summary { get; set; }
+        public int id_pedido { get; set; }
+        public int id_estilo{ get; set; }
+        public string talla { get; set; }
+        public int id_talla { get; set; }
+        public int total { get; set; }
+        public int piezas { get; set; }
+    }
 
+    public class StagingDatos
+    {
+        public string Pais { get; set; }
+        public string Porcentaje { get; set; }
+        public string NombreColor { get; set; }
 
+    }
 
 
 

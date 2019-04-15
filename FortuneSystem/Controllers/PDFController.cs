@@ -73,13 +73,13 @@ namespace FortuneSystem.Controllers
 
         }
        
-        [AllowAnonymous]
+        /*[AllowAnonymous]
         public ActionResult papeleta_staging_vacias()
         {
             int salida = Convert.ToInt32(Session["id_transfer_ticket"]);            
             ViewBag.color = sg.obtener_color_item(Convert.ToInt32(Session["id_inventario"]));
             ViewBag.pais = sg.obtener_pais_item(Convert.ToInt32(Session["id_inventario"]));
-            return new ViewAsPdf("papeleta_staging_vacias", ds.lista_papeleta(Convert.ToInt32(Session["id_inventario"]), Convert.ToInt32(Session["turno"])))
+          return new ViewAsPdf("papeleta_staging_vacias", ds.lista_papeleta(Convert.ToInt32(Session["id_inventario"]), Convert.ToInt32(Session["turno"])))
             {
                 FileName = filename,
                 PageOrientation = Rotativa.Options.Orientation.Portrait,
@@ -87,7 +87,7 @@ namespace FortuneSystem.Controllers
                 PageMargins = new Rotativa.Options.Margins(15, 10, 15, 10),
                 CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
             };
-        }
+        }*/
         //papeleta_staging
         [AllowAnonymous]
         public ActionResult papeleta_staging(){

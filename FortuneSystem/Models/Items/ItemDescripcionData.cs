@@ -105,7 +105,7 @@ namespace FortuneSystem.Models.Items
             return itemDesc;
 
         }
-
+        //Obtener el id de un estilo por nombre
         public int ObtenerIdEstilo(string estilo)
         {
             int idEstilo = 0;
@@ -131,6 +131,33 @@ namespace FortuneSystem.Models.Items
             }
             
             return idEstilo;
+        }
+        //Obtener el nombre de un estilo por id
+        public string ObtenerEstiloPorId(int?  idEstilo)
+        {
+            string Estilo = "";
+            Conexion conex = new Conexion();
+            try
+            {
+                SqlCommand coman = new SqlCommand();
+                SqlDataReader leerF = null;
+                coman.Connection = conex.AbrirConexion();
+                coman.CommandText = "SELECT ITEM_STYLE FROM ITEM_DESCRIPTION " +
+                                     "WHERE ITEM_ID='" + idEstilo + "' ";
+                leerF = coman.ExecuteReader();
+                while (leerF.Read())
+                {
+                    Estilo += leerF["ITEM_STYLE"].ToString();
+                }
+                leerF.Close();
+            }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+
+            return Estilo;
         }
 
 

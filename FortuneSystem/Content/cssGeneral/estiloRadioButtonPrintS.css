@@ -3,7 +3,7 @@
     -moz-appearance: none;
     display: inline-block;
     position: relative;
-    background-color: #f1f1f1;
+    background-color: #DFD7D7;
     color: #666;
     top: 10px;
     height: 30px;
@@ -25,11 +25,11 @@
     }
 
     .form-radio:hover {
-        background-color: #f7f7f7;
+        background-color: #DFD7D7;
     }
 
     .form-radio:checked {
-        background-color: #f1f1f1;
+        background-color: #D2CECE;
     }
 label {
     font: 1.000em 'Open Sans', sans-serif;

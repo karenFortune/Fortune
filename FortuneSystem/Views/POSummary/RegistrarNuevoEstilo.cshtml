@@ -1,7 +1,6 @@
 ﻿@model FortuneSystem.Models.POSummary.POSummary
 
 <script src="~/Scripts/general/autocomplete.js"></script>
-<script src="~/Scripts/general/AgregarTalla.js"></script>
 <script type="text/javascript">
 
 
@@ -9,20 +8,21 @@
         $(document).on("click", ".classAdd", function () {
             var rowCount = $('.data-Talla').length + 1;
             var tallasdiv = '<tr class="data-Talla">' +
-                '<td><input type="text"  name="f-talla" id="f-talla" class="form-control talla"  /></td>' +
-                '<td><input type="text" id="l-cantidad" name="l-cantidad" class="form-control l-name01 numCantTall"  /></td>' +
-                '<td><input type="text" id="e-extras"  name="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>' +
-                '<td><input type="text" id="s-ejemplo" name="s-ejemplo" class="form-control s-name01 numEjmTall" value="' + 0 + '"/></td>' +
+                '<td class="mover"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>' +
+                '<td class="datoTalla"><input type="text"  name="f-talla" id="f-talla" class="form-control talla" autocomplete="off" /></td>' +
+                '<td class="datoTalla"><input type="text" id="l-cantidad" name="l-cantidad" class="form-control l-name01 numCantTall"  /></td>' +
+                '<td class="datoTalla"><input type="text" id="e-extras"  name="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>' +
+                '<td class="datoTalla"><input type="text" id="s-ejemplo" name="s-ejemplo" class="form-control s-name01 numEjmTall" value="' + 0 + '"/></td>' +
                 '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
-
                 '</tr>';
             $('#tablaTallas').append(tallasdiv);
         });
 
         $(document).on("click", ".deleteTalla", function () {
             $(this).closest("tr").remove();
-        });
+        }); 
         $('#selectGenero').select2({
+            dropdownParent: $("#nuevoEstiloModal"),
             placeholder: "Select a gender",
             language: {
 
@@ -38,7 +38,8 @@
         });
 
         $('#selectEspecialidad').select2({
-            placeholder: "Select a specialty",
+            dropdownParent: $("#nuevoEstiloModal"),
+            //placeholder: "Select a specialty",
             language: {
                 noResults: function () {
                     return "There is no result";
@@ -48,8 +49,11 @@
                 }
             }
         });
+        $("#selectEspecialidad").val('12');
+        $("#selectEspecialidad").trigger('change');
 
         $('#selectTela').select2({
+            dropdownParent: $("#nuevoEstiloModal"),
             placeholder: "Select a type of fabric",
             language: {
 
@@ -65,6 +69,7 @@
         });
 
         $("#selectTipoCamiseta").select2({
+            dropdownParent: $("#nuevoEstiloModal"),
             placeholder: "Select a type of shirt",
             language: {
 
@@ -78,6 +83,37 @@
                 }
             }
         });
+
+        //Autocomplete tallas
+        $(function () {
+            var list_datalist = Array();
+            $.ajax({
+                url: '/Tallas/Lista_Tallas',
+                type: 'GET',
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var html = "";
+                        list_datalist.push(data[i].Talla);
+                    }
+                }
+            })
+            var availableTags = list_datalist;
+            $(document).on("focus keyup", "input.talla", function (event) {
+                $(this).autocomplete({
+                    source: availableTags,
+                    select: function (event, ui) {
+                        event.preventDefault();
+                        this.value = ui.item.label;
+                    },
+                    focus: function (event, ui) {
+                        event.preventDefault();
+                        this.value = ui.item.label;
+                    }
+                });
+            });
+        });
+
+
         var estilo = $("#ItemDescripcion_ItemEstilo").val();
         if (estilo != '') {
             $('#ItemDescripcion_Descripcion').val('');
@@ -172,26 +208,17 @@
                     method: 'GET',
                     success: function (result) {
                         var html = '';
-                        html +='<table class="table" id="tablaTallas"><thead>' +
-                            '  <tr>' +
-                            '<th>Size</th>' +
-                            ' <th>Quantity</th>' +
-                            ' <th>Extra</th>' +
-                            ' <th>Examples</th>' +
-                            '</tr>'+
-                            '</thead><tbody>';
                         $.each(result, function (key, item) {
                             html += '<tr>';
-                            //html += '<td><input type="text" name="talla" id="f-talla" class="form-control" /></td>';
-                            html += '<td><input type="text" id="f-talla" class="form-control talla" value="' + item.CatTallaItem.Talla + '"/></td>';
-                            html += '<td><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 numCantTall "  /></td>';
-                            html += '<td><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>';
-                            html += '<td><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 numEjmTall"  value="' + 0 + '"/></td>';
-                            html += '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
+                            html += '<td class="mover"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>';
+                            html += '<td class="datoTalla"><input type="text" id="f-talla" class="form-control talla" value="' + item.CatTallaItem.Talla + '"/></td>';
+                            html += '<td class="datoTalla"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 numCantTall "  /></td>';
+                            html += '<td class="datoTalla"><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>';
+                            html += '<td class="datoTalla"><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 numEjmTall"  value="' + 0 + '"/></td>';
+                            html += '<td class="datoTalla"><button type="button" id="btnDelete"  class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
                             html += '</tr>';
-                        });
-                        html += '</tbody> </table>';
-                        $('#listaTalla').html(html);
+                        });             
+                        $('.tbodyTallas').html(html);
                     },
                     error: function (errormessage) {
                         alert(errormessage.responseText);
@@ -271,7 +298,7 @@
                     });
                 });   
             var error = 0;
-            $('#tablaTallas').find('td').each(function (i, el) {
+            $('#tablaTallas').find('td.datoTalla').each(function (i, el) {
 
                 var valor = $(el).children().val();
 
@@ -370,6 +397,9 @@
         });
     }
 
+    $(document).ready(function () {
+        $('.tbodyTallas').sortable();
+    });
     //Sumar cantidades
     var rep;
     document.addEventListener("blur", function (event) {
@@ -519,7 +549,18 @@
             <br />
 
             <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">+ Add Size</button>
-            <div id="listaTalla"></div>
+            <table class="table" id="tablaTallas">
+                <thead>
+                    <tr>
+                        <th class="index"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true" /></th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Extra</th>
+                        <th>Examples</th>
+                    </tr>
+                </thead>
+                <tbody class="tbodyTallas"></tbody>
+            </table>
             <button type="button" id="nuevaTalla" class="btn btn-success btn-md pull-right btn-sm">Save Size</button>
             <br />
             <br />

@@ -5,6 +5,7 @@ C:\Users\karen\Source\Repos\fortuneSystem3\Helpers\obj\Debug\Helpers.dll
 C:\Users\karen\Source\Repos\fortuneSystem3\Helpers\obj\Debug\Helpers.pdb
 C:\Users\karen\Source\Repos\Fortune\Helpers\bin\Debug\Helpers.dll
 C:\Users\karen\Source\Repos\Fortune\Helpers\bin\Debug\Helpers.pdb
+C:\Users\karen\Source\Repos\Fortune\Helpers\obj\Debug\Helpers.csprojAssemblyReference.cache
 C:\Users\karen\Source\Repos\Fortune\Helpers\obj\Debug\Helpers.csproj.CoreCompileInputs.cache
 C:\Users\karen\Source\Repos\Fortune\Helpers\obj\Debug\Helpers.dll
 C:\Users\karen\Source\Repos\Fortune\Helpers\obj\Debug\Helpers.pdb

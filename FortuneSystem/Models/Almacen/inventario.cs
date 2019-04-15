@@ -93,7 +93,11 @@ namespace FortuneSystem.Models.Almacen
         public string mp_number { get; set; }
         public string mill_po { get; set; }
         public string po_reference { get; set; }
-
+        public string estilo { get; set; }
+        public string fecha { get; set; }
+        public int auditoria { get; set; }
+        public int id_item { get; set; }
+        
 
 
     }

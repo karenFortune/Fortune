@@ -20,5 +20,6 @@ namespace FortuneSystem.Models.Item
         public int Extras { get; set; }
         public int IdSummary { get; set; }
         public string Estilo { get; set; }
+        public string DescripcionEstilo { get; set; }
     }
 }

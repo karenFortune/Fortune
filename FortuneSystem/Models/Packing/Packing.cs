@@ -30,6 +30,7 @@ namespace FortuneSystem.Models.Packing
         public int TipoEmpaque { get; set; }
         public int NumberPO { get; set; }
         public int CantidadP { get; set; }
+        public int Partial { get; set; }
         [Display(Name = "PPKS#")]
         public int CantidadPPKS { get; set; }
 

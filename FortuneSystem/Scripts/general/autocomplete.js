@@ -24,7 +24,7 @@
         select: function (event, ui) {
             var estilo = ui.item.value;
             var nuevoEstilo = estilo.trim();
-            //var numero = validarEstilo(nuevoEstilo);  
+            var numero = validarEstilo(nuevoEstilo);  
             var item = $("#ItemDescripcion_Descripcion").val(ui.item.descripcion);
             if (item !== "") {
                 $('#nuevoEstilo').attr('disabled', true);
@@ -32,7 +32,14 @@
                 $('#nuevoEstilo').attr('disabled', false);
             }
         },
-        minLength: 1
+        minLength: 1,
+        response: function (event, ui) {
+            if (!ui.content.length) {               
+                var alert = alertify.alert("Message", 'No style results found.').set('label', 'Aceptar');
+                alert.set({ transition: 'zoom' });
+                alert.set('modal', false);
+            } 
+        }
     });
 
     //Autocomplete codigo de color 
@@ -67,7 +74,14 @@
             }
 
         },
-        minLength: 1
+        minLength: 1,
+        response: function (event, ui) {
+            if (!ui.content.length) {
+                var alert = alertify.alert("Message", 'No color results found.').set('label', 'Aceptar');
+                alert.set({ transition: 'zoom' });
+                alert.set('modal', false);
+            }
+        }
     });   
 
 

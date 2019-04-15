@@ -273,6 +273,21 @@ namespace FortuneSystem.Models.Almacen
             }
             return Lista;
         }
+        public List<String> Lista_dcs(){
+            Conexion con = new Conexion();
+            List<String> Lista = new List<String>();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT DISTINCT dc from shipping_ids order by dc";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    Lista.Add(leer["dc"].ToString());
+                }leer.Close();
+            }finally{con.CerrarConexion(); con.Dispose();}
+            return Lista;
+        }
         public List<String> Lista_generos()
         {
             Conexion con = new Conexion();
@@ -385,27 +400,19 @@ namespace FortuneSystem.Models.Almacen
             }
             return Lista;
         }
-        public List<String> Lista_units()
-        {
+        public List<String> Lista_units(){
             Conexion con = new Conexion();
             List<String> Lista = new List<String>();
-            try
-            {
+            try{
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;                
                 com.Connection = con.AbrirConexion();
                 com.CommandText = "SELECT unit from units order by unit";
                 leer = com.ExecuteReader();
-                while (leer.Read())
-                {
+                while (leer.Read()){
                     Lista.Add(leer["unit"].ToString());
-                }
-                leer.Close();
-            }
-            finally
-            {
-                con.CerrarConexion(); con.Dispose();
-            }
+                }leer.Close();
+            }finally{con.CerrarConexion(); con.Dispose();}
             return Lista;
         }
         public List<String> Lista_location()
@@ -1589,28 +1596,20 @@ namespace FortuneSystem.Models.Almacen
                 con_c.CerrarConexion(); con_c.Dispose();
             }
         }
-        public salidas buscar_sello_nuevo(int sucursal)
-        {
+        public salidas buscar_sello_nuevo(int sucursal){
             salidas s = new salidas();
             Conexion con = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
                 com.CommandText = "SELECT id_sello,usado from sellos where id_sucursal='" + sucursal + "' and usado<final and estado=0";
                 leer = com.ExecuteReader();
-                while (leer.Read())
-                {
+                while (leer.Read()){
                     s.id_sello = (Convert.ToInt32(leer["id_sello"]) + 1);
                     s.sello = (Convert.ToInt32(leer["usado"]) + 1);
-                }
-                leer.Close();
-            }
-            finally
-            {
-                con.CerrarConexion(); con.Dispose();
-            }
+                }leer.Close();
+            }finally{con.CerrarConexion(); con.Dispose();}
             return s;
         }
         public string buscar_nombre_usuario(string usuario){
@@ -1900,6 +1899,36 @@ namespace FortuneSystem.Models.Almacen
             }finally{con.CerrarConexion(); con.Dispose();}
             return temp;
         }
+        public string buscar_descripcion_item(string id){
+            string temp = "";
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT descripcion from items_catalogue where item_id='" + id + "'";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    temp = Convert.ToString(leer["descripcion"]);
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
+            return temp;
+        }
+        public string buscar_tipo_trim_item(string id){
+            string temp = "";
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT fabric_type from items_catalogue where item_id='" + id + "'";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    temp = Convert.ToString(leer["fabric_type"]);
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
+            return temp;
+        }
         public double item_age;
         public string mill_po;
         public string obtener_fecha_recibo(int id){
@@ -1947,7 +1976,8 @@ namespace FortuneSystem.Models.Almacen
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
-                com.CommandText = "SELECT ID_PO_SUMMARY from PO_SUMMARY where ITEM_ID='" +estilo+ "' and ID_PEDIDOS='"+po+"' ";
+                com.CommandText = "SELECT PS.ID_PO_SUMMARY from PO_SUMMARY PS,PEDIDO P where PS.ITEM_ID='" + estilo+ "' and PS.ID_PEDIDOS='"+po+"' " +
+                    " AND P.ID_PEDIDO=PS.ID_PEDIDOS AND P.ID_STATUS!=6 AND P.ID_STATUS!=7 ";
                 leer = com.ExecuteReader();
                 while(leer.Read()){
                     temp = Convert.ToInt32(leer["ID_PO_SUMMARY"]);
@@ -1970,7 +2000,6 @@ namespace FortuneSystem.Models.Almacen
             }finally { con.CerrarConexion(); con.Dispose(); }
             return temp;
         }
-
         public string buscar_descripcion_estilo(int estilo){
             string temp = "";
             Conexion con = new Conexion();
@@ -2098,18 +2127,31 @@ namespace FortuneSystem.Models.Almacen
             }finally { con.CerrarConexion(); con.Dispose(); }
             return temp;
         }
-
-        public int buscar_tipo_empaque(int summary){
-            int temp = 1;
+        /******************************************************************/
+        public List<string> buscar_tipo_empaque(int summary){
+            List<string> temp = new List<string>();
             Conexion con = new Conexion();
             try{
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
-                com.CommandText = "SELECT TYPE_PACKING from PACKING_TYPE_SIZE where ID_SUMMARY='" + summary + "'";
+                com.CommandText = "SELECT TYPE_PACKING from PACKING_TYPE_SIZE where ID_SUMMARY='" + summary + "' and TYPE_PACKING!=3";
                 leer = com.ExecuteReader();
                 while (leer.Read()){
-                    temp = Convert.ToInt32(leer["TYPE_PACKING"]);
+                    bool isEmpty = !temp.Any();
+                    if (isEmpty){
+                        temp.Add(Convert.ToString(leer["TYPE_PACKING"]));
+                    }else{
+                        int same = 0;
+                        foreach (string s in temp) {
+                            if (s == Convert.ToString(leer["TYPE_PACKING"])) {
+                                same++;
+                            }
+                        }
+                        if (same == 0) {
+                            temp.Add(Convert.ToString(leer["TYPE_PACKING"]));
+                        }
+                    }
                 }leer.Close();
             }finally { con.CerrarConexion(); con.Dispose(); }
             return temp;
@@ -2160,6 +2202,63 @@ namespace FortuneSystem.Models.Almacen
                 com_c.ExecuteNonQuery();
             }finally{con_c.CerrarConexion(); con_c.Dispose();}
         }
+
+        public int buscar_total_inventario(int inventario){
+            int temp = 0;
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT total from inventario where id_inventario='" + inventario + "'";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    temp = Convert.ToInt32(leer["total"]);
+                }leer.Close();
+            }finally{con.CerrarConexion(); con.Dispose();}
+            return temp;
+        }
+
+        public string obtener_siglas_cliente(string customer_final){
+            string temp = "";
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT siglas from siglas_clientes where id_customer_po='" + customer_final + "'";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    temp = Convert.ToString(leer["siglas"]);
+                }leer.Close();
+            }finally{con.CerrarConexion();con.Dispose();}
+            return temp;
+        }
+        public List<int> Lista_generos_po(int pedido){
+            Conexion con = new Conexion();
+            List<int> Lista = new List<int>();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT ID_GENDER FROM PO_SUMMARY WHERE ID_PEDIDOS='"+pedido+"'";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    Lista.Add(Convert.ToInt32(leer["ID_GENDER"]));
+                }leer.Close();
+            }finally{con.CerrarConexion(); con.Dispose();}
+            return Lista.Distinct().ToList(); 
+        }
+
+
+
+
+
+
+
+
+
+
 
 
 

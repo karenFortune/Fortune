@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     var ID = $("#IdPedido").val();
     buscar_estilos(ID);
-    $("#div_tabla_packing").css("visibility", "hidden");
+    $("#div_tabla_packing").css('display', 'none');
 
 });
 
@@ -14,11 +14,15 @@ function probar(id) {
     $('#tabless tr').on('click', function (e) {
         $('#tabless tr').removeClass('highlighted');
         $(this).addClass('highlighted');
-    });
-
-    obtenerListaTallas(id);
+    });   
 }
 
+$(document).on("dblclick", "#tabless tr", function () {
+    var row = this.rowIndex;
+    var numEstilo = $('#tabless tr:eq(' + row + ') td:eq(0)').html();
+    //var estilo = $('#tabless tr:eq(' + row + ') td:eq(2)').html();
+    obtenerListaTallas(numEstilo);
+});
 
 $(document).on("input", ".numeric", function () {
     this.value = this.value.replace(/\D/g, '');
@@ -66,6 +70,7 @@ function buscar_estilos(ID) {
 
             $.each(lista_estilo, function (key, item) {
                 html += '<tr  onclick="probar(' + item.IdItems + ')">';
+                html += '<td>' + item.IdItems + '</td>';
                 html += '<td>' + item.EstiloItem + '</td>';
                 html += '<td>' + item.ItemDescripcion.Descripcion + '</td>';
                 html += '<td>' + item.CatColores.CodigoColor + '</td>';
@@ -73,7 +78,7 @@ function buscar_estilos(ID) {
                 html += '<td>' + item.Cantidad + '</td>';
                 html += '<td>' + item.Price + '</td>';
                 html += '<td>' + item.Total + '</td>';
-                html += '<td><a href="#" onclick="obtenerListaTallas(' + item.IdItems + ');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Sizes"></a></td>';
+                //html += '<td><a href="#" onclick="obtenerListaTallas(' + item.IdItems + ');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Sizes"></a></td>';
                 html += '</tr>';
             });
             if (Object.keys(lista_estilo).length === 0) {
@@ -81,7 +86,7 @@ function buscar_estilos(ID) {
 
             }
             $('.tbody').html(html);
-            $("#div_estilos_orden").css("visibility", "visible");
+            $("#div_estilos_orden").css("display", "inline"); 
             $(window).scrollTop(tempScrollTop);
         },
         error: function (errormessage) { alert(errormessage.responseText); }
@@ -93,8 +98,9 @@ var tipoEmp = "";
 var datosPO = "";
 var tUnidades = 0;
 function obtenerListaTallas(EstiloId) {
-    $("#panelHotTopic").css('display', 'inline');
     $("#loading").css('display', 'inline');
+    $("#panelHotTopic").css('display', 'inline');
+    
     estiloId = EstiloId;
     $.ajax({
         url: "/Packing/Lista_Tallas_HT_Por_Estilo/" + EstiloId,
@@ -134,18 +140,40 @@ function obtenerListaTallas(EstiloId) {
 
             var cantidadesEmpBulk = 0;
             html += '</tr><tr><td width="30%">Bulk - #Pieces</td>';
+            var listaTBatchBulk = 0;
+            $.each(listaTCajas, function (key, item) {
+                listaTBatchBulk++;
+            });
           
             $.each(listaPBulk, function (key, item) {
-                html += '<td>' + item + '</td>';
-                cantidadesEmpBulk += item;
-              
+                if (listaTBatchBulk === 0) {
+                    item = 0;
+                    html += '<td>' + item + '</td>';
+                } else {
+                    html += '<td>' + item + '</td>';
+                }                
+                cantidadesEmpBulk += item;              
             });
             
             html += '<td>' + cantidadesEmpBulk + '</td>';
             html += '</tr><tr><td width="30%">Packages</td>';
-            var cantidades_PBulk = "";
+            var cantidades_PBulk = "";          
+            var listaTBatch = 0;
             $.each(listaTCajas, function (key, item) {
-                   html += '<td>' + item + '</td>';
+                listaTBatch++;
+            });
+            if (listaTBatch === 0) {
+                listaTCajas = listaPBulk;
+            } else {
+                listaTCajas;
+            }
+            $.each(listaTCajas, function (key, item) {
+                if (listaTBatch === 0) {
+                    item = 0;
+                    html += '<td class="qtyBulk">' + item + '</td>';
+                } else {
+                    html += '<td class="qtyBulk">' + item + '</td>';
+                }                  
                 cantidades_PBulk += "*" + item;
             });
             var cantidades_array_pbulk = cantidades_PBulk.split('*');
@@ -165,10 +193,10 @@ function obtenerListaTallas(EstiloId) {
                     cantidadesEmpPPK += i.Ratio;               
                 });
                 //html += '<td>' + cantidadesEmpPPK + '</td>';
-                html += '</tr><tr id="empaque' + (cont) + '" class="empaque"><td width="30%">Packages</td>';
+                html += '</tr><tr id="empaque' + cont + '" class="empaque"><td width="30%">Packages</td>';
                 $.each(item.ListaEmpaque, function (key, i) {
 
-                       html += '<td>' + i.TotalRatio + '</td>';
+                       html += '<td class="qtyPPK">' + i.TotalRatio + '</td>';
              
                 });
                 html += '</tr>';
@@ -176,18 +204,50 @@ function obtenerListaTallas(EstiloId) {
 
             html += '<tr><td width="30%">+/-</td>';
             var totales = 0;
-            var i = 1;
+            var i = 1;           
+            var sum = 0;
             $.each(listaTCajas, function (key, item) {
+                var valorCalidad = $(".calidad").parent("tr").find("td").eq(i).text();
+                var valorQtyBulk = $(".qtyBulk").parent("tr").find("td").eq(i).text();
+                var valorQtyPPK = $(".qtyPPK").parent("tr").find("td").eq(i).text();                
+                var qtyPO = parseInt(valorCalidad);             
+                var qtyValorB = parseInt(valorQtyBulk);
+                var qtyValorP = parseInt(valorQtyPPK);
+                if (isNaN(qtyPO)) {
+                    qtyPO = 0;
+                }
+                if (isNaN(qtyValorB)) {
+                    qtyValorB = 0;
+                }
+                if (isNaN(qtyValorP)) {
+                    qtyValorP = 0;
+                }
+                sum = qtyValorB + qtyValorP;
+                if (isNaN(sum)) {
+                    sum = 0;
+                }
+                var resta = sum - qtyPO;
+                if (isNaN(resta)) {
+                    resta = 0;
+                }
                // var resta = (parseFloat(cantidades_array[i]) - parseFloat(item))
-                html += '<td class="faltante"></td>';
+                if (resta === 0) {
+                    html += '<td class="faltante" style="color:black;">' + resta + '</td>';
+                } else if (resta >= 0) {
+                    html += '<td class="faltante" style="color:blue;">' + resta + '</td>';
+                } else {
+                    html += '<td class="faltante" style="color:red;">' + resta + '</td>';
+                }
+               // html += '<td class="faltante" ></td>';
                 i++;
             });
             html += '</tr>';             
 
             $('.tbodyPHT').html(html);
-            var nColumnas = $("#tablePackingHT tr:last td").length;
+            
+           /* var nColumnas = $("#tablePackingHT tr:last td").length;
             var totalRows = $("#tablePackingHT tr").length;
-             for (var v = 1; v < (lPO+1); v++) {
+             for (var v = 1; v < lPO+1; v++) {
                  datosPO += "*" + $('#tablePackingHT tr:eq(1) td:eq(' + v + ')').html();
               }
 
@@ -203,7 +263,7 @@ function obtenerListaTallas(EstiloId) {
                     contener = valor.includes('Packages');
                 }               
                 if (contener === true) {
-                    for (var j = 1; j < (lPO+1); j++) {
+                    for (var j = 1; j < lPO+1; j++) {
                         temp += "*" + $('#tablePackingHT tr:eq(' + z + ') td:eq(' + j + ')').html();
                     }
                     arrayCantidades.push(temp);
@@ -222,16 +282,31 @@ function obtenerListaTallas(EstiloId) {
             var resultPO = iDatosPO.map(function (x) {
                 return parseInt(x, 10);
             });
-
+            //var l = 0;
+            var valorFalt = 0;
             var val = parseInt(resultPO.length);
             for (var l = 1; l < val; l++) {
                 for (var r = 0; r < arrayCantidades.length; r++) {
-                    var totalC = resultPO[l] - mArray[r][l];
+                    var totalC = mArray[r][l] - resultPO[l];
                     resultPO[l] = totalC;
                 }
                 $('#tablePackingHT tr:eq(' + (totalRows - 1) + ') td:eq(' + l + ')').html(resultPO[l]);
-            }
+                valorFalt = $(".faltante").parent("tr").find("td").eq(l).text();
+                var qtyFalt = parseInt(valorFalt);
 
+                if (qtyFalt === 0) {
+                    $(".faltante").css('color', '1px solid black');
+                } else if (qtyFalt >= 0) {
+                    $(".faltante").css('color', '1px solid blue');
+                } else {
+                    $(".faltante").css('color', '1px solid #e03f3f');
+                }
+            }*/
+          
+            
+
+            
+            
             if (listaPBulk.length === 0 && listaEPPK.length === 0) {
                 if (listaPBulk.length !== 0) {
                     $("#btnNext").prop("disabled", false);
@@ -241,15 +316,17 @@ function obtenerListaTallas(EstiloId) {
                 TallasEmpaqueBulkHT(EstiloId);
             } else {
                 $("#grupoBotones").hide();                 
-                $("#div_titulo_Register").css("visibility", "visible");
+                $("#div_titulo_Register").css("display", "inline"); 
                 $("#div_titulo_Register").html("<h3>REGISTRATION OF PALLET</h3>");
                 $('label[for="Packing_CantBox"]').hide();
                 $("#numeroCajas").hide();
                 $('label[for="Packing_CantidadPPKS"]').hide();
                 $("#Packing_CantidadPPKS").hide();
                 $("#opcionesRegistro").css("display", "inline");
-                $('label[for="Packing_PackingTypeSize_TotalUnits"]').hide();
+                $('label[id="numTotalUnitLabel"]').hide();
                 $("#numTotalUnit").hide(); 
+                $("#div_titulo_Bulk").css("display", "none");
+                $("#opciones").css("display", "none");
                 obtener_bacth_estilo(estiloId);
             }            
       
@@ -257,7 +334,8 @@ function obtenerListaTallas(EstiloId) {
             $("#arte").css("display", "inline-block");
             obtenerImagenPNL(estilos);
             obtenerImagenArte(estilos);
-            $("#loading").css('display', 'none');
+           // $("#loading").css('display', 'none');
+            setTimeout(function () { $("#loading").css('display', 'none'); }, 3000);
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -284,12 +362,17 @@ function TallasEmpaqueBulkHT(idEst) {
             $('#btnNuevoPPK').hide();
                 $("#btnNuevo").prop("disabled", true);               
             $("#btnDone").prop("disabled", true);     
-            $('label[for="Packing_PackingTypeSize_TotalUnits"]').hide();
+            $('label[id="numTotalUnitLabel"]').hide();
             $("#numTotalUnit").hide(); 
-            $('#listaTallaBatchHT').css("display", "none");   
+            $('#listaTallaBatchHT').css("display", "none"); 
+            $('#listaBatchHT').css("display", "none");  
                 $("#div_titulo_Bulk").html("<h3>REGISTRATION OF TYPE OF PACKAGING - BULK</h3>");
-                $("#div_titulo_Bulk").css("visibility", "visible");
-                $("#opciones").css("display", "inline");
+            $("#div_titulo_Bulk").css("display", "inline"); 
+            $("#opciones").css("display", "inline");
+                $("#div_titulo_Register").css("display", "none");
+                $("#opcionesRegistro").css("display", "none");
+                          
+            
                 html += '<table class="table" id="tablaTallasBulkHT"><thead>';
                 html += '<tr><th>Size</th>' +
                     ' <th>QTY#</th>' +
@@ -301,9 +384,9 @@ function TallasEmpaqueBulkHT(idEst) {
             var cont = 0;
             $.each(listaPO, function (key, item) {
                     cont = cont + 1;
-                    html += '<tr id="pallet' + (cont) + '" class="pallet">';
+                    html += '<tr id="pallet' + cont + '" class="pallet">';
                     html += '<td width="20%"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '" readonly/></td>';
-                    html += '<td width="20%"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control numeric qty " onkeyup="obtTotalCartones(' + (cont) + ')" value="' + 0 + '"  /></td>';
+                    html += '<td width="20%"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control numeric qty " onkeyup="obtTotalCartones(' + cont + ')" value="' + 0 + '"  /></td>';
                     html += '<td width="20%"><input type="text" name="l-cartones" id="l-cartones" class="form-control numeric cart " value="' + 0 + '"  readonly/></td>';
                     html += '<td width="20%"><input type="text" name="l-partial" id="l-partial" class="form-control numeric part " value="' + 0 + '"  readonly/></td>';
                 html += '<td width="20%"><input type="text" name="l-totCartones" id="l-totCartones" class="form-control numeric tcart " value="' + 0 + '"  readonly/></td>';
@@ -311,7 +394,7 @@ function TallasEmpaqueBulkHT(idEst) {
                     html += '</tr>';
                 });
                 html += '</tbody> </table>';    
-                html += '<button type="button" id="nuevoEmpaqueBulkHT" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> BULK</button>';               
+                html += '<button type="button" id="nuevoEmpaqueBulkHT" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save</button>';               
                 $('#listaTallaPHT').html(html);
             
         },
@@ -484,9 +567,9 @@ function RegistrarEmpaquePPKHT(nPO, tEmpaque) {
                     } else {
                         cadenaCantidad += cajaTemp + "*";
                         cont = cont + 1;
-                        html += '<tr id="pallet' + (cont) + '" class="pallet">';
+                        html += '<tr id="pallet' + cont + '" class="pallet">';
                         html += '<td width="20%"><input type="text" id="f-talla" class="form-control talla" value="' + tallaTemp + '" readonly/></td>';           
-                        html += '<td width="20%"><input type="text"  name="l-ratio" id="l-ratio" class="form-control numeric ratio " onkeyup="obtTotalPiezasPPK(' + (cont) + ')"  value="' + cajaTemp + '"  readonly/></td>';                     
+                        html += '<td width="20%"><input type="text"  name="l-ratio" id="l-ratio" class="form-control numeric ratio " onkeyup="obtTotalPiezasPPK(' + cont + ')"  value="' + cajaTemp + '"  readonly/></td>';                     
                         html += '<td width="20%"><input type="text" name="l-piezas" id="l-piezas" class="form-control numeric piezas " value="' + 0 + '"  readonly/></td>';
                         html += '<td width="20%"><input type="text" name="l-tpiezas" id="l-tpiezas" class="form-control numeric tpiezas " value="' + piezasTemp + '"  readonly/></td>';
                         html += '<td width="20%"><input type="text" name="l-cantTP" id="l-cantTP" class="form-control numeric cantTP " value="' + 0 + '"  readonly/></td>';
@@ -501,9 +584,9 @@ function RegistrarEmpaquePPKHT(nPO, tEmpaque) {
                     if (i === totalTallas) {
                         cadenaCantidad += cajaTemp + "*";
                         cont = cont + 1;
-                        html += '<tr id="pallet' + (cont) + '" class="pallet">';
+                        html += '<tr id="pallet' + cont + '" class="pallet">';
                         html += '<td width="20%"><input type="text" id="f-talla" class="form-control talla" value="' + tallaTemp + '" readonly/></td>';
-                        html += '<td width="20%"><input type="text"  name="l-ratio" id="l-ratio" class="form-control numeric ratio " onkeyup="obtTotalPiezasPPK(' + (cont) + ')"  value="' + cajaTemp + '"  readonly/></td>';
+                        html += '<td width="20%"><input type="text"  name="l-ratio" id="l-ratio" class="form-control numeric ratio " onkeyup="obtTotalPiezasPPK(' + cont + ')"  value="' + cajaTemp + '"  readonly/></td>';
                         html += '<td width="20%"><input type="text" name="l-piezas" id="l-piezas" class="form-control numeric piezas " value="' + 0 + '"  readonly/></td>';
                         html += '<td width="20%"><input type="text" name="l-tpiezas" id="l-tpiezas" class="form-control numeric tpiezas " value="' + piezasTemp + '"  readonly/></td>';
                         html += '<td width="20%"><input type="text" name="l-cantTP" id="l-cantTP" class="form-control numeric cantTP " value="' + 0 + '"  readonly/></td>';
@@ -597,7 +680,7 @@ function limpiarFormBulk() {
         });
     });
     
-    $('#Packing_PackingTypeSize_FormaEmpaque').val(0)
+    $('#Packing_PackingTypeSize_FormaEmpaque').val(0);
     $('#Packing_PackingTypeSize_NumberPO').val('');
 }
 
@@ -690,10 +773,7 @@ function enviarListaTallaBulkHT(cadena, error) {
                 // obtenerListaTallas(estiloId);
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                showError(xhr.status, xhr.responseText);
-                if (data.error === 1) {
-                    alertify.notify('Check.', 'error', 5, null);
-                }
+               
             }
         });
     }
@@ -735,12 +815,13 @@ function TallasEmpaquePPKHT(idEst) {
                 $('#Packing_PackingTypeSize_FormaEmpaque').hide();
             $('label[for="Packing_PackingTypeSize_FormaEmpaque"]').hide();
             $("#opciones").css("display", "inline");
-            $('#listaTallaBatchHT').css("display", "none");   
+            $('#listaTallaBatchHT').css("display", "none"); 
+            $('#listaBatchHT').css("display", "none"); 
             $('#opcionTotal').css("display", "inline");    
-            $('label[for="Packing_PackingTypeSize_TotalUnits"]').hide();
+            $('label[id="numTotalUnitLabel"]').hide();
             $("#numTotalUnit").hide(); 
                 $("#div_titulo_Bulk").html("<h3>REGISTRATION OF TYPE OF PACKAGING - PPK</h3>");
-                $("#div_titulo_Bulk").css("visibility", "visible");
+                $("#div_titulo_Bulk").css("display", "inline"); 
 
                 html += '<table class="table" id="tablaTallasPPKHT"><thead>';
                 html += '<tr><th>Size</th>' +
@@ -755,12 +836,12 @@ function TallasEmpaquePPKHT(idEst) {
                     html += '</tr>';
                 });
                 html += '</tbody> </table>';
-                html += '<button type="button" id="nuevoEmpaquePPKHT" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> PPK</button>';
+                html += '<button type="button" id="nuevoEmpaquePPKHT" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>Save</button>';
                 $('#listaTallaPHT').html(html);
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
-        },
+        }
     }).done(function (data) {
     });
 }
@@ -843,10 +924,7 @@ function enviarListaTallaPPKHT(cadena, error) {
                 //obtenerListaTallas(estiloId);
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                showError(xhr.status, xhr.responseText);
-                if (data.error === 1) {
-                    alertify.notify('Check.', 'error', 5, null);
-                }
+                
             }
         });
     }
@@ -869,7 +947,7 @@ $(function () {
             $("#numeroCajas").hide();
             $('label[for="Packing_CantidadPPKS"]').hide();
             $("#Packing_CantidadPPKS").hide();
-            $('label[for="Packing_PackingTypeSize_TotalUnits"]').hide();
+            $('label[id="numTotalUnitLabel"]').hide();
             $("#numTotalUnit").hide(); 
             if (npo === "") {
                 npo = 0;
@@ -884,7 +962,7 @@ $(function () {
             $('label[for="Packing_CantidadPPKS"]').show();
             $("#Packing_CantidadPPKS").show();
             $("#Packing_CantidadPPKS").val(0); 
-            $('label[for="Packing_PackingTypeSize_TotalUnits"]').show();
+            $('label[id="numTotalUnitLabel"]').show();
             $("#numTotalUnit").show();
             $("#numTotalUnit").val(0);
             if (npo === "") {
@@ -1049,10 +1127,10 @@ function enviarListaTallaPalletHT(cadena, error) {
 
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                showError(xhr.status, xhr.responseText);
+                /*showError(xhr.status, xhr.responseText);
                 if (data.error === 1) {
                     alertify.notify('Check.', 'error', 5, null);
-                }
+                }*/
             }
         });
     }
@@ -1062,14 +1140,18 @@ function obtener_bacth_estilo(IdEstilo) {
     var tempScrollTop = $(window).scrollTop();
     //  $("#loading").css('display', 'inline');
     $.ajax({
-        url: "/Packing/Lista_Batch_HT_Estilo/" + IdEstilo,
+        url: "/Packing/Lista_Batch_HT_Estilo/",
         type: "POST",
+        data: JSON.stringify({ id: IdEstilo }),
         contentType: "application/json;charset=UTF-8",
         dataType: "json",
         success: function (jsonData) {
 
-            var lista_batch = jsonData.Data.listaTalla;
-            var numBatch = lista_batch.length;
+            var lista_batch = jsonData.Data.listaPO;
+            var numBatch = 0;
+            $.each(lista_batch, function (key, item) {
+                numBatch++;
+            });
             if (numBatch === 0) {
                 // $("#div_tabla_talla").hide();
             } else {
@@ -1077,7 +1159,7 @@ function obtener_bacth_estilo(IdEstilo) {
                 var estilos = jsonData.Data.estilos;
                 if (estilos !== '') {
                     $("#div_titulo_Bulk").html("<h3>BATCH REVIEW </h3>");
-                    $("#div_titulo_Bulk").css("visibility", "visible");
+                    $("#div_titulo_Bulk").css("display", "inline"); 
                 } else {
                     //$("#div_estilo_batch").hide();
                 }

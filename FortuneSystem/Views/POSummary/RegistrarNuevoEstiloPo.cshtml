@@ -1,7 +1,6 @@
 ﻿@model FortuneSystem.Models.POSummary.POSummary
 
 <script src="~/Scripts/general/autocomplete.js"></script>
-<script src="~/Scripts/general/AgregarTalla.js"></script>
 <script type="text/javascript">
 
 
@@ -9,12 +8,12 @@
         $(document).on("click", ".classAdd", function () {
             var rowCount = $('.data-Talla').length + 1;
             var tallasdiv = '<tr class="data-Talla">' +
-                '<td><input type="text"  name="f-talla" id="f-talla" class="form-control talla"  /></td>' +
-                '<td><input type="text" id="l-cantidad" name="l-cantidad" class="form-control l-name01 numCantTall"  /></td>' +
-                '<td><input type="text" id="e-extras"  name="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>' +
-                '<td><input type="text" id="s-ejemplo" name="s-ejemplo" class="form-control s-name01 numEjmTall" value="' + 0 + '"/></td>' +
+                '<td class="mover"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>' +
+                '<td class="datoTalla"><input type="text"  name="f-talla" id="f-talla" class="form-control talla" autocomplete="off" /></td>' +
+                '<td class="datoTalla"><input type="text" id="l-cantidad" name="l-cantidad" class="form-control l-name01 numCantTall"  /></td>' +
+                '<td class="datoTalla"><input type="text" id="e-extras"  name="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>' +
+                '<td class="datoTalla"><input type="text" id="s-ejemplo" name="s-ejemplo" class="form-control s-name01 numEjmTall" value="' + 0 + '"/></td>' +
                 '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
-
                 '</tr>';
             $('#tablaTallas').append(tallasdiv);
         });
@@ -22,53 +21,9 @@
         $(document).on("click", ".deleteTalla", function () {
             $(this).closest("tr").remove();
         });
-        $('#selectGenero').select2({
-            placeholder: "Select a gender",
-            language: {
-
-                noResults: function () {
-
-                    return "There is no result";
-                },
-                searching: function () {
-
-                    return "Searching..";
-                }
-            }
-        });
-
-        $('#selectEspecialidad').select2({
-            placeholder: "Select a specialty",
-            language: {
-
-                noResults: function () {
-
-                    return "There is no result";
-                },
-                searching: function () {
-
-                    return "Searching..";
-                }
-            }
-        });
-
-        $('#selectTela').select2({
-            placeholder: "Select a type of fabric",
-            language: {
-
-                noResults: function () {
-
-                    return "There is no result";
-                },
-                searching: function () {
-
-                    return "Searching..";
-                }
-            }
-        });
-
         $("#selectTipoCamiseta").select2({
             placeholder: "Select a type of shirt",
+            dropdownParent: $("#nuevoEstiloModal"),
             language: {
 
                 noResults: function () {
@@ -81,6 +36,88 @@
                 }
             }
         });
+
+        $("#selectGenero").select2({
+            placeholder: "Select a gender",
+            dropdownParent: $("#nuevoEstiloModal"),
+            language: {
+
+                noResults: function () {
+
+                    return "There is no result";
+                },
+                searching: function () {
+
+                    return "Searching..";
+                }
+            }
+        });
+
+        $("#selectEspecialidad").select2({
+            //placeholder: "Select a specialty",
+            dropdownParent: $("#nuevoEstiloModal"),
+            language: {
+
+                noResults: function () {
+
+                    return "There is no result";
+                },
+                searching: function () {
+
+                    return "Searching..";
+                }
+            }
+        });
+
+        $("#selectEspecialidad").val('12');
+        $("#selectEspecialidad").trigger('change');
+
+        $("#selectTela").select2({
+            placeholder: "Select a type of fabric",
+            dropdownParent: $("#nuevoEstiloModal"),
+            language: {
+
+                noResults: function () {
+
+                    return "There is no result";
+                },
+                searching: function () {
+
+                    return "Searching..";
+                }
+            }
+        }); 
+
+        //Autocomplete tallas
+        $(function () {
+            var list_datalist = Array();
+            $.ajax({
+                url: '/Tallas/Lista_Tallas',
+                type: 'GET',
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var html = "";
+                        list_datalist.push(data[i].Talla);
+                    }
+                }
+            })
+            var availableTags = list_datalist;
+            $(document).on("focus keyup", "input.talla", function (event) {
+                $(this).autocomplete({
+                    source: availableTags,
+                    select: function (event, ui) {
+                        event.preventDefault();
+                        this.value = ui.item.label;
+                    },
+                    focus: function (event, ui) {
+                        event.preventDefault();
+                        this.value = ui.item.label;
+                    }
+                });
+            });
+        });
+
+
         var estilo = $("#ItemDescripcion_ItemEstilo").val();
         if (estilo != '') {
             $('#ItemDescripcion_Descripcion').val('');
@@ -111,13 +148,18 @@
         alertify.notify('the style was registered correctly.', 'success', 10, null);
     });
 
-        $("#ItemDescripcion_ItemEstilo,#CatColores_CodigoColor,#f-talla").on('input', function () {
+       $("#f-talla").on('input', function () {
             var val = this.value;
             this.value = val.replace(/[^A-Z\u00f1\u00d1\u0020\s\^0-9]/g, '');
         });
+
+       /* $("#ItemDescripcion_ItemEstilo,#CatColores_CodigoColor,#f-talla").on('input', function () {
+            var val = this.value;
+            this.value = val.replace(/[^A-Z\u00f1\u00d1\u0020\s\^0-9]/g, '');
+        });*/
         $("#Cantidad").on('input', function () {
             var val = this.value;
-            this.value = val.replace(/^[0-9]\./g, '');
+            this.value = val.replace(/^[0-9]\./gm, '');
         });
 
         $("#crearTallas").hide();
@@ -176,26 +218,17 @@
                     method: 'GET',
                     success: function (result) {
                         var html = '';
-                        html +='<table class="table" id="tablaTallas"><thead>' +
-                            '<tr>' +
-                            '<th>Size</th>' +
-                            ' <th>Quantity</th>' +
-                            ' <th>Extra</th>' +
-                            ' <th>Examples</th>' +
-                            '</tr>'+
-                            '</thead><tbody>';
                         $.each(result, function (key, item) {
                             html += '<tr>';
-                            //html += '<td><input type="text" name="talla" id="f-talla" class="form-control" /></td>';
-                            html += '<td><input type="text" id="f-talla" class="form-control talla" value="' + item.CatTallaItem.Talla + '"/></td>';
-                            html += '<td><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 numCantTall "  /></td>';
-                            html += '<td><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>';
-                            html += '<td><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 numEjmTall"  value="' + 0 + '"/></td>';
+                            html += '<td class="mover"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>';
+                            html += '<td class="datoTalla"><input type="text" id="f-talla" class="form-control talla" value="' + item.CatTallaItem.Talla + '"/></td>';
+                            html += '<td class="datoTalla"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 numCantTall "  /></td>';
+                            html += '<td class="datoTalla"><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>';
+                            html += '<td class="datoTalla"><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 numEjmTall"  value="' + 0 + '"/></td>';
                             html += '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
                             html += '</tr>';
                         });
-                        html += '</tbody> </table>';
-                        $('#listaTalla').html(html);
+                        $('.tbodyTallas').html(html);
                     },
                     error: function (errormessage) {
                         alert(errormessage.responseText);
@@ -274,8 +307,8 @@
                     r++;
                     });
                 });   
-            var error = 0;
-            $('#tablaTallas').find('td').each(function (i, el) {
+            var error = 0;            
+            $('#tablaTallas').find('td.datoTalla').each(function (i, el) {
 
                 var valor = $(el).children().val();
 
@@ -298,12 +331,13 @@
     }
     //Revisar por que se redirecciona a la pagina index
     function enviarListaTalla(cadena, error) {
-
+        
         if (error != 0) {
             var alert = alertify.alert("Mensaje", 'All fields are required.').set('label', 'Aceptar');
             alert.set({ transition: 'zoom' });
             alert.set('modal', false);
         } else {
+            $('#nuevaTalla').prop("disabled", true);
             $.ajax({
                 url: "/POSummary/Registrar_Lista_Tallas",
                 datatType: 'json',
@@ -324,11 +358,13 @@
                         limpiarFormItems();
                         alertify.success('You have confirmed');
                         $("#loading").css('display', 'none');
+                        $('#nuevaTalla').prop("disabled", false);
                     });
                     confirm.set('oncancel', function () {                       
                         $("#loading").css('display', 'none');                        
                         var ID = $("#IdPedido").val();                   
                         $("#nuevoEstiloModal").modal("hide");    
+                        $('#nuevaTalla').prop("disabled", false);
                         buscar_estilos(ID);
                     });
                 },
@@ -374,6 +410,10 @@
         });
     }
 
+    $(document).ready(function () {
+        $('.tbodyTallas').sortable();
+    });
+
     //Sumar cantidades
     var rep;
     document.addEventListener("blur", function (event) {
@@ -416,12 +456,12 @@
             <div class="form-row ">
                 <div class="form-group col-md-5">
                     @Html.LabelFor(model => model.ItemDescripcion.ItemEstilo, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.ItemDescripcion.ItemEstilo, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
+                    @Html.EditorFor(model => model.ItemDescripcion.ItemEstilo, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
                     @Html.ValidationMessageFor(model => model.ItemDescripcion.ItemEstilo, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group col-md-5">
                     @Html.LabelFor(model => model.ItemDescripcion.Descripcion, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.ItemDescripcion.Descripcion, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
+                    @Html.EditorFor(model => model.ItemDescripcion.Descripcion, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
                     @Html.ValidationMessageFor(model => model.ItemDescripcion.Descripcion, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group col-md-3">
@@ -437,13 +477,13 @@
             <div class="form-row">
                 <div class="form-group col-md-5">
                     @Html.LabelFor(model => model.CatColores.CodigoColor, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.CatColores.CodigoColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
+                    @Html.EditorFor(model => model.CatColores.CodigoColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
                     @Html.ValidationMessageFor(model => model.CatColores.CodigoColor, "", new { @class = "text-danger" })
 
                 </div>
                 <div class="form-group col-md-5">
                     @Html.LabelFor(model => model.CatColores.DescripcionColor, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.CatColores.DescripcionColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
+                    @Html.EditorFor(model => model.CatColores.DescripcionColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
                     @Html.ValidationMessageFor(model => model.CatColores.DescripcionColor, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group col-md-3">
@@ -519,12 +559,21 @@
         <div class="panel-heading">
             <h4>Reception of Sizes</h4>
         </div>
-
         <div class="container-fluid">
             <br />
-
             <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">+ Add Size</button>
-            <div id="listaTalla"></div>
+            <table class="table" id="tablaTallas">
+                <thead>
+                    <tr>
+                        <th class="index"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true" /></th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Extra</th>
+                        <th>Examples</th>
+                    </tr>
+                </thead>
+                <tbody class="tbodyTallas"></tbody>
+            </table>
             <button type="button" id="nuevaTalla" class="btn btn-success btn-md pull-right btn-sm">Save Size</button>
             <br />
             <br />

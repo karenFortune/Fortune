@@ -28,7 +28,7 @@ namespace FortuneSystem.Controllers.Catalogos
         DatosTransferencias dt = new DatosTransferencias();
         QRCodeController qr = new QRCodeController();
         PDFController pdf = new PDFController();
-
+        int id_sucursal;
         public ActionResult Index(){
             //Session["id_usuario"] = consultas.buscar_id_usuario(Convert.ToString(Session["usuario"]));
             //Session["id_usuario"] = 2;
@@ -39,8 +39,9 @@ namespace FortuneSystem.Controllers.Catalogos
                 bool isExcelInstalled = Type.GetTypeFromProgID("Excel.Application") != null ? true : false;
                 //return View(di.ListaInventario());
             }*/
-            int id_usuario = Convert.ToInt32(Session["idUsuario"]);
+            int id_usuario = Convert.ToInt32(Session["id_Empleado"]);
             Session["id_usuario"] = id_usuario;
+            Session["id_sucursal"] = consultas.obtener_sucursal_id_usuario(Convert.ToInt32(Session["id_usuario"]));
             return View();
         }
         public ActionResult recibo_items(){
@@ -178,6 +179,12 @@ namespace FortuneSystem.Controllers.Catalogos
             var filteredItems = items.Where(item => item.IndexOf(term, StringComparison.InvariantCultureIgnoreCase) >= 0);
             return Json(filteredItems, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult Autocomplete_units(string term)
+        {
+            var items = consultas.Lista_units();
+            var filteredItems = items.Where(item => item.IndexOf(term, StringComparison.InvariantCultureIgnoreCase) >= 0);
+            return Json(filteredItems, JsonRequestBehavior.AllowGet);
+        }
         //AUTOCOMPLETADOS
         public ActionResult lista_pos(string term) {
             return Json(consultas.Lista_po_abiertos(), JsonRequestBehavior.AllowGet);
@@ -202,8 +209,7 @@ namespace FortuneSystem.Controllers.Catalogos
             return Json(dt.lista_lugares_transfer_destino(ID), JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult inventario_sucursal(string ID, string busqueda)
-        {
+        public JsonResult inventario_sucursal(string ID, string busqueda){
             return Json(dt.obtener_inventario_sucursal(ID, busqueda), JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
@@ -226,13 +232,15 @@ namespace FortuneSystem.Controllers.Catalogos
             Estilos = estilos.Split('*');
             Cajas = caja.Split('*');
             Codigo= codigos.Split('*');
-            for (int i = 1; i < Cantidades.Length; i++) {
+            for (int i = 1; i < Cantidades.Length; i++){
                 total += Convert.ToInt32(Cantidades[i]);
             }
             dt.guardar_transferencia_inventario(fecha, persona, sello, origen, destino, driver, pallet, envio, total, Convert.ToInt32(Session["id_usuario"]), id_sello,carro,placas);
             id_transferencia = dt.obtener_ultima_transferencia();
             id_sucursal = consultas.buscar_id_sucursal_usuario(Convert.ToInt32(Session["id_usuario"]));
-            dt.aumentar_sellos(sello, id_sucursal);
+            if (sello != "0"){
+                dt.aumentar_sellos(sello, id_sucursal);
+            }
             dt.revisar_sellos(id_sello, sello);
             for (int i = 1; i < Cantidades.Length; i++) {
                 int pedido = consultas.buscar_pedido(Pos[i]);
@@ -315,58 +323,27 @@ namespace FortuneSystem.Controllers.Catalogos
         }
         //*****************************************************************************************************************************************************
         [HttpGet]
-        public ActionResult lista_recepcion_transferencias()
-        {
-            string id_sucursal = consultas.obtener_sucursal_id_usuario(Convert.ToInt32(Session["id_usuario"]));
-            id_sucursal = "1";
-            return PartialView(dt.lista_transferencias_por_recibir(id_sucursal));
-        }
-        [HttpPost]
-        public JsonResult aceptar_transferencia(string ID){
-            int id_destino = 0, existencia = 0;
-            List<salidas> transferencia = dt.obtener_informacion_transferencia(ID);
-            foreach (salidas item in transferencia){
-                id_destino = item.id_destino;
-                foreach (salidas_item i in item.lista_salidas_item) {
-                    Inventario inventario = new Inventario();
-                    inventario = dt.consultar_item(i.id_inventario);
-                    //buscar si en el destino de la transferencia ya existen esos item
-                    existencia = dt.comparar_inventario(inventario, id_destino);
-                    if (existencia != 0) {
-                        //si existen se suma 
-                        di.update_stock(existencia, i.cantidad, id_destino);
-                    } else {
-                        //si no se agregan con la  sucursal de destino
-                        dt.agregar_inventario_desde_transferencia(inventario, id_destino, i.cantidad);
-                        existencia = di.obtener_ultimo_inventario();
-                    }
-                    dt.agregar_id_inventario_nuevo_transferencia(i.id_salida_item,existencia);
-                    string[] codigo = (i.codigo).Split('_');
-                    if ((i.codigo).Contains("caja")) { 
-                        int cantidad_caja = dt.obtener_contenido_caja(Convert.ToInt32(codigo[1]));
-                        if ((i.codigo).Contains("caja") && (cantidad_caja==i.cantidad)) {                        
-                            dt.cambiar_id_inventario_caja(existencia,codigo[1]);
-                        }
-                    }
-                }
-            }
-            dt.actualizar_transferencia(Convert.ToInt32(Session["id_usuario"]), Convert.ToInt32(ID));
-            return Json("", JsonRequestBehavior.AllowGet);
-        }
+        public ActionResult lista_recepcion_transferencias(){
+            return PartialView(dt.lista_transferencias_por_recibir(Convert.ToString(Session["id_sucursal"])));
+        }      
+
+        
 
         public JsonResult obtener_categorias_inventario() {
             return Json(consultas.buscar_categorias_inventario(), JsonRequestBehavior.AllowGet);
         }
         /******************************************************************************************************************************************/
         [HttpPost]
-        public JsonResult agregar_item_catalogo(string actionData){
+        public JsonResult agregar_item_catalogo(string actionData,string unit,string minimo){
             string[] datos = actionData.Split('*');
             string[] tallas = datos[3].Split('+');
             
             for (int i = 0; i < tallas.Length; i++) {
                 int existencia = di.buscar_existencia_item(actionData,tallas[i]);
                 if (existencia == 0){
-                    di.guardar_item_nuevo(actionData,tallas[i]);
+                    di.guardar_item_nuevo(actionData,tallas[i],unit,minimo);
+                    //if () {
+                    //}
                 }
             }            
             
@@ -423,11 +400,10 @@ namespace FortuneSystem.Controllers.Catalogos
                             di.sumar_existencia_trim(existencia);
                             ids_inventario += "*" + existencia.ToString();
                         }
-                        trims_inventario += "*"+existencia;
+                        trims_inventario += "*"+ consultas.obtener_po_summary(di.id_pedido, di.id_estilo);
                         trims_cantidades+= "*"+ total_item.ToString();
                         trims_item+= "*"+ ids[i];
                         break;
-
                     case 1:
                         consultas.buscar_informacion_blank_item(ids[i]);
                         int customer_final = consultas.buscar_cliente_final_po(pos[i]);
@@ -452,10 +428,9 @@ namespace FortuneSystem.Controllers.Catalogos
             GenerateMyQCCode("recibo_" + di.id_recibo.ToString());
             string[] trimsInventario = trims_inventario.Split('*'), trimsCantidad = trims_cantidades.Split('*'), trimsItem= trims_item.Split('*');
             //REVISAR TRIMS 
-            for (int tr = 1; tr < trimsInventario.Length; tr++) {
-                int summary = di.buscar_po_summary_inventario(trimsInventario[tr]);
-                di.buscar_item_trim_request(summary,Convert.ToInt32(trimsCantidad[tr]),Convert.ToInt32(trimsItem[tr]), di.id_recibo);
-            }
+            /*for (int tr = 1; tr < trimsInventario.Length; tr++){
+                di.buscar_item_trim_request(Convert.ToInt32(trimsInventario[tr]), Convert.ToInt32(trimsCantidad[tr]), Convert.ToInt32(trimsItem[tr]), di.id_recibo);
+            }*/
             //TRIMS
             string[] inventarios = ids_inventario.Split('*'), totales_items = qty_item.Split('*');
             for (int j = 1; j < inventarios.Length; j++){
@@ -693,8 +668,95 @@ namespace FortuneSystem.Controllers.Catalogos
             return Json(dt.buscar_estilo_inventario(Convert.ToInt32(inventario))+"*"+ dt.buscar_cajas_inventario(Convert.ToInt32(inventario)), JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult aceptar_transferencia(string id){
+            int id_destino = 0, existencia = 0;
+            //int cantidad_temporal, total_caja, identificador_caja;
+            List<salidas> transferencia = dt.obtener_informacion_transferencia(id);
+            foreach (salidas item in transferencia){
+                id_destino = item.id_destino;
+                foreach (salidas_item i in item.lista_salidas_item){
+                    Inventario inventario = new Inventario();
+                    inventario = dt.consultar_item(i.id_inventario);
+                    //buscar si en el destino de la transferencia ya existen esos item
+                    existencia = dt.comparar_inventario(inventario, id_destino);
+                    if (existencia != 0){
+                        //si existen se suma 
+                        di.update_stock(existencia, i.cantidad, id_destino);
+                    }else{
+                        //si no se agregan con la  sucursal de destino
+                        dt.agregar_inventario_desde_transferencia(inventario, id_destino, i.cantidad);
+                        existencia = di.obtener_ultimo_inventario();
+                    }
+                    dt.agregar_id_inventario_nuevo_transferencia(i.id_salida_item, existencia);
+                    string[] codigo = (i.codigo).Split('_');
+                    if ((i.codigo).Contains("caja")){
+                        int cantidad_caja = dt.obtener_contenido_caja(Convert.ToInt32(codigo[1]));
+                        if ((i.codigo).Contains("caja") && (cantidad_caja == i.cantidad)){
+                            dt.cambiar_id_inventario_caja(existencia, codigo[1]);
+                        }
+                    }else{
+                        //crear una nueva caja con ese id de inventario y cantidad
+                        di.guardar_caja(i.id_salida_item, (existencia).ToString(), (i.cantidad).ToString(), (i.cantidad).ToString());
+                    }
+                }
+            }
+            dt.actualizar_transferencia(Convert.ToInt32(Session["id_usuario"]), Convert.ToInt32(id));
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
 
+        public JsonResult guardar_id_salida(string id){
+            Session["id_salida_editar"] = id;
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult obtener_informacion_salida(){
+            return Json(dt.obtener_informacion_transferencia(Convert.ToString(Session["id_salida_editar"])), JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult abrir_edicion(){
+            return View("editar_transferencia");
+        }
+        public JsonResult guardar_edicion_transferencia(string informacion,string estado,string items_salida){
+            // 0      1            2     3       4       5       6       7       8       9      10       11    12      13     14     15       16
+            //ids, cantidades, fecha, persona, sello, origen, destino, driver, pallet, envio, id_sello, pos, estilos, caja, carro, placas, codigos
+            string[] datos= informacion.Split('+');
+            int id_transferencia = Convert.ToInt32(Session["id_salida_editar"]), total = 0, id_sucursal = 0;
+            string[] Cantidades, Ids, Pos, Estilos, Cajas, Codigo;
+            Cantidades = datos[1].Split('*');
+            Ids = datos[0].Split('*');
+            Pos = datos[11].Split('*');
+            Estilos = datos[12].Split('*');
+            Cajas = datos[13].Split('*');
+            Codigo = datos[16].Split('*');
+            for (int i = 1; i < Cantidades.Length; i++){
+                total += Convert.ToInt32(Cantidades[i]);
+            }
+            dt.guardar_edicion_transferencia_inventario(id_transferencia,datos[2], datos[3], datos[4], datos[5], datos[6], datos[7], datos[8], datos[9], total, Convert.ToInt32(Session["id_usuario"]), datos[10], datos[14], datos[15]);
+            id_sucursal = consultas.buscar_id_sucursal_usuario(Convert.ToInt32(Session["id_usuario"]));
+            
+            if (datos[4] != "0"){
+                dt.aumentar_sellos(datos[4], id_sucursal);
+            }
+            string[] salidasitems = items_salida.Split('*');
+            if (estado == "1") {//si esta aprobada                
+                for(int ii= 1; ii < salidasitems.Length; ii++){
+                    salidas_item sa = dt.obtener_datos_salida_item(Convert.ToInt32(salidasitems[ii]));
+                    //regresar_inventario
+                    di.update_inventario(sa.id_inventario, sa.cantidad);
+                    //regresar cajas
+                    dt.regresar_datos_cajas(sa.id_inventario, sa.cantidad);                   
+                }
+            }
+            //borrar
+            for (int ii = 1; ii < salidasitems.Length; ii++){
+                dt.eliminar_salida_item(Convert.ToInt32(salidasitems[ii]));
+            }
 
+            for (int i = 1; i < Cantidades.Length; i++){
+                int pedido = consultas.buscar_pedido(Pos[i]);
+                int estilo = consultas.obtener_estilo_id(Estilos[i]);
+                dt.guardar_items_inventario(id_transferencia, Ids[i], Cantidades[i], pedido, estilo, Cajas[i], Codigo[i]);
+            }
+            return Json("0", JsonRequestBehavior.AllowGet);
+        }
 
 
 

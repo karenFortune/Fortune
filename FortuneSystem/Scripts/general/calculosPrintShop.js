@@ -59,9 +59,7 @@ function calcular_Printed() {
                 alert.set({ transition: 'zoom' });
                 alert.set('modal', false);
                 error++;       
-            } else if (numPrint === 0) {
-                error++;
-            }
+            } 
             else {
                 input.css('border', '1px solid #cccccc');
             }
@@ -117,6 +115,8 @@ function obtTotalMat(index) {
     var error = 0;
     var valorCalidad = $(".calidad").parent("tr").find("td").eq(index).text();
     var valorCajas = $(".cajasQty").parent("tr").find("td").eq(index).text();
+    var valorFaltante = $(".faltante").parent("tr").find("td").eq(index).text();
+    var faltanteQty = parseInt(valorFaltante) * -1;
     var input = $(".totalPiezas");
     var pCalidad = parseInt(valorCalidad);  
     var nombreT = "#pallet" + index + " .totalPiezas";
@@ -124,16 +124,112 @@ function obtTotalMat(index) {
     var nombreP = "#pallet" + index + " .cant"; 
     var nombreB = "#pallet" + index + " .totBox";
     var nombreTF = "#pallet" + index + " .totFaltantes";
-    var numCajas = $(nombreC).val(); 
-    var numPiezas = $(nombreP).val();
-    var numTotalBox = pCalidad / numPiezas;
-    var totalBox = Math.floor(numTotalBox);
-    var tot = numCajas * numPiezas; 
-    //$(nombreB).val(totalBox);
-    $(nombreT).val(tot);
-    var nCajas = parseInt(valorCajas) + parseInt(numCajas);
-    var resta = parseInt(totalBox) - nCajas;     
-    $(nombreTF).val(resta);
+    var nombrePartial = "#pallet" + index + " .totBoxPartial";
+  
+    var numCajas = parseInt($(nombreC).val()); 
+    var totalCajas = $(nombreB).val();
+    var nCajas = 0;
+    var resta = 0;
+    var numTotalBox = 0;
+    var totalBox;
+    var tot = 0;
+    var totalPartial = 0;
+    var totalPiezasGrl = 0;
+    var resultado = 0;
+    var numTotalCajas = $(nombreB).val();   
+    if (numCajas <= totalCajas) {
+        if (numCajas !== 0) {
+            var numPiezas = $(nombreP).val();
+            var cantBox = parseInt(numPiezas);
+            if (faltanteQty < cantBox) {
+                numTotalBox = faltanteQty / numPiezas;
+                totalBox = Math.floor(numTotalBox);
+                if (numTotalBox < 1) {
+                    totalBox = 1;
+                }
+                var partial = parseInt(totalBox);
+                $(nombreT).val(faltanteQty);
+
+                $(nombrePartial).val(faltanteQty);
+                nCajas = parseInt(valorCajas) + parseInt(numCajas);
+                resta = parseInt(numTotalCajas) - nCajas;
+                $(nombreTF).val(resta);
+            } else {
+                numTotalBox = faltanteQty / numPiezas;
+                totalBox = Math.floor(numTotalBox);
+                tot = numCajas * numPiezas;
+                $(nombreT).val(tot);
+                if (faltanteQty > parseInt(tot)) {
+                    $(nombrePartial).val(0);
+                    if ($(nombrePartial).val() === "0") {
+                        $(nombrePartial).prop('readonly', true);
+                    } else {
+                        $(nombrePartial).prop('readonly', false);
+                    }
+                    tot = numCajas * numPiezas;
+                    resultado = parseInt(tot);
+                    $(nombreT).val(resultado);
+                    if (parseInt(valorCajas) === 0) {
+                        nCajas = parseInt(valorCajas) + parseInt(numCajas);
+                    } else {
+                        nCajas = parseInt(valorCajas);
+                    }
+                   
+                   // resta = parseInt(numTotalCajas) - nCajas;
+                    resta = numTotalCajas - numCajas;
+                    $(nombreTF).val(resta);
+                } else {                 
+                        tot = (numCajas - 1) * numPiezas;
+                        totalPiezasGrl = faltanteQty - tot;
+                        resultado = parseInt(tot) + parseInt(totalPiezasGrl);
+                    $(nombreT).val(resultado);
+                  
+                    if (numTotalBox % 1 === 0) {
+                        $(nombrePartial).val(0);
+                    } else {
+                        $(nombrePartial).val(totalPiezasGrl);
+                    }
+                    
+                    if ($(nombrePartial).val() === "0") {
+                        $(nombrePartial).prop('readonly', true);
+                    } else {
+                        $(nombrePartial).prop('readonly', false);
+                    }
+                    if (faltanteQty > cantBox) {
+                        //nCajas = parseInt(valorCajas) + parseInt(numCajas);
+                        resta = numTotalCajas - numCajas;
+                        $(nombreTF).val(resta);
+                    } else {
+                       // nCajas = parseInt(valorCajas) + parseInt(numCajas);
+                       // resta = parseInt(numTotalCajas) - nCajas;
+                        resta = numTotalCajas - numCajas;
+                        $(nombreTF).val(resta);
+                    }
+                                      
+                 
+                }                
+            }
+        } else {
+            $(nombreT).val(0);
+            $(nombrePartial).val(0);
+            if ($(nombrePartial).val() === "0") {
+                $(nombrePartial).prop('readonly', true);
+            } else {
+                $(nombrePartial).prop('readonly', false);
+            }
+            $(nombreTF).val(totalCajas);
+        }
+        $(nombreC).css('border', '1px solid #cccccc');
+        $("#nuevoPallet").prop('disabled', false);
+    } else {
+        var alert = alertify.alert("Message", 'The number of boxes exceeds the allowed boxes.').set('label', 'Aceptar');
+        alert.set({ transition: 'zoom' });
+        alert.set('modal', false);
+        $(nombreC).css('border', '2px solid #e03f3f');
+        $("#nuevoPallet").prop('disabled', true);
+    }
+    
+    
     
     /*if (resta < 0) {
         $(nombreC).css('border', '2px solid #e03f3f');
@@ -158,6 +254,41 @@ function obtTotalMat(index) {
         $("#nuevoPallet").prop('disabled', false);
     }*/
    
+}
+
+function ActualizarPiezasPackingBulk(index) {
+    var error = 0;
+    var valorCalidad = $(".calidad").parent("tr").find("td").eq(index).text();
+    var pCalidad = parseInt(valorCalidad); 
+    var nombreT = "#pallet" + index + " .totalPiezas";
+    var nombrePartial = "#pallet" + index + " .totBoxPartial";
+    var nombreP = "#pallet" + index + " .cant"; 
+    var numPartial = $(nombrePartial).val();
+    var totalPiezas = $(nombreT).val();
+    var numTPiezas = 0;
+    var resultado = 0;
+    var numPiezas = $(nombreP).val();
+    var numTotalBox = pCalidad / numPiezas;
+    var totalBox = Math.floor(numTotalBox);
+    var cantCajas = totalBox * numPiezas;
+    var totalPiezasGrl = pCalidad - parseInt(cantCajas) ;
+
+    if (numPartial > pCalidad || numPartial > totalPiezasGrl) {        
+        var alert = alertify.alert("Message", 'The quantity of the partial exceeds the number of pieces of the order.').set('label', 'Aceptar');
+        alert.set({ transition: 'zoom' });
+        alert.set('modal', false);
+        $(nombrePartial).css('border', '2px solid #e03f3f');
+        $("#nuevoPallet").prop('disabled', true);
+        error++;
+    } else {
+        $(nombrePartial).css('border', '1px solid #cccccc');
+        $("#nuevoPallet").prop('disabled', false);
+        numTPiezas = $(nombrePartial).val();
+        resultado = parseInt(cantCajas) + parseInt(numTPiezas);
+        $(nombreT).val(resultado); 
+      
+              
+    }
 }
 
 
@@ -200,11 +331,15 @@ function obtTotalPiezas(numBoxPPK) {
     var pQty = parseInt(valorQty);
     var numRatio = parseInt(valorRatio);
     var numTotalCart = pQty / numRatio;
+    var restar;
+    if ($(".cantBox").val() === "") {
+        $(".cantBox").val(0);
+    }
     $("#Packing_TotalCartonsPPK").val(numTotalCart);
     if (parseInt(numBoxPPK) === 0) {
         $("#Packing_TotalCartonesFaltPPK").val(numTotalCart);
     } else {
-        var restar = parseInt(numTotalCart) - parseInt(numBoxPPK);
+        restar = parseInt(numTotalCart) - parseInt(numBoxPPK);
         $("#Packing_TotalCartonesFaltPPK").val(restar);
     } 
     for (var i = 1; i <= numFilas; i++) {
@@ -239,9 +374,20 @@ function obtTotalPiezas(numBoxPPK) {
             $(nombreT).css('border', '1px solid #cccccc');
             $("#nuevoPallet").prop('disabled', false);
         }
+
+        if (parseInt(numCajas) > restar) {
+            $(".cantBox ").css('border', '2px solid #e03f3f');
+            error++;
+            $("#nuevoPallet").prop('disabled', true);
+        } else {
+            $(".cantBox ").css('border', '1px solid #cccccc');
+            $("#nuevoPallet").prop('disabled', false);
+        }
+
     }
     var numMBoxPPK = $("#Packing_TotalCartonesFaltPPK").val();
-    var resta = parseInt(numMBoxPPK) - parseInt(numBoxPPK);
+    //var resta = parseInt(numMBoxPPK) - parseInt(numBoxPPK);
+    var resta = parseInt(numMBoxPPK) - parseInt(numCajas);
     if (resta !== 0) {
         $("#Packing_TotalCartonesFaltPPK").val(resta);
     }

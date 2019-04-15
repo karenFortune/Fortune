@@ -9,6 +9,7 @@
         <EntityTypeShape EntityType="FortuneTestModel.IMAGEN_ARTE" Width="1.5" PointX="0.5" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FortuneTestModel.UPC" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
         <AssociationConnector Association="FortuneTestModel.FK__ARTE__IdImgArte__467D75B8" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="FortuneTestModel.IMAGEN_ARTE_PNL" Width="1.5" PointX="3.875" PointY="4.25" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

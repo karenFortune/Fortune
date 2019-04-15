@@ -21,8 +21,10 @@ namespace FortuneSystem.Controllers
             //Session["id_usuario"] = consultas.buscar_id_usuario(Convert.ToString(Session["usuario"]));
             //Session["id_usuario"] = 2;
             //Session["id_sucursal"] = consultas.obtener_sucursal_id_usuario(Convert.ToInt32(Session["id_usuario"]));
-            int id_usuario = Convert.ToInt32(Session["idUsuario"]);
-            Session["id_usuario"] = id_usuario;
+            int id_usuario = Convert.ToInt32(Session["id_Empleado"]);
+            Session["id_usuario"] = id_usuario;           
+            //Session["id_usuario"] = 2;           
+            Session["id_sucursal"] = consultas.obtener_sucursal_id_usuario(Convert.ToInt32(Session["id_usuario"]));
             Session["turno"] = consultas.obtener_turno_usuario(Convert.ToInt32(Session["id_usuario"]));            
             return View();
         }
@@ -63,9 +65,7 @@ namespace FortuneSystem.Controllers
             return Json(filteredItems, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult buscar_pedidos_inicio() {
-            return Json(ds.buscar_pedidos_recibo(Convert.ToInt32(Session["id_sucursal"])), JsonRequestBehavior.AllowGet);
-        }
+        
        
         [HttpPost]
         public JsonResult imprimir_papeleta_vacia_staging(string datos)
@@ -79,10 +79,7 @@ namespace FortuneSystem.Controllers
             return Json("0", JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult buscar_pedido_estilo_tallas(string id) {
-            return Json(ds.lista_papeleta(Convert.ToInt32(id), Convert.ToInt32(Session["turno"])),JsonRequestBehavior.AllowGet);
-        }
-
+        
         public JsonResult guardar_stag_bd(string po,string estilo,string size,string quantity, string employee,string fabric_percent,string country,string color,string comentario) {
             string[] tallas = size.Split('*'), cantidades = quantity.Split('*'), empleados = employee.Split('*'), porcentajes = fabric_percent.Split('*'), paises = country.Split('*'), colores = color.Split('*');
             int total = 0,id_size,id_color,id_pais,id_percent;
@@ -90,16 +87,16 @@ namespace FortuneSystem.Controllers
             for (int i = 1; i < cantidades.Length; i++) {
                 total += Convert.ToInt32(cantidades[i]);
             }
-            int id_empleado;
+            //int id_empleado;
             ds.guardar_stag_bd(po,estilo,total,Convert.ToInt32(Session["id_usuario"]),summary,comentario);
             int id_stag = ds.obtener_ultimo_stag();
             for (int i = 1; i < cantidades.Length; i++){
-                id_empleado = stag.obtener_id_empleado(empleados[i]);
+               // id_empleado = stag.obtener_id_empleado(empleados[i]);
                 id_size = consultas.buscar_talla(tallas[i]);
                 id_color = consultas.buscar_color(colores[i]);
                 id_pais = consultas.buscar_id_pais(paises[i]);
                 id_percent = consultas.buscar_percent(porcentajes[i]);
-                ds.guardar_stag_conteos(id_stag, id_size, id_pais,id_color,id_percent,Convert.ToInt32(cantidades[i]),id_empleado);
+                ds.guardar_stag_conteos(id_stag, id_size, id_pais,id_color,id_percent,Convert.ToInt32(cantidades[i]), empleados[i]);
             }
             Session["id_staging"] = id_stag;
             return Json("",JsonRequestBehavior.AllowGet);
@@ -118,6 +115,83 @@ namespace FortuneSystem.Controllers
         public JsonResult buscar_datos_grafica() {
             return Json(stag.obtener_lista_staging_grafica(), JsonRequestBehavior.AllowGet);
         }
+/***********************************************************************************************************************************************************************/
+        public JsonResult buscar_pedidos_inicio(string busqueda){
+            return Json(ds.buscar_pedidos_recibo(Convert.ToInt32(Session["id_sucursal"]),busqueda), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult buscar_pedido_estilo_tallas(string datos) {
+            string[] data = datos.Split('*');
+            //summary//estilo//pedido
+            
+            Session["id_estilo_count"] = data[0];
+            Session["id_pedido_count"] = data[1];
+            Session["id_summary_count"] = data[2];           
+            var resultado = Json(new {
+                result = ds.lista_papeleta(Convert.ToInt32(Session["id_estilo_count"]), Convert.ToInt32(Session["id_pedido_count"]), Convert.ToInt32(Session["turno"])),
+            });
+            return Json(resultado, JsonRequestBehavior.AllowGet);
+           
+        }
+
+        public JsonResult buscar_conteos_estilo(){
+            List<Talla_staging> lista_tallas = ds.obtener_cantidades_tallas_estilo(Convert.ToInt32(Session["id_summary_count"]));
+            List<Talla_staging> totales_orden = ds.obtener_cantidades_tallas_estilo(Convert.ToInt32(Session["id_summary_count"]));
+            List<Talla_staging> totales_stagin = ds.obtener_cantidades_tallas_estilo_staging(lista_tallas, Convert.ToInt32(Session["id_summary_count"]));
+            string nombre = consultas.obtener_estilo(Convert.ToInt32(Session["id_estilo_count"])) + " " + consultas.buscar_descripcion_estilo(Convert.ToInt32(Session["id_estilo_count"]));
+            var resultado = Json(new{
+                result = ds.lista_papeleta(Convert.ToInt32(Session["id_estilo_count"]), Convert.ToInt32(Session["id_pedido_count"]), Convert.ToInt32(Session["turno"])),
+                lista_totales_orden = totales_orden,
+                lista_staging = totales_stagin,
+                estilo = nombre
+            });
+            return Json(resultado, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -4,7 +4,48 @@
     ViewBag.Title = "Index";
    
 }
+<style>
+    .edit_driver {
+    }
 
+        .edit_driver:hover {
+            color: white !important;
+            background: #3479bf !important;
+            border-radius: 15px;
+        }
+
+    .dot {
+        height: 50px;
+        width: 50px;
+        background-color: #de5a00;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .dot2 {
+        height: 50px;
+        width: 50px;
+        background-color: #de5a00;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .dot3 {
+        height: 50px;
+        width: 50px;
+        background-color: dimgray;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .dot4 {
+        height: 50px;
+        width: 50px;
+        background-color: darkseagreen;
+        border-radius: 50%;
+        display: inline-block;       
+       
+</style>
 <h2></h2>
     <table id="tablaArte" class="table table-striped">
         <thead>
@@ -21,9 +62,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.StatusArte)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.StatusPNL)
-                </th>
 
                 <th>ACTIONS</th>
             </tr>
@@ -31,28 +69,41 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Estilo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PO)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Tienda)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EstadosArte)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EstadosPNL)
-                    </td>
-                    <td>
-                        @Html.ActionLink(" ", "Create", new { id = item.CATARTE.IdSummary, idArte = item.IdImgArte }, new { @class = "btn btn-default glyphicon glyphicon-check", @style = "color:black", @Title = "Art" })
-                    
-                    </td>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estilo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PO)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tienda)
+                </td>
+                @if (item.StatusArte == 1)
+                {
 
-                </tr>
+                    <td><span class="dot" title="APPROVED"></span> </td>
+                }
+                else if (item.StatusArte == 2)
+                {
+
+                    <td><span class="dot2" title="REVIEWED"></span> </td>
+                }
+                else if (item.StatusArte == 3)
+                {
+                    <td><span class="dot3" title="PENDING"></span> </td>
+                }
+                else if (item.StatusArte == 4)
+                {
+                    <td><span class="dot4" title="INHOUSE"></span> </td>
+                }
+                <td>
+
+                    <a href="@Url.Action("Create", "Arte",  new { id = item.CATARTE.IdSummary, idArte = item.IdImgArte }) " class="btn edit_driver edicion_driver" Title="Art"> <span class="glyphicon glyphicon-check " aria-hidden="true" style="padding: 0px !important;"></span></a>
+
+                </td>
+
+            </tr>
             }
         </tbody>
     </table>

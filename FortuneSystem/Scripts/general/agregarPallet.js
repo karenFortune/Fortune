@@ -1,6 +1,6 @@
 ﻿function obtenerPalletBulk() {
-    var r = 0; var c = 0; var i = 0; var cadena = new Array(5);
-    cadena[0] = ''; cadena[1] = ''; cadena[2] = ''; cadena[3] = ''; cadena[4] = '';
+    var r = 0; var c = 0; var i = 0; var cadena = new Array(6);
+    cadena[0] = ''; cadena[1] = ''; cadena[2] = ''; cadena[3] = ''; cadena[4] = ''; cadena[5] = '';
     var nFilas = $("#tablaTallasPallet tbody>tr").length;
     var nColumnas = $("#tablaTallasPallet tr:last td").length;
     $('#tablaTallasPallet tbody>tr').each(function () {
@@ -17,7 +17,7 @@
    error = 0;
     $('#tablaTallasPallet').find('td.cBox').each(function (i, el) {
         var valor = $(el).children().val();
-        if ($(el).children().val() === '' || $(el).children().val() === '0') {
+        if ($(el).children().val() === '') {
             error++;
             $(el).children().css('border', '2px solid #e03f3f');
 
@@ -38,7 +38,7 @@
      
 
         } else {
-            if ($(nombreC).val() === '' || $(nombreC).val() === '0') {
+            if ($(nombreC).val() === '') {
                 error++;
                 $(nombreC).css('border', '2px solid #e03f3f');
 
@@ -62,8 +62,8 @@
 }
 
 function obtenerPalletPPK() {
-    var r = 0; var c = 0; var i = 0; var cadena = new Array(5);
-    cadena[0] = ''; cadena[1] = ''; cadena[2] = ''; cadena[3] = ''; cadena[4] = '';
+    var r = 0; var c = 0; var i = 0; var cadena = new Array(6);
+    cadena[0] = ''; cadena[1] = ''; cadena[2] = ''; cadena[3] = ''; cadena[4] = ''; cadena[5] = '';
     var nFilas = $("#tablaTallasPallet tbody>tr").length;
     var nColumnas = $("#tablaTallasPallet tr:last td").length;
     $('#tablaTallasPallet tbody>tr').each(function () {

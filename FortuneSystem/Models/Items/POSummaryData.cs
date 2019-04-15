@@ -3,6 +3,7 @@ using FortuneSystem.Models.Item;
 using FortuneSystem.Models.Items;
 using FortuneSystem.Models.Packing;
 using FortuneSystem.Models.Pedidos;
+using FortuneSystem.Models.Usuarios;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,6 +18,8 @@ namespace FortuneSystem.Models.POSummary
         PackingData objPacking = new PackingData();
         PedidosData objPedido = new PedidosData();
         ItemTallaData objTallas = new ItemTallaData();
+        CatUsuarioData objUsr = new CatUsuarioData();
+
         //Muestra la lista de PO Summary Por PO
         public IEnumerable<POSummary> ListaItemsPorPO(int? id)
           {
@@ -50,6 +53,21 @@ namespace FortuneSystem.Models.POSummary
                     ItemSummary.CatEspecialidades = Especialidad;
                     ItemSummary.CatColores = colores;
                     ItemSummary.ItemDescripcion = Desc;
+                    ItemSummary.IdEstilo= Convert.ToInt32(leer["ITEM_ID"]);
+                    if (!Convert.IsDBNull(leer["ID_USUARIO"]))
+                    {
+                        ItemSummary.IdUsuario = Convert.ToInt32(leer["ID_USUARIO"]);
+                    }             
+                    if (ItemSummary.IdUsuario != 0)
+                    {
+                        ItemSummary.NombreUsuario = objUsr.Obtener_Nombre_Usuario_PorID(ItemSummary.IdUsuario);
+                    }
+                    else
+                    {
+                        ItemSummary.NombreUsuario = "-";
+                    }
+                    
+                    //ItemSummary.NombreEstilo = leer["DESCRIPTION"].ToString();
                     listSummary.Add(ItemSummary);
 
                 }
@@ -228,6 +246,9 @@ namespace FortuneSystem.Models.POSummary
                 comando.Parameters.AddWithValue("@IdTela", items.IdTela);
                 comando.Parameters.AddWithValue("@TipoCamiseta", items.TipoCamiseta);
                 comando.Parameters.AddWithValue("@IdEspecialidad", items.IdEspecialidad);
+                comando.Parameters.AddWithValue("@IdUsuario", items.IdUsuario);
+                comando.Parameters.AddWithValue("@FechaUCC", DBNull.Value);
+                comando.Parameters.AddWithValue("@IdEstado", items.IdEstado);
 
                 comando.ExecuteNonQuery();
             }
@@ -257,6 +278,31 @@ namespace FortuneSystem.Models.POSummary
                 conex.CerrarConexion();
             }
             finally {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+            return 0;
+        }
+
+        public int Obtener_Utlimo_Id_Arte_Pnl()
+        {
+            Conexion conex = new Conexion();
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
+            try
+            {
+                cmd.Connection = conex.AbrirConexion();
+                cmd.CommandText = "SELECT IdImgArtePNL FROM IMAGEN_ARTE_PNL WHERE IdImgArtePNL = (SELECT MAX(IdImgArtePNL) FROM IMAGEN_ARTE_PNL) ";
+                cmd.CommandType = CommandType.Text;
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    return Convert.ToInt32(reader["IdImgArtePNL"]);
+                }
+                conex.CerrarConexion();
+            }
+            finally
+            {
                 conex.CerrarConexion();
                 conex.Dispose();
             }
@@ -425,5 +471,101 @@ namespace FortuneSystem.Models.POSummary
                 conex.Dispose();
             }
         }
+
+        //Muestra la lista estilos y tallas por ID pedido y ID Estilo
+       /* public IEnumerable<POSummarys> ListaSummaryBlanksId(int? id, int? idEstilo)
+        {
+            Conexion conn = new Conexion();
+            List<POSummarys> listSummary = new List<POSummarys>();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;
+                comando.Connection = conn.AbrirConexion();
+                comando.CommandText = "SELECT PO.ID_PO_SUMMARY, S.TALLA_ITEM, S.CANTIDAD,S.EJEMPLOS FROM PO_SUMMARY PO " +
+                    "INNER JOIN ITEM_SIZE S ON S.ID_SUMMARY=PO.ID_PO_SUMMARY " +
+                    "WHERE PO.ID_PEDIDOS='" + id + "' AND PO.ITEM_ID='" + idEstilo + "' ";
+                comando.CommandType = CommandType.Text; 
+                leer = comando.ExecuteReader();
+
+                while (leer.Read())
+                {
+                    POSummarys ItemSummary = new POSummarys();
+                    ItemTalla talla = new ItemTalla();
+                    talla.IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]);  
+                    talla.Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]);
+                    ItemSummary.IdItems = Convert.ToInt32(leer["ID_PO_SUMMARY"]);
+                    talla.Cantidad = Convert.ToInt32(leer["CANTIDAD"]) + Convert.ToInt32(leer["EJEMPLOS"]);
+                    ItemSummary.ItemTalla = talla;
+                    listSummary.Add(ItemSummary);
+
+                }
+                leer.Close();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
+
+            return listSummary;
+        }*/
+
+        //Obtener el tipo de especialidad de estilo por Id Summary
+        public int ObtenerEspecialidadPorIdSummary(int? idSummary)        {
+        
+            Conexion conex = new Conexion();
+            try
+            {
+                SqlCommand coman = new SqlCommand();
+                SqlDataReader leerF = null;
+                coman.Connection = conex.AbrirConexion();
+                coman.CommandText = "SELECT ID_SPECIALTIES FROM PO_SUMMARY " +
+                                     "WHERE ID_PO_SUMMARY='" + idSummary + "' ";
+                leerF = coman.ExecuteReader();
+                while (leerF.Read())
+                {
+                 
+                    if (!Convert.IsDBNull(leerF["ID_SPECIALTIES"]))
+                    {
+                        return Convert.ToInt32(leerF["ID_SPECIALTIES"]);
+                    }
+                   
+                }
+                leerF.Close();
+            }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+
+            return 0;
+        }
+
+        //Permite registrar la fechaUPCC al estilo
+        public void AgregarFechaUCC(POSummary poSummary)
+        {
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
+            Conexion conex = new Conexion();
+            try
+            {
+                cmd.Connection = conex.AbrirConexion();
+                cmd.CommandText = "UPDATE PO_SUMMARY SET FECHA_UCC ='" + poSummary.FechaUCC + "' WHERE ID_PO_SUMMARY='" + poSummary.IdItems + "'";
+                cmd.CommandType = CommandType.Text;
+                reader = cmd.ExecuteReader();
+                conex.CerrarConexion();
+            }
+            finally
+            {
+                conex.CerrarConexion();
+                conex.Dispose();
+            }
+
+        }
+
+       
+
     }
 }
