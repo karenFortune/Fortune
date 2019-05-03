@@ -1,4 +1,5 @@
-﻿using FortuneSystem.Models.Usuarios;
+﻿using FortuneSystem.Models.Item;
+using FortuneSystem.Models.Usuarios;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,8 +12,9 @@ namespace FortuneSystem.Models.PNL
     public class PnlData
     {
         CatUsuarioData objCatUser = new CatUsuarioData();
-        //Muestra la lista de tallas de PNL por estilo
-        public IEnumerable<Pnl> ListaTallasPnl(int? id)
+		ItemTallaData objTalla = new ItemTallaData();
+		//Muestra la lista de tallas de PNL por estilo
+		public IEnumerable<Pnl> ListaTallasPnl(int? id)
         {
             Conexion conn = new Conexion();
             List<Pnl> listTallas = new List<Pnl>();
@@ -183,23 +185,23 @@ namespace FortuneSystem.Models.PNL
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leer = null;               
                 comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "SELECT T.ID_TALLA,S.TALLA, S.ORDEN FROM PNL T " +
-                    "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                    "WHERE T.ID_SUMMARY= '" + id + "' ORDER by cast(S.ORDEN AS int) ASC";
-                leer = comando.ExecuteReader();
+                comando.CommandText = "SELECT distinct cast(S.ORDEN AS int) as codigo, S.TALLA FROM PNL T " +
+									"INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
+									"WHERE T.ID_SUMMARY= '" + id + "'";
+				leer = comando.ExecuteReader();
                 int total = 0;
                 while (leer.Read())
                 {
                     Pnl tallas = new Pnl()
                     {
-                        IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
+   
                         Talla = leer["TALLA"].ToString()
 
                     };
-                    total = SumaTotalBacheTalla(id, tallas.IdTalla);
+					tallas.IdTalla = objTalla.ObtenerIdTallas(tallas.Talla);
+					total = SumaTotalBacheTalla(id, tallas.IdTalla);
                     listTallas.Add(total);
-
-                }
+				}
                 leer.Close();
             }
             finally
@@ -210,9 +212,45 @@ namespace FortuneSystem.Models.PNL
 
             return listTallas;
         }
+		//Muestra la lista de tallas TOTAL de PNL por estilo
+		public IEnumerable<Pnl> ListaTotalTallasPNLBatch(int? id)
+		{
+			Conexion conn = new Conexion();
+			List<Pnl> listTallas = new List<Pnl>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "SELECT distinct cast(S.ORDEN AS int) as codigo, S.TALLA FROM PNL T " +
+									"INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
+									"WHERE T.ID_SUMMARY= '" + id + "'";
+				leer = comando.ExecuteReader();
+				while (leer.Read())
+				{
+					Pnl tallas = new Pnl()
+					{
 
-        //Muestra la lista de tallas TOTAL MisPrint de Pnl por estilo
-        public IEnumerable<int> ListaTotalMPTallasBatchEstilo(int? id)
+						Talla = leer["TALLA"].ToString()
+
+					};
+					tallas.IdTalla = objTalla.ObtenerIdTallas(tallas.Talla);
+					tallas.TotalBatch = SumaTotalBacheTalla(id, tallas.IdTalla);
+					listTallas.Add(tallas);
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+
+			return listTallas;
+		}
+
+		//Muestra la lista de tallas TOTAL MisPrint de Pnl por estilo
+		public IEnumerable<int> ListaTotalMPTallasBatchEstilo(int? id)
         {
             Conexion conn = new Conexion();
             List<int> listTallas = new List<int>();
@@ -221,20 +259,21 @@ namespace FortuneSystem.Models.PNL
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leer = null;               
                 comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "SELECT T.ID_TALLA,S.TALLA, S.ORDEN FROM PNL T " +
+                comando.CommandText = "SELECT distinct cast(S.ORDEN AS int) as codigo, S.TALLA FROM PNL T " +
                     "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                    "WHERE T.ID_SUMMARY= '" + id + "' ORDER by cast(S.ORDEN AS int) ASC";
+                    "WHERE T.ID_SUMMARY= '" + id + "' ";
                 leer = comando.ExecuteReader();
                 int totalMisPrint = 0;
                 while (leer.Read())
                 {
                     Pnl tallas = new Pnl()
                     {
-                        IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
+                      
                         Talla = leer["TALLA"].ToString()
 
                     };
-                    totalMisPrint = SumaTotalMisprintBacheTalla(id, tallas.IdTalla);
+					tallas.IdTalla = objTalla.ObtenerIdTallas(tallas.Talla);
+					totalMisPrint = SumaTotalMisprintBacheTalla(id, tallas.IdTalla);
                     listTallas.Add(totalMisPrint);
                 }
                 leer.Close();
@@ -258,20 +297,20 @@ namespace FortuneSystem.Models.PNL
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leer = null;               
                 comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "SELECT T.ID_TALLA,S.TALLA, S.ORDEN FROM PNL T " +
-                    "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                    "WHERE T.ID_SUMMARY= '" + id + "' ORDER by cast(S.ORDEN AS int) ASC";
-                leer = comando.ExecuteReader();
+                comando.CommandText = "SELECT distinct cast(S.ORDEN AS int) as codigo, S.TALLA FROM PNL T " +
+					"INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
+					"WHERE T.ID_SUMMARY= '" + id + "' ";
+				leer = comando.ExecuteReader();
                 int totalDefect = 0;
                 while (leer.Read())
                 {
                     Pnl tallas = new Pnl()
                     {
-                        IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
                         Talla = leer["TALLA"].ToString()
 
                     };
-                    totalDefect = SumaTotalDefectBacheTalla(id, tallas.IdTalla);
+					tallas.IdTalla = objTalla.ObtenerIdTallas(tallas.Talla);
+					totalDefect = SumaTotalDefectBacheTalla(id, tallas.IdTalla);
                     listTallas.Add(totalDefect);
                 }
                 leer.Close();
@@ -295,20 +334,20 @@ namespace FortuneSystem.Models.PNL
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leer = null;                
                 comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "SELECT T.ID_TALLA,S.TALLA, S.ORDEN FROM PNL T " +
-                    "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                    "WHERE T.ID_SUMMARY= '" + id + "' ORDER by cast(S.ORDEN AS int) ASC";
-                leer = comando.ExecuteReader();
+                comando.CommandText = "SELECT distinct cast(S.ORDEN AS int) as codigo, S.TALLA FROM PNL T " +
+					"INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
+					"WHERE T.ID_SUMMARY= '" + id + "' ";
+				leer = comando.ExecuteReader();
                 int totalRepair = 0;
                 while (leer.Read())
                 {
                     Pnl tallas = new Pnl()
                     {
-                        IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
-                        Talla = leer["TALLA"].ToString()
+                      Talla = leer["TALLA"].ToString()
 
                     };
-                    totalRepair = SumaTotalRepairBacheTalla(id, tallas.IdTalla);
+					tallas.IdTalla = objTalla.ObtenerIdTallas(tallas.Talla);
+					totalRepair = SumaTotalRepairBacheTalla(id, tallas.IdTalla);
                     listTallas.Add(totalRepair);
                 }
                 leer.Close();
@@ -322,8 +361,47 @@ namespace FortuneSystem.Models.PNL
             return listTallas;
         }
 
-        //Muestra la lista de suma de Reparaciones tallas por Batch
-        public int SumaTotalRepairBacheTalla(int? idEstilo, int idTalla)
+		//Muestra la lista de tallas TOTAL Printed de Pnl por estilo
+		public IEnumerable<int> ListaTotalPrintedTallasBatchEstilo(int? id)
+		{
+			Conexion conn = new Conexion();
+			List<int> listTallas = new List<int>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "SELECT distinct cast(S.ORDEN AS int) as codigo, S.TALLA FROM PNL T " +
+					"INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
+					"WHERE T.ID_SUMMARY= '" + id + "' ";
+				leer = comando.ExecuteReader();
+				int totalPrinted = 0;
+				while (leer.Read())
+				{
+					Pnl tallas = new Pnl()
+					{
+					
+						Talla = leer["TALLA"].ToString()
+
+					};
+					tallas.IdTalla = objTalla.ObtenerIdTallas(tallas.Talla);
+					totalPrinted = SumaTotalPrintedBacheTalla(id, tallas.IdTalla);
+					listTallas.Add(totalPrinted);
+
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+
+			return listTallas;
+		}
+
+		//Muestra la lista de suma de Reparaciones tallas por Batch
+		public int SumaTotalRepairBacheTalla(int? idEstilo, int idTalla)
         {
             Conexion conex = new Conexion();
             int suma = 0;
@@ -352,45 +430,7 @@ namespace FortuneSystem.Models.PNL
 
             return suma;
         }
-
-        //Muestra la lista de tallas TOTAL Printed de Pnl por estilo
-        public IEnumerable<int> ListaTotalPrintedTallasBatchEstilo(int? id)
-        {
-            Conexion conn = new Conexion();
-            List<int> listTallas = new List<int>();
-            try
-            {
-                SqlCommand comando = new SqlCommand();
-                SqlDataReader leer = null;               
-                comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "SELECT T.ID_TALLA,S.TALLA, S.ORDEN FROM PNL T " +
-                    "INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
-                    "WHERE T.ID_SUMMARY= '" + id + "' ORDER by cast(S.ORDEN AS int) ASC";
-                leer = comando.ExecuteReader();
-                int totalPrinted = 0;
-                while (leer.Read())
-                {
-                    Pnl tallas = new Pnl()
-                    {
-                        IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
-                        Talla = leer["TALLA"].ToString()
-
-                    };
-                    totalPrinted = SumaTotalPrintedBacheTalla(id, tallas.IdTalla);
-                    listTallas.Add(totalPrinted);
-
-                }
-                leer.Close();
-            }
-            finally
-            {
-                conn.CerrarConexion();
-                conn.Dispose();
-            }      
-
-            return listTallas;
-        }
-
+		
         //Muestra la lista de suma de  tallas por Batch
         public int SumaTotalBacheTalla(int? idEstilo, int idTalla)
         {

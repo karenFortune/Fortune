@@ -21,6 +21,15 @@
         overflow-y: scroll;
         overflow-x: hidden;
     }*/
+
+       .edit_driver {
+    }
+
+        .edit_driver:hover {
+            color: white !important;
+            background: #3479bf !important;
+            border-radius: 15px;
+        }
 </style>
 
 <script>
@@ -59,8 +68,8 @@
                     html += '<td>' + item.Price + '</td>';
                     html += '<td>' + item.Total + '</td>';
                    // html += '<td><a href="#" onclick="obtener_tallas_item(' + item.IdItems + ');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Tallas"></a></td>';
-                    html += '<td><a href="#" class="btn btn-default glyphicon glyphicon-edit btnEdit" data-value="' + item.IdItems + '" title="Edit Estilo"></a> | ';
-                    html += '<a href="#" class="btn btn-default glyphicon glyphicon-trash btnDelete" data-value="' + item.IdItems + '" title="Delete Style"></a> </td>';
+                    html += '<td><a href="#" class="btn edit_driver edicion_driver btnEdit" data-value="' + item.IdItems + '" title="Edit Estilo"> <span class="glyphicon glyphicon-edit" aria-hidden="true" style="padding: 0px !important;"></span></a>';
+                    html += '<a href="#" class=""btn edit_driver edicion_driver  btnDelete" data-value="' + item.IdItems + '" title="Delete Style"><span class="glyphicon glyphicon-trash" aria-hidden="true" style="padding: 0px !important;"></span></a> </td>';
                     html += '</tr>';
                 });
                 if (Object.keys(lista_estilo).length === 0) {

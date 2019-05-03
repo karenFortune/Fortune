@@ -40,7 +40,7 @@ namespace FortuneSystem.Models.Item
                 SqlCommand comando = new SqlCommand();
                 comando.Connection = conn.AbrirConexion();
                 comando.CommandText = "INSERT INTO  CAT_TYPE_PACK_STYLE (ID_SUMMARY,DESC_PACK) " +
-                    " VALUES('" + TypePack.IdSummary + "','" + TypePack.DescripcionPack + "')";
+                    " VALUES('" + TypePack.IdSummary + "','" + TypePack.DescripcionPack.ToUpper() + "')";
                 comando.ExecuteNonQuery();
             }
             finally
@@ -50,7 +50,29 @@ namespace FortuneSystem.Models.Item
             }
         }
 
-        public void RegistroTallasUPC(UPC tallas)
+		//Obtener Actualizar información de TypePack
+		public void ActualizarInfoTypePack(CatTypePackItem datoPack)
+		{
+			SqlCommand cmd = new SqlCommand();
+			SqlDataReader reader;
+			Conexion conex = new Conexion();
+			try
+			{
+				cmd.Connection = conex.AbrirConexion();
+				cmd.CommandText = "UPDATE CAT_TYPE_PACK_STYLE SET DESC_PACK ='" + datoPack.DescripcionPack.ToUpper() + "' WHERE ID_PACK_STYLE='" + datoPack.IdPackStyle + "'";
+				cmd.CommandType = CommandType.Text;
+				reader = cmd.ExecuteReader();
+				conex.CerrarConexion();
+			}
+			finally
+			{
+				conex.CerrarConexion();
+				conex.Dispose();
+			}
+
+		}
+
+		public void RegistroTallasUPC(UPC tallas)
         {
             Conexion conn = new Conexion();
             try
@@ -112,8 +134,52 @@ namespace FortuneSystem.Models.Item
             return listTallas;
         }
 
-        //Muestra la lista de tallas por estilo
-        public IEnumerable<ItemTalla> ListadoTallasPorEstilos(int? id)
+		//Muestra la lista de tallas Packing
+		public IEnumerable<ItemTalla> ListaTallasPacking(int? id)
+		{
+			Conexion conn = new Conexion();
+			List<ItemTalla> listTallas = new List<ItemTalla>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "Lista_Tallas_Por_Estilo";
+				comando.CommandType = CommandType.StoredProcedure;
+				comando.Parameters.AddWithValue("@Id", id);
+				leer = comando.ExecuteReader();
+				int calidad = 0;
+				while (leer.Read())
+				{
+					ItemTalla tallas = new ItemTalla()
+					{
+						Talla = leer["TALLA"].ToString(),
+						IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]),
+						Cantidad = Convert.ToInt32(leer["CANTIDAD"]),
+						Extras = Convert.ToInt32(leer["EXTRAS"]),
+						Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
+						Estilo = leer["ITEM_STYLE"].ToString(),
+						DescripcionEstilo = leer["DESCRIPTION"].ToString()
+
+					};
+					calidad = Convert.ToInt32(leer["CANTIDAD"]);
+
+					tallas.Cantidad = calidad;
+					listTallas.Add(tallas);
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+
+			return listTallas;
+		}
+
+		//Muestra la lista de tallas por estilo
+		public IEnumerable<ItemTalla> ListadoTallasPorEstilos(int? id)
         {
             Conexion conn = new Conexion();
             List<ItemTalla> listTallas = new List<ItemTalla>();

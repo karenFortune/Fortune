@@ -270,7 +270,7 @@
                 <div id="ContenedorEditarModal"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary " data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary btnCancel" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -324,29 +324,41 @@
             @Html.HiddenFor(model => model.IdPedido)
 
         </div>
-        <div class="container-fluid">
-            <div class="form-row">
-                <div class="form-group col-sm-4 estilo">
-                    <label style="font-size: x-large; font-weight: 500">
-                        @Html.LabelFor(model => model.CatCliente.Nombre, new { @class = "control-label" }):
-                        <label style="font-size: x-large; font-weight: 500">@Html.DisplayFor(model => model.CatCliente.Nombre, new { @class = "control-label col-md-6" })</label>
-                    </label>
-                </div>
-                <div class="form-group col-sm-7 estilo">
-                    <label style="font-size: x-large; font-weight: 500">
-                        @Html.LabelFor(model => model.CatClienteFinal.NombreCliente, new { @class = "control-label" }):
-                        <label style="font-size: x-large; font-weight: 300">@Html.DisplayFor(model => model.CatClienteFinal.NombreCliente, new { @class = "control-label col-md-6" })</label>
-                    </label>
-                </div>
-            </div>
-            <br />
-            @if ((int)Session["idCargo"] == 1 || (int)Session["idCargo"] == 6)
-            {
-                <p>
-                    <a href="#" class="btn btn-primary  btnNuevo" title="ADD NEW STYLE" id="nuevo-estilo"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> ADD NEW STYLE</a>
-                </p>
-            }
-        </div>
+		<div class="container-fluid">
+			<div class="form-row">
+				<div class="form-group col-sm-4 estilo">
+					<label style="font-size: x-large; font-weight: 500">
+						@Html.LabelFor(model => model.CatCliente.Nombre, new { @class = "control-label" }):
+						<label style="font-size: x-large; font-weight: 500">@Html.DisplayFor(model => model.CatCliente.Nombre, new { @class = "control-label col-md-6" })</label>
+					</label>
+				</div>
+				<div class="form-group col-sm-7 estilo">
+					<label style="font-size: x-large; font-weight: 500">
+						@Html.LabelFor(model => model.CatClienteFinal.NombreCliente, new { @class = "control-label" }):
+						<label style="font-size: x-large; font-weight: 300">@Html.DisplayFor(model => model.CatClienteFinal.NombreCliente, new { @class = "control-label col-md-6" })</label>
+					</label>
+				</div>
+			</div>
+			<br />
+			@if (Session["idCargo"] != null)
+		    {
+						if((int)Session["idCargo"] == 1 || (int)Session["idCargo"] == 6)
+						{
+
+								<p>
+								<a href="#" class="btn btn-primary  btnNuevo" title="ADD NEW STYLE" id="nuevo-estilo"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> ADD NEW STYLE</a>
+								</p>
+						}
+				
+			}
+			else if(Session["idCargo"] == null || (int)Session["idCargo"] == 0 )
+			{
+				<script type="text/javascript">
+                var url = '@Url.Action("Login", "Login")';
+                window.location.href = url;
+				</script>
+			}
+		</div>
         <div class="panel panel-primary" id="consultaPO">
             <div class="panel-heading">
                 <h4>STYELS</h4>
@@ -396,7 +408,7 @@
             </div>
             <div id="div_tabla_tallas" style="width: 100%; height:250px; ">
 
-                <div id="div_estilo" style=" overflow:auto; visibility:hidden; background-color:lightblue; text-align:center "></div>
+                <div id="div_estilo" style=" overflow:auto; visibility:hidden; background-color:lightblue; text-align:center; "></div>
                 <table class="table table-sm table-striped table-hover ">
                     <thead class="encabezado"></thead>
                     <tbody class="tbodys"></tbody>
@@ -440,6 +452,11 @@
             $("#Contenedor").load("/POSummary/RegistrarNuevoEstiloPo", function () {
                 $("#nuevoEstiloModal").modal("show");
             });
+	});
+
+	$(document).on("click", ".btnCancel", function () {
+		window.location.reload();
+		$("#loading").css('display', 'inline');
         });
 
         $(document).on('click', '.btnArte', function () {
@@ -478,5 +495,7 @@
                 }).set({
                     title: "Confirmation"
                 });
-        }
+	}
+
+		
 </script>

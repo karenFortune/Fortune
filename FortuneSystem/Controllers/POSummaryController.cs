@@ -222,26 +222,29 @@ namespace FortuneSystem.Controllers
             descItem.PedidosId = Convert.ToInt32(Session["idPedidoRevision"]);
             descItem.Cantidad = Int32.Parse(Cantidad);
             descItem.IdEstado = 1;
+			descItem.IdSucursal = 1;
             objItems.AgregarItems(descItem);
             Session["IdItemsRev"] = objItems.Obtener_Utlimo_Item();
             return View(descItem);
         }
 
-        [HttpGet]
-        public ActionResult RegistrarNuevoItems([Bind] POSummary descItem, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad, int IdPedido)
+		[HttpPost]
+		public JsonResult RegistrarNuevoItems([Bind] POSummary descItem, string EstiloItem, /*string IdColor,*/ string Cantidad,/* float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad,*/ int IdPedido, List<string> ListaPackSytle)
         {
             int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
             descItem.IdUsuario = noEmpleado;
             descItem.PedidosId = IdPedido;
             descItem.Cantidad = Int32.Parse(Cantidad);
             descItem.IdEstado = 1;
-            objItems.AgregarItems(descItem);
+			descItem.IdSucursal = 1;
+			objItems.AgregarItems(descItem);
             Session["IdItemsNuevo"] = objItems.Obtener_Utlimo_Item();
             this.RegistrarArteNuevo(EstiloItem);
             int IdItems = Convert.ToInt32(Session["IdItemsNuevo"]);
             this.RegistrarArtePnl(EstiloItem, IdItems);
-            return View(descItem);
-        }
+			this.Obtener_Lista_TipoPacking_Estilo(ListaPackSytle);
+			return Json("0", JsonRequestBehavior.AllowGet);
+		}
 
         [HttpPost]
         public JsonResult RegistrarItem([Bind] POSummary descItem, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad, List<string> ListaPackSytle)
@@ -252,7 +255,8 @@ namespace FortuneSystem.Controllers
             descItem.PedidosId = PedidosId;
             descItem.Cantidad = Int32.Parse(Cantidad);
             descItem.IdEstado = 1;
-            objItems.AgregarItems(descItem);
+			descItem.IdSucursal = 1;
+			objItems.AgregarItems(descItem);
             Session["IdItems"] = objItems.Obtener_Utlimo_Item();
             this.RegistrarArte(EstiloItem);
             int IdItems = Convert.ToInt32(Session["IdItems"]);
@@ -365,7 +369,18 @@ namespace FortuneSystem.Controllers
                 string codigoPack = descripcion.Substring((tam_var - 5), 5);
                 tallaItem.DescripcionPack = codigoPack;
                 int IdItems = Convert.ToInt32(Session["IdItems"]);
-                tallaItem.IdSummary = IdItems;
+				int IdItemsNuevo = Convert.ToInt32(Session["IdItemsNuevo"]);
+				if (IdItems != 0)
+				{
+					tallaItem.IdSummary = IdItems;
+				}
+				else if (IdItemsNuevo != 0)
+				{
+					tallaItem.IdSummary = IdItemsNuevo;
+				}
+
+				
+               
                 objTalla.RegistroCatTypePack(tallaItem);            
 
             }
@@ -510,7 +525,7 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult Actualizar_Info_Estilo(List<string> ListTalla, string IdEstilo)
+        public JsonResult Actualizar_Info_Estilo(List<string> ListTalla, string IdEstilo, List<string> ListaTypePack)
         {
             ItemTalla tallaItem = new ItemTalla();
             List<string> tallas = ListTalla[0].Split('*').ToList();
@@ -563,12 +578,48 @@ namespace FortuneSystem.Controllers
                     objTalla.Actualizar_Tallas_Estilo(tallaItem);
                 }
             }
+			int IdSummary = Int32.Parse(IdEstilo);
+			this.Obtener_Lista_Type_Pack(ListaTypePack, IdSummary);
 
-            return Json("0", JsonRequestBehavior.AllowGet);
+			return Json("0", JsonRequestBehavior.AllowGet);
 
         }
 
-        [HttpGet]
+
+		[HttpPost]
+		public JsonResult Obtener_Lista_Type_Pack(List<string> ListaPack, int idEstilo)
+		{
+			CatTypePackItem datoPack = new CatTypePackItem();
+			List<string> datosIds = ListaPack[0].Split('*').ToList();
+			List<string> descPack = ListaPack[1].Split('*').ToList();
+			int i = 0;
+			foreach (var item in datosIds)
+			{
+				i++;
+			}
+			int x = i - 1;
+			for (int v = 0; v < x; v++)
+			{
+				string id = datosIds[v];
+				if (id == "0")
+				{
+					datoPack.DescripcionPack = descPack[v];
+					datoPack.IdSummary = idEstilo;
+					objTalla.RegistroCatTypePack(datoPack);	
+				}
+				else
+				{
+					datoPack.IdPackStyle = Convert.ToInt32(id);
+					datoPack.DescripcionPack = descPack[v];
+					objTalla.ActualizarInfoTypePack(datoPack);
+
+				}
+			}
+			return Json("0", JsonRequestBehavior.AllowGet);
+
+		}
+
+		[HttpGet]
         public ActionResult Actualizar_Edicion_Estilo([Bind] POSummary items, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad, string IdEstilo, string PedidoId)
         {
             items.IdItems = Int32.Parse(IdEstilo);

@@ -110,6 +110,7 @@ namespace FortuneSystem.Models.POSummary
 
         public DateTime FechaUCC { get; set; } 
         public int IdEstado { get; set; }
+		public int IdSucursal { get; set; }
 
 
 

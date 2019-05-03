@@ -1,8 +1,11 @@
-﻿using FortuneSystem.Models.Catalogos;
+﻿using FortuneSystem.Models;
+using FortuneSystem.Models.Catalogos;
 using FortuneSystem.Models.Pedidos;
 using FortuneSystem.Models.POSummary;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -74,9 +77,8 @@ namespace FortuneSystem.Controllers
 
          public JsonResult ListadoComentariosWIP()
         {
-            string tipoArchivo = "WIP";
-            List<CatComentarios> listaComentarios = new List<CatComentarios>();
-            listaComentarios = objComent.ListadoAllWIPComentarios(tipoArchivo).ToList();
+            string tipoArchivo = "WIP";   
+			List<CatComentarios> listaComentarios = objComent.ListadoAllWIPComentarios(tipoArchivo).ToList();
 
             return Json(listaComentarios, JsonRequestBehavior.AllowGet);
         }
@@ -84,8 +86,7 @@ namespace FortuneSystem.Controllers
         public JsonResult ListadoComentariosShipped()
         {
             string tipoArchivo = "SHIPPED";
-            List<CatComentarios> listaComentarios = new List<CatComentarios>();
-            listaComentarios = objComent.ListadoAllWIPComentarios(tipoArchivo).ToList();
+			List<CatComentarios> listaComentarios = objComent.ListadoAllWIPComentarios(tipoArchivo).ToList();
 
             return Json(listaComentarios, JsonRequestBehavior.AllowGet);
         }
@@ -93,8 +94,7 @@ namespace FortuneSystem.Controllers
         public JsonResult ListadoComentariosCancelled()
         {
             string tipoArchivo = "CANCELLED";
-            List<CatComentarios> listaComentarios = new List<CatComentarios>();
-            listaComentarios = objComent.ListadoAllWIPComentarios(tipoArchivo).ToList();
+			List<CatComentarios> listaComentarios = objComent.ListadoAllWIPComentarios(tipoArchivo).ToList();
 
             return Json(listaComentarios, JsonRequestBehavior.AllowGet);
         }
@@ -113,25 +113,42 @@ namespace FortuneSystem.Controllers
                 IdUsuario = noEmpleado,
                 TipoArchivo = TipoArchivo
             };
-
-
             objComent.AgregarComentario(catComentario);
 
         }
         [HttpPost]
         public void RegistrarFechaUCC(DateTime FechaUCC, int IdSummary)
         {
-            DateTime fecha = DateTime.Now;
-            int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
+           // DateTime fecha = DateTime.Now;
+          //  int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
             POSummary poSummary = new POSummary()
             {
                 IdItems = IdSummary,
                 FechaUCC= FechaUCC
             };
-
-
             objSummary.AgregarFechaUCC(poSummary);
 
         }
-    }
+
+		public void ActualizarSucursalIdSummary(int IdSucursal, int IdSummary)
+		{
+			SqlCommand cmd = new SqlCommand();
+			SqlDataReader reader;
+			Conexion conex = new Conexion();
+			try
+			{
+				cmd.Connection = conex.AbrirConexion();
+				cmd.CommandText = "UPDATE PO_SUMMARY SET ID_SUCURSAL='"+ IdSucursal + "' WHERE ID_PO_SUMMARY='" + IdSummary + "'";
+				cmd.CommandType = CommandType.Text;
+				reader = cmd.ExecuteReader();
+				conex.CerrarConexion();
+			}
+			finally
+			{
+				conex.CerrarConexion();
+				conex.Dispose();
+			}
+
+		}
+	}
 }

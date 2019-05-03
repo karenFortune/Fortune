@@ -20,8 +20,7 @@ namespace FortuneSystem.Controllers
 
         DatosInventario di = new DatosInventario();
         DatosTransferencias dt = new DatosTransferencias();
-       //DatosTrims dtr = new DatosTrims();
-        DescripcionItemData de = new DescripcionItemData();
+       //DatosTrims dtr = new DatosTrims();   
         DatosStaging ds = new DatosStaging();
         DatosShipping dsh = new DatosShipping();
         StagingGeneral sg = new StagingGeneral();
@@ -138,20 +137,7 @@ namespace FortuneSystem.Controllers
             };
         }*/
 
-        [AllowAnonymous]
-        public ActionResult Imprimir_Reporte_PO()
-        {
-            int id = Convert.ToInt32(Session["idPed"]);
-            return new ViewAsPdf("Imprimir_Reporte_PO", de.ListadoInfEstilo(id))
-            {
-                FileName = filename,
-                PageOrientation = Rotativa.Options.Orientation.Portrait,
-                PageSize = Rotativa.Options.Size.Letter,
-                PageMargins = new Rotativa.Options.Margins(5, 10, 15, 10),
-                CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
-            };
-
-        }
+        
 
 
 

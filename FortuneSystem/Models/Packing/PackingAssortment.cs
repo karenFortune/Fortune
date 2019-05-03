@@ -11,7 +11,7 @@ namespace FortuneSystem.Models.Packing
         public int IdPackingAssort { get; set; }
         [Display(Name = "CARTONS#")]
         public int CantCartons { get; set; }
-        [Display(Name = "TURN")]
+        [Display(Name = "SHIFT")]
         public Turnos Turnos { get; set; }
         public int IdTurno { get; set; }
         public int TipoTurno { get; set; }

@@ -56,7 +56,10 @@ namespace FortuneSystem.Controllers
                     usuario.CatRoles = objCaRoles.ConsultarListaRoles(usuario.Cargo);
                     Session["rolUser"] = usuario.CatRoles.Rol;
                     string pass = objUsr.Obtener_Contraseña_Usuario(empleado);
-                    if (noEmpleado != 0 && pass.CompareTo(usuario.Contrasena)==0)
+					string sucursal = objUsr.Obtener_Sucursal_Usuario(empleado);
+					Session["sucursal"] = sucursal;
+
+					if (noEmpleado != 0 && pass.CompareTo(usuario.Contrasena)==0)
                     {
                         if (usuario.Cargo == 1)
                         {
@@ -109,7 +112,7 @@ namespace FortuneSystem.Controllers
                         else if (usuario.Cargo == 15)
                         {
                             actionName = "Index";
-                            nameController = "Pedidos";
+                            nameController = "customerService";
 
                         }
                         else if (usuario.Cargo == 0)

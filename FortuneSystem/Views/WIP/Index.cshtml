@@ -1,21 +1,24 @@
 ﻿@model FortuneSystem.Models.Pedidos.OrdenesCompra
 
 @{
-    ViewBag.Title = "WIP";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewBag.Title = "WIP";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @*<link type="text/css" rel="stylesheet" href="~/Content/jsgrid-1.5.3/dist/jsgrid.min.css" />
-    <link type="text/css" rel="stylesheet" href="~/Content/jsgrid-1.5.3/dist/jsgrid-theme.min.css" />
-    <script type="text/javascript" src="~/Content/jsgrid-1.5.3/dist/jsgrid.min.js"></script>*@
+	<link type="text/css" rel="stylesheet" href="~/Content/jsgrid-1.5.3/dist/jsgrid-theme.min.css" />
+	<script type="text/javascript" src="~/Content/jsgrid-1.5.3/dist/jsgrid.min.js"></script>*@
 @*<link href="http://js-grid.com/css/jsgrid.min.css" rel="stylesheet" />
-    <link href="http://js-grid.com/css/jsgrid-theme.min.css" rel="stylesheet" />
-    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
-    <link href="~/Content/jquery.jqGrid/ui.jqgrid.css" rel="stylesheet" />*@
+	<link href="http://js-grid.com/css/jsgrid-theme.min.css" rel="stylesheet" />
+	<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+	<link href="~/Content/jquery.jqGrid/ui.jqgrid.css" rel="stylesheet" />*@
 
 @*<link href="~/Content/kendoui.2019.1.220.core/styles/kendo.common.min.css" rel="stylesheet" />
-    <link href="~/Content/kendoui.2019.1.220.core/styles/kendo.default.min.css" rel="stylesheet" />
-    <script type="text/javascript" src="~/Scripts/kendo.all.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/kendo.aspnetmvc.min.js"></script>*@
+	<link href="~/Content/kendoui.2019.1.220.core/styles/kendo.default.min.css" rel="stylesheet" />
+	<script type="text/javascript" src="~/Scripts/kendo.all.min.js"></script>
+	<script type="text/javascript" src="~/Scripts/kendo.aspnetmvc.min.js"></script>*@
+
+<script>window.jQuery || document.write(decodeURIComponent('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E'))</script>
+
 
 <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
 <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
@@ -37,214 +40,239 @@
 <script type="text/javascript" src="~/Scripts/general/dataGeneralWIP.js"></script>
 
 <style>
-    .content {
-        text-align: justify;
-        margin-top: 25px;
-    }
+	.content {
+		text-align: justify;
+		margin-top: 25px;
+	}
 
-    #longtabs {
-        margin-top: 20px;
-    }
+	#longtabs {
+		margin-top: 20px;
+	}
 
-    #scrolledtabs {
-        margin-top: 20px;
-    }
+	#scrolledtabs {
+		margin-top: 20px;
+	}
 
-    #tabs {
-        margin-top: 60px;
-    }
+	#tabs {
+		margin-top: 60px;
+	}
 
-    .caption {
-        font-size: 16px;
-        padding-bottom: 3px;
-        padding-left: 10px;
-    
-    }
+	.caption {
+		font-size: 16px;
+		padding-bottom: 3px;
+		padding-left: 10px;
+	}
 
-    .left-aligned {
-        text-align: left;
-    }
+	.left-aligned {
+		text-align: left;
+	}
 
-    .colorCell {
-        background-color: #ff0000;
-        color: #000000;
-    }
+	.colorCell {
+		background-color: #ff0000;
+		color: #000000;
+	}
 
-    img {
-        height: 35px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
+	img {
+		height: 35px;
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+	}
 
-    .center {
-        height: 80% !important;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
+	.center {
+		height: 80% !important;
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+	}
 
-    .edit_driver {
-    }
+	.edit_driver {
+	}
 
-        .edit_driver:hover {
-            color: white !important;
-            background: #3479bf !important;
-            border-radius: 15px;
-        }
+		.edit_driver:hover {
+			color: white !important;
+			background: #3479bf !important;
+			border-radius: 15px;
+		}
 
-    .highAmountOrder_saleAmount {
-        background-color: #FFBB00;
-        color: #000000;
-    }
+	.highAmountOrder_saleAmount {
+		background-color: #FFBB00;
+		color: #000000;
+	}
 
-    .myClass {
-        vertical-align: middle !important;
-    }
+	.myClass {
+		vertical-align: middle !important;
+	}
 
-    .my-custom-scrollbar {
-        position: relative;
-        height: 200px;
-        overflow: auto;
-        padding: 20px;
-        border: dotted 1px;
-        white-space: nowrap;
-        overflow-x: auto;
-    }
+	.my-custom-scrollbar {
+		position: relative;
+		height: 200px;
+		overflow: auto;
+		padding: 20px;
+		border: dotted 1px;
+		white-space: nowrap;
+		overflow-x: auto;
+	}
 
-    .table-wrapper-scroll-y {
-        display: block;
-    }
+	.table-wrapper-scroll-y {
+		display: block;
+	}
 
-    .bntXls {
-        margin-left: 30px;
-        margin-top: 1px;
-        width: 180px;
-        height: 40px;
-        border: none;
-        font-size: 14px;
-        font-weight: 600;
-    }
-   /* .dx-tabs .dx-tab {
-        background-color: red;
-    }*/
-    .dx-theme-ios.dx-version-major-7 .dx-tabs .dx-tab:first-child {
-        background-color: red;
-    }
+	.bntXls {
+		margin-left: 30px;
+		margin-top: 1px;
+		width: 180px;
+		height: 40px;
+		border: none;
+		font-size: 14px;
+		font-weight: 600;
+	}
+	/* .dx-tabs .dx-tab {
+		background-color: red;
+	}*/
+	.dx-theme-ios.dx-version-major-7 .dx-tabs .dx-tab:first-child {
+		background-color: red;
+	}
 
-
-
+	#gridContainer {
+		max-height: 800px;
+	}
 </style>
 @{
-    if (TempData["itemEditar"] != null)
-    {
-        <script type="text/javascript">
+	if (TempData["itemEditar"] != null)
+	{
+		<script type="text/javascript">
             alertify.set('notifier', 'position', 'top-right');
             alertify.notify(@Html.Raw(Json.Encode(TempData["itemEditar"])), 'success', 5, null);
 
-        </script>
-    }
-    if (TempData["itemEditarError"] != null)
-    {
-        <script type="text/javascript">
+		</script>
+	}
+	if (TempData["itemEditarError"] != null)
+	{
+		<script type="text/javascript">
             alertify.set('notifier', 'position', 'top-right');
             alertify.notify(@Html.Raw(Json.Encode(TempData["itemEditarError"])), 'error', 5, null);
 
-        </script>
-    }
+		</script>
+	}
 
-    if (TempData["cancelarPO"] != null)
-    {
-        <script type="text/javascript">
+	if (TempData["cancelarPO"] != null)
+	{
+		<script type="text/javascript">
             alertify.set('notifier', 'position', 'top-right');
             alertify.notify(@Html.Raw(Json.Encode(TempData["cancelarPO"])), 'success', 5, null);
 
-        </script>
-    }
+		</script>
+	}
 
-    <script type="text/javascript">
+	<script type="text/javascript">
 
-    </script>
+	</script>
 
 }
 
 </div>
-    <div id="espera" class="" style="display:none; z-index:999; position:absolute; top:0; left:0; width:100%; height:100%; background:white; opacity:0.6; ">
-        <div id="" class="" style="float:left; background-image:url('../../Content/img/gif/preloader.gif'); background-repeat: no-repeat; width:300px; height:160px; position:absolute; left:45%; top:25%; "></div>
-        <div id="" class="" style="float:left; font-size:2em; color:#3479bf; top:50%; position:absolute; left:36%; width:100%;">We are making the report, please wait a few seconds</div>
-    </div>
+<div id="espera" class="" style="display:none; z-index:999; position:absolute; top:0; left:0; width:100%; height:100%; background:white; opacity:0.6; ">
+	<div id="" class="" style="float:left; background-image:url('../../Content/img/gif/preloader.gif'); background-repeat: no-repeat; width:300px; height:160px; position:absolute; left:45%; top:25%; "></div>
+	<div id="" class="" style="float:left; font-size:2em; color:#3479bf; top:50%; position:absolute; left:36%; width:100%;">We are making the report, please wait a few seconds</div>
+</div>
 <div class="modal fade" id="enlargeImageModal" tabindex="-1" role="dialog" aria-labelledby="enlargeImageModal" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" id="exampleModalLabel">ART</h2>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                <img class="enlargeImageModalSource center" style="width: 50%;">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 class="modal-title" id="exampleModalLabel">ART</h2>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+			</div>
+			<div class="modal-body">
+				<img class="enlargeImageModalSource center" style="width: 50%;">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
 </div>
 <div class="container-fluid" style="margin-left:15em; margin-right:5em; ">
-    <div class="panel panel-primary" id="listaWIP">
-        <div class="panel-heading">
-            <h2>WIP</h2>
-        </div>
-        <br />
-        <div id="botones"></div>
-        <br />
-        <div id="jsGrid"></div>
+	<div class="panel panel-primary" id="listaWIP">
+		<div class="panel-heading">
+			<h2>WIP</h2>
+		</div>
+		<br />
+		<div id="botones"></div>
+		<br />
+		<div id="jsGrid"></div>
 
-        <div class="demo-container">
-            <!-- <div class="form-group has-feedback">
+		<div class="demo-container">
+			<!-- <div class="form-group has-feedback">
 
-        <input class="btn btn-primary btnNuevo" title="WIP" id="downloadButton" type="button" value="REPORT WIP" />
+				<input class="btn btn-primary btnNuevo" title="WIP" id="downloadButton" type="button" value="REPORT WIP" />
 
 
-    </div>-->
-            <button class="btn btn-primary bntXls" title="WIP" id="downloadButton" type="button">
-                <i class="fa fa-file-excel-o" aria-hidden="true"></i> REPORT WIP
-            </button>
+			</div>-->
+			<button class="btn btn-primary bntXls" title="WIP" id="downloadButton" type="button">
+				<i class="fa fa-file-excel-o" aria-hidden="true"></i> REPORT WIP
+			</button>
 
-            <!-- <p>
-         <a id="reporte_WIP" href="#" class="btn btn-primary  btnNuevo" title="ADD NEW STYLE"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> REPORT WIP</a>
-     </p>-->
-            <div id="tabs">
-                <div class="tabs-container"></div>
-                <div class="content  dx-fieldset">
-                    <div class="dx-field gridWip" style="display:inline;">
+			<!-- <p>
+				<a id="reporte_WIP" href="#" class="btn btn-primary  btnNuevo" title="ADD NEW STYLE"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> REPORT WIP</a>
+			</p>-->
+			<div id="tabs">
+				<div class="tabs-container"></div>
+				<div class="content  dx-fieldset">
+					<div class="dx-field gridWip" style="display:inline;">
 
-                        <div id="gridContainer"></div>
-                        <div id="gridContainerShip"></div>
+						<div id="gridContainer"></div>
+						<div id="gridContainerShip"></div>
 
-                        <div id="popup"></div>
-                        <div id="popupTrims"></div>
-                        <div id="popupPriceTrims"></div>
+						<div id="popup"></div>
+						<div id="popupTrims"></div>
+						<div id="popupPriceTrims"></div>
+						<div id="popupSuc"></div>
+						<div class="buttons"></div>
+						<br />
+						<div class="dx-field-value idTabs">
 
-                        <br />
-                        <div class="dx-field-value idTabs">
+						</div>
+					</div>
+				</div>
 
-                        </div>
-                    </div>
-                </div>
+			</div>
 
-            </div>
-
-        </div>
-    </div>   
+		</div>
+	</div>
 </div>
 <script type="text/javascript" charset="utf-8">
+
+	/*document.oncontextmenu = preventDefaultAction;
+
+	function preventDefaultAction(event) {
+		event = event || window.event;
+
+		if (event.preventDefault) {
+			event.preventDefault();
+		}
+		else {
+			event.returnValue = false;
+		}
+	}*/
+
+	/*window.addEventListener('touchmove', event => {
+		console.log(event);
+	}, { passive: true });*/
+
+	window.addEventListener('wheel', event => {
+		console.log(event);
+	}, { passive: true });
+
+/* window.addEventListener("wheel", func, {passive: true} );*/
+
     var IdSum;
 
     $(document).on("click", "#downloadButton", function () {
         $("#loading").css('display', 'inline');
         $.ajax({
             type: 'post',
-            url: "@Url.Action("ReportWIP", "Pedidos")",
+            url: "@Url.Action("ObtenerReporteWIP", "Report")",
             cache: false,
             contentType: 'application/json',
             dataType: 'json',
@@ -262,7 +290,7 @@
                 $("#loading").css('display', 'none');
             }
         });
-    });   
+    });
 
     $(function () {
             var output= FilterFecha();
@@ -452,9 +480,9 @@
                 selectedIndex: 0,
                 onItemClick: function (e) {
                     var id = tabs[e.itemData.id].id;
-                    if (id === 0) {                        
+                    if (id === 0) {
                         $(id).css("background-color", "#5F9DCD");
-                        gridWip = GridWIP(orders, output, comments);     
+                        gridWip = GridWIP(orders, output, comments);
                         $(".idTabs").text(tabs[id].content);
                         $(".gridWip").css('display', 'inline');
                     } else if (id === 1) {

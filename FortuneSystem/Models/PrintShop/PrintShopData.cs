@@ -212,8 +212,46 @@ namespace FortuneSystem.Models.PrintShop
             return listTallas;
         }
 
-        //Muestra la lista de tallas TOTAL MisPrint de PrintShop por estilo
-        public IEnumerable<int> ListaTotalMPTallasBatchEstilo(int? id)
+		//Muestra la lista de tallas TOTAL de PrintShop por estilo
+		public IEnumerable<PrintShopC> ListaTotalTallasBatch(int? id)
+		{
+			Conexion conn = new Conexion();
+			List<PrintShopC> listTallas = new List<PrintShopC>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "SELECT distinct cast(S.ORDEN AS int) as codigo, S.TALLA FROM PRINTSHOP T  " +
+					"INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
+					"WHERE T.ID_SUMMARY= '" + id + "' ";
+				leer = comando.ExecuteReader();
+				while (leer.Read())
+				{
+					PrintShopC tallas = new PrintShopC()
+					{
+
+						Talla = leer["TALLA"].ToString()
+
+					};
+					tallas.IdTalla = objTalla.ObtenerIdTallas(tallas.Talla);
+					tallas.TotalBatch = SumaTotalBacheTalla(id, tallas.IdTalla);
+					listTallas.Add(tallas);
+
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+
+			return listTallas;
+		}
+
+		//Muestra la lista de tallas TOTAL MisPrint de PrintShop por estilo
+		public IEnumerable<int> ListaTotalMPTallasBatchEstilo(int? id)
         {
             Conexion conn = new Conexion();
             List<int> listTallas = new List<int>();

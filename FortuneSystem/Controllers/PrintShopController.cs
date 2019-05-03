@@ -169,7 +169,8 @@ namespace FortuneSystem.Controllers
         {
             List<PrintShopC> listaBatch = objPrint.ListaBatch(id).ToList();
             int cargo = Convert.ToInt32(Session["idCargo"]);
-            var result = Json(new { listaTalla = listaBatch, cargoUser= cargo });
+			string sucursalName = ((string)Session["sucursal"]);
+			var result = Json(new { listaTalla = listaBatch, cargoUser= cargo, sucursal= sucursalName });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

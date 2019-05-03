@@ -21,7 +21,8 @@ namespace FortuneSystem.Models.Usuarios
             {
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leerFilas = null;
-                comando.CommandText = "Listar_Usuarios";
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "Listar_Usuarios";
                 comando.CommandType = CommandType.StoredProcedure;
                 leerFilas = comando.ExecuteReader();
 
@@ -37,7 +38,8 @@ namespace FortuneSystem.Models.Usuarios
                     usuarios.Email = leerFilas["Email"].ToString();
                     usuarios.Contrasena = leerFilas["Contrasena"].ToString();
                     usuarios.NombreCompleto = usuarios.Nombres + " " + usuarios.Apellidos;
-                    roles.Rol = leerFilas["rol"].ToString();
+					usuarios.TipoTurno = Convert.ToInt32(leerFilas["turno"]);
+					roles.Rol = leerFilas["rol"].ToString();
                     usuarios.CatRoles = roles;
                     listUsuarios.Add(usuarios);
 
@@ -229,8 +231,41 @@ namespace FortuneSystem.Models.Usuarios
             return "";
         }
 
-        // Obtenernombre de un usuario 
-        public string Obtener_Nombre_Usuario(string noEmpleado)
+		// Obtener sucursal de un usuario 
+		public string Obtener_Sucursal_Usuario(string noEmpleado)
+		{
+			SqlCommand cmd = new SqlCommand();
+			SqlDataReader reader;
+			Conexion conex = new Conexion();
+			string sucursal = "";
+			try
+			{
+				cmd.Connection = conex.AbrirConexion();
+				cmd.CommandText = "SELECT id_sucursal FROM Usuarios WHERE NoEmpleado='" + noEmpleado + "'";
+				cmd.CommandType = CommandType.Text;
+				reader = cmd.ExecuteReader();
+				while (reader.Read())
+				{
+					
+					int idSucursal = Convert.ToInt32(reader["id_sucursal"]);
+					if(idSucursal == 1)
+					{
+						sucursal = "FORTUNE";
+					}
+					else
+					{
+						sucursal = "LUCKY1";
+					}
+					
+				}
+
+			}
+			finally { conex.CerrarConexion(); conex.Dispose(); }
+			return sucursal;
+		}
+
+		// Obtenernombre de un usuario 
+		public string Obtener_Nombre_Usuario(string noEmpleado)
         {
             SqlCommand cmd = new SqlCommand();
             SqlDataReader reader;

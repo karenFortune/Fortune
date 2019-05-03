@@ -13,7 +13,8 @@ namespace FortuneSystem.Models.Packing
         public string Talla { get; set; }
         public int IdSummary { get; set; }
         public int Calidad { get; set; }
+		public double Porcentaje { get; set; }
 
-    }
+	}
 
 }

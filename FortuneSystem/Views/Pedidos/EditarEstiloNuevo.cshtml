@@ -17,8 +17,32 @@
     <script src="~/Scripts/bootstrap.js"></script>
 }
 <script type="text/javascript">
+
+	$(document).on("click", ".classEditStyle", function () {
+		var rowCount = $('.data-Pack').length + 1;
+				var packdiv = '<tr class="data-Pack">' +
+					'<td class="mover" width="10%"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>' +
+					'<td class="datoPack" style="width:1px; display:none;"><input type="text"  name="id-pack" id="id-pack" class="form-control pack" value="' + 0 + '"/ readonly></td>' +
+					'<td class="datoPack" width="20%"><input type="text"  name="f-pack" id="f-pack" class="form-control desPack pack" style="width: 80%;" /></td>' +
+					'<td><button type="button" id="btnDelete" class="pDelete btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
+					'</tr>';
+				$('#tablaPack').append(packdiv);
+	});
+
+		$(document).on("click", ".pkDelete", function () {
+			var $row = $(this).closest("tr");
+			debugger
+			var $text = $row.find(".idPack").val();
+			eliminarPacking($text);
+			$(this).closest("tr").remove();
+		});
+
+		$(document).on("click", ".pDelete", function () {
+			$(this).closest("tr").remove();
+		});
+
     $(document).ready(function () {
-       
+		buscar_Packing();
         $(document).on("click", ".classAdd", function () {
             var rowCount = $('.data-Talla').length + 1;
             var tallasdiv = '<tr class="data-Talla">' +  
@@ -28,7 +52,7 @@
                 '<td class="datoTalla"><input type="text" id="l-cantidad" name="l-cantidad" class="form-control l-name01 numCantTall"  /></td>' +
                 '<td class="datoTalla"><input type="text" id="e-extras"  name="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>' +
                 '<td class="datoTalla"><input type="text" id="s-ejemplo" name="s-ejemplo" class="form-control s-name01 numEjmTall" value="' + 0 + '"/></td>' +              
-                '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
+                '<td><button type="button" id="btnDelete" class="delTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
                 '</tr>';
             $('#tablaTallas').append(tallasdiv);
         });
@@ -39,6 +63,10 @@
             eliminarTallas($text);
             $(this).closest("tr").remove();
         });
+
+		$(document).on("click", ".delTalla", function () {
+			$(this).closest("tr").remove();
+		});
 
 
         $('#selectGenero').select2({
@@ -266,7 +294,88 @@
         buscar_estilos_Edicion();      
 
 
-    });
+	});
+
+	function eliminarPacking(idPacking) {
+		 $.ajax('@Url.Action("EliminarPacking", "Pedidos")', {
+			 data: { id: idPacking },
+            method: 'post'
+        }).done(function (data) {        });
+                  alertify.set('notifier', 'position', 'top-right');
+                  alertify.notify('The packing was removed correctly.', 'success', 5, null);
+	}
+
+		function obtenerListPack() {
+		var r = 0; var c = 0; var i = 0; var cadena = new Array(2);
+            cadena[0] = ''; cadena[1] = '';
+            var nFilas = $("#tablaPack tbody>tr").length;
+            var nColumnas = $("#tablaPack tr:last td").length;
+            $('#tablaPack tbody>tr').each(function () {
+                r = 0;
+                c = 0;
+                $(this).find("input").each(function () {
+                    $(this).closest('td').find("input").each(function () {
+                        cadena[c] += this.value + "*" ;
+                        c++;
+                    });
+
+                    r++;
+                    });
+                });
+
+            var error = 0;
+            $('#tablaPack').find('td.datoPack').each(function (i, el) {
+
+                var valor = $(el).children().val();
+
+                    if ($(el).children().val() == '') {
+                        error++;
+                        $(el).children().css('border', '2px solid #e03f3f');
+
+                    } else {
+                        $(el).children().css('border', '1px solid #cccccc');
+
+                    }
+		});
+
+		if (error == 0) {
+                return (cadena);
+            }
+
+	}
+
+		function buscar_Packing() {
+		var tempScrollTop = $(window).scrollTop();
+        var id = $("#IdItems").val();
+        $.ajax({
+            url: "/Pedidos/Lista_Packings/" + id,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (jsonData) {
+                var listaT = jsonData.Data.listPack;
+				var html = '';    
+				//var cont = 1;
+                $.each(listaT, function (key, item) {          
+                    
+                    html += '<tr>';					
+					html += '<td class="mover" style="width:2em;"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>';
+					html += '<td class="datoPack" style="width:1px; display:none;"><input type="text"  name="id-pack" id="id-pack" class="form-control idPack pack" value="' + item.IdPackStyle + '"/ readonly></td>';
+                    html += '<td class="datoPack" width="20%"><input type="text"  style="text-transform:uppercase" name="f-pack" id="f-pack" class="form-control pack" style="width: 80%;" value="' + item.DescripcionPack + '"/></td>';
+                    html += '<td><button type="button" id="btnDelete" class="pkDelete btn btn btn-danger btn-xs" value="4">Delete</button></td>';
+					//cont++;
+					html += '</tr>';
+					//contador = item.IdMillPO;
+				});
+				
+               $('.tbodyPack').html(html);
+
+                $(window).scrollTop(tempScrollTop);
+            },
+            error: function (errormessage) { alert(errormessage.responseText); }
+        });
+	}	
+
 
     function buscar_estilos_Edicion() {
         var tempScrollTop = $(window).scrollTop();
@@ -300,7 +409,6 @@
 
     function eliminarTallas(talla) {
             var idEstilo = $("#IdItems").val();
-           var idEstilo = $("#IdItems").val();
            $.ajax('@Url.Action("EliminarTallaPorEstilo", "POSummary")', {
             data: { estilo: idEstilo, talla: talla },
             method: 'post'
@@ -378,8 +486,14 @@
             } else {
                 $(el).children().css('border', '1px solid #cccccc');
             }
-        });
-        enviarListaTalla(cadena, error);
+		});
+
+			var lista = []; 
+            lista = obtenerListPack();
+			var datos = JSON.stringify(lista);
+            var obj = datos;
+            obj = JSON.parse(obj);
+        enviarListaTalla(cadena, error, obj);
 
     });
 
@@ -423,7 +537,7 @@
     function redireccionarPagina() {
         window.location = '/pedidos/Index';
     }
-    function enviarListaTalla(cadena, error) {
+    function enviarListaTalla(cadena, error, obj) {
         var IDEstilo = $("#IdItems").val();
         var IDPEDIDO = $("#PedidosId").val();
         actualizar_Datos_Estilo(IDEstilo, IDPEDIDO);
@@ -436,7 +550,7 @@
             $.ajax({
                 url: "/POSummary/Actualizar_Info_Estilo",
                 datatType: 'json',
-                data: JSON.stringify({ ListTalla: cadena, IdEstilo: IDEstilo }),
+                data: JSON.stringify({ ListTalla: cadena, IdEstilo: IDEstilo, ListaTypePack: obj }),
                 cache: false,
                 type: 'POST',
                 contentType: 'application/json',
@@ -548,6 +662,11 @@
         overflow-y: scroll;
         overflow-x: hidden;
     }
+
+	.classTipoPack {
+		color: white !important;
+		background: #709ec5 !important;
+	}
 </style>
 
 @using (Html.BeginForm())
@@ -560,95 +679,118 @@
         @Html.HiddenFor(model => model.IdColor)
         @Html.HiddenFor(model => model.PedidosId)
 
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4>Edit Style</h4>
-            </div>
-            <div class="container-fluid">
-                <div class="form-row ">
-                    <div class="form-group col-md-5">
-                        @Html.LabelFor(model => model.ItemDescripcion.ItemEstilo, htmlAttributes: new { @class = "control-label" })
-                        @Html.EditorFor(model => model.ItemDescripcion.ItemEstilo, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
-                        @Html.ValidationMessageFor(model => model.ItemDescripcion.ItemEstilo, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group col-md-5">
-                        @Html.LabelFor(model => model.ItemDescripcion.Descripcion, htmlAttributes: new { @class = "control-label" })
-                        @Html.EditorFor(model => model.ItemDescripcion.Descripcion, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
-                        @Html.ValidationMessageFor(model => model.ItemDescripcion.Descripcion, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group col-md-3">
-                        <br />
-                        <button type="button" class="btn btn-success" id="nuevoEstilo" data-toggle="modal">
-                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Style
-                        </button>
-                    </div>
-                </div>
-            </div>
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h4>Edit Style</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="form-row ">
+					<div class="form-group col-md-5">
+						@Html.LabelFor(model => model.ItemDescripcion.ItemEstilo, htmlAttributes: new { @class = "control-label" })
+						@Html.EditorFor(model => model.ItemDescripcion.ItemEstilo, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
+						@Html.ValidationMessageFor(model => model.ItemDescripcion.ItemEstilo, "", new { @class = "text-danger" })
+					</div>
+					<div class="form-group col-md-5">
+						@Html.LabelFor(model => model.ItemDescripcion.Descripcion, htmlAttributes: new { @class = "control-label" })
+						@Html.EditorFor(model => model.ItemDescripcion.Descripcion, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
+						@Html.ValidationMessageFor(model => model.ItemDescripcion.Descripcion, "", new { @class = "text-danger" })
+					</div>
+					<div class="form-group col-md-3">
+						<br />
+						<button type="button" class="btn btn-success" id="nuevoEstilo" data-toggle="modal">
+							<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Style
+						</button>
+					</div>
+				</div>
+			</div>
 
-            <div class="container-fluid">
-                <div class="form-row">
-                    <div class="form-group col-md-5">
-                        @Html.LabelFor(model => model.CatColores.CodigoColor, htmlAttributes: new { @class = "control-label" })
-                        @Html.EditorFor(model => model.CatColores.CodigoColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
-                        @Html.ValidationMessageFor(model => model.CatColores.CodigoColor, "", new { @class = "text-danger" })
+			<div class="container-fluid">
+				<div class="form-row">
+					<div class="form-group col-md-5">
+						@Html.LabelFor(model => model.CatColores.CodigoColor, htmlAttributes: new { @class = "control-label" })
+						@Html.EditorFor(model => model.CatColores.CodigoColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
+						@Html.ValidationMessageFor(model => model.CatColores.CodigoColor, "", new { @class = "text-danger" })
 
-                    </div>
-                    <div class="form-group col-md-5">
-                        @Html.LabelFor(model => model.CatColores.DescripcionColor, htmlAttributes: new { @class = "control-label" })
-                        @Html.EditorFor(model => model.CatColores.DescripcionColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
-                        @Html.ValidationMessageFor(model => model.CatColores.DescripcionColor, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group col-md-3">
-                        <br />
-                        <button type="button" class="btn btn-success" id="nuevoColor" data-toggle="modal">
-                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Color
-                        </button>
-                    </div>
-                </div>
-            </div>
+					</div>
+					<div class="form-group col-md-5">
+						@Html.LabelFor(model => model.CatColores.DescripcionColor, htmlAttributes: new { @class = "control-label" })
+						@Html.EditorFor(model => model.CatColores.DescripcionColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
+						@Html.ValidationMessageFor(model => model.CatColores.DescripcionColor, "", new { @class = "text-danger" })
+					</div>
+					<div class="form-group col-md-3">
+						<br />
+						<button type="button" class="btn btn-success" id="nuevoColor" data-toggle="modal">
+							<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Color
+						</button>
+					</div>
+				</div>
+			</div>
 
-            <div class="container-fluid">
-                <div class="form-row">
-                    <div class="form-group col-sm-5">
-                        @Html.LabelFor(model => model.Cantidad, htmlAttributes: new { @class = "control-label" })
-                        @Html.EditorFor(model => model.Cantidad, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
-                        @Html.ValidationMessageFor(model => model.Cantidad, "", new { @class = "text-danger" })
-                    </div>
+			<div class="container-fluid">
+				<div class="form-row">
+					<div class="form-group col-sm-5">
+						@Html.LabelFor(model => model.Cantidad, htmlAttributes: new { @class = "control-label" })
+						@Html.EditorFor(model => model.Cantidad, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
+						@Html.ValidationMessageFor(model => model.Cantidad, "", new { @class = "text-danger" })
+					</div>
 
-                    <div class="form-group col-sm-5">
-                        @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label" })
-                        @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
-                        @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
+					<div class="form-group col-sm-5">
+						@Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label" })
+						@Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
+						@Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
 
-                    </div>
-                    <div class="form-group col-sm-4">
-                        @Html.LabelFor(model => model.CatEspecialidades.Especialidad, htmlAttributes: new { @class = "control-label " }) <br />
-                        @Html.DropDownList("Especialidad", (SelectList)ViewBag.listEspecialidad, string.Empty, new { @class = "form-control nuevo_item", @id = "selectEspecialidad", @name = "state", @style = "width: 60%;" })
-                        @Html.ValidationMessageFor(model => model.IdEspecialidad, "", new { @class = "text-danger" })
+					</div>
+					<div class="form-group col-sm-4">
+						@Html.LabelFor(model => model.CatEspecialidades.Especialidad, htmlAttributes: new { @class = "control-label " }) <br />
+						@Html.DropDownList("Especialidad", (SelectList)ViewBag.listEspecialidad, string.Empty, new { @class = "form-control nuevo_item", @id = "selectEspecialidad", @name = "state", @style = "width: 60%;" })
+						@Html.ValidationMessageFor(model => model.IdEspecialidad, "", new { @class = "text-danger" })
 
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="form-row">
-                    <div class="form-group col-sm-4 estilo">
-                        @Html.LabelFor(model => model.IdGenero, htmlAttributes: new { @class = "control-label " }) <br />
-                        @Html.DropDownList("Genero", (SelectList)ViewBag.listGenero, new { @class = "form-control nuevo_item", @id = "selectGenero", @name = "state", @style = "width: 80%;" })
-                        @Html.ValidationMessageFor(model => model.IdGenero, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group col-sm-4">
-                        @Html.LabelFor(model => model.IdTela, htmlAttributes: new { @class = "control-label " }) <br />
-                        @Html.DropDownList("Tela", (SelectList)ViewBag.listTela, new { @class = "form-control nuevo_item", @id = "selectTela", @name = "state", @style = "width: 80%;" })
-                        @Html.ValidationMessageFor(model => model.IdTela, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group col-sm-4">
-                        @Html.LabelFor(model => model.TipoCamiseta, htmlAttributes: new { @class = "control-label " }) <br />
-                        @Html.DropDownList("DescripcionTipo", (SelectList)ViewBag.listTipoCamiseta, string.Empty, new { @class = "form-control nuevo_item", @id = "selectTipoCamiseta", @name = "state", @style = "width: 80%;" })
-                        @Html.ValidationMessageFor(model => model.TipoCamiseta, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            </div>
-        </div>
+					</div>
+					<div class="form-group col-sm-4 estilo">
+						@Html.LabelFor(model => model.IdGenero, htmlAttributes: new { @class = "control-label " }) <br />
+						@Html.DropDownList("Genero", (SelectList)ViewBag.listGenero, new { @class = "form-control nuevo_item", @id = "selectGenero", @name = "state", @style = "width: 80%;" })
+						@Html.ValidationMessageFor(model => model.IdGenero, "", new { @class = "text-danger" })
+					</div>
+					<div class="form-group col-sm-4">
+						@Html.LabelFor(model => model.IdTela, htmlAttributes: new { @class = "control-label " }) <br />
+						@Html.DropDownList("Tela", (SelectList)ViewBag.listTela, new { @class = "form-control nuevo_item", @id = "selectTela", @name = "state", @style = "width: 80%;" })
+						@Html.ValidationMessageFor(model => model.IdTela, "", new { @class = "text-danger" })
+					</div>
+				</div>
+			</div>
+			<div class="container-fluid">
+				<div class="form-row">
+					<div class="form-group col-sm-4">
+						@Html.LabelFor(model => model.TipoCamiseta, htmlAttributes: new { @class = "control-label " }) <br />
+						@Html.DropDownList("DescripcionTipo", (SelectList)ViewBag.listTipoCamiseta, string.Empty, new { @class = "form-control nuevo_item", @id = "selectTipoCamiseta", @name = "state", @style = "width: 80%;" })
+						@Html.ValidationMessageFor(model => model.TipoCamiseta, "", new { @class = "text-danger" })
+					</div>
+				</div>
+			</div>
+			<div class="container-fluid">
+				<div class="form-group">
+					<div class="panel-group">
+						<div class="panel panel-title">
+							<div class="panel-heading classTipoPack">Reception of type of packing</div>
+							<div class="panel-body">
+								<button type="button" id="btnAddPack" class="btn btn-xs btn-primary classEditStyle">+ New Pack</button>
+								<table class="table" id="tablaPack" style="margin:0px; padding:0px;">
+									<thead>
+										<tr>
+											<th class="index"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true" /></th>
+											<th>Packing</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody class="tbodyPack"></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<br />	
+				</div>
+			</div>
+		</div>
     </div>
     @*style="visibility:hidden;"*@
     <div class="panel panel-primary">

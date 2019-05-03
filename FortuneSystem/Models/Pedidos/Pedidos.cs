@@ -82,7 +82,7 @@ namespace FortuneSystem.Models.Pedidos
         [Required]
         // [RegularExpression("^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$", ErrorMessage = "Formato de fecha incorrecta.")]
         [RegularExpression("^[0-1][0-9][- /.][0-3][0-9][- /.][0-9]{4}$", ErrorMessage = "Incorrect date format.")]
-        [Display(Name = "REGISTRATION DATE")]
+        [Display(Name = "DATE RECEIVED")]
         [DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}")]
         public DateTime FechaOrden { get; set; }
         public string FechaRecOrden { get; set; }
@@ -136,8 +136,9 @@ namespace FortuneSystem.Models.Pedidos
         public virtual CatTypeBrand CatTipoBrand { get; set; }
         //Imagen
         public virtual IMAGEN_ARTE ImagenArte { get; set; }
-        //Recibo
-        public virtual recibo Recibo { get; set; }
+		public virtual IMAGEN_ARTE_PNL ImagenArtePnl { get; set; }
+		//Recibo
+		public virtual recibo Recibo { get; set; }
         public string MillPO { get; set; }
         public List<recibo> ListadoRecibosBlanks { get; set; }
         public List<recibo> ListadoRecibos { get; set; }
@@ -157,8 +158,13 @@ namespace FortuneSystem.Models.Pedidos
         public virtual Shipped Shipped { get; set; }
         //Pack Instruction
         public virtual InfoPackInstruction InfoPackInstruction { get; set; }
+		//Lista MillPO
+		public List<InfoMillPO> ListaMillPO { get; set; }
+		//Lista Tipo de Packing Estilo
+		public List<CatTypePackItem> ListaTypePack { get; set; }
 
-    }
+
+	}
 
     public class InfoSummary
     {
@@ -173,6 +179,8 @@ namespace FortuneSystem.Models.Pedidos
         public virtual CatGenero CatGenero { get; set; }
         public List<InfoSummary> ListSummary { get; set; }
         public string FechaUCC { get; set; }
+		public int IdSucursal { get; set; }
+		
 
     }
 
@@ -207,7 +215,12 @@ namespace FortuneSystem.Models.Pedidos
         public DateTime Fecha_Rec_Pack { get; set; }
     }
 
-  
+	public class InfoMillPO
+	{
+		public int IdMillPO { get; set; }
+		public string MillPO { get; set; }
+		public int IdPedido { get; set; }
+	}
 
 
 

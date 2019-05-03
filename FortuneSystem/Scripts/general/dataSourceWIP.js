@@ -37,3 +37,4 @@ function RegistrarFechaUCC(d, values, idSummary) {
     });
 }
 
+

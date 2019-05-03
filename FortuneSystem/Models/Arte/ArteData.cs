@@ -555,7 +555,20 @@ namespace FortuneSystem.Models.Arte
                     arte.IdEstilo = Convert.ToInt32(leerF["IdEstilo"]);
                     arte.StatusPNL = Convert.ToInt32(leerF["StatusPNL"]);
                     arte.ExtensionPNL = leerF["extensionPNL"].ToString();
-                }
+
+
+					if (!Convert.IsDBNull(leerF["fecha"]))
+					{
+						arte.Fecha = Convert.ToDateTime(leerF["fecha"]);
+						arte.FechaArtePnl = String.Format("{0:dd/MM/yyyy}", arte.Fecha);
+					}
+					else
+					{
+
+						arte.FechaArtePnl = "";
+					}
+
+				}
                 leerF.Close();
             }
             finally

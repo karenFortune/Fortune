@@ -555,7 +555,7 @@
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\PackingController.cs" />
     <Compile Include="Controllers\RecibosController.cs" />
-    <Compile Include="Controllers\ReportPDFController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\PDFController.cs" />
     <Compile Include="Controllers\PedidosController.cs" />
     <Compile Include="Controllers\PNLController.cs" />
@@ -1326,6 +1326,7 @@
     <Content Include="Content\img\IconPacking.png" />
     <Content Include="Content\img\IconPoList.png" />
     <Content Include="Content\img\IconPrintshop.png" />
+    <Content Include="Content\img\IconPrintShop1.png" />
     <Content Include="Content\img\IconShipping.png" />
     <Content Include="Content\img\IconStanging.png" />
     <Content Include="Content\img\IconWIP.png" />

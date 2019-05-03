@@ -58,7 +58,7 @@ namespace FortuneSystem.Controllers
 
             pedido.IdPedido = Convert.ToInt32(id);
             int cont = 0;
-            Session["id_Block"] = objPacking.ObtenerNumBlock(pedido.ListItems);
+            Session["id_Block"] = objPacking.ObtenerNumBlock(pedido.ListItems, id);
             int numIdBlock = Convert.ToInt32(Session["id_Block"])+1;
             string namePack= "PACK-" + numIdBlock;
             string nameAssort = "ASMT-" + numIdBlock;
@@ -140,7 +140,7 @@ namespace FortuneSystem.Controllers
             PackingTypeSize packSize = new PackingTypeSize();
             List<ItemDescripcion> listaEstilos = pedido.ListItems;
             listaEstilos = objPedido.ListaEstilosPorIdPedido(id).ToList();
-            Session["id_Block"] = objPacking.ObtenerNumBlock(listaEstilos);
+            Session["id_Block"] = objPacking.ObtenerNumBlock(listaEstilos, id);
             int NumBlock = Convert.ToInt32(Session["id_Block"])+1;
             string datosBlock = "PACK-" + NumBlock;      
             string nameAssort = "ASMT-" + NumBlock;
@@ -747,7 +747,8 @@ namespace FortuneSystem.Controllers
         {
             List<PackingM> listaBatch = objPacking.ListaBatch(id, tipoEmpaque).ToList();
             int cargo = Convert.ToInt32(Session["idCargo"]);
-            var result = Json(new { listaPO = listaBatch, cargoUser = cargo });
+			string sucursalName = ((string)Session["sucursal"]);
+			var result = Json(new { listaPO = listaBatch, cargoUser = cargo, sucursal = sucursalName });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -839,7 +840,8 @@ namespace FortuneSystem.Controllers
         {
              List<PackingM> listaTallasEstilo = objPacking.ObtenerTallas(id).ToList();
             List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilo(id).ToList();
-            List<int> listaCajasPacking = objPacking.ListaTotalTallasPackingBatchEstilo(id).ToList();
+			List<ItemTalla> listaTallasPack = objTallas.ListaTallasPacking(id).ToList();
+			List<int> listaCajasPacking = objPacking.ListaTotalTallasPackingBatchEstilo(id).ToList();
             List<int> listaPartialPacking = objPacking.ListaTallasPartialPackingBulkEstilo(id).ToList();            
             List<PackingSize> listaTallasPacking = objPacking.ObtenerListaPackingSizePorEstilo(id).ToList();
             List<PackingTypeSize> listaTallasEmpaque = objPacking.ObtenerListaPackingTypeSizePorEstilo(id).ToList();
@@ -866,11 +868,100 @@ namespace FortuneSystem.Controllers
                                     listaEmpaqueTallas = listaTallasEmpaque, listaTotalCajasPack = listaCajasPacking,
                                     listaCajasT = listaTallasCBatch, estilos = estilo, cargoUser = cargo,
                                     numTPSyle = totalPiezasEstilos, numTPack = totalPiezasPack,
-                                    listaTotalPiezas = listaTotalPiezasTallas, listCantTalla = listCantidadesTallas, listaPartial= listaPartialPacking});
+                                    listaTotalPiezas = listaTotalPiezasTallas, listCantTalla = listCantidadesTallas,
+				                    listaPartial = listaPartialPacking, listaPack = listaTallasPack});
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
+		[HttpPost]
+		public JsonResult Info_Packing_Grafica(int? id)
+		{
+			//List<ItemTalla> listaTallas = objTallas.ObtenerListaPackingSizePorEstilo(id).ToList();
+			List<PackingSize> listaTallas = objPacking.ObtenerListaPackingSizePorEstilo(id).ToList();
+			List<PackingM> listaTallasTPackingBatch = objPacking.ListaTotalTallasPackingBatch(id).ToList();
+
+			foreach (var item in listaTallas)
+			{
+				int CantidadBatch = 0;
+				double CantidadGeneral = 0;
+				double Cantidadfinal = 0;
+				foreach (var itemBatch in listaTallasTPackingBatch)
+				{
+					if (item.IdTalla == itemBatch.IdTalla)
+					{
+						CantidadBatch = itemBatch.TotalBatch;
+						//CantidadPrint = item.Cantidad - CantidadBatch;
+						CantidadGeneral = (CantidadBatch * 100);
+					    Cantidadfinal = Math.Round(CantidadGeneral / item.Calidad, 2);
+					}
+
+				}
+				//item.Total = CantidadGeneral;
+				item.Porcentaje = Cantidadfinal;
+
+			}
+			var result = Json(new
+			{
+				listaTalla = listaTallas,
+				listaTallasTotalBatch = listaTallasTPackingBatch
+
+			});
+			return Json(result, JsonRequestBehavior.AllowGet);
+		}
+
+		[HttpPost]
+		public JsonResult Info_PackingHT_Grafica(int? id)
+		{
+			List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilo(id).ToList();
+			//List<ItemTalla> listaTallas = objTallas.ObtenerListaPackingSizePorEstilo(id).ToList();
+			List<int> listaBatch = objPacking.ObtenerListaBatchIdSummary(id).ToList();
+			string valores = "";
+			for (int v = 0; v < listaBatch.Count; v++)
+			{
+				if (v > 0)
+				{
+					valores += "," + listaBatch[v];
+				}
+				else
+				{
+					valores += listaBatch[v];
+				}
+			}
+			
+			string query = valores;
+			
+			List<PackingM> listaTallasTPackingBatch = objPacking.ListaTotalTallasPackingBatchHT(id, query).ToList();
+
+			foreach (var item in listaTallas)
+			{
+				int CantidadBatch = 0;
+				double CantidadGeneral = 0;
+				double Cantidadfinal = 0;
+				foreach (var itemBatch in listaTallasTPackingBatch)
+				{
+					if (item.IdTalla == itemBatch.IdTalla)
+					{
+						CantidadBatch = itemBatch.SumaTotalBatch;
+						//CantidadPrint = item.Cantidad - CantidadBatch;
+						CantidadGeneral = (CantidadBatch * 100);
+						Cantidadfinal = Math.Round(CantidadGeneral / item.Cantidad, 2);
+					}
+
+				}
+				//item.Total = CantidadGeneral;
+				item.Porcentaje = Cantidadfinal;
+
+			}
+			var result = Json(new
+			{
+				listaTalla = listaTallas,
+				listaTallasTotalBatch = listaTallasTPackingBatch
+
+			});
+			return Json(result, JsonRequestBehavior.AllowGet);
+		}
+
+		[HttpPost]
         public JsonResult Lista_Tallas_Por_Estilo_BULK(int? id)
         {
             List<PackingM> listaTallasEstilo = objPacking.ObtenerTallas(id).ToList();
@@ -1014,8 +1105,8 @@ namespace FortuneSystem.Controllers
                 estilo = item.Estilo;
 
             }
-
-            var result = Json(new
+			int cargo = Convert.ToInt32(Session["idCargo"]);
+			var result = Json(new
             {
                 lista = listaTallas,
                 //listaTalla = listaTallasEstilo,
@@ -1024,7 +1115,8 @@ namespace FortuneSystem.Controllers
                 listaPTBulk = listaPiezasPackingBulk,
                 listaPTPPK = listaPiezasPackingPPK,
                 listaEmpPPK = listaTallasEmpaquePPK,
-                listaTotalCajasPack = listaTallasCBatch
+                listaTotalCajasPack = listaTallasCBatch,
+				cargoUser = cargo
             });
             return Json(result, JsonRequestBehavior.AllowGet);
         }

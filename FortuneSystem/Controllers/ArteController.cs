@@ -490,7 +490,8 @@ namespace FortuneSystem.Controllers
             IArte.ResultadoK = kohl.Matches(IArte.Tienda);
             IArte.ResultadoW = walmart.Matches(IArte.Tienda);
             IArte.Estilo = objDesc.ObtenerEstiloPorId(IArte.IdEstilo);
-            ObtenerEstadosPNL(IArte.StatusPNL, IArte);  
+			IArte.Fecha = DateTime.Today;
+			ObtenerEstadosPNL(IArte.StatusPNL, IArte);  
 
             return View(IArte);
         }

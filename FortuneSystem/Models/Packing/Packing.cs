@@ -15,7 +15,7 @@ namespace FortuneSystem.Models.Packing
         public int IdTalla { get; set; }
         [Display(Name = "BOX#")]
         public int CantBox { get; set; }
-        [Display(Name = "TURN")]
+        [Display(Name = "SHIFT")]
         public Turno Turnos { get; set; }
         public int IdTurno { get; set; }
         public int TipoTurno { get; set; }
@@ -51,6 +51,9 @@ namespace FortuneSystem.Models.Packing
         public virtual PackingTypeSize PackingTypeSize { get; set; }
 
         public virtual PackingAssortment PackingAssort { get; set; }
+		public int TotalBatch { get; set; }
+
+		public int SumaTotalBatch { get; set; }
     }
 
     public enum Turno

@@ -169,8 +169,9 @@ namespace FortuneSystem.Controllers
         public JsonResult Lista_Batch_Estilo(int? id)
         {
             List<Pnl> listaBatch = objPnl.ListaBatch(id).ToList();
-
-            var result = Json(new { listaTalla = listaBatch });
+			int cargo = Convert.ToInt32(Session["idCargo"]);
+			string sucursalName = ((string)Session["sucursal"]);
+			var result = Json(new { listaTalla = listaBatch, cargoUser = cargo, sucursal = sucursalName });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

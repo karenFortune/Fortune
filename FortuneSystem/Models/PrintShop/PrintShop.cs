@@ -21,7 +21,7 @@ namespace FortuneSystem.Models.PrintShop
         public int Maquina { get; set; }
         public Maquina Maquinas { get; set; }
         public string NombreMaquina { get; set; }
-        [Display(Name = "TURN")]
+        [Display(Name = "SHIFT")]
         public Turno Turnos { get; set; }
         public int TipoTurno { get; set; }
         public int Usuario { get; set; }
@@ -40,6 +40,8 @@ namespace FortuneSystem.Models.PrintShop
         public List<PrintShopC> Batch { get; set; }
 
         public virtual IMAGEN_ARTE ImagenArte { get; set; }
+
+		public int TotalBatch { get; set; }
     }
 
     public enum Turno

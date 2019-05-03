@@ -4,6 +4,14 @@
     ViewBag.Title = "PO REVIEW";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+
+	  tr.highlighted td {
+        background: #b3e0ff;
+    }
+
+
+</style>
 
 </div>
 <div class="container-fluid" style="padding-left:20em; padding-right:10em;">
@@ -39,13 +47,13 @@
                         <th>
                             @Html.DisplayNameFor(model => model.TotalUnidades)
                         </th>
-                        <th>ACTIONS</th>
+                       
                     </tr>
                 </thead>
                 <tbody class="tbody">
                     @foreach (var item in Model)
                     {
-                        <tr>
+                        <tr ondblclick="location.href = '@(Url.Action("DetallesRev", "Pedidos", new { id = item.IdPedido }))'">
                             <td>
                                 @Html.DisplayFor(modelItem => item.IdPedido)
                             </td>
@@ -70,9 +78,7 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.TotalUnidades)
                             </td>
-                            <td>
-                                @Html.ActionLink(" ", "DetallesRev", new { id = item.IdPedido }, new { @class = "btn btn-default glyphicon glyphicon-search", @style = "color:black", @Title = "Style Details " })
-                            </td>
+                            
                         </tr>
                     }
                 </tbody>
@@ -83,3 +89,9 @@
         <img src='@Url.Content("~/Content/img/backToPage.png")' id="flecha" title="Go Back" />
     </a>
 </div>
+<script>
+	    $('#tabless tr').click(function (e) {
+        $('#tabless tr').removeClass('highlighted');
+        $(this).addClass('highlighted');
+    });
+</script>

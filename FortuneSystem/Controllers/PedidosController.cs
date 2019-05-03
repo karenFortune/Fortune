@@ -25,8 +25,8 @@ namespace FortuneSystem.Controllers
 {
     public class PedidosController : Controller
     {
-        // GET: Pedido
-        PedidosData objPedido = new PedidosData();
+		// GET: Pedido
+		readonly PedidosData objPedido = new PedidosData();
         CatClienteData objCliente = new CatClienteData();
         CatClienteFinalData objClienteFinal = new CatClienteFinalData();
         CatStatusData objEstados = new CatStatusData();
@@ -41,9 +41,9 @@ namespace FortuneSystem.Controllers
         PrintShopData objPrint = new PrintShopData();
         PackingData objPacking = new PackingData();
         PnlData objPnl = new PnlData();
-        PDFController pdf = new PDFController();
         CatEspecialidadesData objEspecialidad = new CatEspecialidadesData();
         CatTipoOrdenData objTipoOrden = new CatTipoOrdenData();
+		ReportController reporte = new ReportController();
   
         public int estado;
         public int IdPO;
@@ -51,15 +51,14 @@ namespace FortuneSystem.Controllers
 
         public ActionResult Index()
         {
-            List<OrdenesCompra> listaPedidos = new List<OrdenesCompra>();
-            listaPedidos = objPedido.ListaOrdenCompra().ToList();
+			List<OrdenesCompra> listaPedidos = objPedido.ListaOrdenCompra().ToList();
             return View(listaPedidos);
         }
 
         public void Reporte(int? id)
         {
             Session["idPed"] = id;
-            pdf.Imprimir_Reporte_PO();
+            reporte.Imprimir_Reporte_PO();
         }
 
         [HttpPost]
@@ -200,7 +199,8 @@ namespace FortuneSystem.Controllers
         public JsonResult Lista_Tallas_Estilo_PrintShop(int? id)
         {
             List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstiloPrint(id).ToList();
-            List<StagingD> listaTallasStaging = objTallas.ListaTallasStagingPorEstilo(id).ToList();
+			List<ItemTalla> listaTallasQty = objTallas.ListadoTallasPorEstilos(id).ToList();
+			List<StagingD> listaTallasStaging = objTallas.ListaTallasStagingPorEstilo(id).ToList();
             List<StagingDatos> listaDatosStaging = objTallas.ListaTallasStagingDatosPorEstilo(id).ToList();
             List<int> listaTallasTBatch = objPrint.ListaTotalTallasBatchEstilo(id).ToList();
             List<int> listaTallasPBatch = new List<int>();
@@ -231,12 +231,50 @@ namespace FortuneSystem.Controllers
                 listaTallasTotalPBatch = listaTallasPBatch,
                 listaTallasTotalMBatch = listaTallasMPBatch,
                 listaTallasTotalDBatch = listaTallasDBatch,
-                listaTallasTotalRBatch = listaTallasRBatch
+                listaTallasTotalRBatch = listaTallasRBatch,
+				listTallaCant = listaTallasQty
             });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
+		[HttpPost]
+		public JsonResult Info_PrintShop_Grafica(int? id)
+		{
+			List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstiloPrint(id).ToList();
+			List<PrintShopC> listaTallasTBatch = objPrint.ListaTotalTallasBatch(id).ToList();
+			
+			foreach (var item in listaTallas)
+			{
+				int CantidadBatch = 0;
+				double CantidadGeneral = 0;
+				double Cantidadfinal = 0;
+				foreach (var itemBatch in listaTallasTBatch)
+				{
+					if(item.IdTalla == itemBatch.IdTalla)
+					{
+						CantidadBatch = itemBatch.TotalBatch;
+						//CantidadPrint = item.Cantidad - CantidadBatch;
+						CantidadGeneral = (CantidadBatch * 100);
+						Cantidadfinal = Math.Round(CantidadGeneral / item.Cantidad, 2);
+					}
+					
+				}
+				//item.Total = CantidadGeneral;
+				item.Porcentaje = Cantidadfinal;
+				
+			}
+			var result = Json(new
+			{
+				listaTalla = listaTallas,
+				listaTallasTotalBatch = listaTallasTBatch
+
+			});
+			return Json(result, JsonRequestBehavior.AllowGet);
+		}
+
+
+
+		[HttpPost]
         public JsonResult Lista_Tallas_Estilo_Recibos(int? idSummary, int? idPedido, int? idEstilo)
         {
             List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstiloRecibo(idSummary).ToList();
@@ -352,7 +390,8 @@ namespace FortuneSystem.Controllers
         public JsonResult Lista_Tallas_Estilo_Pnl(int? id)
         {
             List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilopnl(id).ToList();
-            List<StagingD> listaTallasStaging = objTallas.ListaTallasStagingPorEstilo(id).ToList();
+			List<ItemTalla> listaTallasQty = objTallas.ListadoTallasPorEstilos(id).ToList();
+			List<StagingD> listaTallasStaging = objTallas.ListaTallasStagingPorEstilo(id).ToList();
             List<StagingDatos> listaDatosStaging = objTallas.ListaTallasStagingDatosPorEstilo(id).ToList();
             List<int> listaTallasTPnlBatch = objPnl.ListaTotalTallasPNLBatchEstilo(id).ToList();
             List<int> listaTallasPBatchPnl = new List<int>();
@@ -384,13 +423,49 @@ namespace FortuneSystem.Controllers
                 listaTallasTotalPBatchPNL = listaTallasPBatchPnl,
                 listaTallasTotalMBatchPnl = listaTallasMPBatchPnl,
                 listaTallasTotalDBatchPnl = listaTallasDBatchPnl,
-                listaTallasTotalRBatch = listaTallasRBatch
-            });
+                listaTallasTotalRBatch = listaTallasRBatch,
+				listTallaCant = listaTallasQty
+			});
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+		[HttpPost]
+		public JsonResult Info_Pnl_Grafica(int? id)
+		{
+			List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilopnl(id).ToList();
+			List<Pnl> listaTallasTPnlBatch = objPnl.ListaTotalTallasPNLBatch(id).ToList();
 
-        [HttpPost]
+			foreach (var item in listaTallas)
+			{
+				int CantidadBatch = 0;
+				double CantidadGeneral = 0;
+				double Cantidadfinal = 0;
+				foreach (var itemBatch in listaTallasTPnlBatch)
+				{
+					if (item.IdTalla == itemBatch.IdTalla)
+					{
+						CantidadBatch = itemBatch.TotalBatch;
+						//CantidadPrint = item.Cantidad - CantidadBatch;
+						CantidadGeneral = (CantidadBatch * 100);
+						Cantidadfinal = Math.Round(CantidadGeneral / item.Cantidad, 2);
+					}
+
+				}
+				//item.Total = CantidadGeneral;
+				item.Porcentaje = Cantidadfinal;
+
+			}
+			var result = Json(new
+			{
+				listaTalla = listaTallas,
+				listaTallasTotalBatch = listaTallasTPnlBatch
+
+			});
+			return Json(result, JsonRequestBehavior.AllowGet);
+		}
+
+
+		[HttpPost]
         public JsonResult Lista_Tallas_Estilo_Packing(int? id)
         {
             List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilo(id).ToList();
@@ -429,7 +504,11 @@ namespace FortuneSystem.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
+
+
+
+
+		[HttpPost]
         public JsonResult Lista_Tallas_Staging_Estilo(int? id)
         {
             List<StagingD> listaTallas = objTallas.ListaTallasStagingPorEstilo(id).ToList();
@@ -503,18 +582,56 @@ namespace FortuneSystem.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult RegistrarPO([Bind] OrdenesCompra ordenCompra, string po, string VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades, int IdTipoOrden)
+        public JsonResult RegistrarPO([Bind] OrdenesCompra ordenCompra, string po, string VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades, int IdTipoOrden, List<string> ListaMillPO)
         {
             ListaEstados(ordenCompra);
             int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
             ordenCompra.Usuario = noEmpleado;
-            objPedido.AgregarPO(ordenCompra);
-            Session["idPedido"] = objPedido.Obtener_Utlimo_po();
+			List<OrdenesCompra> listaPedidos = objPedido.ListaOrdenCompra().ToList();
+			OrdenesCompra result = listaPedidos.Find(x => x.PO == ordenCompra.PO);
+			int duplicado = 0;
+			if (result == null)
+			{
+				objPedido.AgregarPO(ordenCompra);
+				Session["idPedido"] = objPedido.Obtener_Utlimo_po();
+				this.Obtener_Lista_MillPO(ListaMillPO);
+				duplicado = 2;
+			}
+			else
+			{
+				duplicado = 1;
+				//TempData["duplicadoPO"] = "There is already a purchase order with that PO ("+ ordenCompra.PO + ")." ;
+			}
+			var resultado = Json(new { doblePO = duplicado });
+			return Json(resultado, JsonRequestBehavior.AllowGet);
+		}
 
-            return View(ordenCompra);
-        }
+		[HttpPost]
+		public JsonResult Obtener_Lista_MillPO(List<string> ListaMillPO)
+		{
+			InfoMillPO datos = new InfoMillPO();
+			List<string> descMPO = ListaMillPO[0].Split('*').ToList();
+			int i = 0;
+			foreach (var item in descMPO)
+			{
+				i++;
+			}
 
-        [HttpPost]
+			i = i - 1;
+			for (int v = 0; v < i; v++)
+			{
+				
+				datos.MillPO = descMPO[v];
+				int IdPedido = Convert.ToInt32(Session["idPedido"]);
+				datos.IdPedido = IdPedido;
+				objPedido.RegistroMillPO(datos);
+
+			}
+			return Json("0", JsonRequestBehavior.AllowGet);
+
+		}
+
+		[HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CrearPO([Bind] OrdenesCompra ordenCompra)
         {
@@ -631,6 +748,7 @@ namespace FortuneSystem.Controllers
                 estilos.TipoCamiseta = item.CatTipoCamiseta.TipoProducto;
                 estilos.IdItems = item.IdItems;
                 estilos.IdEspecialidad = item.CatEspecialidades.IdEspecialidad;
+				estilos.IdEstado = item.IdEstado;
                 Session["id_estilo"] = estilos.IdItems;
                 int? idEstilo = Convert.ToInt32(Convert.ToInt32(Session["id_estilo"]));
                 estilos.PedidosId = Convert.ToInt32(Session["idPedidoNuevo"]);
@@ -894,7 +1012,7 @@ namespace FortuneSystem.Controllers
             pedido.FechaOrdenFinal = String.Format("{0:MM/dd/yyyy}", pedido.FechaOrden);
             pedido.NombrePO=pedido.PO.TrimEnd(' ');
             pedido.PO = pedido.NombrePO;
-            ListasClientes(pedido);      
+			ListasClientes(pedido);      
             ListaTipoOrden(pedido);           
             pedido.IdEstilo = pedido.IdPedido;
             pedido.CatCliente = objCliente.ConsultarListaClientes(pedido.Cliente);
@@ -911,26 +1029,102 @@ namespace FortuneSystem.Controllers
 
         }
 
-        [HttpGet]
-        public ActionResult ActualizarInfPO( [Bind] OrdenesCompra pedido,int id, string po, string VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades, int IdTipoOrden)
+		public JsonResult Lista_MillPO(int? id)
+		{
+			OrdenesCompra pedido = new OrdenesCompra();
+			List<InfoMillPO>  listaMPO = objPedido.ListaMillPOPedido(id).ToList();
+			pedido.ListaMillPO = listaMPO;
+			var result = Json(new { listMpo = listaMPO });
+			return Json(result, JsonRequestBehavior.AllowGet);
+		}
+
+		public JsonResult Lista_Packings(int? id)
+		{
+			OrdenesCompra pedido = new OrdenesCompra();		
+			List<CatTypePackItem>  listaPack = objItems.ListaPackPorEstilo(id).ToList();
+			pedido.ListaTypePack = listaPack;
+			var result = Json(new { listPack = listaPack });
+			return Json(result, JsonRequestBehavior.AllowGet);
+		}
+
+		[HttpPost]
+		public JsonResult ActualizarInfPO( [Bind] OrdenesCompra pedido,int id, string po, string VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades, int IdTipoOrden, List<string> ListaMPO)
         {
             pedido.IdPedido = id;
 
             if (pedido.IdPedido != 0)
             {
                 objPedido.ActualizarPedidos(pedido);
-                TempData["itemEditar"] = "The purchase order was modified correctly.";
-               return RedirectToAction("Index");
-            }
+				this.Obtener_Lista_MIllPO(ListaMPO, pedido.IdPedido);
+				TempData["itemEditar"] = "The purchase order was modified correctly.";
+				//return RedirectToAction("Index");
+				return Json(new
+				{
+					redirectUrl = Url.Action("Index", "Pedidos"),
+					isRedirect = true
+				});
+			}
             else
             {
                 TempData["itemEditarError"] = "The purchase order could not be modified, try it later.";
             }
-            return View(pedido);
-        }
+
+			
+
+			return Json("0", JsonRequestBehavior.AllowGet);
+		}
 
 
-        [HttpPost]
+		[HttpPost]
+		public void EliminarMillPO(string id)
+		{
+			int idMillpo = Convert.ToInt32(id);
+			objPedido.EliminarMillPO(idMillpo);
+		}
+
+		[HttpPost]
+		public void EliminarPacking(string id)
+		{
+			int idPacking = Convert.ToInt32(id);
+			objPedido.EliminarPackEstilo(idPacking);
+		}
+
+		[HttpPost]
+		public JsonResult Obtener_Lista_MIllPO(List<string> ListaMillpo, int idPedido)
+		{
+			InfoMillPO datoMPO = new InfoMillPO();
+			List<string> datosIds = ListaMillpo[0].Split('*').ToList();
+			List<string> descMPO = ListaMillpo[1].Split('*').ToList();
+			int i = 0;
+			foreach (var item in datosIds)
+			{
+				i++;
+			}
+			int x = i - 1;
+			for (int v = 0; v < x; v++)
+			{
+				string id = datosIds[v];
+				if (id == "0")
+				{
+					datoMPO.MillPO = descMPO[v];
+					datoMPO.IdPedido = idPedido;
+					objPedido.RegistroMillPO(datoMPO);
+
+				}
+				else
+				{
+					datoMPO.IdMillPO = Convert.ToInt32(id);
+					datoMPO.MillPO = descMPO[v];
+					objPedido.ActualizarInfoMPO(datoMPO);
+
+				}
+			}
+			return Json("0", JsonRequestBehavior.AllowGet);
+
+		}
+
+
+		[HttpPost]
         public ActionResult Eliminar(int? id)
         {
             objItems.EliminarTallasEstilo(id);
@@ -1112,625 +1306,12 @@ namespace FortuneSystem.Controllers
         
 
         public ActionResult ReportWIP()
-        {
-            FileContentResult robj;
-            //string year = Convert.ToString(Session["year_reporte"]);
-            List<OrdenesCompra> listaPedidos = objPedido.ListaOrdenCompraWIP(1).ToList();
-            List<OrdenesCompra> listaShipped = objPedido.ListaOrdenCompraWIP(2).ToList();
-            List<OrdenesCompra> listaCancelled = objPedido.ListaOrdenCompraWIP(3).ToList();
+		{			
+			reporte.ObtenerReporteWIP();
+			return Json("0", JsonRequestBehavior.AllowGet);
+		}
 
-
-            int row = 1, column = 1;
-            using (XLWorkbook libro_trabajo = new XLWorkbook())
-            { //Regex.Replace(pedido, @"\s+", " "); 
-                var wp = libro_trabajo.Worksheets.Add("WIP");
-                var ws = libro_trabajo.Worksheets.Add("SHIPPED");
-                var wc = libro_trabajo.Worksheets.Add("CANCELLED");
-                wp.TabColor = XLColor.Green;
-                ws.TabColor = XLColor.Yellow;
-                wc.TabColor = XLColor.Red;
-
-
-
-                //CABECERAS TABLA
-                var headers = new List<String[]>();
-                List<String> titulos = new List<string>();
-                titulos.Add("CUSTOMER"); titulos.Add("RETAILER"); titulos.Add("P.O. RECVD DATA"); titulos.Add("PO NO."); titulos.Add("BRAND NAME"); titulos.Add("AMT PO"); titulos.Add("REG/BULK"); titulos.Add("BALANCE QTY");
-                titulos.Add("EXPECTED SHIP DATE"); titulos.Add("ORIGINAL CUST DUE DATE"); titulos.Add("DESIGN NAME"); titulos.Add("STYLE"); titulos.Add("MillPO"); titulos.Add("COLOR"); titulos.Add("GENDER");
-                titulos.Add("BLANKS RECEIVED"); titulos.Add("PARTIAL/COMPLETE BLANKS"); titulos.Add("ART RECEIVED"); titulos.Add("TRIM RECEIVED"); titulos.Add("PACK INST.RCVD"); titulos.Add("PRICE TICKET RECEIVED");
-                titulos.Add("UCC RECEIVED"); titulos.Add("COMMENTS UPDATE"); titulos.Add("COMMENTS");
-                headers.Add(titulos.ToArray());
-                ws.Cell(row, 1).Value = headers;
-                ws.Range(row, 1, row, 24).Style.Fill.BackgroundColor = XLColor.FromArgb(0, 0, 0);
-                ws.Range(row, 1, row, 24).Style.Font.FontColor = XLColor.FromArgb(255, 255, 255);
-                wp.Cell(row, 1).Value = headers;
-                wp.Range(row, 1, row, 24).Style.Fill.BackgroundColor = XLColor.FromArgb(0, 0, 0);
-                wp.Range(row, 1, row, 24).Style.Font.FontColor = XLColor.FromArgb(255, 255, 255);
-                wc.Cell(row, 1).Value = headers;
-                wc.Range(row, 1, row, 24).Style.Fill.BackgroundColor = XLColor.FromArgb(0, 0, 0);
-                wc.Range(row, 1, row, 24).Style.Font.FontColor = XLColor.FromArgb(255, 255, 255);
-                wp.RangeUsed().SetAutoFilter().Column(1);
-                ws.RangeUsed().SetAutoFilter().Column(1);
-                wc.RangeUsed().SetAutoFilter().Column(1);
-                row++; //AGREGAR DATOS LISTAS
-                SheetWIP(listaPedidos, wp, row);
-                SheetShipped(listaShipped, ws, row);
-                SheetCancelled(listaCancelled, wc, row);
-
-                wp.Rows().AdjustToContents();
-                wp.Columns().AdjustToContents();
-                ws.Rows().AdjustToContents();
-                ws.Columns().AdjustToContents();
-                wc.Rows().AdjustToContents();
-                wc.Columns().AdjustToContents();
-                //ws.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                /***********D*O*W*N*L*O*A*D*************************************************************************************************************************************************************************/
-               /* HttpResponse httpResponse = System.Web.HttpContext.Current.Response;
-                httpResponse.Clear();
-                httpResponse.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                httpResponse.AddHeader("content-disposition", "attachment;filename=\"WIP.xlsx\"");*/
-                // Flush the workbook to the Response.OutputStream
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    libro_trabajo.SaveAs(memoryStream);
-                    var bytesdata = File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "WIP.xlsx");
-                    robj = bytesdata;
-                }
-             
-               // return File(httpResponse.OutputStream);
-            }
-          
-            return Json(robj, JsonRequestBehavior.AllowGet);
-        }
-
-      /*  public void ReportWIP()
-        {
-            
-        }*/
-
-        public void SheetWIP(List<OrdenesCompra> listaPedidos, IXLWorksheet wp, int row)
-        {
-            foreach (OrdenesCompra e in listaPedidos)
-            {
-                var celdas = new List<String[]>();
-                List<String> datos = new List<string>();
-                DateTime fechaActual = DateTime.Today;
-                string fechaHoy = String.Format("{0:dd/MM/yyyy}", fechaActual);
-                if (e.CatComentarios.FechaComents == fechaHoy)
-                {
-                    wp.Range(row, 1, row, 24).Style.Fill.BackgroundColor = XLColor.FromArgb(254, 232, 200);
-                }
-                datos.Add(e.CatCliente.Nombre);
-
-                datos.Add(e.CatClienteFinal.NombreCliente);
-                datos.Add(e.FechaRecOrden);
-                //PO NO
-                if (e.RestaPrintshop <= 10)
-                {
-                    datos.Add(e.PO);
-                    wp.Range(row, 4, row, 4).Style.Fill.BackgroundColor = XLColor.FromArgb(95, 157, 205);
-                    wp.Range(row, 4, row, 4).Style.Font.Bold = true;
-                    wp.Range(row, 4, row, 4).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.PO);
-                    wp.Range(row, 4, row, 4).Style.Font.Bold = true;
-                    wp.Range(row, 4, row, 4).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-
-                datos.Add(e.CatTipoBrand.TipoBrandName);
-                wp.Range(row, 5, row, 5).Style.Font.Bold = true;
-                datos.Add(e.VPO);
-                datos.Add(e.CatTipoOrden.TipoOrden);
-                wp.Range(row, 7, row, 7).Style.Font.Bold = true;
-                datos.Add((e.InfoSummary.CantidadEstilo).ToString());
-                datos.Add(e.FechaOrdenFinal);
-                datos.Add(e.FechaCancelada);
-                //DESIGN NAME
-                if (e.DestinoSalida == 2)
-                {
-                    datos.Add(e.InfoSummary.ItemDesc.Descripcion);
-                    wp.Range(row, 11, row, 11).Style.Fill.BackgroundColor = XLColor.FromArgb(190, 174, 241);
-                    wp.Range(row, 11, row, 11).Style.Font.Bold = true;
-                    wp.Range(row, 11, row, 11).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.InfoSummary.ItemDesc.Descripcion);
-                    wp.Range(row, 11, row, 11).Style.Font.Bold = true;
-                    wp.Range(row, 11, row, 11).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                datos.Add(e.InfoSummary.ItemDesc.ItemEstilo);
-                datos.Add(e.MillPO);
-                datos.Add(e.InfoSummary.CatColores.DescripcionColor);
-                datos.Add(e.InfoSummary.CatGenero.Genero);
-                // BLANKS RECEIVED 
-                if (e.TotalRestante == 0)
-                {
-                    datos.Add((e.TotalRestante).ToString());
-                    wp.Range(row, 16, row, 16).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.TotalRestante != e.InfoSummary.TotalEstilo)
-                {
-                    datos.Add((e.TotalRestante).ToString());
-                    wp.Range(row, 16, row, 16).Style.Font.FontColor = XLColor.FromArgb(246, 57, 57);
-                }
-                //PARTIAL/COMPLETE BLANKS
-                if (e.TipoPartial == "PARTIAL")
-                {
-
-                    datos.Add(e.TipoPartial);
-                    wp.Range(row, 17, row, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(249, 136, 29);
-                    wp.Range(row, 17, row, 17).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-
-                }
-                else if (e.TipoPartial == "COMPLETE")
-                {
-                    datos.Add(e.TipoPartial);
-                    wp.Range(row, 17, row, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(64, 191, 128);
-                    wp.Range(row, 17, row, 17).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.TipoPartial == null)
-                {
-                    e.TipoPartial = "";
-                    datos.Add(e.TipoPartial);
-                    wp.Range(row, 17, row, 17).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-
-                //ART RECEIVED
-                if (e.ImagenArte.StatusArteInf == "IN HOUSE")
-                {
-                    datos.Add((e.ImagenArte.StatusArteInf).ToString());
-                    wp.Range(row, 18, row, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    wp.Range(row, 18, row, 18).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-
-                }
-                else if (e.ImagenArte.StatusArteInf == "REVIEWED")
-                {
-                    datos.Add((e.ImagenArte.StatusArteInf).ToString());
-                    wp.Range(row, 18, row, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    wp.Range(row, 18, row, 18).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.ImagenArte.StatusArteInf == "PENDING")
-                {
-                    datos.Add((e.ImagenArte.StatusArteInf).ToString());
-                    wp.Range(row, 18, row, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(236, 95, 95);
-                    wp.Range(row, 18, row, 18).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.ImagenArte.StatusArteInf == "APPROVED")
-                {
-                    string infoArte = e.ImagenArte.StatusArteInf + e.ImagenArte.FechaArte;
-                    datos.Add(infoArte);
-                    wp.Range(row, 18, row, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(246, 129, 51);
-                    wp.Range(row, 18, row, 18).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-
-                //TRIM RECEIVED
-                if (e.Trims.restante <= 0 && e.Trims.estado == "1")
-                {
-                    datos.Add(e.Trims.fecha_recibo);
-                    wp.Range(row, 19, row, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    wp.Range(row, 19, row, 19).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.Trims.restante >= 1 && e.Trims.estado == "1")
-                {
-                    datos.Add(e.Trims.fecha_recibo);
-                    wp.Range(row, 19, row, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(245, 213, 67);
-                    wp.Range(row, 19, row, 19).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.Trims.fecha_recibo);
-                    wp.Range(row, 19, row, 19).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                //PACK INSTRUCTION
-                if (e.InfoPackInstruction.Fecha_Pack != "" && e.InfoPackInstruction.EstadoPack == 1)
-                {
-                    datos.Add(e.InfoPackInstruction.Fecha_Pack);
-                    wp.Range(row, 20, row, 20).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    wp.Range(row, 20, row, 20).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }                
-                else
-                {
-                    datos.Add(e.InfoPackInstruction.Fecha_Pack);
-                    wp.Range(row, 20, row, 20).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
      
-                //PRICE TICKET RECEIVED
-                if (e.InfoPriceTickets.Restante <= 0 && e.InfoPriceTickets.Estado == "1")
-                {
-                    datos.Add(e.InfoPriceTickets.Fecha_recibo);
-                    wp.Range(row, 21, row, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    wp.Range(row, 21, row, 21).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.InfoPriceTickets.Restante >= 1 && e.InfoPriceTickets.Estado == "1")
-                {
-                    datos.Add(e.InfoPriceTickets.Fecha_recibo);
-                    wp.Range(row, 21, row, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(245, 213, 67);
-                    wp.Range(row, 21, row, 21).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.InfoPriceTickets.Fecha_recibo);
-                    wp.Range(row, 21, row, 21).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                //UCC RECEIVED
-                if (e.InfoSummary.FechaUCC != "")
-                {
-                    datos.Add(e.InfoSummary.FechaUCC);
-                    wp.Range(row, 22, row, 22).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    wp.Range(row, 22, row, 22).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.InfoSummary.FechaUCC);
-                    wp.Range(row, 22, row, 22).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                datos.Add(e.CatComentarios.FechaComents);
-                datos.Add(e.CatComentarios.Comentario);
-                celdas.Add(datos.ToArray());
-                wp.Cell(row, 1).Value = celdas;
-
-
-                row++;
-            }
-        }
-
-        public void SheetShipped(List<OrdenesCompra> listaShipped, IXLWorksheet ws, int row)
-        {
-            foreach (OrdenesCompra e in listaShipped)
-            {
-                var celdas = new List<String[]>();
-                List<String> datos = new List<string>();
-                datos.Add(e.CatCliente.Nombre);
-
-                datos.Add(e.CatClienteFinal.NombreCliente);
-                datos.Add(e.FechaRecOrden);
-                //PO NO
-                if (e.RestaPrintshop <= 10)
-                {
-                    datos.Add(e.PO);
-                    ws.Range(row, 4, row, 4).Style.Fill.BackgroundColor = XLColor.FromArgb(95, 157, 205);
-                    ws.Range(row, 4, row, 4).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.PO);
-                    ws.Range(row, 4, row, 4).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-
-                datos.Add(e.CatTipoBrand.TipoBrandName);
-                datos.Add(e.VPO);
-                datos.Add(e.CatTipoOrden.TipoOrden);
-                datos.Add((e.Shipped.Cantidad).ToString());
-                datos.Add(e.FechaOrdenFinal);
-                datos.Add(e.FechaCancelada);
-                //DESIGN NAME
-                if (e.DestinoSalida == 2)
-                {
-                    datos.Add(e.InfoSummary.ItemDesc.Descripcion);
-                    ws.Range(row, 11, row, 11).Style.Fill.BackgroundColor = XLColor.FromArgb(190, 174, 241);
-                    ws.Range(row, 11, row, 11).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.InfoSummary.ItemDesc.Descripcion);
-                    ws.Range(row, 11, row, 11).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                datos.Add(e.InfoSummary.ItemDesc.ItemEstilo);
-                datos.Add(e.MillPO);
-                datos.Add(e.InfoSummary.CatColores.DescripcionColor);
-                datos.Add(e.InfoSummary.CatGenero.Genero);
-                // BLANKS RECEIVED 
-                if (e.TotalRestante == 0)
-                {
-                    datos.Add((e.TotalRestante).ToString());
-                    ws.Range(row, 16, row, 16).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.TotalRestante != e.InfoSummary.TotalEstilo)
-                {
-                    datos.Add((e.TotalRestante).ToString());
-                    ws.Range(row, 16, row, 16).Style.Font.FontColor = XLColor.FromArgb(246, 57, 57);
-                }
-                //PARTIAL/COMPLETE BLANKS
-                if (e.TipoPartial == "PARTIAL")
-                {
-
-                    datos.Add(e.TipoPartial);
-                    ws.Range(row, 17, row, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(249, 136, 29);
-                    ws.Range(row, 17, row, 17).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-
-                }
-                else if (e.TipoPartial == "COMPLETE")
-                {
-                    datos.Add(e.TipoPartial);
-                    ws.Range(row, 17, row, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(64, 191, 128);
-                    ws.Range(row, 17, row, 17).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.TipoPartial == null)
-                {
-                    e.TipoPartial = "";
-                    datos.Add(e.TipoPartial);
-                    ws.Range(row, 17, row, 17).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-
-                //ART RECEIVED
-                if (e.ImagenArte.StatusArteInf == "IN HOUSE")
-                {
-                    datos.Add((e.ImagenArte.StatusArteInf).ToString());
-                    ws.Range(row, 18, row, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    ws.Range(row, 18, row, 18).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-
-                }
-                else if (e.ImagenArte.StatusArteInf == "REVIEWED")
-                {
-                    datos.Add((e.ImagenArte.StatusArteInf).ToString());
-                    ws.Range(row, 18, row, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    ws.Range(row, 18, row, 18).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.ImagenArte.StatusArteInf == "PENDING")
-                {
-                    datos.Add((e.ImagenArte.StatusArteInf).ToString());
-                    ws.Range(row, 18, row, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(236, 95, 95);
-                    ws.Range(row, 18, row, 18).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.ImagenArte.StatusArteInf == "APPROVED")
-                {
-                    string infoArte = e.ImagenArte.StatusArteInf + "-" + e.ImagenArte.FechaArte;
-                    datos.Add(infoArte);
-                    ws.Range(row, 18, row, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(246, 129, 51);
-                    ws.Range(row, 18, row, 18).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-
-                //TRIM RECEIVED
-                if (e.Trims.restante <= 0 && e.Trims.estado == "1")
-                {
-                    datos.Add(e.Trims.fecha_recibo);
-                    ws.Range(row, 19, row, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    ws.Range(row, 19, row, 19).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.Trims.restante >= 1 && e.Trims.estado == "1")
-                {
-                    datos.Add(e.Trims.fecha_recibo);
-                    ws.Range(row, 19, row, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(245, 213, 67);
-                    ws.Range(row, 19, row, 19).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.Trims.fecha_recibo);
-                    ws.Range(row, 19, row, 19).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                //PACK INSTRUCTION
-                if (e.InfoPackInstruction.Fecha_Pack != "" && e.InfoPackInstruction.EstadoPack == 1)
-                {
-                    datos.Add(e.InfoPackInstruction.Fecha_Pack);
-                    ws.Range(row, 20, row, 20).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    ws.Range(row, 20, row, 20).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.InfoPackInstruction.Fecha_Pack);
-                    ws.Range(row, 20, row, 20).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                //PRICE TICKET RECEIVED
-                if (e.InfoPriceTickets.Restante <= 0 && e.InfoPriceTickets.Estado == "1")
-                {
-                    datos.Add(e.InfoPriceTickets.Fecha_recibo);
-                    ws.Range(row, 21, row, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    ws.Range(row, 21, row, 21).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.InfoPriceTickets.Restante >= 1 && e.InfoPriceTickets.Estado == "1")
-                {
-                    datos.Add(e.InfoPriceTickets.Fecha_recibo);
-                    ws.Range(row, 21, row, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(245, 213, 67);
-                    ws.Range(row, 21, row, 21).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.InfoPriceTickets.Fecha_recibo);
-                    ws.Range(row, 21, row, 21).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                //UCC RECEIVED
-                if (e.InfoSummary.FechaUCC != "")
-                {
-                    datos.Add(e.InfoSummary.FechaUCC);
-                    ws.Range(row, 22, row, 22).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    ws.Range(row, 22, row, 22).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.InfoSummary.FechaUCC);
-                    ws.Range(row, 22, row, 22).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                datos.Add(e.CatComentarios.FechaComents);
-                datos.Add(e.CatComentarios.Comentario);
-                celdas.Add(datos.ToArray());
-                ws.Cell(row, 1).Value = celdas;
-
-
-                row++;
-            }
-
-        }
-
-        public void SheetCancelled(List<OrdenesCompra> listaCancelled, IXLWorksheet wc, int row)
-        {
-            foreach (OrdenesCompra e in listaCancelled)
-            {
-                var celdas = new List<String[]>();
-                List<String> datos = new List<string>();
-                datos.Add(e.CatCliente.Nombre);
-
-                datos.Add(e.CatClienteFinal.NombreCliente);
-                datos.Add(e.FechaRecOrden);
-                //PO NO
-                if (e.RestaPrintshop <= 10)
-                {
-                    datos.Add(e.PO);
-                    wc.Range(row, 4, row, 4).Style.Fill.BackgroundColor = XLColor.FromArgb(95, 157, 205);
-                    wc.Range(row, 4, row, 4).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.PO);
-                    wc.Range(row, 4, row, 4).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-
-                datos.Add(e.CatTipoBrand.TipoBrandName);
-                datos.Add(e.VPO);
-                datos.Add(e.CatTipoOrden.TipoOrden);
-                datos.Add((e.InfoSummary.CantidadEstilo).ToString());
-                datos.Add(e.FechaOrdenFinal);
-                datos.Add(e.FechaCancelada);
-                //DESIGN NAME
-                if (e.DestinoSalida == 2)
-                {
-                    datos.Add(e.InfoSummary.ItemDesc.Descripcion);
-                    wc.Range(row, 11, row, 11).Style.Fill.BackgroundColor = XLColor.FromArgb(190, 174, 241);
-                    wc.Range(row, 11, row, 11).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.InfoSummary.ItemDesc.Descripcion);
-                    wc.Range(row, 11, row, 11).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                datos.Add(e.InfoSummary.ItemDesc.ItemEstilo);
-                datos.Add(e.MillPO);
-                datos.Add(e.InfoSummary.CatColores.DescripcionColor);
-                datos.Add(e.InfoSummary.CatGenero.Genero);
-                // BLANKS RECEIVED 
-                if (e.TotalRestante == 0)
-                {
-                    datos.Add((e.TotalRestante).ToString());
-                    wc.Range(row, 16, row, 16).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.TotalRestante != e.InfoSummary.TotalEstilo)
-                {
-                    datos.Add((e.TotalRestante).ToString());
-                    wc.Range(row, 16, row, 16).Style.Font.FontColor = XLColor.FromArgb(246, 57, 57);
-                }
-                //PARTIAL/COMPLETE BLANKS
-                if (e.TipoPartial == "PARTIAL")
-                {
-
-                    datos.Add(e.TipoPartial);
-                    wc.Range(row, 17, row, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(249, 136, 29);
-                    wc.Range(row, 17, row, 17).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-
-                }
-                else if (e.TipoPartial == "COMPLETE")
-                {
-                    datos.Add(e.TipoPartial);
-                    wc.Range(row, 17, row, 17).Style.Fill.BackgroundColor = XLColor.FromArgb(64, 191, 128);
-                    wc.Range(row, 17, row, 17).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.TipoPartial == null)
-                {
-                    e.TipoPartial = "";
-                    datos.Add(e.TipoPartial);
-                    wc.Range(row, 17, row, 17).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-
-                //ART RECEIVED
-                if (e.ImagenArte.StatusArteInf == "IN HOUSE")
-                {
-                    datos.Add((e.ImagenArte.StatusArteInf).ToString());
-                    wc.Range(row, 18, row, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    wc.Range(row, 18, row, 18).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-
-                }
-                else if (e.ImagenArte.StatusArteInf == "REVIEWED")
-                {
-                    datos.Add((e.ImagenArte.StatusArteInf).ToString());
-                    wc.Range(row, 18, row, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    wc.Range(row, 18, row, 18).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.ImagenArte.StatusArteInf == "PENDING")
-                {
-                    datos.Add((e.ImagenArte.StatusArteInf).ToString());
-                    wc.Range(row, 18, row, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(236, 95, 95);
-                    wc.Range(row, 18, row, 18).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.ImagenArte.StatusArteInf == "APPROVED")
-                {
-                    string infoArte = e.ImagenArte.StatusArteInf + "-" + e.ImagenArte.FechaArte;
-                    datos.Add(infoArte);
-                    wc.Range(row, 18, row, 18).Style.Fill.BackgroundColor = XLColor.FromArgb(246, 129, 51);
-                    wc.Range(row, 18, row, 18).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-
-                //TRIM RECEIVED
-                if (e.Trims.restante <= 0 && e.Trims.estado == "1")
-                {
-                    datos.Add(e.Trims.fecha_recibo);
-                    wc.Range(row, 19, row, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    wc.Range(row, 19, row, 19).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.Trims.restante >= 1 && e.Trims.estado == "1")
-                {
-                    datos.Add(e.Trims.fecha_recibo);
-                    wc.Range(row, 19, row, 19).Style.Fill.BackgroundColor = XLColor.FromArgb(245, 213, 67);
-                    wc.Range(row, 19, row, 19).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.Trims.fecha_recibo);
-                    wc.Range(row, 19, row, 19).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                //PACK INSTRUCTION
-                if (e.InfoPackInstruction.Fecha_Pack != "" && e.InfoPackInstruction.EstadoPack == 1)
-                {
-                    datos.Add(e.InfoPackInstruction.Fecha_Pack);
-                    wc.Range(row, 20, row, 20).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    wc.Range(row, 20, row, 20).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.InfoPackInstruction.Fecha_Pack);
-                    wc.Range(row, 20, row, 20).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-
-                //PRICE TICKET RECEIVED
-                if (e.InfoPriceTickets.Restante <= 0 && e.InfoPriceTickets.Estado == "1")
-                {
-                    datos.Add(e.InfoPriceTickets.Fecha_recibo);
-                    wc.Range(row, 21, row, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    wc.Range(row, 21, row, 21).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else if (e.InfoPriceTickets.Restante >= 1 && e.InfoPriceTickets.Estado == "1")
-                {
-                    datos.Add(e.InfoPriceTickets.Fecha_recibo);
-                    wc.Range(row, 21, row, 21).Style.Fill.BackgroundColor = XLColor.FromArgb(245, 213, 67);
-                    wc.Range(row, 21, row, 21).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.InfoPriceTickets.Fecha_recibo);
-                    wc.Range(row, 21, row, 21).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                //UCC RECEIVED
-                if (e.InfoSummary.FechaUCC != "")
-                {
-                    datos.Add(e.InfoSummary.FechaUCC);
-                    wc.Range(row, 22, row, 22).Style.Fill.BackgroundColor = XLColor.FromArgb(68, 193, 116);
-                    wc.Range(row, 22, row, 22).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                else
-                {
-                    datos.Add(e.InfoSummary.FechaUCC);
-                    wc.Range(row, 22, row, 22).Style.Font.FontColor = XLColor.FromArgb(0, 0, 0);
-                }
-                datos.Add(e.CatComentarios.FechaComents);
-                datos.Add(e.CatComentarios.Comentario);
-                celdas.Add(datos.ToArray());
-                wc.Cell(row, 1).Value = celdas;
-
-
-                row++;
-            }
-
-        }
 
 
 

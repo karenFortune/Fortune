@@ -337,6 +337,8 @@ namespace FortuneSystem.Models.Packing
                         Talla = leer["TALLA"].ToString(),
                         Calidad = Convert.ToInt32(leer["QUALITY"])
                     };
+
+
                     listTallas.Add(tallas);
                 }
                 leer.Close();
@@ -859,8 +861,134 @@ namespace FortuneSystem.Models.Packing
             return listTallas;
         }
 
-        //Muestra la lista de tallas Partial de Packing Bulk por estilo
-        public IEnumerable<int> ListaTallasPartialPackingBulkEstilo(int? id)
+
+		//Muestra la lista de batch por idSummary
+		public IEnumerable<int> ObtenerListaBatchIdSummary(int? id)
+		{
+			Conexion conn = new Conexion();
+			List<int> listBacth = new List<int>();
+			
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "SELECT distinct (P.ID_BATCH) FROM PACKING P WHERE P.ID_SUMMARY= '" + id + "' ";
+				leer = comando.ExecuteReader();
+				int idBatch = 0;
+				while (leer.Read())
+				{
+
+					idBatch = Convert.ToInt32(leer["ID_BATCH"]);
+
+					listBacth.Add(idBatch);
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+			}
+
+			return listBacth;
+		}
+
+
+		//Muestra la lista de tallas TOTAL de Packing por estilo
+		public IEnumerable<PackingM> ListaTotalTallasPackingBatch(int? id)
+		{
+			Conexion conn = new Conexion();
+			List<PackingM> listTallas = new List<PackingM>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "SELECT S.ORDEN,T.ID_TALLA, S.TALLA FROM PACKING T " +
+					"INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
+					"WHERE T.ID_SUMMARY= '" + id + "' GROUP by S.ORDEN, T.ID_TALLA, S.TALLA ORDER BY cast(S.ORDEN AS int) ASC ";
+				leer = comando.ExecuteReader();
+				int total = 0;
+				while (leer.Read())
+				{
+					PackingM tallas = new PackingM()
+					{
+						IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
+						Talla = leer["TALLA"].ToString()
+
+					};
+					tallas.TotalBatch = SumaTotalBacheTalla(id, tallas.IdTalla);
+					listTallas.Add(tallas);
+
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+			}
+
+			return listTallas;
+		}
+
+
+		//Muestra la lista de cantidades de por talla 
+		public IEnumerable<PackingM> ListaTotalTallasPackingBatchHT(int? id , string query)
+		{
+			Conexion conn = new Conexion();
+			List<PackingM> listTallas = new List<PackingM>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "SELECT P.ID_TALLA, S.TALLA, P.CANT_BOX, P.TOTAL_PIECES, PZ.QTY FROM PACKING P, CAT_ITEM_SIZE S, USUARIOS U, PACKING_TYPE_SIZE PZ " +
+								 "WHERE P.ID_BATCH in(" + query + ")  AND P.ID_SUMMARY='" + id + "' AND S.ID=P.ID_TALLA AND U.Id=P.ID_USUARIO AND PZ.ID_PACKING_TYPE_SIZE=P.ID_PACKING_TYPE_SIZE " +
+								 "ORDER by cast(S.ORDEN AS int) ASC ";
+				leer = comando.ExecuteReader();
+				int total = 0;
+				while (leer.Read())
+				{
+					PackingM tallas = new PackingM()
+					{
+						IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
+						Talla = leer["TALLA"].ToString(),
+						CantBox = Convert.ToInt32(leer["CANT_BOX"]),
+						TotalPiezas = Convert.ToInt32(leer["TOTAL_PIECES"]),
+					    CantidadP = Convert.ToInt32(leer["QTY"])
+
+					};
+					int suma = tallas.TotalPiezas + tallas.CantidadP;
+					PackingM result = listTallas.Find(x => x.IdTalla == tallas.IdTalla);
+					if (result == null)
+					{
+						tallas.SumaTotalBatch = suma;
+
+						listTallas.Add(tallas);
+
+					}
+					else
+					{
+						if (result.IdTalla == tallas.IdTalla)
+						{
+							result.SumaTotalBatch += suma;
+						}
+					}
+					
+
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+			}
+
+			return listTallas;
+		}
+
+		//Muestra la lista de tallas Partial de Packing Bulk por estilo
+		public IEnumerable<int> ListaTallasPartialPackingBulkEstilo(int? id)
         {
             Conexion conn = new Conexion();
             List<int> listTallas = new List<int>();
@@ -2282,7 +2410,7 @@ namespace FortuneSystem.Models.Packing
         
 
         //Permite obtener el id BLOCK packing type size registrado
-        public int ObtenerNumBlock(List<ItemDescripcion> listaEstilos)
+        public int ObtenerNumBlock(List<ItemDescripcion> listaEstilos, int? id)
         {
             int idBlock = 0;
             int idTotal = 0;
@@ -2301,12 +2429,21 @@ namespace FortuneSystem.Models.Packing
 
             }
             string query = valores;
+			
             try
             {
                 SqlCommand coman = new SqlCommand();
                 SqlDataReader leerF = null;
                 coman.Connection = conex.AbrirConexion();
-                coman.CommandText = "select DISTINCT ID_BLOCK_PACK FROM PACKING_TYPE_SIZE WHERE ID_SUMMARY in("+query+") ";
+				if (query == "")
+				{
+					coman.CommandText = "select DISTINCT ID_BLOCK_PACK FROM PACKING_TYPE_SIZE WHERE ID_SUMMARY='"+ id +"' ";
+				}
+				else
+				{
+					coman.CommandText = "select DISTINCT ID_BLOCK_PACK FROM PACKING_TYPE_SIZE WHERE ID_SUMMARY in(" + query + ") ";
+				}
+				
                 leerF = coman.ExecuteReader();
                 while (leerF.Read())
                 {

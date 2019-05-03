@@ -1,4 +1,4 @@
-﻿@model FortuneSystem.Models.POSummary.POSummarys
+﻿@model FortuneSystem.Models.POSummary.POSummary
 
 @{
     ViewBag.Title = "CrearItems";
@@ -156,7 +156,8 @@
                 alert.set('modal', false);
             } else {
                 $("#nuevoItem").prop("disabled", true);
-                $("#crearTallas").show();
+				$("#crearTallas").show();
+				 deshabilitarForm();
               //  $("#crearTipoPack").show();
                 var EstiloItem = $("#ItemDescripcion_ItemEstilo").val();
                 var IdColor = $("#CatColores_CodigoColor").val();
@@ -482,7 +483,19 @@
         $("#nuevoEstilo").prop("disabled", false);
         limpiarInptCant();
         limpiarInptExt();
-        limpiarInptEjm();
+		limpiarInptEjm();
+		$(".pack").prop('disabled', false);
+		$("#btnAddPack").prop('disabled', false);
+		$(".packDelete").prop('disabled', false);
+		$(".pack").val('');
+
+	}
+
+	    function deshabilitarForm() {
+		$(".pack").prop('disabled', true);
+		$("#btnAddPack").prop('disabled', true);
+		$(".packDelete").prop('disabled', true);
+		
     }
 
     function limpiarInptCant() {
@@ -523,6 +536,10 @@
 </script>
 
 <style>
+		.classTipoPack {
+    color: white !important;
+    background: #709ec5 !important;
+}
 </style>
 
 <h2></h2>
@@ -680,7 +697,7 @@
             <div class="form-group">
                 <div class="panel-group">
                     <div class="panel panel-title">
-                        <div class="panel-heading">Reception of type of packing</div>
+                        <div class="panel-heading classTipoPack">Reception of type of packing</div>
                         <div class="panel-body">
                             <button type="button" id="btnAddPack" class="btn btn-xs btn-primary classAddPack">+ New Pack</button>
                             <table class="table" id="tablaPack" style="margin:0px; padding:0px;">

@@ -170,7 +170,8 @@ namespace FortuneSystem.Models.POSummary
                     ItemSummary.CatTipoCamiseta = tipoCamiseta;
                     ItemSummary.CatEspecialidades = especial;
                     ItemSummary.CatGenero = genero;
-                    listSummary.Add(ItemSummary);
+					ItemSummary.IdEstado = Convert.ToInt32(leer["ID_ESTADO"]);
+					listSummary.Add(ItemSummary);
 
                 }
                 leer.Close();
@@ -249,6 +250,7 @@ namespace FortuneSystem.Models.POSummary
                 comando.Parameters.AddWithValue("@IdUsuario", items.IdUsuario);
                 comando.Parameters.AddWithValue("@FechaUCC", DBNull.Value);
                 comando.Parameters.AddWithValue("@IdEstado", items.IdEstado);
+				comando.Parameters.AddWithValue("@IdSucursal", items.IdSucursal);
 
                 comando.ExecuteNonQuery();
             }
@@ -355,7 +357,11 @@ namespace FortuneSystem.Models.POSummary
                                   "WHERE PT.ID_SUMMARY in(" + query + ") AND PT.TYPE_PACKING IN(1,2) AND P.ID_SUMMARY=PT.ID_SUMMARY";
                 cmd.CommandType = CommandType.Text;
                 reader = cmd.ExecuteReader();
-                while (reader.Read())
+				if (!reader.Read())
+				{
+					//Response.Write("Wrong Details");
+				}
+				while (reader.Read())
                 {
                     suma += Convert.ToInt32(reader["TOTAL_PIECES"]);
 
@@ -565,7 +571,44 @@ namespace FortuneSystem.Models.POSummary
 
         }
 
-       
+		//Muestra la lista de tipo packing por Estilo
+		public IEnumerable<CatTypePackItem> ListaPackPorEstilo(int? id)
+		{
+			Conexion conn = new Conexion();
+			List<CatTypePackItem> listPack = new List<CatTypePackItem>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "SELECT ID_PACK_STYLE, DESC_PACK FROM CAT_TYPE_PACK_STYLE WHERE ID_SUMMARY='" + id + "' ";
+				comando.CommandType = CommandType.Text;
+				leer = comando.ExecuteReader();
 
-    }
+				while (leer.Read())
+				{
+					CatTypePackItem typePack = new CatTypePackItem()
+					{
+						IdPackStyle = Convert.ToInt32(leer["ID_PACK_STYLE"]),
+						DescripcionPack = leer["DESC_PACK"].ToString()
+
+				    };
+
+				listPack.Add(typePack);
+
+			}
+				leer.Close();
+		}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+
+			return listPack;
+		}
+
+
+
+	}
 }

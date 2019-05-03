@@ -83,9 +83,10 @@ $(document).on("click", "#btnAssort", function () {
                         $("#packAssort").show();
                         $('#agregarNuevoPack').hide();
                         $("#nuevoPalletAssort").hide();
-                        $("#panelNoEstilos").css('display', 'inline');
+						$("#panelNoEstilos").css('display', 'inline');
+						$("#containerPie").hide();
                         $("#imgPanel").css('cursor', 'none');
-                        $("#consultaTalla").css('height', '1040px');
+                        $("#consultaTalla").css('height', '900px');
                         $("#arte").css('display', 'none');
                         $("#consultaTalla").css('width', '121%');
                         $("#consultaTalla").css("visibility", "visible");
@@ -384,7 +385,7 @@ function obtenerListaTallasAssort(namePack) {
             $("#div_titulo_Registro").css('display', 'inline');
             $("#regAssort").css('display', 'inline');
             $("#div_titulo_Registro").html("<h3>REGISTRATION OF ASSORTMENT</h3>");
-            html += '<table class="table" id="tablaAssort"  width="100%"><thead>';
+			html += '<table class="table" id="tablaAssort"><thead>';
             html += '<tr>'+
                  '<th style="visibility:hidden;"> </th> ' +
                 '<th> STYLE#</th> ' +

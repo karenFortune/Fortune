@@ -274,7 +274,8 @@ function obtener_tallas_item(IdEstilo) {
             var html = '';
             var estilos = jsonData.Data.estilos;
             var EstiloDescription;
-            var lista_estilo_Desc = jsonData.Data.listaTalla;
+			var lista_estilo_Desc = jsonData.Data.listaTalla;
+			var lista_Qty_Tallas = jsonData.Data.listTallaCant;
             $.each(lista_estilo_Desc, function (key, item) {
 
                 EstiloDescription = item.DescripcionEstilo;
@@ -315,18 +316,30 @@ function obtener_tallas_item(IdEstilo) {
 
             });
             html += '<th> Total </th>';
-            html += '</tr><tr><td>PO Quantity</td>';
-            var cantidadesPO = 0;
-            var cadena_cantidades = "";
+            html += '</tr><tr><td>Total Orden</td>';
+            var cantidadesPOTotal = 0;
+            var cadena_cantidadesTotal = "";
             $.each(lista_estilo, function (key, item) {
 
                 html += '<td class="total" >' + item.Cantidad + '</td>';
-                cantidadesPO += item.Cantidad;
-                cadena_cantidades += "*" + item.Cantidad;
+				cantidadesPOTotal += item.Cantidad;
+				cadena_cantidadesTotal += "*" + item.Cantidad;
             });
-            var cantidades_array = cadena_cantidades.split('*');
-            html += '<td>' + cantidadesPO + '</td>';
-            html += '</tr>';
+			var cantidades_arrayTotal = cadena_cantidadesTotal.split('*');
+			html += '<td>' + cantidadesPOTotal + '</td>';
+			html += '</tr>';
+			html += '</tr><tr><td>PO Quantity</td>';
+			var cantidadesPO = 0;
+			var cadena_cantidades = "";
+			$.each(lista_Qty_Tallas, function (key, item) {
+
+				html += '<td class="total" >' + item.Cantidad + '</td>';
+				cantidadesPO += item.Cantidad;
+				cadena_cantidades += "*" + item.Cantidad;
+			});
+			var cantidades_array = cadena_cantidades.split('*');
+			html += '<td>' + cantidadesPO + '</td>';
+			html += '</tr>';
             var numTallas = 0;
             $.each(lista_estilo, function (key, item) {
                 numTallas++;
@@ -471,7 +484,7 @@ function obtener_tallas_item(IdEstilo) {
                 if (listaTBatch === 0) {
                     item = 0;
                 }
-                var resta = parseFloat(item) - parseFloat(cantidades_array[i]);
+				var resta = parseFloat(item) - parseFloat(cantidades_arrayTotal[i]);
          
                 if (resta === 0) {
                     html += '<td class="restaPrint" style="color:black;">' + resta + '</td>';
@@ -526,7 +539,8 @@ function obtener_bacth_estilo(IdEstilo) {
             var html = '';
 
             var estilos = jsonData.Data.estilos;
-            var cargoUser = jsonData.Data.cargoUser;
+			var cargoUser = jsonData.Data.cargoUser;
+			var sucursal = jsonData.Data.sucursal;
             if (estilos !== '') {
                 $("#div_estilo_batch").html("<h2>BATCH REVIEW <h4> STATUS (C-complete / I-incomplete)</h4> </h2> ");
                 $("#div_estilo_batch").show();
@@ -555,7 +569,7 @@ function obtener_bacth_estilo(IdEstilo) {
             html += '<th> Total </th>';
             html += '<th> User </th>';
             html += '<th> Comments </th>';
-            html += '<th> Turn </th>';
+            html += '<th> Shift </th>';
             html += '<th> Machine </th>';
             html += '<th> User Modif </th>';
             html += '<th> Status </th>';
@@ -580,18 +594,30 @@ function obtener_bacth_estilo(IdEstilo) {
                 } else {
                     html += '<td>' + item.Comentarios + '</td>';
                 }
-                
-                if (item.TipoTurno === 1) {
-                    html += '<td>First Turn</td>';
-                } else {
-                    html += '<td>Second Turn</td>';
-                }
+
+				if (sucursal === "FORTUNE") {
+					if (item.TipoTurno === 1) {
+						html += '<td>First Turn</td>';
+					} else {
+						html += '<td>Second Turn</td>';
+					}
+				} else if (sucursal === "LUCKY1") {
+					if (item.TipoTurno === 1) {
+						html += '<td>First Turn - Lucky1</td>';
+					} else {
+						html += '<td>Second Turn - Lucky1</td>';
+					}
+				//	html += '<td>Lucky1</td>';
+				}
+
                 html += '<td>' + item.NombreMaquina + '</td>';
                 html += '<td>' + item.NombreUsrModif + '</td>';
                 html += '<td>' + item.Status + '</td>';
                 if (cargoUser === 5 || cargoUser === 1) {
                     html += '<td><a href="#" onclick="obtenerTallas_Batch(' + item.IdBatch + ',' + item.TipoTurno + ',' + item.Maquina + ',' + item.IdPrintShop + ',\'' + item.Comentarios +'\''+ ',\'' + item.Status + '\');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Details Bacth"></a></td>';
-                }
+				} else {
+					html += '<td></td>';
+				}
                
                 html += '</tr>';
                 

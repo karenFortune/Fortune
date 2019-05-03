@@ -1,6 +1,7 @@
 ﻿@model FortuneSystem.Models.POSummary.POSummary
 
 <script src="~/Scripts/general/autocomplete.js"></script>
+<script src="~/Scripts/general/AgregarTallas.js"></script>
 <script type="text/javascript">
 
 
@@ -20,7 +21,9 @@
 
         $(document).on("click", ".deleteTalla", function () {
             $(this).closest("tr").remove();
-        });
+		});
+
+
         $("#selectTipoCamiseta").select2({
             placeholder: "Select a type of shirt",
             dropdownParent: $("#nuevoEstiloModal"),
@@ -164,7 +167,12 @@
 
         $("#crearTallas").hide();
         $('#nuevoItem').click(function (e) {
-            var error = 0;
+			var error = 0;
+			var lista = []; 
+            lista = obtenerPackingEstilo();
+            var datos = JSON.stringify(lista);
+            var obj = datos;
+            obj = JSON.parse(obj);
             $(".nuevo_item").each(function () {
                 error;
                 var id = $(this).attr('id');
@@ -182,7 +190,8 @@
                 alert.set('modal', false);
             } else {
                 $("#nuevoItem").prop("disabled", true);
-                $("#crearTallas").show();
+				$("#crearTallas").show();
+				deshabilitarForm();
                 var IdPedido = $("#IdPedido").val();
                 var EstiloItem = $("#ItemDescripcion_ItemEstilo").val();
                 var IdColor = $("#CatColores_CodigoColor").val();
@@ -193,9 +202,10 @@
                 var TipoCamiseta = $("#selectTipoCamiseta option:selected").val();
                 var Especialidad = $("#selectEspecialidad option:selected").val();
                 $.ajax('@Url.Action("RegistrarNuevoItems", "POSummary")', {
-                    data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela, IdEspecialidad: Especialidad, IdPedido: IdPedido },
-                method: 'get',
+                    data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela, IdEspecialidad: Especialidad, IdPedido: IdPedido, ListaPackSytle: obj },
+                type: "POST",
                 async: true,
+                dataType: "json",
                 success: function (data) {
 
                 },
@@ -240,7 +250,46 @@
         });
         var exists = false;
 
-    });
+	});
+
+	     function obtenerPackingEstilo() {
+            var r = 0; var c = 0; var i = 0; var cadena = new Array(1);
+            cadena[0] = '';
+            var nFilas = $("#tablaPack tbody>tr").length;
+            var nColumnas = $("#tablaPack tr:last td").length;
+            $('#tablaPack tbody>tr').each(function () {
+                r = 0;
+                c = 0;
+                $(this).find("input").each(function () {
+                    $(this).closest('td').find("input").each(function () {
+                        cadena[c] += this.value + "*";
+                        c++;
+                    });
+
+                    r++;
+                });
+            });
+
+            var error = 0;
+            $('#tablaPack').find('td.datoPack').each(function (i, el) {
+
+                var valor = $(el).children().val();
+
+                if ($(el).children().val() == '') {
+                    error++;
+                    $(el).children().css('border', '2px solid #e03f3f');
+
+                } else {
+                    $(el).children().css('border', '1px solid #cccccc');
+
+                }
+            });
+
+            if (error == 0) {
+                return (cadena);
+            }
+
+        }
 
     function buscarTipoCamiseta(tipoProd) {
         $('#selectTipoCamiseta option').each(function (i, e) {
@@ -377,7 +426,9 @@
             });
         }
 
-    }
+	}
+
+
 
     function limpiarFormItems() {
         $('#ItemDescripcion_ItemEstilo').val('');
@@ -390,8 +441,20 @@
         $("#nuevoEstilo").prop("disabled", false);
         limpiarInptCant();
         limpiarInptExt();
-        limpiarInptEjm();
-    }
+		limpiarInptEjm();
+		$(".pack").prop('disabled', false);
+		$("#btnAddPack").prop('disabled', false);
+		$(".packDelete").prop('disabled', false);
+		$(".pack").val('');
+	}
+
+	function deshabilitarForm() {
+		$(".pack").prop('disabled', true);
+		$("#btnAddPack").prop('disabled', true);
+		$(".packDelete").prop('disabled', true);
+		
+	}
+
     function limpiarInptCant() {
         $(".numCantTall").each(function () {
             $(this).val('');
@@ -436,6 +499,11 @@
         overflow-y: scroll;
         overflow-x: hidden;
     }
+
+	.classTipoPack {
+		color: white !important;
+		background: #709ec5 !important;
+	}
 </style>
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formItems" }))
@@ -448,112 +516,137 @@
     @Html.HiddenFor(model => model.IdItems)
     @Html.HiddenFor(model => model.IdColor)
     @Html.HiddenFor(model => model.PedidosId)
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4>Reception of Items</h4>
-        </div>
-        <div class="container-fluid">
-            <div class="form-row ">
-                <div class="form-group col-md-5">
-                    @Html.LabelFor(model => model.ItemDescripcion.ItemEstilo, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.ItemDescripcion.ItemEstilo, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
-                    @Html.ValidationMessageFor(model => model.ItemDescripcion.ItemEstilo, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group col-md-5">
-                    @Html.LabelFor(model => model.ItemDescripcion.Descripcion, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.ItemDescripcion.Descripcion, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
-                    @Html.ValidationMessageFor(model => model.ItemDescripcion.Descripcion, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group col-md-3">
-                    <br />
-                    <button type="button" class="btn btn-success" id="nuevoEstilo" data-toggle="modal">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Style
-                    </button>
-                </div>
-            </div>
-        </div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h4>Reception of Items</h4>
+		</div>
+		<div class="container-fluid">
+			<div class="form-row ">
+				<div class="form-group col-md-5">
+					@Html.LabelFor(model => model.ItemDescripcion.ItemEstilo, htmlAttributes: new { @class = "control-label" })
+					@Html.EditorFor(model => model.ItemDescripcion.ItemEstilo, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
+					@Html.ValidationMessageFor(model => model.ItemDescripcion.ItemEstilo, "", new { @class = "text-danger" })
+				</div>
+				<div class="form-group col-md-5">
+					@Html.LabelFor(model => model.ItemDescripcion.Descripcion, htmlAttributes: new { @class = "control-label" })
+					@Html.EditorFor(model => model.ItemDescripcion.Descripcion, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
+					@Html.ValidationMessageFor(model => model.ItemDescripcion.Descripcion, "", new { @class = "text-danger" })
+				</div>
+				<div class="form-group col-md-3">
+					<br />
+					<button type="button" class="btn btn-success" id="nuevoEstilo" data-toggle="modal">
+						<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Style
+					</button>
+				</div>
+			</div>
+		</div>
 
-        <div class="container-fluid">
-            <div class="form-row">
-                <div class="form-group col-md-5">
-                    @Html.LabelFor(model => model.CatColores.CodigoColor, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.CatColores.CodigoColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
-                    @Html.ValidationMessageFor(model => model.CatColores.CodigoColor, "", new { @class = "text-danger" })
+		<div class="container-fluid">
+			<div class="form-row">
+				<div class="form-group col-md-5">
+					@Html.LabelFor(model => model.CatColores.CodigoColor, htmlAttributes: new { @class = "control-label" })
+					@Html.EditorFor(model => model.CatColores.CodigoColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
+					@Html.ValidationMessageFor(model => model.CatColores.CodigoColor, "", new { @class = "text-danger" })
 
-                </div>
-                <div class="form-group col-md-5">
-                    @Html.LabelFor(model => model.CatColores.DescripcionColor, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.CatColores.DescripcionColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
-                    @Html.ValidationMessageFor(model => model.CatColores.DescripcionColor, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group col-md-3">
-                    <br />
+				</div>
+				<div class="form-group col-md-5">
+					@Html.LabelFor(model => model.CatColores.DescripcionColor, htmlAttributes: new { @class = "control-label" })
+					@Html.EditorFor(model => model.CatColores.DescripcionColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
+					@Html.ValidationMessageFor(model => model.CatColores.DescripcionColor, "", new { @class = "text-danger" })
+				</div>
+				<div class="form-group col-md-3">
+					<br />
 
-                    <button type="button" class="btn btn-success" id="nuevoColor" data-toggle="modal">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Color
-                    </button>
+					<button type="button" class="btn btn-success" id="nuevoColor" data-toggle="modal">
+						<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Color
+					</button>
 
-                </div>
-            </div>
-        </div>
+				</div>
+			</div>
+		</div>
 
 
-        <div class="container-fluid">
-            <div class="form-row">
+		<div class="container-fluid">
+			<div class="form-row">
 
-                <div class="form-group col-sm-5">
-                    @Html.LabelFor(model => model.CantidadT, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.CantidadT, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
-                    @Html.ValidationMessageFor(model => model.CantidadT, "", new { @class = "text-danger" })
-                </div>
+				<div class="form-group col-sm-5">
+					@Html.LabelFor(model => model.CantidadT, htmlAttributes: new { @class = "control-label" })
+					@Html.EditorFor(model => model.CantidadT, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
+					@Html.ValidationMessageFor(model => model.CantidadT, "", new { @class = "text-danger" })
+				</div>
 
-                <div class="form-group col-sm-5">
-                    @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
-                    @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
+				<div class="form-group col-sm-5">
+					@Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label" })
+					@Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
+					@Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
 
-                </div>
+				</div>
 
-                <div class="form-group col-sm-4">
-                    @Html.LabelFor(model => model.CatEspecialidades.Especialidad, htmlAttributes: new { @class = "control-label " }) <br />
-                    @Html.DropDownList("listEspecialidad", (SelectList)ViewBag.listEspecialidad, string.Empty, new { @class = "form-control nuevo_item", @id = "selectEspecialidad", @name = "state", @style = "width: 60%;" })
-                    @Html.ValidationMessageFor(model => model.IdEspecialidad, "", new { @class = "text-danger" })
+				<div class="form-group col-sm-4">
+					@Html.LabelFor(model => model.CatEspecialidades.Especialidad, htmlAttributes: new { @class = "control-label " }) <br />
+					@Html.DropDownList("listEspecialidad", (SelectList)ViewBag.listEspecialidad, string.Empty, new { @class = "form-control nuevo_item", @id = "selectEspecialidad", @name = "state", @style = "width: 60%;" })
+					@Html.ValidationMessageFor(model => model.IdEspecialidad, "", new { @class = "text-danger" })
 
-                </div>
+				</div>
+				<div class="form-group col-sm-4 estilo">
+					@Html.LabelFor(model => model.IdGenero, htmlAttributes: new { @class = "control-label " }) <br />
+					@Html.DropDownList("listGenero", (SelectList)ViewBag.listGenero, string.Empty, new { @class = "form-control nuevo_item", @id = "selectGenero", @name = "state", @style = "width: 80%;" })
+					@Html.ValidationMessageFor(model => model.IdGenero, "", new { @class = "text-danger" })
 
-            </div>
-        </div>
-        <div class="container-fluid">
-            <div class="form-row">
-                <div class="form-group col-sm-4 estilo">
-                    @Html.LabelFor(model => model.IdGenero, htmlAttributes: new { @class = "control-label " }) <br />
-                    @Html.DropDownList("listGenero", (SelectList)ViewBag.listGenero, string.Empty, new { @class = "form-control nuevo_item", @id = "selectGenero", @name = "state", @style = "width: 80%;" })
-                    @Html.ValidationMessageFor(model => model.IdGenero, "", new { @class = "text-danger" })
+				</div>
+				<div class="form-group col-sm-4">
+					@Html.LabelFor(model => model.IdTela, htmlAttributes: new { @class = "control-label " }) <br />
+					@Html.DropDownList("listTela", (SelectList)ViewBag.listTela, string.Empty, new { @class = "form-control nuevo_item", @id = "selectTela", @name = "state", @style = "width: 80%;" })
+					@Html.ValidationMessageFor(model => model.IdTela, "", new { @class = "text-danger" })
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid">
+			<div class="form-row">			
+				<div class="form-group col-sm-4">
+					@Html.LabelFor(model => model.TipoCamiseta, htmlAttributes: new { @class = "control-label " }) <br />
+					@Html.DropDownList("listTipoCamiseta", (SelectList)ViewBag.listTipoCamiseta, string.Empty, new { @class = "form-control nuevo_item", @id = "selectTipoCamiseta", @name = "state", @style = "width: 80%;" })
+					@Html.ValidationMessageFor(model => model.TipoCamiseta, "", new { @class = "text-danger" })
+				</div>
 
-                </div>
-                <div class="form-group col-sm-4">
-                    @Html.LabelFor(model => model.IdTela, htmlAttributes: new { @class = "control-label " }) <br />
-                    @Html.DropDownList("listTela", (SelectList)ViewBag.listTela, string.Empty, new { @class = "form-control nuevo_item", @id = "selectTela", @name = "state", @style = "width: 80%;" })
-                    @Html.ValidationMessageFor(model => model.IdTela, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group col-sm-4">
-                    @Html.LabelFor(model => model.TipoCamiseta, htmlAttributes: new { @class = "control-label " }) <br />
-                    @Html.DropDownList("listTipoCamiseta", (SelectList)ViewBag.listTipoCamiseta, string.Empty, new { @class = "form-control nuevo_item", @id = "selectTipoCamiseta", @name = "state", @style = "width: 80%;" })
-                    @Html.ValidationMessageFor(model => model.TipoCamiseta, "", new { @class = "text-danger" })
-                </div>
+			</div>
+		</div>
+		<div class="container-fluid">
+			<div class="form-group">
+				<div class="panel-group">
+					<div class="panel panel-title">
+						<div class="panel-heading classTipoPack">Reception of type of packing</div>
+						<div class="panel-body">
+							<button type="button" id="btnAddPack" class="btn btn-xs btn-primary classAddPack">+ New Pack</button>
+							<table class="table" id="tablaPack" style="margin:0px; padding:0px;">
+								<thead>
+									<tr>
+										<th class="index"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true" /></th>
+										<th>Packing</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody class="tbodyPack"></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<br />
+				<br />
+				<div class="form-group">
+					<br />
+					<div class="text-center margin-bottom col-sm-12">
+						<button type="button" class="btn btn-success" id="nuevoItem" data-toggle="modal">
+							<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Save Item
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-            </div>
-            <div class="form-group">
-                <br />
-                <div class="text-center margin-bottom col-sm-12">
-                    <button type="button" class="btn btn-success" id="nuevoItem" data-toggle="modal">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Save Item
-                    </button>
-                </div>
-            </div>
-        </div>
 
-    </div>
+
+	</div>
 
     <div class="panel panel-primary" id="crearTallas">
         <div class="panel-heading">

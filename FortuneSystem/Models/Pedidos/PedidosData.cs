@@ -50,7 +50,7 @@ namespace FortuneSystem.Models.Pedidos
                     OrdenesCompra pedidos = new OrdenesCompra()
                     {
                         IdPedido = Convert.ToInt32(leer["ID_PEDIDO"]),
-                        PO = leer["PO"].ToString(),
+                        PO = leer["PO"].ToString().TrimEnd(),
                         VPO = leer["VPO"].ToString(),
                         Cliente = Convert.ToInt32(leer["CUSTOMER"]),
                         ClienteFinal = Convert.ToInt32(leer["CUSTOMER_FINAL"]),
@@ -102,15 +102,15 @@ namespace FortuneSystem.Models.Pedidos
                 // comando.CommandText = "Listar_Pedidos";
                 if (estadoTab == 1){
                     //bd = "PEDIDO P";
-                    comando.CommandText = "SELECT P.ID_PEDIDO, CU.NAME, CF.NAME_FINAL,P.DATE_CANCEL, P.DATE_ORDER, P.PO, P.VPO,PO.ID_PO_SUMMARY, PO.QTY,I.ITEM_STYLE, I.DESCRIPTION, CC.DESCRIPCION,G.GENERO, P.ID_TYPE_ORDER,I.ITEM_ID, PO.FECHA_UCC,PO.ID_ESTADO  FROM PEDIDO P " +
+                    comando.CommandText = "SELECT P.ID_PEDIDO, CU.NAME, CF.NAME_FINAL,P.DATE_CANCEL, P.DATE_ORDER, P.PO, P.VPO,PO.ID_PO_SUMMARY, PO.QTY,I.ITEM_STYLE, I.DESCRIPTION, CC.DESCRIPCION,G.GENERO, P.ID_TYPE_ORDER,I.ITEM_ID, PO.FECHA_UCC,PO.ID_ESTADO,PO.ID_SUCURSAL  FROM PEDIDO P " +
                     "INNER JOIN CAT_CUSTOMER CU ON CU.CUSTOMER=P.CUSTOMER " +
                     "INNER JOIN CAT_CUSTOMER_PO CF ON CF.CUSTOMER_FINAL=P.CUSTOMER_FINAL " +
                     "INNER JOIN PO_SUMMARY PO ON PO.ID_PEDIDOS=P.ID_PEDIDO " +
                     "INNER JOIN ITEM_DESCRIPTION I ON I.ITEM_ID=PO.ITEM_ID " +
                     "INNER JOIN CAT_COLORES CC ON CC.ID_COLOR=PO.ID_COLOR " +
                     "INNER JOIN CAT_GENDER G ON G.ID_GENDER=PO.ID_GENDER " +
-                    "WHERE PO.ID_ESTADO=1 AND YEAR(P.DATE_CANCEL) = 2019";
-                } else if (estadoTab == 2){
+                    "WHERE PO.ID_ESTADO=1 "; //AND YEAR(P.DATE_CANCEL) = 2019
+				} else if (estadoTab == 2){
                     // bd = "shipping_ids S";
                     List<Shipped> listaShipped = new List<Shipped>();
                     listaShipped = ListadoShipped().ToList();
@@ -129,7 +129,7 @@ namespace FortuneSystem.Models.Pedidos
                     }
                     string query = valores;
 
-                    comando.CommandText = "SELECT P.ID_PEDIDO, CU.NAME, CF.NAME_FINAL,P.DATE_CANCEL, P.DATE_ORDER, P.PO, P.VPO,PO.ID_PO_SUMMARY, PO.QTY,I.ITEM_STYLE, I.DESCRIPTION, CC.DESCRIPCION,G.GENERO, P.ID_TYPE_ORDER,I.ITEM_ID, PO.FECHA_UCC,PO.ID_ESTADO  FROM PEDIDO P " +
+                    comando.CommandText = "SELECT P.ID_PEDIDO, CU.NAME, CF.NAME_FINAL,P.DATE_CANCEL, P.DATE_ORDER, P.PO, P.VPO,PO.ID_PO_SUMMARY, PO.QTY,I.ITEM_STYLE, I.DESCRIPTION, CC.DESCRIPCION,G.GENERO, P.ID_TYPE_ORDER,I.ITEM_ID, PO.FECHA_UCC,PO.ID_ESTADO,PO.ID_SUCURSAL  FROM PEDIDO P " +
                     "INNER JOIN CAT_CUSTOMER CU ON CU.CUSTOMER=P.CUSTOMER " +
                     "INNER JOIN CAT_CUSTOMER_PO CF ON CF.CUSTOMER_FINAL=P.CUSTOMER_FINAL " +
                     "INNER JOIN PO_SUMMARY PO ON PO.ID_PEDIDOS=P.ID_PEDIDO " +
@@ -137,16 +137,16 @@ namespace FortuneSystem.Models.Pedidos
                     "INNER JOIN CAT_COLORES CC ON CC.ID_COLOR=PO.ID_COLOR " +
                     "INNER JOIN CAT_GENDER G ON G.ID_GENDER=PO.ID_GENDER " +
                     // "INNER JOIN shipping_ids S ON S.id_po_summary=PO.ID_PO_SUMMARY " +
-                    "WHERE PO.ID_ESTADO=1 AND PO.ID_PO_SUMMARY in(" + query + ") ";
+                    "WHERE PO.ID_ESTADO=7 AND PO.ID_PO_SUMMARY in(" + query + ") ";
                 } else if (estadoTab == 3) {
-                    comando.CommandText = "SELECT P.ID_PEDIDO, CU.NAME, CF.NAME_FINAL,P.DATE_CANCEL, P.DATE_ORDER, P.PO, P.VPO,PO.ID_PO_SUMMARY, PO.QTY,I.ITEM_STYLE, I.DESCRIPTION, CC.DESCRIPCION,G.GENERO, P.ID_TYPE_ORDER,I.ITEM_ID, PO.FECHA_UCC  FROM PEDIDO P " +
+                    comando.CommandText = "SELECT P.ID_PEDIDO, CU.NAME, CF.NAME_FINAL,P.DATE_CANCEL, P.DATE_ORDER, P.PO, P.VPO,PO.ID_PO_SUMMARY, PO.QTY,I.ITEM_STYLE, I.DESCRIPTION, CC.DESCRIPCION,G.GENERO, P.ID_TYPE_ORDER,I.ITEM_ID, PO.FECHA_UCC, PO.ID_SUCURSAL  FROM PEDIDO P " +
                     "INNER JOIN CAT_CUSTOMER CU ON CU.CUSTOMER=P.CUSTOMER " +
                     "INNER JOIN CAT_CUSTOMER_PO CF ON CF.CUSTOMER_FINAL=P.CUSTOMER_FINAL " +
                     "INNER JOIN PO_SUMMARY PO ON PO.ID_PEDIDOS=P.ID_PEDIDO " +
                     "INNER JOIN ITEM_DESCRIPTION I ON I.ITEM_ID=PO.ITEM_ID " +
                     "INNER JOIN CAT_COLORES CC ON CC.ID_COLOR=PO.ID_COLOR " +
                     "INNER JOIN CAT_GENDER G ON G.ID_GENDER=PO.ID_GENDER " +
-                    "WHERE PO.ID_ESTADO=6";
+					"WHERE PO.ID_ESTADO=6 ";
                 }                
                 comando.CommandType = CommandType.Text;
                 leer = comando.ExecuteReader();
@@ -175,7 +175,8 @@ namespace FortuneSystem.Models.Pedidos
                     POSummary.POSummary itemsPO = new POSummary.POSummary()
                     {
                         IdItems = Convert.ToInt32(leer["ID_PO_SUMMARY"]),
-                        Cantidad = Convert.ToInt32(leer["QTY"])
+                        Cantidad = Convert.ToInt32(leer["QTY"]),
+						IdSucursal = Convert.ToInt32(leer["ID_SUCURSAL"])					
                     };
 
                     ItemDescripcion estilosI = new ItemDescripcion()
@@ -262,14 +263,41 @@ namespace FortuneSystem.Models.Pedidos
                         imgArte.StatusArteInf = "IN HOUSE";
                     }
 
-                    string gender = genero.Genero.TrimEnd(' ');
+					//Status de Imagen PNL
+					IMAGEN_ARTE_PNL imgPNL = new IMAGEN_ARTE_PNL();
+					imgPNL = objArte.BuscarEstiloArtePnlImagen(itemsPO.IdItems);
+					if (imgPNL.StatusPNL == 1)
+					{
+						imgPNL.StatusArtePnlInf = "APPROVED";
+
+					}
+					else if (imgPNL.StatusPNL == 2)
+					{
+						imgPNL.StatusArtePnlInf = "IN HOUSE"; 
+					}
+					else if (imgPNL.StatusPNL == 3)
+					{
+						imgPNL.StatusArtePnlInf = "REVIEWED";
+					}
+					else if (imgPNL.StatusPNL == 4)
+					{
+						imgPNL.StatusArtePnlInf = "PENDING";
+					}
+					else
+					{
+						imgPNL.StatusArtePnlInf = "PENDING";
+					}
+
+					string gender = genero.Genero.TrimEnd(' ');
                     genero.Genero = gender;
 
                     //LISTA DE COMENTARIOS
                     pedidos.ListaComentarios = objComent.ListaComentarios(itemsPO.IdItems).ToList();
-                    //CADENA DE MILLPO
-                    pedidos.MillPO = Obtener_Mill_PO_Recibos(pedidos.IdPedido, estilosI.ItemId);
-                    if (pedidos.MillPO == null)
+					//CADENA DE MILLPO
+					//pedidos.MillPO = Obtener_Mill_PO_Recibos(pedidos.IdPedido, estilosI.ItemId);
+					pedidos.MillPO = Obtener_Mill_PO(pedidos.IdPedido);
+
+					if (pedidos.MillPO == null)
                     {
                         pedidos.MillPO = "";
                     }
@@ -331,6 +359,7 @@ namespace FortuneSystem.Models.Pedidos
                     infSummary.CatColores = colores;
                     infSummary.CatGenero = genero;
                     infSummary.IdItems = itemsPO.IdItems;
+					infSummary.IdSucursal = itemsPO.IdSucursal;
                     infSummary.CantidadEstilo = itemsPO.Cantidad;
                     pedidos.CatCliente = cliente;
                     pedidos.CatClienteFinal = clienteFinal;
@@ -338,6 +367,7 @@ namespace FortuneSystem.Models.Pedidos
                     pedidos.CatTipoBrand = tipoBrand;
                     pedidos.IdSummaryOrden = itemsPO.IdItems;
                     pedidos.ImagenArte = imgArte;
+					pedidos.ImagenArtePnl = imgPNL;
                     pedidos.InfoSummary = infSummary;
                     pedidos.IdEstilo = estilosI.ItemId;
 
@@ -353,8 +383,17 @@ namespace FortuneSystem.Models.Pedidos
                         if (pedidos.Trims.estado == "1")
                         {
                             pedidos.Trims.recibo = ObtenerUltimoReciboTrims(infSummary.IdItems);
-                            DateTime fechaRec = ObtenerFechaUltimoReciboTrims(pedidos.Trims.recibo);
-                            pedidos.Trims.fecha_recibo = String.Format("{0:dd/MMM/yyyy}", fechaRec);
+							if(pedidos.Trims.recibo != 0)
+							{
+								DateTime fechaRec = ObtenerFechaUltimoReciboTrims(pedidos.Trims.recibo);
+								pedidos.Trims.fecha_recibo = String.Format("{0:dd/MMM/yyyy}", fechaRec);
+							}
+							else
+							{
+								pedidos.Trims.fecha_recibo = "";
+							}
+	                      							
+                            
                         }
                     }
                     //Price tickets
@@ -425,20 +464,21 @@ namespace FortuneSystem.Models.Pedidos
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leer = null;
                 comando.Connection = conn.AbrirConexion();
-                // comando.CommandText = "Listar_Pedidos";
-                comando.CommandText = "SELECT  S.id_po_summary, S.cantidad FROM shipping_ids S ";
+				// comando.CommandText = "Listar_Pedidos";
+				//comando.CommandText = "SELECT  S.id_po_summary, S.cantidad FROM shipping_ids S ";
+				comando.CommandText = "SELECT  S.id_summary, S.total FROM totales_envios S ";
                 comando.CommandType = CommandType.Text;
                 leer = comando.ExecuteReader();
 
                 while (leer.Read())
                 {
                     Shipped datos = new Shipped();
-                    int id = Convert.ToInt32(leer["id_po_summary"]);
+                    int id = Convert.ToInt32(leer["id_summary"]);
                     Shipped result = listShipped.Find(x => x.Id_summary == id);
                     if (result == null)
                     {
-                        datos.Id_summary = Convert.ToInt32(leer["id_po_summary"]);
-                        datos.Cantidad = Convert.ToInt32(leer["cantidad"]);
+                        datos.Id_summary = Convert.ToInt32(leer["id_summary"]);
+                        datos.Cantidad = Convert.ToInt32(leer["total"]);
                         listShipped.Add(datos);
                        
                     }
@@ -446,7 +486,7 @@ namespace FortuneSystem.Models.Pedidos
                     {
                         if (result.Id_summary == id)
                         {
-                            result.Cantidad += Convert.ToInt32(leer["cantidad"]);
+                            result.Cantidad += Convert.ToInt32(leer["total"]);
                         }
                     }
                 }
@@ -1018,8 +1058,44 @@ namespace FortuneSystem.Models.Pedidos
             return listSummary;
         }
 
-        //Obtener mill po de recibos
-        public string Obtener_Mill_PO_Recibos(int? idPedido, int? idEstilo)
+		//Muestra la lista de millpo por Pedido
+		public IEnumerable<InfoMillPO> ListaMillPOPedido(int? id)
+		{
+			Conexion conn = new Conexion();
+			List<InfoMillPO> listMPO = new List<InfoMillPO>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "SELECT ID_MILLPO, MILLPO FROM MILLPO_LIST WHERE ID_PEDIDO='" + id + "' ";
+				comando.CommandType = CommandType.Text;
+				leer = comando.ExecuteReader();
+
+				while (leer.Read())
+				{
+					InfoMillPO millPO = new InfoMillPO() {
+						IdMillPO = Convert.ToInt32(leer["ID_MILLPO"]),
+						MillPO = leer["MILLPO"].ToString()
+
+					};
+					
+					listMPO.Add(millPO);
+
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+
+			return listMPO;
+		}
+
+		//Obtener mill po de recibos
+		public string Obtener_Mill_PO_Recibos(int? idPedido, int? idEstilo)
         {
             SqlCommand cmd = new SqlCommand();
             SqlDataReader reader;
@@ -1059,9 +1135,70 @@ namespace FortuneSystem.Models.Pedidos
             return millPO;
         }
 
+		//Obtener mill po de Millpo_List
+		public string Obtener_Mill_PO(int? idPedido)
+		{
+			SqlCommand cmd = new SqlCommand();
+			SqlDataReader reader;
+			Conexion conex = new Conexion();
+			string millPO = "";
+			int cont = 0;
+			try
+			{
+				cmd.Connection = conex.AbrirConexion();
+				cmd.CommandText = "SELECT ID_MILLPO, MILLPO FROM MILLPO_LIST WHERE ID_PEDIDO='" + idPedido + "' ";
+				cmd.CommandType = CommandType.Text;
+				reader = cmd.ExecuteReader();
+				while (reader.Read())
+				{
+					string mp = reader["MILLPO"].ToString();
+					if (cont == 0)
+					{
+						millPO = mp;
+						cont++;
+					}
+					else
+					{
+						millPO += "," + mp;
+					}
 
-        //Muestra la lista de suma de Printed tallas por IdSummary
-        public int TotalPrintedPorIdSummary(int? idSummary)
+				}
+
+			}
+			finally
+			{
+				conex.CerrarConexion();
+				conex.Dispose();
+			}
+			return millPO;
+		}
+
+
+		//Obtener Actualizar información de MILLPO
+		public void ActualizarInfoMPO(InfoMillPO datoMPO)
+		{
+			SqlCommand cmd = new SqlCommand();
+			SqlDataReader reader;
+			Conexion conex = new Conexion();
+			try
+			{
+				cmd.Connection = conex.AbrirConexion();
+				cmd.CommandText = "UPDATE MILLPO_LIST SET MILLPO ='"+datoMPO.MillPO.ToUpper()+"' WHERE ID_MILLPO='" + datoMPO.IdMillPO + "'";
+				cmd.CommandType = CommandType.Text;
+				reader = cmd.ExecuteReader();
+				conex.CerrarConexion();
+			}
+			finally
+			{
+				conex.CerrarConexion();
+				conex.Dispose();
+			}
+
+		}
+
+
+		//Muestra la lista de suma de Printed tallas por IdSummary
+		public int TotalPrintedPorIdSummary(int? idSummary)
         {
             Conexion conex = new Conexion();
             int suma = 0;
@@ -1142,8 +1279,8 @@ namespace FortuneSystem.Models.Pedidos
                 {
                     trims.estado = "1";
                     trims.id_request = Convert.ToInt32(leerF["id_request"]);
-                    trims.restante += Convert.ToInt32(leerF["restante"]);      
-                }
+                    trims.restante += Convert.ToInt32(leerF["restante"]);   
+				}
                 leerF.Close();
             }
             finally
@@ -1384,5 +1521,70 @@ namespace FortuneSystem.Models.Pedidos
             return instruccion;
         }
 
-    }
+		public void RegistroMillPO(InfoMillPO datosMPO)
+		{
+			Conexion conn = new Conexion();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "INSERT INTO  MILLPO_LIST (MILLPO, ID_PEDIDO) " +
+					" VALUES('" + datosMPO.MillPO.ToUpper() + "','" + datosMPO.IdPedido + "')";
+				comando.ExecuteNonQuery();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+		}
+
+		//Permite eliminar la informacion de un millpo por id
+		public void EliminarMillPO(int id)
+		{
+
+			SqlCommand cmd = new SqlCommand();
+			SqlDataReader reader;
+			Conexion conex = new Conexion();
+			try
+			{
+				cmd.Connection = conex.AbrirConexion();
+				cmd.CommandText = "DELETE FROM MILLPO_LIST WHERE ID_MILLPO='" + id + "' ";
+				cmd.CommandType = CommandType.Text;
+				reader = cmd.ExecuteReader();
+				conex.CerrarConexion();
+			}
+			finally
+			{
+				conex.CerrarConexion();
+				conex.Dispose();
+			}
+
+		}
+
+
+		//Permite eliminar la informacion de un tipo packing del estilo
+		public void EliminarPackEstilo(int id)
+		{
+
+			SqlCommand cmd = new SqlCommand();
+			SqlDataReader reader;
+			Conexion conex = new Conexion();
+			try
+			{
+				cmd.Connection = conex.AbrirConexion();
+				cmd.CommandText = "DELETE FROM CAT_TYPE_PACK_STYLE WHERE ID_PACK_STYLE='" + id + "' ";
+				cmd.CommandType = CommandType.Text;
+				reader = cmd.ExecuteReader();
+				conex.CerrarConexion();
+			}
+			finally
+			{
+				conex.CerrarConexion();
+				conex.Dispose();
+			}
+
+		}
+
+	}
 }

@@ -39,7 +39,10 @@ namespace FortuneSystem
         public MatchCollection ResultadoK { get; set; }
         public MatchCollection ResultadoW { get; set; }
         public string PO { get; set; }
-    }
+		public string StatusArtePnlInf { get; set; }
+		public DateTime Fecha { get; set; }
+		public string FechaArtePnl { get; set; }
+	}
 
     public enum EstatusImgPNL
     {

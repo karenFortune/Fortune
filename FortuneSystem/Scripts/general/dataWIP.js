@@ -23,9 +23,9 @@ var tabs = [
 
 var priorities = ["Normal", "Modify"];
 
+var sucursales = ["Fortune", "Lucky1"];
+
    
-
-
 
 function TablaRecibos(IdSum, IdPed, IdEst) {
     var IdSummary = parseInt(IdSum);
@@ -268,20 +268,33 @@ var exportedHandler2 = function (e) {
 
 function GridWIP(orders, output, comments) {
     var editCells = [];
-    var popup = $("#popup").dxPopover({
+	var popup = $("#popup").dxPopup({
+		title: "BLANKS",
         width: 500,
-        height: 230
-    }).dxPopover("instance");
+        height: 300
+	}).dxPopup("instance");
 
-    var popupTrims = $("#popupTrims").dxPopover({
-        width: 600,
-        height: 230
-    }).dxPopover("instance");
+	var popupSuc = $("#popupSuc").dxPopup({
+		title: "FACTORY",
+		width: 300,
+		height: 150
+	}).dxPopup("instance");
 
-    var popupPriceTrims = $("#popupPriceTrims").dxPopover({
+	/*var popupTrims = $("#popupTrims").dxPopover({
+		width: 600,
+		height: 230
+	}).dxPopover("instance");*/
+	var popupTrims = $("#popupTrims").dxPopup({
+		title: "TRIMS",
         width: 600,
-        height: 230
-    }).dxPopover("instance");
+        height: 300
+	}).dxPopup("instance");
+
+	var popupPriceTrims = $("#popupPriceTrims").dxPopup({
+		title: "PRICE TICKET",
+        width: 600,
+        height: 300
+	}).dxPopup("instance");
 
     var grid = $("#gridContainer").dxDataGrid({
         onInitialized: function (e) {
@@ -321,10 +334,29 @@ function GridWIP(orders, output, comments) {
                             options.font.color = '#000000';
                         } else if (options.gridCell.data.ImagenArte.StatusArteInf === 'APPROVED') {
                             options.font.bold = true;
-                            options.backgroundColor = '#de5a00';
+							options.backgroundColor = '#ec8a47';
                             options.font.color = '#000000';
                         }
-                    }
+					}
+					if (options.gridCell.column.dataField === 'ImagenArtePnl.StatusArtePnlInf') {
+						if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'IN HOUSE') {
+							options.font.bold = true;
+							options.backgroundColor = '#44c174';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'REVIEWED') {
+							options.font.bold = true;
+							options.backgroundColor = '#66c2ff';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'PENDING') {
+							options.font.bold = true;
+							options.backgroundColor = '#ec5f5f';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'APPROVED') {
+							options.font.bold = true;
+							options.backgroundColor = '#ec8a47';
+							options.font.color = '#000000';
+						}
+					}
                     if (options.gridCell.column.dataField === 'PO') {
                         if (options.gridCell.data.RestaPrintshop <= 10) {
                             options.font.bold = true;
@@ -389,8 +421,17 @@ function GridWIP(orders, output, comments) {
                             //options.rowElement.removeClass("dx-row-alt").addClass("");
                         }
 
-                    }
+					}
+					if (options.gridCell.column.dataField === 'FechaOrdenFinal') {
 
+						if (options.gridCell.data.FechaOrdenFinal < output) {							
+							options.font.bold = true;
+							options.font.color = '#101010';
+						} else {
+							options.font.bold = true;
+							options.font.color = '#101010';
+						}
+					}
                     /*if (e.data.FechaRecOrden == output) {
                         e.rowElement.css('background', '#FEF2E0');
                         e.rowElement.removeClass("dx-row-alt").addClass("");
@@ -420,13 +461,19 @@ function GridWIP(orders, output, comments) {
         showColumnLines: true,
         showRowLines: true,
         rowAlternationEnabled: true,
-        scrolling: {
+        /*scrolling: {
             columnRenderingMode: "virtual"
-        },
+        },*/
         remoteOperations: false,
-        paging: {
-            pageSize: 10
-        },
+		scrolling: {
+			//columnRenderingMode: "virtual"
+			//mode: "virtual"
+			mode: "virtual",
+			columnRenderingMode: "virtual"
+		},
+		paging: {
+			enabled: false
+		},
         searchPanel: {
             visible: true,
             width: 240,
@@ -526,7 +573,6 @@ function GridWIP(orders, output, comments) {
                                     .append('<tbody class="tbodyPTrims"></tbody>')
                                     .append('</table>')
                                     .appendTo(contentElement);
-
                             });
                         popupPriceTrims.option("target", e.cellElement);
                         popupPriceTrims.show();
@@ -534,7 +580,65 @@ function GridWIP(orders, output, comments) {
                         popupPriceTrims.hide();
                     }
                 }
-            }
+			}
+			if (e.column.dataField === "InfoSummary.ItemDesc.Descripcion") {
+				if (e.rowType === 'data') {
+					if (e.key.InfoSummary.ItemDesc.Descripcion !== null) {
+						popupSuc.option("contentTemplate",
+							function (contentElement) {
+								IdSum = e.key.IdSummaryOrden;
+								IdPed = e.key.IdPedido;
+								IdEst = e.key.IdEstilo;
+								var valor;
+								if (e.key.InfoSummary.IdSucursal === 2) {
+									valor = 2;
+								} else {
+									valor = 1;
+								}
+
+								var datos = $('<div>')
+									.dxRadioGroup({
+										dataSource: [{
+											id: 1,
+											text: 'FORTUNE'
+										}, {
+											id: 2,
+											text: 'LUCKY1'
+										}],
+										valueExpr: "id",
+										displayExpr: "text",
+										onValueChanged: function (dato) {
+											//var d = $.Deferred();											
+											var previousValue = dato.previousValue;
+											var newSucursal = dato.value;
+											//var text = radioGroup1.Properties.Items[radioGroup1.SelectedIndex].Description;
+											ActualizarSucursalEstilo(/*d,*/ newSucursal, IdSum);
+											if (newSucursal === 2) {													
+												e.cellElement.css("background-color", "#beaef1");
+												e.cellElement.css("color", "white");
+											} else {
+												e.cellElement.css("background-color", "");
+												e.cellElement.css("color", "black");												
+											}
+										//	return d.promise();
+										},
+										value: valor,
+										layout: "horizontal"
+									});
+								var gridPopSucursal = $("<div/>")
+									.append(gridPopSucursal)
+									.append('<div>' + e.key.InfoSummary.ItemDesc.Descripcion + '</div>')
+									.append('<br/>')
+									.append(datos)						
+									.appendTo(contentElement);
+							});
+						popupSuc.option("target", e.cellElement);
+						popupSuc.show();
+					} else {
+						popupSuc.hide();
+					}
+				}
+			}
 
         },
         columns: [
@@ -641,7 +745,18 @@ function GridWIP(orders, output, comments) {
                 format: "dd/MM/yyyy",
                 allowEditing: false,
                 cssClass: "myClass",
-                headerCellTemplate: $('<b style="color: gray">EXPECTED SHIP DATE</b>')
+				headerCellTemplate: $('<b style="color: gray">EXPECTED SHIP DATE</b>'),
+				cellTemplate: function (element, info) {
+					if (info.data.FechaOrdenFinal < output) {
+						info.text = "TBD";
+						element.append('<div>' + info.text + '</div>')
+							.css("color", "black");
+
+					} else {
+						element.append('<div>' + info.text + '</div>')
+							.css("color", "black");
+					}
+				}
             }, {
                 caption: "ORIGINAL CUST DUE DATE",
                 dataField: "FechaCancelada",
@@ -659,17 +774,17 @@ function GridWIP(orders, output, comments) {
                 allowEditing: false,
                 cssClass: "myClass",
                 headerCellTemplate: $('<b style="color: gray">DESIGN NAME</b>'),
-                cellTemplate: function (element, info) {
-                    if (info.data.DestinoSalida === 2) {
+				cellTemplate: function (element, info) {					
+					//info.data.DestinoSalida
+				if (info.data.InfoSummary.IdSucursal === 2) {
                         element.append('<div>' + info.text + '</div>')
                             .css("background-color", "#beaef1");
                         element.append('<div></div>')
-                            .css("color", "white");
-
+                            .css("color", "white");	
                     } else {
                         element.append('<div>' + info.text + '</div>')
-                            .css("color", "black");
-                    }
+							.css("color", "black");			
+					}								
                 }
 
             }, {
@@ -781,10 +896,63 @@ function GridWIP(orders, output, comments) {
                         element.append("<div>" + infoArte + "</div>")
                             .css("background-color", "#de5a00");
                         element.append("<div></div>")
-                            .css("color", "white");
+							.css("color", "white");
+						if (info.data.ImagenArte.extensionArte === "") {
+							info.data.ImagenArte.extensionArte = "/Content/img/noImagen.png";
+						}
+						element.append($('<img />').attr('src', '/Content/imagenesArte/' + info.data.ImagenArte.extensionArte).on('click', function (event) {
+							$('.enlargeImageModalSource').attr('src', $(this).attr('src'));
+							$('#enlargeImageModal').modal('show');
+						}));
                     }
                 }
-            }, {
+			}, {
+				caption: "PNL RECEIVED",
+				dataField: "ImagenArtePnl.StatusArtePnlInf",
+				alignment: "center",
+				allowEditing: false,
+				cssClass: "myClass",
+				headerCellTemplate: $('<b style="color: gray">PNL RECEIVED</b>'),
+				cellTemplate: function (element, info) {
+					if (info.text === 'IN HOUSE') {
+						element.append("<div>" + info.text + "</div>")
+							.css("background-color", "#44c174");
+						element.append("<div></div>")
+							.css("color", "white");
+						if (info.data.ImagenArtePnl.ExtensionPNL === "") {
+							info.data.ImagenArtePnl.ExtensionPNL = "/Content/img/noImagen.png";
+						}
+						element.append($('<img/>').attr('src', '/Content/imagenesPNL/' + info.data.ImagenArtePnl.ExtensionPNL).on('click', function (event) {
+							$('.enlargeImageModalSource').attr('src', $(this).attr('src'));
+							$('#enlargeImageModal').modal('show');
+						}));
+
+					} else if (info.text === 'REVIEWED') {
+						element.append("<div>" + info.text + "</div>")
+							.css("background-color", "#68D385");
+						element.append("<div></div>")
+							.css("color", "white");
+					} else if (info.text === 'PENDING') {
+						element.append("<div>" + info.text + "</div>")
+							.css("background-color", "#ec5f5f");
+						element.append("<div></div>")
+							.css("color", "white");
+					} else if (info.text === 'APPROVED') {
+						var infoArte = info.text + "-" + info.data.ImagenArtePnl.FechaArtePnl;
+						element.append("<div>" + infoArte + "</div>")
+							.css("background-color", "#ec8a47");
+						element.append("<div></div>")
+							.css("color", "white");
+						if (info.data.ImagenArtePnl.ExtensionPNL === "") {
+							info.data.ImagenArtePnl.ExtensionPNL = "/Content/img/noImagen.png";
+						}
+						element.append($('<img/>').attr('src', '/Content/imagenesPNL/' + info.data.ImagenArtePnl.ExtensionPNL).on('click', function (event) {
+							$('.enlargeImageModalSource').attr('src', $(this).attr('src'));
+							$('#enlargeImageModal').modal('show');
+						}));
+					}
+				}
+			}, {
                 caption: "TRIM RECEIVED",
                 dataField: "Trims.fecha_recibo",
                 alignment: "center",
@@ -983,20 +1151,29 @@ function GridWIP(orders, output, comments) {
 }
 
 function GridShipping(ordersShipped, output, commentsShipped) {
-    var popup = $("#popup").dxPopover({
-        width: 500,
-        height: 230
-    }).dxPopover("instance");
+	var popup = $("#popup").dxPopup({
+		title: "BLANKS",
+		width: 500,
+		height: 300
+	}).dxPopup("instance");
 
-    var popupTrims = $("#popupTrims").dxPopover({
-        width: 600,
-        height: 230
-    }).dxPopover("instance");
+	var popupSuc = $("#popupSuc").dxPopup({
+		title: "FACTORY",
+		width: 300,
+		height: 150
+	}).dxPopup("instance");
 
-    var popupPriceTrims = $("#popupPriceTrims").dxPopover({
-        width: 600,
-        height: 230
-    }).dxPopover("instance");
+	var popupTrims = $("#popupTrims").dxPopup({
+		title: "TRIMS",
+		width: 600,
+		height: 300
+	}).dxPopup("instance");
+
+	var popupPriceTrims = $("#popupPriceTrims").dxPopup({
+		title: "PRICE TICKET",
+		width: 600,
+		height: 300
+	}).dxPopup("instance");
 
     var gridShip = $("#gridContainer").dxDataGrid({
         onInitialized: function (e) {
@@ -1011,7 +1188,7 @@ function GridShipping(ordersShipped, output, commentsShipped) {
         },
         export: {
             enabled: true,
-            fileName: "WIP",
+            fileName: "SHIPPED",
             //allowExportSelectedData: true,
             excelFilterEnabled: true,
             customizeExcelCell: options => {
@@ -1021,25 +1198,44 @@ function GridShipping(ordersShipped, output, commentsShipped) {
                     options.font.bold = true;
                 }
                 if (options.gridCell.rowType === 'data') {
-                    if (options.gridCell.column.dataField === 'ImagenArte.StatusArteInf') {
-                        if (options.gridCell.data.ImagenArte.StatusArteInf === 'IN HOUSE') {
-                            options.font.bold = true;
-                            options.backgroundColor = '#44c174';
-                            options.font.color = '#000000';
-                        } else if (options.gridCell.data.ImagenArte.StatusArteInf === 'REVIEWED') {
-                            options.font.bold = true;
-                            options.backgroundColor = '#66c2ff';
-                            options.font.color = '#000000';
-                        } else if (options.gridCell.data.ImagenArte.StatusArteInf === 'PENDING') {
-                            options.font.bold = true;
-                            options.backgroundColor = '#ec5f5f';
-                            options.font.color = '#000000';
-                        } else if (options.gridCell.data.ImagenArte.StatusArteInf === 'APPROVED') {
-                            options.font.bold = true;
-                            options.backgroundColor = '#de5a00';
-                            options.font.color = '#000000';
-                        }
-                    }
+					if (options.gridCell.column.dataField === 'ImagenArte.StatusArteInf') {
+						if (options.gridCell.data.ImagenArte.StatusArteInf === 'IN HOUSE') {
+							options.font.bold = true;
+							options.backgroundColor = '#44c174';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArte.StatusArteInf === 'REVIEWED') {
+							options.font.bold = true;
+							options.backgroundColor = '#66c2ff';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArte.StatusArteInf === 'PENDING') {
+							options.font.bold = true;
+							options.backgroundColor = '#ec5f5f';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArte.StatusArteInf === 'APPROVED') {
+							options.font.bold = true;
+							options.backgroundColor = '#ec8a47';
+							options.font.color = '#000000';
+						}
+					}
+					if (options.gridCell.column.dataField === 'ImagenArtePnl.StatusArtePnlInf') {
+						if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'IN HOUSE') {
+							options.font.bold = true;
+							options.backgroundColor = '#44c174';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'REVIEWED') {
+							options.font.bold = true;
+							options.backgroundColor = '#66c2ff';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'PENDING') {
+							options.font.bold = true;
+							options.backgroundColor = '#ec5f5f';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'APPROVED') {
+							options.font.bold = true;
+							options.backgroundColor = '#ec8a47';
+							options.font.color = '#000000';
+						}
+					}
                     if (options.gridCell.column.dataField === 'PO') {
                         if (options.gridCell.data.RestaPrintshop <= 10) {
                             options.font.bold = true;
@@ -1250,7 +1446,65 @@ function GridShipping(ordersShipped, output, commentsShipped) {
                         popupPriceTrims.hide();
                     }
                 }
-            }
+			}
+			if (e.column.dataField === "InfoSummary.ItemDesc.Descripcion") {
+				if (e.rowType === 'data') {
+					if (e.key.InfoSummary.ItemDesc.Descripcion !== null) {
+						popupSuc.option("contentTemplate",
+							function (contentElement) {
+								IdSum = e.key.IdSummaryOrden;
+								IdPed = e.key.IdPedido;
+								IdEst = e.key.IdEstilo;
+								var valor;
+								if (e.key.InfoSummary.IdSucursal === 2) {
+									valor = 2;
+								} else {
+									valor = 1;
+								}
+
+								var datos = $('<div>')
+									.dxRadioGroup({
+										dataSource: [{
+											id: 1,
+											text: 'FORTUNE'
+										}, {
+											id: 2,
+											text: 'LUCKY1'
+										}],
+										valueExpr: "id",
+										displayExpr: "text",
+										onValueChanged: function (dato) {
+											//var d = $.Deferred();											
+											var previousValue = dato.previousValue;
+											var newSucursal = dato.value;
+											//var text = radioGroup1.Properties.Items[radioGroup1.SelectedIndex].Description;
+											ActualizarSucursalEstilo(/*d,*/ newSucursal, IdSum);
+											if (newSucursal === 2) {
+												e.cellElement.css("background-color", "#beaef1");
+												e.cellElement.css("color", "white");
+											} else {
+												e.cellElement.css("background-color", "");
+												e.cellElement.css("color", "black");
+											}
+											//	return d.promise();
+										},
+										value: valor,
+										layout: "horizontal"
+									});
+								var gridPopSucursal = $("<div/>")
+									.append(gridPopSucursal)
+									.append('<div>' + e.key.InfoSummary.ItemDesc.Descripcion + '</div>')
+									.append('<br/>')
+									.append(datos)
+									.appendTo(contentElement);
+							});
+						popupSuc.option("target", e.cellElement);
+						popupSuc.show();
+					} else {
+						popupSuc.hide();
+					}
+				}
+			}
 
         },
         columns: [
@@ -1360,16 +1614,15 @@ function GridShipping(ordersShipped, output, commentsShipped) {
                 cssClass: "myClass",
                 headerCellTemplate: $('<b style="color: gray">DESIGN NAME</b>'),
                 cellTemplate: function (element, info) {
-                    if (info.data.DestinoSalida === 2) {
-                        element.append('<div>' + info.text + '</div>')
-                            .css("background-color", "#beaef1");
-                        element.append('<div></div>')
-                            .css("color", "white");
-
-                    } else {
-                        element.append('<div>' + info.text + '</div>')
-                            .css("color", "black");
-                    }
+					if (info.data.InfoSummary.IdSucursal === 2) {
+						element.append('<div>' + info.text + '</div>')
+							.css("background-color", "#beaef1");
+						element.append('<div></div>')
+							.css("color", "white");
+					} else {
+						element.append('<div>' + info.text + '</div>')
+							.css("color", "black");
+					}	
                 }
 
             }, {
@@ -1478,7 +1731,46 @@ function GridShipping(ordersShipped, output, commentsShipped) {
                             .css("color", "white");
                     }
                 }
-            }, {
+			}, {
+				caption: "PNL RECEIVED",
+				dataField: "ImagenArtePnl.StatusArtePnlInf",
+				alignment: "center",
+				allowEditing: false,
+				cssClass: "myClass",
+				headerCellTemplate: $('<b style="color: gray">PNL RECEIVED</b>'),
+				cellTemplate: function (element, info) {
+					if (info.text === 'IN HOUSE') {
+						element.append("<div>" + info.text + "</div>")
+							.css("background-color", "#44c174");
+						element.append("<div></div>")
+							.css("color", "white");
+						if (info.data.ImagenArtePnl.ExtensionPNL === "") {
+							info.data.ImagenArtePnl.ExtensionPNL = "/Content/img/noImagen.png";
+						}
+						element.append($('<img/>').attr('src', '/Content/imagenesPNL/' + info.data.ImagenArtePnl.ExtensionPNL).on('click', function (event) {
+							$('.enlargeImageModalSource').attr('src', $(this).attr('src'));
+							$('#enlargeImageModal').modal('show');
+						}));
+
+					} else if (info.text === 'REVIEWED') {
+						element.append("<div>" + info.text + "</div>")
+							.css("background-color", "#68D385");
+						element.append("<div></div>")
+							.css("color", "white");
+					} else if (info.text === 'PENDING') {
+						element.append("<div>" + info.text + "</div>")
+							.css("background-color", "#ec5f5f");
+						element.append("<div></div>")
+							.css("color", "white");
+					} else if (info.text === 'APPROVED') {
+						var infoArte = info.text + "-" + info.data.ImagenArtePnl.FechaArtePnl;
+						element.append("<div>" + infoArte + "</div>")
+							.css("background-color", "#ec8a47");
+						element.append("<div></div>")
+							.css("color", "white");
+					}
+				}
+			}, {
                 caption: "TRIIM RECEIVED",
                 dataField: "Trims.fecha_recibo",
                 alignment: "center",
@@ -1679,20 +1971,29 @@ function GridShipping(ordersShipped, output, commentsShipped) {
 }
 
 function GridCancelled(ordersCancelled, output, commentsCancel) {
-    var popup = $("#popup").dxPopover({
-        width: 500,
-        height: 230
-    }).dxPopover("instance");
+	var popup = $("#popup").dxPopup({
+		title: "BLANKS",
+		width: 500,
+		height: 300
+	}).dxPopup("instance");
 
-    var popupTrims = $("#popupTrims").dxPopover({
-        width: 600,
-        height: 230
-    }).dxPopover("instance");
+	var popupSuc = $("#popupSuc").dxPopup({
+		title: "FACTORY",
+		width: 300,
+		height: 150
+	}).dxPopup("instance");
 
-    var popupPriceTrims = $("#popupPriceTrims").dxPopover({
-        width: 600,
-        height: 230
-    }).dxPopover("instance");
+	var popupTrims = $("#popupTrims").dxPopup({
+		title: "TRIMS",
+		width: 600,
+		height: 300
+	}).dxPopup("instance");
+
+	var popupPriceTrims = $("#popupPriceTrims").dxPopup({
+		title: "PRICE TICKET",
+		width: 600,
+		height: 300
+	}).dxPopup("instance");
 
     var gridCancel = $("#gridContainer").dxDataGrid({
         onInitialized: function (e) {
@@ -1707,7 +2008,7 @@ function GridCancelled(ordersCancelled, output, commentsCancel) {
         },
         export: {
             enabled: true,
-            fileName: "WIP",
+            fileName: "CANCELLED",
             //allowExportSelectedData: true,
             excelFilterEnabled: true,
             customizeExcelCell: options => {
@@ -1717,25 +2018,44 @@ function GridCancelled(ordersCancelled, output, commentsCancel) {
                     options.font.bold = true;
                 }
                 if (options.gridCell.rowType === 'data') {
-                    if (options.gridCell.column.dataField === 'ImagenArte.StatusArteInf') {
-                        if (options.gridCell.data.ImagenArte.StatusArteInf === 'IN HOUSE') {
-                            options.font.bold = true;
-                            options.backgroundColor = '#44c174';
-                            options.font.color = '#000000';
-                        } else if (options.gridCell.data.ImagenArte.StatusArteInf === 'REVIEWED') {
-                            options.font.bold = true;
-                            options.backgroundColor = '#66c2ff';
-                            options.font.color = '#000000';
-                        } else if (options.gridCell.data.ImagenArte.StatusArteInf === 'PENDING') {
-                            options.font.bold = true;
-                            options.backgroundColor = '#ec5f5f';
-                            options.font.color = '#000000';
-                        } else if (options.gridCell.data.ImagenArte.StatusArteInf === 'APPROVED') {
-                            options.font.bold = true;
-                            options.backgroundColor = '#de5a00';
-                            options.font.color = '#000000';
-                        }
-                    }
+					if (options.gridCell.column.dataField === 'ImagenArte.StatusArteInf') {
+						if (options.gridCell.data.ImagenArte.StatusArteInf === 'IN HOUSE') {
+							options.font.bold = true;
+							options.backgroundColor = '#44c174';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArte.StatusArteInf === 'REVIEWED') {
+							options.font.bold = true;
+							options.backgroundColor = '#66c2ff';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArte.StatusArteInf === 'PENDING') {
+							options.font.bold = true;
+							options.backgroundColor = '#ec5f5f';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArte.StatusArteInf === 'APPROVED') {
+							options.font.bold = true;
+							options.backgroundColor = '#ec8a47';
+							options.font.color = '#000000';
+						}
+					}
+					if (options.gridCell.column.dataField === 'ImagenArtePnl.StatusArtePnlInf') {
+						if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'IN HOUSE') {
+							options.font.bold = true;
+							options.backgroundColor = '#44c174';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'REVIEWED') {
+							options.font.bold = true;
+							options.backgroundColor = '#66c2ff';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'PENDING') {
+							options.font.bold = true;
+							options.backgroundColor = '#ec5f5f';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'APPROVED') {
+							options.font.bold = true;
+							options.backgroundColor = '#ec8a47';
+							options.font.color = '#000000';
+						}
+					}
                     if (options.gridCell.column.dataField === 'PO') {
                         if (options.gridCell.data.RestaPrintshop <= 10) {
                             options.font.bold = true;
@@ -1946,7 +2266,65 @@ function GridCancelled(ordersCancelled, output, commentsCancel) {
                         popupPriceTrims.hide();
                     }
                 }
-            }
+			}
+			if (e.column.dataField === "InfoSummary.ItemDesc.Descripcion") {
+				if (e.rowType === 'data') {
+					if (e.key.InfoSummary.ItemDesc.Descripcion !== null) {
+						popupSuc.option("contentTemplate",
+							function (contentElement) {
+								IdSum = e.key.IdSummaryOrden;
+								IdPed = e.key.IdPedido;
+								IdEst = e.key.IdEstilo;
+								var valor;
+								if (e.key.InfoSummary.IdSucursal === 2) {
+									valor = 2;
+								} else {
+									valor = 1;
+								}
+
+								var datos = $('<div>')
+									.dxRadioGroup({
+										dataSource: [{
+											id: 1,
+											text: 'FORTUNE'
+										}, {
+											id: 2,
+											text: 'LUCKY1'
+										}],
+										valueExpr: "id",
+										displayExpr: "text",
+										onValueChanged: function (dato) {
+											//var d = $.Deferred();											
+											var previousValue = dato.previousValue;
+											var newSucursal = dato.value;
+											//var text = radioGroup1.Properties.Items[radioGroup1.SelectedIndex].Description;
+											ActualizarSucursalEstilo(/*d,*/ newSucursal, IdSum);
+											if (newSucursal === 2) {
+												e.cellElement.css("background-color", "#beaef1");
+												e.cellElement.css("color", "white");
+											} else {
+												e.cellElement.css("background-color", "");
+												e.cellElement.css("color", "black");
+											}
+											//	return d.promise();
+										},
+										value: valor,
+										layout: "horizontal"
+									});
+								var gridPopSucursal = $("<div/>")
+									.append(gridPopSucursal)
+									.append('<div>' + e.key.InfoSummary.ItemDesc.Descripcion + '</div>')
+									.append('<br/>')
+									.append(datos)
+									.appendTo(contentElement);
+							});
+						popupSuc.option("target", e.cellElement);
+						popupSuc.show();
+					} else {
+						popupSuc.hide();
+					}
+				}
+			}
 
         },
         columns: [
@@ -1973,7 +2351,6 @@ function GridCancelled(ordersCancelled, output, commentsCancel) {
                 allowEditing: false,
                 cssClass: "myClass",
                 headerCellTemplate: $('<b style="color: gray">PO RECVD DATE</b>')
-
             }, {
                 caption: "PO NO",
                 dataField: "PO",
@@ -2048,16 +2425,15 @@ function GridCancelled(ordersCancelled, output, commentsCancel) {
                 cssClass: "myClass",
                 headerCellTemplate: $('<b style="color: gray">DESIGN NAME</b>'),
                 cellTemplate: function (element, info) {
-                    if (info.data.DestinoSalida === 2) {
-                        element.append('<div>' + info.text + '</div>')
-                            .css("background-color", "#beaef1");
-                        element.append('<div></div>')
-                            .css("color", "white");
-
-                    } else {
-                        element.append('<div>' + info.text + '</div>')
-                            .css("color", "black");
-                    }
+					if (info.data.InfoSummary.IdSucursal === 2) {
+						element.append('<div>' + info.text + '</div>')
+							.css("background-color", "#beaef1");
+						element.append('<div></div>')
+							.css("color", "white");
+					} else {
+						element.append('<div>' + info.text + '</div>')
+							.css("color", "black");
+					}	
                 }
 
             }, {
@@ -2167,7 +2543,46 @@ function GridCancelled(ordersCancelled, output, commentsCancel) {
                             .css("color", "white");
                     }
                 }
-            }, {
+			}, {
+				caption: "PNL RECEIVED",
+				dataField: "ImagenArtePnl.StatusArtePnlInf",
+				alignment: "center",
+				allowEditing: false,
+				cssClass: "myClass",
+				headerCellTemplate: $('<b style="color: gray">PNL RECEIVED</b>'),
+				cellTemplate: function (element, info) {
+					if (info.text === 'IN HOUSE') {
+						element.append("<div>" + info.text + "</div>")
+							.css("background-color", "#44c174");
+						element.append("<div></div>")
+							.css("color", "white");
+						if (info.data.ImagenArtePnl.ExtensionPNL === "") {
+							info.data.ImagenArtePnl.ExtensionPNL = "/Content/img/noImagen.png";
+						}
+						element.append($('<img/>').attr('src', '/Content/imagenesPNL/' + info.data.ImagenArtePnl.ExtensionPNL).on('click', function (event) {
+							$('.enlargeImageModalSource').attr('src', $(this).attr('src'));
+							$('#enlargeImageModal').modal('show');
+						}));
+
+					} else if (info.text === 'REVIEWED') {
+						element.append("<div>" + info.text + "</div>")
+							.css("background-color", "#68D385");
+						element.append("<div></div>")
+							.css("color", "white");
+					} else if (info.text === 'PENDING') {
+						element.append("<div>" + info.text + "</div>")
+							.css("background-color", "#ec5f5f");
+						element.append("<div></div>")
+							.css("color", "white");
+					} else if (info.text === 'APPROVED') {
+						var infoArte = info.text + "-" + info.data.ImagenArtePnl.FechaArtePnl;
+						element.append("<div>" + infoArte + "</div>")
+							.css("background-color", "#ec8a47");
+						element.append("<div></div>")
+							.css("color", "white");
+					}
+				}
+			}, {
                 caption: "TRIIM RECEIVED",
                 dataField: "Trims.fecha_recibo",
                 alignment: "center",
@@ -2364,3 +2779,24 @@ function GridCancelled(ordersCancelled, output, commentsCancel) {
 
     return gridCancel;
   }
+
+function ActualizarSucursalEstilo(newSucursal, idSummary) {
+	var sucursal = newSucursal;
+	$.ajax({
+		type: 'POST',
+		url: "/WIP/ActualizarSucursalIdSummary",
+		data: { IdSucursal: newSucursal, IdSummary: parseInt(idSummary) },
+		success: function (data) {
+			//d.resolve(data);
+			
+            /*if (!timeOut) {
+                timeOut = setTimeout(timerCallback, 100);
+            }*/
+			//var dataGrid = $('#gridContainer').dxDataGrid('instance');
+			//dataGrid.refresh();
+		},
+		error: function (e) {
+			alert("error: " + e.responseText);
+		}
+	});
+}

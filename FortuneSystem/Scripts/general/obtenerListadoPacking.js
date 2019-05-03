@@ -97,7 +97,8 @@ var numBoxPPK =0;
 function obtenerListaTallas(EstiloId) {
    $("#loading").css('display', 'inline');   
     $("#panelPacking").css('display', 'inline');
-    $("#consultaTalla").css('width', '100%');
+	$("#consultaTalla").css('width', '100%');
+	$("#InfoSummary_IdItems").val(EstiloId);
     estiloId = EstiloId;
         $.ajax({
             url: "/Packing/Lista_Tallas_Por_Estilo_Packing/" + EstiloId,
@@ -112,7 +113,8 @@ function obtenerListaTallas(EstiloId) {
                 var cargo = jsonData.Data.cargoUser;
                 var tPiezasEstilos = jsonData.Data.numTPSyle;
                 var tPiezasPack = jsonData.Data.numTPack;
-                var listTotalPiezas = jsonData.Data.listaTotalPiezas;
+				var listTotalPiezas = jsonData.Data.listaTotalPiezas;
+				var listadoPack = jsonData.Data.listaPack;
                 listaPsc = jsonData.Data.listaTotalPiezas;
                 listCantTalla = jsonData.Data.listCantTalla;
                 //var listaTCajas = jsonData.Data.listaCajasT;
@@ -143,10 +145,10 @@ function obtenerListaTallas(EstiloId) {
                             '</tr>' +
                             '</thead><tbody>';
                         var cont = 0;
-                        $.each(listaT, function (key, item) {                           
+						$.each(listadoPack, function (key, item) {                           
                             html += '<tr id="pallet' + cont + '" class="pallet">';
                             html += '<td width="250"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '"/></td>';
-                            html += '<td width="250"><input type="text" name="l-cantidad" id="l-cantidad'+cont+'" class="form-control numeric qualityT" value="' + 0 + '" /></td>';
+                            html += '<td width="250"><input type="text" name="l-cantidad" id="l-cantidad'+cont+'" class="form-control numeric qualityT" value="' + item.Cantidad + '" /></td>';
                             html += '<td width="250"><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
                             html += '</tr>';
                             cont = cont + 1;
@@ -159,7 +161,8 @@ function obtenerListaTallas(EstiloId) {
                         $("#nuevaTalla").hide();
                         $("#nuevoPallet").hide();
                         $("#modificarBatch").hide();
-                        $("#panelNoEstilosBPPK").css('display', 'inline');
+						$("#panelNoEstilosBPPK").css('display', 'inline');
+						$("#modificarPack").hide();
                         $("#imgPanelBPPK").css('cursor', 'none');
                         $("#div_estilo").hide();
                         $("#div_titulo").hide();
@@ -175,7 +178,10 @@ function obtenerListaTallas(EstiloId) {
 
                     } else {
                         $("#consultaTalla").css('height', '1600px');
-                    }
+					}
+					if (cargo === 15) {
+						$("#modificarPack").hide();
+					}
                     $("#btnAdd").hide();
                     $("#nuevaTalla").hide();
                     $("#nuevoPallet").hide();
@@ -204,17 +210,27 @@ function obtenerListaTallas(EstiloId) {
                     $.each(listaPacking, function (key, item) {
                         html += '<th>' + item.Talla + '</th>';
                     });
-                    html += '<th width="30%"> Total </th>';
-                    html += '</tr><tr><td width="30%">1rst Quantity</td>';
-                    var cantidades = 0;
-                    var cadena_cantidades = "";
-                    $.each(listaPacking, function (key, item) {
-                        html += '<td class="calidad">' + item.Calidad + '</td>';
-                        cantidades += item.Calidad;
-                        cadena_cantidades += "*" + item.Calidad;
-                    });
-                    var cantidades_array = cadena_cantidades.split('*');
-                    html += '<td>' + cantidades + '</td>';
+                    html += '<th width="30%"> Total </th>';                    
+					html += '</tr><tr><td width="30%">Total Orden</td>';
+					var cantidadesTotal = 0;
+					var cadena_cantidadesTotal = "";
+					$.each(listaT, function (key, item) {
+						html += '<td class="calidad">' + item.Cantidad + '</td>';
+						cantidadesTotal += item.Cantidad;
+						cadena_cantidadesTotal += "*" + item.Cantidad;
+					});
+					var cantidades_arrayTotal = cadena_cantidadesTotal.split('*');
+					html += '<td>' + cantidadesTotal + '</td>';
+					html += '</tr><tr><td width="30%">1rst Quantity</td>';
+					var cantidades = 0;
+					var cadena_cantidades = "";
+					$.each(listaPacking, function (key, item) {
+						html += '<td class="calidad">' + item.Calidad + '</td>';
+						cantidades += item.Calidad;
+						cadena_cantidades += "*" + item.Calidad;
+					});
+					var cantidades_array = cadena_cantidades.split('*');
+					html += '<td>' + cantidades + '</td>';
                     var cantidadesEmp = 0;
                     if (listaEmpaque.length === 0) {
                         listaEmpaque;
@@ -253,7 +269,7 @@ function obtenerListaTallas(EstiloId) {
                         html += '<td>' + cantidadesEmp + '</td>';
                     }
 
-                    html += '</tr><tr><td width="30%">Packages</td>';
+                    html += '</tr><tr><td width="30%">Packed</td>';
                     /*  $.each(listaTCajas, function (key, item) {
                           html += '<td>' + item.TotalPiezas + '</td>';
                       });*/
@@ -281,7 +297,7 @@ function obtenerListaTallas(EstiloId) {
                     html += '<td>' + cantidadesTBox + '</td>';                    
                     html += '</tr><tr>';
                     if (tipoEmp === "BULK") {
-                        html += '<td class="cajasQty">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Box</td>';
+                        html += '<td class="cajasQty">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Box # </td>';
                     }
 
                     var lista_Batch_Box = jsonData.Data.listaCajasT;
@@ -300,10 +316,10 @@ function obtenerListaTallas(EstiloId) {
                             if (key === 1) {
                                 if (listaPBatch === 0) {
                                     item = 0;
-                                    html += '<td>' + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Box# -" + item + '</td>';
+									html += '<td>' + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Box # " + item + '</td>';
                                     numBoxPPK = item;
                                 } else {
-                                    html += '<td>' + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Box# -" + item + '</td>';
+									html += '<td>' + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Box # " + item + '</td>';
                                     numBoxPPK = item;
                                 }
                             } else {
@@ -335,7 +351,7 @@ function obtenerListaTallas(EstiloId) {
                         lista_Partial;
                     }
                     if (tipoEmp === "BULK") {
-                        html += '</tr><tr><td width="30%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ Partial</td>';                       
+                        html += '</tr><tr><td width="30%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Partial #</td>';                       
                  
                         $.each(lista_Partial, function (key, item) {        
                                              
@@ -358,7 +374,7 @@ function obtenerListaTallas(EstiloId) {
                         if (listaTBatch === 0) {
                             item = 0;
                         }
-                        var resta = parseInt(item) - parseInt(cantidades_array[i]);
+						var resta = parseInt(item) - parseInt(cantidades_arrayTotal[i]);
 
                         if (resta === 0) {
                             html += '<td class="faltante" style="color:black;">' + resta + '</td>';
@@ -412,7 +428,7 @@ function obtenerListaTallas(EstiloId) {
             $("#packAssort").hide(); 
             $("#packBPPK").show();
                 //$("#loading").css('display', 'none');
-    
+				
             setTimeout(function () { $("#loading").css('display', 'none'); }, 3000);
 
 
@@ -726,7 +742,7 @@ function TallasEmpaqueBulk() {
                     html += '</tr>';
                 });
                 html += '</tbody> </table>';
-                html += ' <button type="button" id="nuevoEmpaque" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Bulk</button>';
+                html += ' <button type="button" id="nuevoEmpaque" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save</button>';
                 $('#listaTallaP').html(html);
             } else {
                 $("#div_titulo").html("<h3>PACKING DETAILS</h3>");
@@ -785,7 +801,7 @@ function TallasEmpaquePPK() {
                     html += '</tr>';
                 });
                 html += '</tbody> </table>';
-                html += '<button type="button" id="nuevoEmpaquePPK" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> PPK</button>';               
+                html += '<button type="button" id="nuevoEmpaquePPK" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save</button>';               
                 $('#listaTallaP').html(html);
             } else {
                 $("#div_titulo").html("<h3>PACKING DETAILS</h3>");
@@ -863,7 +879,8 @@ function obtener_bacth_estilo_pack(IdEstilo) {
         success: function (jsonData) {
               
             var lista_batch = jsonData.Data.listaPO;
-            var cargoUser = jsonData.Data.cargoUser;
+			var cargoUser = jsonData.Data.cargoUser;
+			var sucursal = jsonData.Data.sucursal;
             var numBatch = 0;
             $.each(lista_batch, function (key, item) {
                 numBatch++;
@@ -903,7 +920,7 @@ function obtener_bacth_estilo_pack(IdEstilo) {
                 } 
             html += '<th> Type Packing </th>';
             html += '<th> User </th>';
-            html += '<th> Turn </th>';
+            html += '<th> Shift </th>';
             html += '<th> User Modif </th>';
             html += '<th> Actions </th>';
             html += '</tr>';
@@ -940,16 +957,30 @@ function obtener_bacth_estilo_pack(IdEstilo) {
                     html += '<td>ASSORTMENT</td>';
                 }
 
-                html += '<td>' + item.NombreUsr + '</td>';
-                if (item.TipoTurno === 1) {
-                    html += '<td>1rst Turn</td>';
-                } else {
-                    html += '<td>2nd Turn</td>';
-                }
+				html += '<td>' + item.NombreUsr + '</td>';
+
+				if (sucursal === "FORTUNE") {
+					if (item.TipoTurno === 1) {
+						html += '<td>First Turn</td>';
+					} else {
+						html += '<td>Second Turn</td>';
+					}
+				} else if (sucursal === "LUCKY1") {
+					if (item.TipoTurno === 1) {
+						html += '<td>First Turn - Lucky1</td>';
+					} else {
+						html += '<td>Second Turn - Lucky1</td>';
+					}
+					//	html += '<td>Lucky1</td>';
+				}
+
                 html += '<td>' + item.NombreUsrModif + '</td>';
-                if (cargoUser === 9 || cargoUser === 1) {
-                    html += '<td><a href="#" onclick="obtenerTallas_Batch(' + item.IdBatch + ',' + item.TipoTurno + ',' + item.IdPacking + ',' + numTipoPack  /*+ ',\'' + item.Status + '\'*/ + ');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Details Bacth"></a></td>';
-                }
+				if (cargoUser === 9 || cargoUser === 1) {
+					html += '<td><a href="#" onclick="obtenerTallas_Batch(' + item.IdBatch + ',' + item.TipoTurno + ',' + item.IdPacking + ',' + numTipoPack  /*+ ',\'' + item.Status + '\'*/ + ');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Details Bacth"></a></td>';
+				}
+				else {
+					html += '<td></td>';
+				}
                
                 html += '</tr>';
             });
@@ -960,9 +991,13 @@ function obtener_bacth_estilo_pack(IdEstilo) {
                 $('#listaTallaBatch').html(html);
                 $('#listaTallaBatch').show();
                 $("#div_titulo").css("display", "inline");
-                $("#modificarPack").prop("disabled", true);
+				$("#modificarPack").prop("disabled", true);
+				
             // $("#loading").css('display', 'none');
-                $(window).scrollTop(tempScrollTop);
+				$(window).scrollTop(tempScrollTop);
+				var IdEstiloInf = $("#InfoSummary_IdItems").val();
+				obtenerListaPacking(IdEstiloInf);			
+				$("#containerPie").css("display", "inline");
             }            
         },
         error: function (errormessage) { alert(errormessage.responseText); }
