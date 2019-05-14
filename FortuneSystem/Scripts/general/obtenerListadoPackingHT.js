@@ -395,7 +395,7 @@ function obtenerListaTallas(EstiloId) {
 					$("#grupoBotones").hide();
 					$('label[id="numTotalUnitLabel"]').hide();
 					$("#numTotalUnit").hide();
-				    obtener_bacth_estilo(estiloId);
+					obtener_bacth_estilo(estiloId);
 				} 
             }            
       
