@@ -70,7 +70,7 @@ $(document).on("click", "#btnAssort", function () {
                         $("#regAssort").css('display', 'none');
                         $("#consultaTalla").css("visibility", "visible");
                         $("#consultaTalla").css('height', '1040px');
-                        $("#consultaTalla").css('width', '121%');
+                        $("#consultaTalla").css('width', '110%');
                         $("#loading").css('display', 'none');
                     }
 
@@ -88,7 +88,7 @@ $(document).on("click", "#btnAssort", function () {
                         $("#imgPanel").css('cursor', 'none');
                         $("#consultaTalla").css('height', '900px');
                         $("#arte").css('display', 'none');
-                        $("#consultaTalla").css('width', '121%');
+                        $("#consultaTalla").css('width', '110%');
                         $("#consultaTalla").css("visibility", "visible");
                         $("#loading").css('display', 'none');
                     }
@@ -352,7 +352,7 @@ function cargarPanelAssort() {
     $('#agregarNuevoPack').hide();
     $("#div_titulo_Assort").html("<h3>REGISTRATION OF TYPE OF PACKAGING- ASSORTMENT</h3>");
     $("#consultaTalla").css('height', '1040px');
-    $("#consultaTalla").css('width', '121%');
+    $("#consultaTalla").css('width', '110%');
     $("#opcionesAssort").css('display', 'inline');
     $("#opcionesPAssort").css('display', 'none');
     $("#div_titulo_Registro").css('display', 'none');

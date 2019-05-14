@@ -1088,8 +1088,9 @@ namespace FortuneSystem.Controllers
         public JsonResult Lista_Tallas_HT_Por_Estilo(int? id)
         {
             List<PackingM> listaTallasEstilo = objPacking.ObtenerTallas(id).ToList();
-            List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilo(id).ToList();
-            List<int> listaPiezasPackingBulk = objPacking.ListaTallasPackingBulkEstilo(id).ToList();
+			List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilo(id).ToList(); 	//lISTA EXTRAS Y EXAMPLES		
+            List<ItemTalla> listaTall = objTallas.ListaTallasHTPorEstilo(id).ToList();
+			List<int> listaPiezasPackingBulk = objPacking.ListaTallasPackingBulkEstilo(id).ToList();
             List<int> listaPiezasPackingPPK = objPacking.ListaTallasPackingPPKEstilo(id).ToList();
             //List<PackingSize> listaTallasPacking = objPacking.ObtenerListaPackingSizePorEstilo(id).ToList();
             //List<PackingTypeSize> listaTallasEmpaquePPK = objPacking.ObtenerListaPackingPPKPorEstilo(id).ToList();
@@ -1109,9 +1110,10 @@ namespace FortuneSystem.Controllers
 			var result = Json(new
             {
                 lista = listaTallas,
-                //listaTalla = listaTallasEstilo,
-                //listaPackingS = listaTallasPacking,
-                estilos = estilo,
+				listaT = listaTall,
+				//listaTalla = listaTallasEstilo,
+				//listaPackingS = listaTallasPacking,
+				estilos = estilo,
                 listaPTBulk = listaPiezasPackingBulk,
                 listaPTPPK = listaPiezasPackingPPK,
                 listaEmpPPK = listaTallasEmpaquePPK,

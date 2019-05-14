@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using FortuneSystem.Models.Almacen;
+using FortuneSystem.Models.Shipping;
 using FortuneSystem.Models.Catalogos;
 using System.Threading;
 using System.Text.RegularExpressions;
@@ -104,12 +105,13 @@ namespace FortuneSystem.Models.Almacen
         /***********TRIMS******************************************************************************************************************************************************************************/
 
         public void guardar_trim_po(){
+            int summary = consultas.obtener_po_summary(id_pedido, id_estilo);
             Conexion conTrim = new Conexion();
             try{
                 SqlCommand comTrim = new SqlCommand();
                 comTrim.Connection = conTrim.AbrirConexion();
-                comTrim.CommandText = "INSERT INTO inventario(id_estilo,id_sucursal,id_pedido,id_pais,id_fabricante,id_categoria_inventario,id_color,id_body_type,id_genero,id_fabric_type,id_location,total,id_size,id_customer,id_customer_final,minimo,notas,id_fabric_percent,stock,date_comment,comment,id_family_trim,id_unit,id_trim,descripcion,id_item) " +
-                "values('"+id_estilo+"','" + id_sucursal + "','" + id_pedido + "','0','0','" + id_tipo + "','0','0','0','0','0','" + total + "','0','" + id_customer + "','0','" + minimo_trim + "','N/A','0','N/A','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "','N/A','" + id_familia + "','" + id_unit + "','" + id_trim + "','" + descripcion + "','" + id_item + "' ) ";
+                comTrim.CommandText = "INSERT INTO inventario(id_estilo,id_sucursal,id_pedido,id_pais,id_fabricante,id_categoria_inventario,id_color,id_body_type,id_genero,id_fabric_type,id_location,total,id_size,id_customer,id_customer_final,minimo,notas,id_fabric_percent,stock,date_comment,comment,id_family_trim,id_unit,id_trim,descripcion,id_item,id_summary) " +
+                "values('"+id_estilo+"','" + id_sucursal + "','" + id_pedido + "','0','0','" + id_tipo + "','0','0','0','0','0','" + total + "','0','" + id_customer + "','0','" + minimo_trim + "','N/A','0','N/A','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "','N/A','" + id_familia + "','" + id_unit + "','" + id_trim + "','" + descripcion + "','" + id_item + "','"+summary+"' ) ";
                 comTrim.ExecuteNonQuery();
             }finally{conTrim.CerrarConexion();conTrim.Dispose();}
         }
@@ -127,12 +129,12 @@ namespace FortuneSystem.Models.Almacen
             }finally{con_u_i.CerrarConexion(); con_u_i.Dispose();            }
             return id_inventario;
         }
-        public void guardar_recibo(int cantidad, int id_customer, string mill, string referencia){
+        public void guardar_recibo(int cantidad, int id_customer, string mill, string referencia,string packing_number){
             Conexion con_r = new Conexion();
             try{
                 SqlCommand com_r = new SqlCommand();
                 com_r.Connection = con_r.AbrirConexion();
-                com_r.CommandText = "INSERT INTO recibos(fecha,total,id_usuario,id_sucursal,id_origen,mp_number,mill_po,po_reference) values('" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "','" + cantidad + "','" + id_usuario + "','" + id_sucursal + "','" + id_company + "','n/a','" + mill + "','" + referencia + "') ";
+                com_r.CommandText = "INSERT INTO recibos(fecha,total,id_usuario,id_sucursal,id_origen,mp_number,mill_po,po_reference,packing_number) values('" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "','" + cantidad + "','" + id_usuario + "','" + id_sucursal + "','" + id_company + "','n/a','" + mill + "','" + referencia + "','"+ packing_number + "') ";
                 com_r.ExecuteNonQuery();
             }finally{con_r.CerrarConexion(); con_r.Dispose();}
         }
@@ -178,12 +180,12 @@ namespace FortuneSystem.Models.Almacen
             }finally{con_u_r_i.CerrarConexion(); con_u_r_i.Dispose();}
             return id_caja;
         }
-        public void guardar_recibo_item(int id_recibo, string id_inventario, string cantidad){
+        public void guardar_recibo_item(int id_recibo, string id_inventario, string cantidad,string summary){
             Conexion con_r_i = new Conexion();
             try{
                 SqlCommand com_r_i = new SqlCommand();
                 com_r_i.Connection = con_r_i.AbrirConexion();
-                com_r_i.CommandText = "INSERT INTO recibos_items(id_recibo,id_inventario,total) values('" + id_recibo + "','" + id_inventario + "','" + cantidad + "') ";
+                com_r_i.CommandText = "INSERT INTO recibos_items(id_recibo,id_inventario,total,id_summary) values('" + id_recibo + "','" + id_inventario + "','" + cantidad + "','"+summary+"') ";
                 com_r_i.ExecuteNonQuery();
             }finally{con_r_i.CerrarConexion();con_r_i.Dispose();}
         }
@@ -285,13 +287,14 @@ namespace FortuneSystem.Models.Almacen
             }finally{con_c.CerrarConexion();con_c.Dispose();}
         }
         public void guardar_blank(){
+            int summary = consultas.obtener_po_summary(id_pedido, id_estilo);
             Conexion con_b = new Conexion();
             try{
                 SqlCommand com_b = new SqlCommand();
                 //SqlDataReader leer_s = null;
                 com_b.Connection = con_b.AbrirConexion();
-                com_b.CommandText = "INSERT INTO inventario(id_estilo,id_sucursal,id_pedido,id_pais,id_fabricante,id_categoria_inventario,id_color,id_body_type,id_genero,id_fabric_type,id_location,total,id_size,id_customer,id_customer_final,minimo,notas,id_fabric_percent,stock,date_comment,comment,id_family_trim,id_unit,id_trim,descripcion,id_item) " +
-                    "values('" + id_estilo + "','" + id_sucursal + "','" + id_pedido + "','" + id_pais + "','" + id_fabricante + "','" + id_tipo + "','" + id_color + "','" + id_body_type + "','" + id_gender + "','" + id_fabric_type + "','" + id_ubicacion + "','" + quantity + "','" + id_size + "','" + id_customer + "','" + id_customer_final + "','0','" + notas + "','" + id_percent + "','STOCK','" + date_comment + "','" + comments + "','0','0','0','" + descripcion + "','" + id_item + "' ) ";
+                com_b.CommandText = "INSERT INTO inventario(id_estilo,id_sucursal,id_pedido,id_pais,id_fabricante,id_categoria_inventario,id_color,id_body_type,id_genero,id_fabric_type,id_location,total,id_size,id_customer,id_customer_final,minimo,notas,id_fabric_percent,stock,date_comment,comment,id_family_trim,id_unit,id_trim,descripcion,id_item,id_summary) " +
+                    "values('" + id_estilo + "','" + id_sucursal + "','" + id_pedido + "','" + id_pais + "','" + id_fabricante + "','" + id_tipo + "','" + id_color + "','" + id_body_type + "','" + id_gender + "','" + id_fabric_type + "','" + id_ubicacion + "','" + quantity + "','" + id_size + "','" + id_customer + "','" + id_customer_final + "','0','" + notas + "','" + id_percent + "','STOCK','" + date_comment + "','" + comments + "','0','0','0','" + descripcion + "','" + id_item + "','"+summary+"' ) ";
                 com_b.ExecuteNonQuery();
             }finally{con_b.CerrarConexion();con_b.Dispose();}
         }
@@ -585,16 +588,185 @@ namespace FortuneSystem.Models.Almacen
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
-                com.CommandText = "SELECT ps.ID_PO_SUMMARY FROM PO_SUMMARY ps, inventario i WHERE i.id_inventario='" + inventario + "' "+
-                    " AND ps.ID_PEDIDOS=i.id_pedido AND  ps.ITEM_ID=i.id_estilo";
+                com.CommandText = "SELECT id_summary FROM inventario WHERE id_inventario='" + inventario + "' ";
                 leer = com.ExecuteReader();
                 while (leer.Read()){
-                    temp = Convert.ToInt32(leer["ID_PO_SUMMARY"]);
+                    temp = Convert.ToInt32(leer["id_summary"]);
                 }leer.Close();
             }finally { con.CerrarConexion(); con.Dispose(); }
             return temp;
         }
-        
+
+        public string obtener_mill_po_pedido(int pedido){
+            string temp = "";
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "Select MILLPO from MILLPO_LIST where ID_PEDIDO='" + pedido + "' ";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    temp = Convert.ToString(leer["MILLPO"]) ;
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
+            return temp;
+        }
+
+        public List<Pedido_customer> obtener_pedidos_customer(string busqueda){
+            List<Pedido_customer> lista = new List<Pedido_customer>();
+            string query = "";
+            if (busqueda == "0"){
+                query = "select top 30 ID_PEDIDO,PO,VPO,CUSTOMER,CUSTOMER_FINAL,DATE_CANCEL,DATE_ORDER,TOTAL_UNITS,ID_STATUS " +
+                    " from PEDIDO where ID_STATUS!=6 and ID_STATUS!=7  order by ID_PEDIDO DESC";
+            }else{
+                query = "select top 30 ID_PEDIDO,PO,VPO,CUSTOMER,CUSTOMER_FINAL,DATE_CANCEL,DATE_ORDER,TOTAL_UNITS,ID_STATUS " +
+                    "from PEDIDO where PO like'%" + busqueda + "%' or VPO like'%" + busqueda + "%' order by ID_PEDIDO DESC  ";
+            }
+            Conexion con_ltd = new Conexion();
+            try{
+                SqlCommand com_ltd = new SqlCommand();
+                SqlDataReader leer_ltd = null;
+                com_ltd.Connection = con_ltd.AbrirConexion();
+                com_ltd.CommandText = query;
+                leer_ltd = com_ltd.ExecuteReader();
+                while (leer_ltd.Read()){
+                    Pedido_customer p = new Pedido_customer();
+                    p.id_pedido = Convert.ToInt32(leer_ltd["ID_PEDIDO"]);
+                    p.pedido = (Convert.ToString(leer_ltd["PO"])).Trim();
+                    p.vpo =Convert.ToString(leer_ltd["VPO"]);
+                    p.id_customer = Convert.ToInt32(leer_ltd["CUSTOMER"]);
+                    p.customer = consultas.obtener_customer_id(Convert.ToString(leer_ltd["CUSTOMER"]));
+                    p.id_customer_final = Convert.ToInt32(leer_ltd["CUSTOMER_FINAL"]);
+                    p.customer_final = consultas.obtener_customer_final_id(Convert.ToString(leer_ltd["CUSTOMER_FINAL"]));
+                    p.date_cancel = (Convert.ToDateTime(leer_ltd["DATE_CANCEL"])).ToString("MMM dd yyyy");
+                    p.date_order = (Convert.ToDateTime(leer_ltd["DATE_ORDER"])).ToString("MMM dd yyyy");
+                    p.total = Convert.ToInt32(leer_ltd["TOTAL_UNITS"]);
+                    lista.Add(p);
+                }leer_ltd.Close();
+            }finally { con_ltd.CerrarConexion(); con_ltd.Dispose(); }
+            return lista;
+        }
+
+        public List<Estilo_customer> obtener_estilos_customer(string pedido){
+            List<Estilo_customer> lista = new List<Estilo_customer>();
+            Conexion con_ltd = new Conexion();
+            try{
+                SqlCommand com_ltd = new SqlCommand();
+                SqlDataReader leer_ltd = null;
+                com_ltd.Connection = con_ltd.AbrirConexion();
+                com_ltd.CommandText = "select ID_PO_SUMMARY,ITEM_ID,ID_COLOR,QTY,ID_GENDER from PO_SUMMARY where ID_PEDIDOS=" + pedido + " ";
+                leer_ltd = com_ltd.ExecuteReader();
+                while (leer_ltd.Read()){
+                    Estilo_customer e = new Estilo_customer();
+                    e.id_estilo = Convert.ToInt32(leer_ltd["ITEM_ID"]);
+                    e.id_summary = Convert.ToInt32(leer_ltd["ID_PO_SUMMARY"]);
+                    e.id_genero = Convert.ToInt32(leer_ltd["ID_GENDER"]);
+                    e.total = Convert.ToInt32(leer_ltd["QTY"]);
+                    e.id_color = Convert.ToInt32(leer_ltd["ID_COLOR"]);
+                    e.id_genero= Convert.ToInt32(leer_ltd["ID_GENDER"]);
+                    e.estilo = (consultas.obtener_estilo(e.id_estilo)).Trim();
+                    e.descripcion = (consultas.buscar_descripcion_estilo(e.id_estilo)).Trim();
+                    e.color = (consultas.obtener_color_id(Convert.ToString(e.id_color)) + " - " + consultas.obtener_descripcion_color_id(Convert.ToString(e.id_color))).Trim();
+                    e.genero = consultas.obtener_genero_id(Convert.ToString(e.id_genero));
+                    lista.Add(e);
+                }leer_ltd.Close();
+            }finally { con_ltd.CerrarConexion(); con_ltd.Dispose(); }
+            return lista;
+        }
+        public List<Talla> obtener_lista_tallas_summary(int summary){
+            List<Talla> lista = new List<Talla>();
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT TALLA_ITEM,CANTIDAD,EXTRAS,EJEMPLOS FROM ITEM_SIZE WHERE ID_SUMMARY='" + summary + "' ORDER by TALLA_ITEM asc ";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    Talla t = new Talla();
+                    t.id_talla = Convert.ToInt32(leer["TALLA_ITEM"]);
+                    t.talla = consultas.obtener_size_id(Convert.ToString(leer["TALLA_ITEM"]));
+                    t.total = Convert.ToInt32(leer["CANTIDAD"]);
+                    t.extras = Convert.ToInt32(leer["EXTRAS"]);
+                    t.ejemplos= Convert.ToInt32(leer["EJEMPLOS"]);
+                    lista.Add(t);
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }            
+            return lista;
+        }
+        public List<recibo> obtener_lista_recibos_summary(int summary){
+            List<recibo> lista = new List<recibo>();
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT distinct r.id_recibo,r.fecha,r.id_sucursal,r.mill_po,r.po_reference FROM " +
+                    " recibos r,recibos_items ri,inventario i WHERE ri.id_summary='" + summary + "' AND r.id_recibo=ri.id_recibo AND " +
+                    " ri.id_inventario=i.id_inventario AND i.id_categoria_inventario=1 ";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    recibo r = new recibo();
+                    r.id_recibo = Convert.ToInt32(leer["id_recibo"]);
+                    r.fecha= (Convert.ToDateTime(leer["fecha"])).ToString("MMM dd yyyy");
+                    r.id_sucursal = Convert.ToInt32(leer["id_sucursal"]);
+                    r.mill_po = Convert.ToString(leer["mill_po"]);
+                    r.po_referencia = Convert.ToString(leer["po_reference"]);
+                    r.lista_recibos_item= obtener_lista_items_customer(r.id_recibo,summary);
+                    lista.Add(r);
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
+            return lista;
+        }
+        public List<recibos_item> obtener_lista_items_customer(int id_recibo,int summary){
+            List<recibos_item> lista = new List<recibos_item>();
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT ri.id_inventario,ri.total,ri.id_recibo_item,i.id_size FROM recibos_items ri,inventario i  " +
+                    " where ri.id_recibo='" + id_recibo + "' AND ri.id_summary="+summary+" AND i.id_inventario=ri.id_inventario ";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    recibos_item ri = new recibos_item();
+                    ri.id_recibo_item = Convert.ToInt32(leer["id_recibo_item"]);
+                    ri.id_inventario = Convert.ToInt32(leer["id_inventario"]);
+                    ri.id_talla= Convert.ToInt32(leer["id_size"]);
+                    ri.total = Convert.ToInt32(leer["total"]);
+                    //ri.item = obtener_inventario(ri.id_inventario);
+                    //ri.lista_cajas = obtener_cajas_recibo(ri.id_recibo_item);
+                    lista.Add(ri);
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
+            return lista;
+        }
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

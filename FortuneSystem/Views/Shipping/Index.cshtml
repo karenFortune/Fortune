@@ -11,16 +11,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <link href="~/Content/base_m.css" rel="stylesheet" />
 <script>
+    var tallas_extras;
     var dc, rows_stock;
     var tipo_packing;
     var estilos_fantasy_lista;
     $(document).ready(function () {
         $("#load_shipping").css('display', 'inline');        
         //obtener_pos('');
+        debugger
         obtener_drivers();
         obtener_carriers();
         obtener_contenedores_edicion();
         obtener_conductores_edicion();
+        obtener_direcciones_edicion();
         obtener_direcciones_pk();
         obtener_direcciones();
         obtener_pks('');
@@ -52,9 +55,18 @@
     });
     //INICIO
     function busqueda_pk() {
-        obtener_pks($("#caja_buscar_pk").val());
-    }
+        if (event.keyCode == 13) {
+            obtener_pks($("#caja_buscar_pk").val());
+        }
+    }   
+
     function obtener_pks(busqueda) {
+        if ($("#caja_buscar_pk").val() == "") {
+            busqueda = 0;
+        } else {
+            busqueda = $("#caja_buscar_pk").val();
+        }
+        $("#load_shipping").css('display', 'inline');
         $.ajax({
             url: "/Shipping/buscar_pk_tabla",
             data: "{'busqueda':'" + busqueda + "'}",
@@ -66,19 +78,21 @@
                 $.each(result, function (key, item) {
                     if (item.id_packing_list != 0) {
                         html += '<tr>';
-                        html += '<td>' + item.id_packing_list + '</td>';
-                        html += '<td>' + item.packing + '</td>';
-                        html += '<td>' + item.fecha + '</td>';
-                        html += '<td>' + item.customer_po + '</td>';
-                        html += '<td><button type="button" ToolTip="Print Bill Of Loading"  class="btn edit_driver edicion_driver" onclick="ver_bol(' + item.id_packing_list + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-print" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
-                        html += '<td><button type="button" ToolTip="Add Ids"  class="btn edit_driver edicion_driver" onclick="agregar_ids(' + item.id_packing_list + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-tag" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
-                        html += '<td><button type="button" ToolTip="Edit seal, driver or container"  class="btn edit_driver edicion_driver" onclick="edit(' + item.id_packing_list + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-pencil" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
-                        html += '<td><button type="button" ToolTip="Add Ext/Dmg"  class="btn edit_driver edicion_driver" onclick="add_others(' + item.id_packing_list + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
+                        html += '<td style="width:5%;">' + item.id_packing_list + '</td>';
+                        html += '<td style="width:20%;">' + item.packing + '</td>';
+                        html += '<td style="width:20%;">' + item.fecha + '</td>';
+                        html += '<td style="width:30%;">' + item.customer_po + '</td>';
+                        html += '<td style="width:5%;"><button type="button" ToolTip="Print Bill Of Loading"  class="btn edit_driver edicion_driver" onclick="ver_bol(' + item.id_packing_list + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-print" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
+                        html += '<td style="width:5%;"><button type="button" ToolTip="Add Ids"  class="btn edit_driver edicion_driver" onclick="agregar_ids(' + item.id_packing_list + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-tag" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
+                        html += '<td style="width:5%;"><button type="button" ToolTip="Edit seal, driver or container"  class="btn edit_driver edicion_driver" onclick="edit(' + item.id_packing_list + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-pencil" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
+                        html += '<td style="width:5%;"><button type="button" ToolTip="Edit packing list"  class="btn edit_driver edicion" onclick="editar_pk_completo(' + item.id_packing_list + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-edit" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
+                        html += '<td style="width:5%;"><button type="button" ToolTip="Add Ext/Dmg"  class="btn edit_driver edicion_driver" onclick="add_others(' + item.id_packing_list + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
 
                         html += '</tr>';
                     }
                 });
                 $(".body_tabla_pk").html(html);
+                $("#load_shipping").css('display', 'none');
             },
             error: function (errormessage) { alert(errormessage.responseText); }
         });
@@ -117,13 +131,34 @@
             }
         });
     }
+
+    function obtener_direcciones_edicion() {
+        $.ajax({
+            url: '/Shipping/buscar_direcciones_select',
+            contentType: 'application/json',
+            dataType: 'json',
+            type: 'post',
+            success: function (result) {
+                var html = '<label class="">Address&nbsp;</label> <select class="form-control pk" id="caja_direccion_edit_pk" >';
+                //var html = '<select class="form-control " id="caja_direccion_pk" >';
+                $.each(result, function (key, item) {
+                    html += '<option  value="' + item.id_direccion + '">' + item.nombre + '</option>';
+                });
+                html += '</select>';
+                $("#div_address_edit").html(html);
+               // $("#loading_pk").css('display', 'none');
+            }
+        });
+    }
     /**
      * *********************************************************************************************************
      *
      */
+    var pk_id;
     var packing_list_number;
     function agregar_ids(id) {
         $("#load_shipping").css('display', 'inline');
+        pk_id = id;
         $.ajax({
             url: "/Shipping/buscar_estilos_packing",
             data: "{'id':'"+id+"'}",
@@ -131,47 +166,111 @@
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             success: function (jsonData) {
-                var html='';
+                var html='',texto='';
                 var i = 0;
                 var lista_estilo = jsonData.Data.estilos;
-                tipo_packing = jsonData.Data.tipo_packing;
+                //tipo_packing = jsonData.Data.tipo_packing;
                 $("#ppk_bk_id").css('display', 'none');
                 $("#assort_id").css('display', 'none');
+
+                $("#caja_numero_id").val("");
                 $(".rows_tabla_estilos_ids").html("");
-                $(".rows_tabla_estilos_ids_assort").html("");
-                if (tipo_packing != 3) {
+                var indices=[];
+                //PRIMERO LO QUE TIENE ID
+                $.each(lista_estilo, function (key, item) { //PRIMERO OBTENER LOS DIFERENTES ÍNDICES
+                    if (item.index_dc != 0) {
+                        if (indices.length == 0) {
+                            indices.push(item.index_dc);
+                        } else {
+                            var existe = 0;
+                            for (var t = 0; t < indices.length; t++) {
+                                if (indices[t] == item.index_dc) { existe++; }
+                            }
+                            if (existe == 0) {
+                                indices.push(item.index_dc);
+                            }
+                        }
+                    }
+                });//PRIMERO OBTENER LOS DIFERENTES ÍNDICES
+                $.each(indices, function (key, indice) {//RECORRER INDICES Y ESTILOS                   
+                    var descripcion ,dc;
+                    i++;
+                    html += '<tr>';
+                    html += '<td style="visibility:hidden; width:1em;">' + i + '</td>';
+                    html += '<td style="visibility:hidden; width:1em;">0</td>';
                     $.each(lista_estilo, function (key, item) {
-                        packing_list_number = item.pk;
+                        if (item.index_dc == indice) {
+                            texto = '';
+                            descripcion = item.estilo + " " + item.descripcion + " " + item.color + ' ' + item.tipo;
+                            dc = item.dc;
+                            $.each(item.lista_ratio, function (key, lr) {
+                                if (lr.id_talla == item.id_talla) {
+                                    texto += '' + lr.talla + ':' + (item.boxes / lr.piezas) + " | ";
+                                }                                
+                            });
+                        }
+                    });
+                    html += '<td>' + descripcion + '</td>';
+                    html += '<td>' + texto + ' PCS </td>';
+                    html += '<td>' + dc+ '</td>';
+                    html += '<td style="visibility:hidden; width:1em;"><input type="checkbox"  class="custom-control-input" id="cbid_' + i + '"></td>';
+                    html += '<td style="visibility:hidden; width:1em;">' + pk_id + '</td>';
+                    html += '<td style="visibility:hidden; width:1em;">' + indice + '</td>';
+                    html += '<td style="visibility:hidden; width:1em;">' + 1 + '</td>';
+                    html += '</tr>';
+                });//RECORRER INDICES Y ESTILOS
+
+                $.each(lista_estilo, function (key, item) {//AGREGAR ESTILOS SIN DC&BP
+                    if (item.index_dc == 0) {
+                        i++; texto = '';
                         html += '<tr>';
-                        html += '<td>' + item.id_shipping_id + '</td>';
-                        html += '<td>' + item.estilo + " " + item.descripcion + " " + item.color + '</td>';
-                        html += '<td>' + item.boxes + '</td>';
+                        html += '<td style="visibility:hidden; width:1em;">' + i + '</td>';
+                        html += '<td style="visibility:hidden; width:1em;">' + item.id_shipping_id + '</td>';
+                        if (item.tipo_empaque == 3) {
+                            html += '<td>';
+                            $.each(item.assort.lista_estilos, function (key, a) {
+                                html += '<p>' + a.estilo + " " + a.descripcion + " " + a.color + ' ' + item.tipo + '</p>';
+                            });
+                            html += '</td>';
+                        } else {
+                            html += '<td>' + item.estilo + " " + item.descripcion + " " + item.color + ' ' + item.tipo + '</td>';
+                        }
+
+                        if (item.tipo == "DMG" || item.tipo == "EXT" || item.tipo == "EXAMPLES") {
+                            $.each(item.lista_ratio, function (key, lr) {                                
+                                texto += '' + lr.talla + ':' +  lr.ratio + "  ";                                
+                            });
+                        } else {
+                            if (item.tipo_empaque == 1) {
+                                $.each(item.lista_ratio, function (key, lr) {
+                                    if (lr.id_talla == item.id_talla) {
+                                        texto += '' + lr.talla + ':' + (item.boxes / lr.ratio) + "  ";
+                                    }
+                                });
+                            }
+                            if (item.tipo_empaque == 2) { texto = '' + item.boxes + '  '; }
+                            if (item.tipo_empaque == 3) { texto = '' + item.boxes + '  '; }
+                        }
+
+                        html += '<td>' + texto + '</td>';
                         html += '<td>' + item.dc + '</td>';
-                        html += '<td style="visibility:hidden; width:1em;"><input type="checkbox"  class="custom-control-input" id="cbid_' + item.id_shipping_id + '"></td>';
+                        html += '<td style="visibility:hidden; width:1em;"><input type="checkbox"  class="custom-control-input" id="cbid_' + i + '"></td>';
+                        html += '<td style="visibility:hidden; width:1em;">' + item.pk + '</td>';
+                        html += '<td style="visibility:hidden; width:1em;">0</td>';
+                        html += '<td style="visibility:hidden; width:1em;">' + item.tipo_empaque + '</td>';
                         html += '</tr>';
-                        i++;
-                    });
-                    $("#ppk_bk_id").css('display', 'inline');
-                    $(".rows_tabla_estilos_ids").html(html);
-                } else {
-                    $.each(lista_estilo, function (key, item) {
-                        packing_list_number = item.pk;
-                        html += '<tr>';
-                        html += '<td>' + item.id_assortment + '</td>';
-                        html += '<td>' + item.nombre+ '</td>';
-                        html += '<td>' + item.cartones + '</td>';
-                        html += '<td style="visibility:hidden; width:1em;"><input type="checkbox"  class="custom-control-input" id="cbid_ass' + item.id_assortment + '"></td>';
-                        html += '</tr>';
-                        i++;
-                    });
-                    $("#assort_id").css('display', 'inline');
-                    $(".rows_tabla_estilos_ids_assort").html(html);
-                }
+                    }
+                });
+
+                $("#ppk_bk_id").css('display', 'inline');
+                $(".rows_tabla_estilos_ids").html(html);
+
                 $("#load_shipping").css('display', 'none');
                 if (i > 0) {
                     $("#modal_ids").modal("show");
                 } else {
-                    alertify.alert('Error!', 'There are not more styles without Ids');
+                    $("#modal_ids").modal("hide");
+                    alertify.alert('Warning', 'There are not more styles without IDs');
                 }
             },
             error: function (errormessage) { alert(errormessage.responseText); }
@@ -192,27 +291,12 @@
             $(this).css('color', 'black');
             estilos_id_seleccionados--;
         }
-    });
-    $(document).on("click", "#tabla_estilos_ids_assort tr", function () {
-        var row = this.rowIndex;
-        var chekbox = $('#tabla_estilos_ids_assort tr:eq(' + row + ')  td:nth-child(1)').html();
-        if (row!= 0) {
-            if (this.style.background == "" || this.style.background == "white") {
-                $("#cbid_ass" + chekbox).prop('checked', true);
-                $(this).css('background', '#46a772');
-                $(this).css('color', 'white');
-                estilos_id_seleccionados++;
-            } else {
-                $("#cbid_ass" + chekbox).prop('checked', false);
-                $(this).css('background', 'white');
-                $(this).css('color', 'black');
-                estilos_id_seleccionados--;
-            }
-        }
-    });
+    });   
     var ids_estilos_pk;
+    var shipping_id, packing, index, empaque;
     function guardar_ids(event) {
         var error = 0; ids_estilos_pk = '';
+        shipping_id = ''; packing = ''; index = ''; empaque = '';
         if (estilos_id_seleccionados == 0) { error++; }
         if ($("#caja_numero_id").val() == '') {
             $("#caja_numero_id").css('border', '2px solid #e03f3f');
@@ -222,19 +306,15 @@
          }
         if (error == 0) {
             $("#load_shipping").css('display', 'inline');
-            if (tipo_packing != 3) {
-                $('#tabla_estilos_ids tbody tr').each(function () {
-                    if ($(this).find('td:eq(4) input').is(":checked")) {
-                        ids_estilos_pk += "*" + $(this).find('td:eq(0) ').html();
-                    }
-                });
-            } else {
-                $('#tabla_estilos_ids_assort tbody tr').each(function () {
-                    if ($(this).find('td:eq(3) input').is(":checked")) {
-                        ids_estilos_pk += "*" + $(this).find('td:eq(0) ').html();
-                    }
-                });
-            }
+            $('#tabla_estilos_ids tbody tr').each(function () {
+                if ($(this).find('td:eq(5) input').is(":checked")) {
+                    //ids_estilos_pk += "*" + $(this).find('td:eq(0) ').html();
+                    shipping_id += "*" + $(this).find('td:eq(1) ').html();
+                    packing += "*" + $(this).find('td:eq(6) ').html();
+                    index += "*" + $(this).find('td:eq(7) ').html();
+                    empaque += "*" + $(this).find('td:eq(8) ').html();
+                }
+            });
             enviar_datos_ids();
             $("#load_shipping").css('display', 'none');
         } else {
@@ -248,59 +328,17 @@
         $("#load_shipping").css('display', 'inline');
         $.ajax({
             url: '/Shipping/guardar_ids_pk',
-            data: "{'tarima':'" + $("#caja_numero_id").val() + "','estilos':'" + ids_estilos_pk + "','pk':'" + packing_list_number+"'}",
+            data: "{'tarima':'" + $("#caja_numero_id").val() + "','shipping_id':'" + shipping_id + "','packing':'" + packing + "','index':'" + index + "','empaque':'" + empaque +"'}",
             contentType: 'application/json',
             dataType: 'json',
             type: 'post',
             success: function (jsonData) {
-                //$("#modal_packinglist").modal("hide");
-                $("#caja_numero_id").val("");
-                var html = '';
-                var i = 0;
-                var lista_estilo = jsonData.Data.estilos;
-                tipo_packing = jsonData.Data.tipo_packing;
-                if (tipo_packing != 3) {
-                    $.each(lista_estilo, function (key, item) {
-                        packing_list_number = item.pk;
-                        html += '<tr>';
-                        html += '<td>' + item.id_shipping_id + '</td>';
-                        html += '<td>' + item.estilo + " " + item.descripcion + " " + item.color + '</td>';
-                        html += '<td>' + item.boxes + '</td>';
-                        html += '<td>' + item.dc + '</td>';
-                        html += '<td style="visibility:hidden; width:1em;"><input type="checkbox"  class="custom-control-input" id="cbid_' + item.id_shipping_id + '"></td>';
-                        html += '</tr>';
-                        i++;
-                    });
-                    $("#ppk_bk_id").css('display', 'inline');
-                    $(".rows_tabla_estilos_ids").html(html);
-                } else {
-                    $.each(lista_estilo, function (key, item) {
-                        packing_list_number = item.pk;
-                        html += '<tr>';
-                        html += '<td>' + item.id_assortment + '</td>';
-                        html += '<td>' + item.nombre + '</td>';
-                        html += '<td>' + item.cartones + '</td>';
-                        html += '<td style="visibility:hidden; width:1em;"><input type="checkbox"  class="custom-control-input" id="cbid_ass' + item.id_assortment + '"></td>';
-                        html += '</tr>';
-                        i++;
-                    });
-                    $("#assort_id").css('display', 'inline');
-                    $(".rows_tabla_estilos_ids_assort").html(html);
-                }
-                $("#load_shipping").css('display', 'none');
-                if (i > 0) {
-                    $("#modal_ids").modal("show");
-                } else {
-                    $("#modal_ids").modal("hide");
-                    alertify.alert('Error!', 'There are not more styles without Ids');
-                }
-
-
+                agregar_ids(pk_id);
             }
         });
     }
     //tabla_estilos_ids_assort
-    function llenar_select_po() {
+    /*function llenar_select_po() {
         $.ajax({
             url: "/Shipping/buscar_po_summary",
             type: "POST",
@@ -325,7 +363,7 @@
             },
             error: function (errormessage) { alert(errormessage.responseText); }
         });
-    }
+    }*/
 
     $(document).on("dblclick", "#tabla_pks tr", function () {
          var row = this.rowIndex;
@@ -391,15 +429,33 @@
                 $("#caja_conductor_edit_pk").val(result.id_driver);
                 $("#caja_contenedor_edit_pk").val(result.id_container);
                 $("#caja_id_pk").val(result.id_packing_list);
+                $("#caja_direccion_edit_pk").val(result.id_direccion_envio);
                 $("#modal_edicion").modal("show");
             },
             error: function (errormessage) { alert(errormessage.responseText); }
         });
+    }//guardar_edicion    
+    function editar_pk_completo(id) {
+        $.ajax({
+            url: "/Shipping/edicion_pk_completo",
+            data: "{'id':'"+id+"'}",
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                redireccionarPaginaEdicion();
+            },
+            error: function (errormessage) { alert(errormessage.responseText); }
+        });
     }//guardar_edicion
+    function redireccionarPaginaEdicion() { window.location = '/Shipping/edicion_pk'; }
+
+
+
     function guardar_edicion() {
         $.ajax({
             url: "/Shipping/guardar_informacion_edicion_pk",
-            data: "{'id':'" + $("#caja_id_pk").val() + "','sello':'" + $("#caja_seal_pk_edit").val() + "','replacement':'" + $("#caja_replacement_pk_edit").val() + "','conductor':'" + $("#caja_conductor_edit_pk").val() + "','contenedor':'" + $("#caja_contenedor_edit_pk").val() +"'}",
+            data: "{'id':'" + $("#caja_id_pk").val() + "','sello':'" + $("#caja_seal_pk_edit").val() + "','replacement':'" + $("#caja_replacement_pk_edit").val() + "','conductor':'" + $("#caja_conductor_edit_pk").val() + "','contenedor':'" + $("#caja_contenedor_edit_pk").val() + "','direccion':'" + $("#caja_direccion_edit_pk").val()+"'}",
             type: "POST",
             contentType: "application/json;charset=utf-8",
             dataType: "json",
@@ -425,15 +481,15 @@
                 var html = '';
                 $.each(result, function (key, item) {
                     html += '<tr>';
-                    html += '<td>' + item.id_driver + '</td>';
-                    html += '<td>' + item.carrier + '</td>';
-                    html += '<td>' + item.driver_name + '</td>';
-                    html += '<td>' + item.plates + '</td>';
-                    html += '<td>' + item.scac + '</td>';
-                    html += '<td>' + item.caat + '</td>';
-                    html += '<td>' + item.tractor + '</td>';
-                    html += '<td> <button type="button" class="btn edit_driver edicion_driver" onclick="modificar_driver(' + item.id_driver + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-pencil" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
-                    html += '<td> <button type="button" class="btn edit_driver" onclick="eliminar_driver(' + item.id_driver + ')" style="padding: 0em 0.3em !important; background:none; color:#3479bf; font-weight: bolder;"> <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
+                    html += '<td style="width:3%;">' + item.id_driver + '</td>';
+                    html += '<td style="width:24%;">' + item.carrier + '</td>';
+                    html += '<td style="width:25%;">' + item.driver_name + '</td>';
+                    html += '<td style="width:10%;">' + item.plates + '</td>';
+                    html += '<td  style="width:10%;">' + item.scac + '</td>';
+                    html += '<td style="width:10%;">' + item.caat + '</td>';
+                    html += '<td style="width:10%;">' + item.tractor + '</td>';
+                    html += '<td style="width:4%;"> <button type="button" class="btn edit_driver edicion_driver" onclick="modificar_driver(' + item.id_driver + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-pencil" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
+                    html += '<td  style="width:4%;"> <button type="button" class="btn edit_driver" onclick="eliminar_driver(' + item.id_driver + ')" style="padding: 0em 0.3em !important; background:none; color:#3479bf; font-weight: bolder;"> <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
                     html += '</tr>';
                 });
                 $(".body_tabla_drivers").html(html);
@@ -622,13 +678,13 @@
                 var html = '';
                 $.each(result, function (key, item) {
                     html += '<tr>';
-                    html += '<td>' + item.id_direccion + '</td>';
-                    html += '<td>' + item.nombre + '</td>';
-                    html += '<td>' + item.direccion + '</td>';
-                    html += '<td>' + item.ciudad + '</td>';
-                    html += '<td>' + item.zip + '</td>';
-                    html += '<td> <button type="button" class="btn edit_driver edit_direccion" onclick="modificar_direccion(' + item.id_direccion + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-pencil" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
-                    html += '<td> <button type="button" class="btn edit_driver" onclick="eliminar_direccion(' + item.id_direccion + ')" style="padding: 0em 0.3em !important; background:none; color:#3479bf; font-weight: bolder;"> <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
+                    html += '<td style="width:5%;">' + item.id_direccion + '</td>';
+                    html += '<td  style="width:20%;">' + item.nombre + '</td>';
+                    html += '<td style="width:25%;">' + item.direccion + '</td>';
+                    html += '<td style="width:20%;">' + item.ciudad + '</td>';
+                    html += '<td style="width:20%;">' + item.zip + '</td>';
+                    html += '<td style="width:5%;"> <button type="button" class="btn edit_driver edit_direccion" onclick="modificar_direccion(' + item.id_direccion + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-pencil" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
+                    html += '<td style="width:5%;"> <button type="button" class="btn edit_driver" onclick="eliminar_direccion(' + item.id_direccion + ')" style="padding: 0em 0.3em !important; background:none; color:#3479bf; font-weight: bolder;"> <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
                     html += '</tr>';
                 });
                 $(".body_tabla_direcciones").html(html);
@@ -934,9 +990,12 @@
         window.open('/PDF/imprimir_pk', '_blank', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');
     }
     function imprimir_bol() {
-        var h = screen.height - 100;
+       /* var h = screen.height - 100;
         var w = screen.width - 30;
-        window.open('/PDF/imprimir_bol', '_blank', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');
+        window.open('/PDF/imprimir_bol', '_blank', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');  */
+        var boton = document.getElementById('link_bol');
+        boton.click();
+        //setTimeout(function () { $("#espera").css('display', 'none'); }, 10000);
     }
     function ver_bol(id) {
         $.ajax({
@@ -957,151 +1016,15 @@
 
 
     var columnas_estilos_dc; var number_po;
-    function add_others(id) {
-        $("#load_shipping").css('display', 'inline');
-        $(".rows_estilos_otros").html("");
-        $.ajax({
-            url: '/Shipping/buscar_estilos_pk_otros',
-            data: "{'id':'" + id + "'}",
-            contentType: 'application/json',
-            dataType: 'json',
-            type: 'post',
-            success: function (jsonData) {
-                var lista_estilo = jsonData.Data.estilos;
-                number_po = jsonData.Data.po_number;
-                var html = '';
-                $.each(lista_estilo, function (key, item) {
-                    if (item.tipo_empaque == 1 || item.tipo_empaque == 2 || item.tipo_empaque == 3) {
-                        tipo_packing = item.tipo_empaque;
-                    }
-                    html += '<tr>';
-                    html += '<td>' + item.id_estilo + '</td>';
-                    html += '<td>' + item.estilo + '</td>';
-                    html += '<td>' + item.descripcion + '</td>';
-                    html += '<td>' + item.color + '</td>';
-                    html += '</tr>';
-                });
-                $("#div_estilos_otros").css('display', 'inline');
-                $(".rows_estilos_otros").append(html);
-                //************************************************************
-                $("#div_otros_tallas").css('display', 'inline');
-                columnas_dc = 0;//same que el de abajo
-                columnas_estilos_dc = '';//USAR SOLAMENTE CUANDO ES OTROS
-                var html = '<td><select class="form-control dc_estilos"  ><option  value="0" selected>#</option></select></td>';
-                html += '<td><select class="form-control dc_estilos"  ><option  value="0" selected>Style</option></select></td>';
-                html += '<td><select class="form-control dc_estilos"  ><option  value="0" selected>Type</option></select></td>';
-                var x = 0;
-                $.each(lista_estilo, function (key, item) {
-                    if (x == 0) {
-                        $.each(item.lista_ratio, function (key, i) {
-                            html += '<td><select class="form-control dc_estilos"  ><option  value="' + i.id_talla + '" selected>' + i.talla + '</option></select></td>';
-                            columnas_estilos_dc += "*" + i.id_talla;
-                            columnas_dc++;
-                        });
-                        x++;
-                    }
-                });
-                html += '<td></td>'; //
-                $(".cabeceras_otros").html(html);
-                estilos_seleccionados = 0;
-                $("#modal_shipping_ratio").modal("show");
-                $("#load_shipping").css('display', 'none');
-            }       //success
-        });
-    }
 
-    $(document).on("dblclick", "#tabla_estilos_otros tr", function () {
-        var row = this.rowIndex;
-        if (row != 0) {
-            agregar_row_otros($('#tabla_estilos_otros tr:eq(' + row + ') td:eq(0)').html() + "&" + $('#tabla_estilos_otros tr:eq(' + row + ') td:eq(1)').html());
-        }
-    });
-    function agregar_row_otros(ID) {
-        var data = ID.split("&");
-        var html = '<tr>' +
-            '<td><input readonly  class="validacion form-control estilos_tablas"  value="' + data[0] + '"  /></td>' +
-            '<td><input readonly  class="validacion form-control estilos_tablas" style="width: 100% !important;" id="" value="' + data[1] + '" /></td>';
-        html += '<td><select class="form-control js-example-basic-single "  >' +
-            '<option>DMG</option><option>EXT</option><option>ECOM</option><option>RPLN</option>'; //<option>EXT</option><option>DMG</option>
-        html += '</select ></td>';
-        for (var i = 0; i < columnas_dc; i++) {
-            html += '<td><input ondrop="return false;" onpaste="return false;" maxlength="6" class="numeric form-control check_item  " id="" value="0" /></td>';  //boxes
-        }
-        html += '<td><button type="button" class="btn btn-light deleteRowOtros"><b>-</b></button></td></tr>';
-        estilos_seleccionados++;
-        $('#tabla_otros').css('visibility', 'visible');
-        $('#boton_guardar_otros').css('visibility', 'visible');
-        $('.rows_otros').append(html);
-    }
-    $(document).on("click", ".deleteRowOtros", function () {
-        $(this).closest("tr").remove();
-        estilos_seleccionados--;
-        if (estilos_seleccionados <= 0) {
-            $('#tabla_otros').css('visibility', 'hidden');
-            $('#boton_guardar_otros').css('visibility', 'hidden');
-        } else {
-            $('#tabla_otros').css('visibility', 'visible');
-            $('#boton_guardar_otros').css('visibility', 'visible');
-        }
-    });
-    function limpiar_otros() {
-        $(".rows_estilos_otros").html('');
-        $(".cabeceras_otros").html('');
-        $(".rows_otros").html('');
-        $("#div_estilos_otros").css('display', 'none');
-    }
-    $(document).on("click", ".cerrar_extras", function () {
-        limpiar_otros();
-    });
-    var row_otro;
-    function guardar_estilos_otros(event) {
-        var error = 0;
+  
 
-        $(".check_item").each(function () {
-            if ($(this).val() == '') {
-                $(this).css('border', '2px solid #e03f3f');
-                error++;
-            } else {
-                $(this).css('border', '1px solid #cccccc');
-            }
-        });
 
-        if (error == 0) {
-            row_otro = []; var row;
-            $('#tabla_otros tbody tr').each(function () {
-                row = $(this).find('td:eq(0) input').val() + '*' + $(this).find("select option:selected").text();
-                for (var i = 3; i < (columnas_dc + 3); i++) {
-                    if ($(this).find('td:eq(' + i + ') input').val() == "") { row += "*0"; }
-                    else { row += "*" + $(this).find('td:eq(' + i + ') input').val(); }
-                }
-                row_otro.push(row);
-            });
-            enviar_otros();
-            $("#loading_pk").css('display', 'none');
-        } else {
-            $("#loading_pk").css('display', 'none');
-            event.preventDefault();
-            alertify.alert('Error!', 'Check empty fields, please');
-            return false;
-        }
-    }
-    function enviar_otros() {
-        var actionData = "{'estilos':'" + columnas_estilos_dc + "','rows':'" + row_otro + "','number_po':'" + number_po + "'}";
-        $.ajax({
-            url: '/Shipping/agregar_otros_estilos',
-            data: actionData,
-            contentType: 'application/json',
-            dataType: 'json',
-            type: 'post',
-            success: function (result) {
-                alertify.success('Succes!');
-                alertify.set('notifier', 'position', 'top-right');
-                $("#modal_shipping_ratio").modal("hide");
-                limpiar_otros();
 
-            }
-        });
-    }
+    
+
+    
+  
 
 
     /*********************************************************************************************************************************************/
@@ -1452,19 +1375,386 @@
     });
     /*********************************************************************************************************************************************/
     /*********************************************************************************************************************************************/
+    /************************DIRECCIONES*********************************************************************************************************************/
+    function obtener_contenedores() {
+        $.ajax({
+            url: "/Shipping/buscar_contenedores",
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = '';
+                $.each(result, function (key, item) {
+                    html += '<tr>';
+                    html += '<td style="width:5%;">' + item.id_container + '</td>';
+                    html += '<td style="width:45%;">' + item.eco + '</td>';
+                    html += '<td style="width:40%;">' + item.plates + '</td>';                   
+                    html += '<td style="width:5%;"> <button type="button" class="btn edit_driver edit_contenedor" onclick="modificar_contenedor(' + item.id_container + ')" style="padding: 0em 0.3em !important;  background:none; color:#3479bf; font-weight: bolder; " > <span class="glyphicon glyphicon-pencil" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
+                    html += '<td style="width:5%;"> <button type="button" class="btn edit_driver" onclick="eliminar_contenedor(' + item.id_container + ')" style="padding: 0em 0.3em !important; background:none; color:#3479bf; font-weight: bolder;"> <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"  style="padding 0px !important;"></span> </button></td>';
+                    html += '</tr>';
+                });
+                $(".body_tabla_contenedores").html(html);                
+            },
+            error: function (errormessage) { alert(errormessage.responseText); }
+        });
+    }
+    $(document).on("click", "#boton_menu_contenedores", function () { obtener_contenedores(); });
+    $(document).on("dblclick", "#tabla_contenedores tr", function () {
+        var row = this.rowIndex;
+        $("#editar_contenedor").css('display', 'inline');
+        modificar_contenedor($('#tabla_contenedores tr:eq(' + row + ')  td:nth-child(1)').html());
+
+    });
+    $(document).on("click", "#boton_formulario_nuevo_contenedor", function () {
+        var texto = $("#boton_formulario_nuevo_contenedor").text();
+        if (texto == 'New container') {
+            $("#boton_formulario_nuevo_contenedor").text('x');
+        } else {
+            $("#boton_formulario_nuevo_contenedor").text('New container');
+        }
+        $("#formulario_nuevo_contenedor").toggle("slow");
+    });
+
+    $(document).on("click", ".edit_contenedor", function () { $("#editar_contenedor").toggle("slow"); });
+    $(document).on("click", "#boton_cerrar_edicion_contenedor", function () { $("#editar_contenedor").toggle("slow"); });
+    $(document).on("click", "#boton_ocultar_formulario_nuevo_contenedor", function () {
+        $("#formulario_nuevo_contenedor").css('display', 'none');
+    });
+    $(document).on("click", "#boton_ocultar_edicion_contenedor", function () { $("#editar_contenedor").css('display', 'none'); });
+    
+    //oton_ocultar_edicion_conductor
+    function guardar_contenedor(event) {
+        var error = 0;
+        $(".check_con").each(function () {
+            if ($(this).val() == '') {
+                $(this).css('border', '2px solid #e03f3f');
+                error++;
+            } else {
+                $(this).css('border', '1px solid #cccccc');
+            }
+        });
+        if (error == 0) {
+            $("#load_shipping").css('display', 'inline');
+            enviar_datos_contenedor();
+            $("#load_shipping").css('display', 'none');
+        } else {
+            $("#load_shipping").css('display', 'none');
+            event.preventDefault();
+            alertify.alert('Error!', 'Check empty fields, please');
+            return false;
+        }
+    }
+    function enviar_datos_contenedor() {
+        $.ajax({
+            url: '/Shipping/enviar_informacion_contenedor',
+            data: "{'eco':'" + $("#caja_eco_con").val() + "','plates':'" + $("#caja_plates_con").val() + "'}",
+            contentType: 'application/json',
+            dataType: 'json',
+            type: 'post',
+            success: function (result) {
+                $("#caja_eco_con").val("");
+                $("#caja_plates_con").val("");
+                $("#formulario_nuevo_contenedor").toggle("slow");
+                obtener_contenedores();
+                alertify.success('Changes saved!');
+                alertify.set('notifier', 'position', 'top-right');
+            }
+        });
+    }
+    function modificar_contenedor(ID) {
+        $("#caja_id_contenedor_id").val(ID);
+        $.ajax({
+            url: '/Shipping/buscar_modificar_contenedor',
+            data: "{'id':'" + ID + "'}",
+            contentType: 'application/json',
+            dataType: 'json',
+            type: 'post',
+            success: function (result) {
+                $.each(result, function (key, item) {
+                    $("#caja_id_contenedor_edit").val(item.id_container);
+                    $("#caja_eco_con_edit").val(item.eco);
+                    $("#caja_plates_con_edit").val(item.plates);
+                });
+            }
+        });
+    }
+    function guardar_contenedor_edicion(event) {
+        var error = 0;
+        $(".check_con_edit").each(function () {
+            if ($(this).val() == '') {
+                $(this).css('border', '2px solid #e03f3f');
+                error++;
+            } else {
+                $(this).css('border', '1px solid #cccccc');
+            }
+        });
+        if (error == 0) {
+            $("#load_shipping").css('display', 'inline');
+            enviar_datos_contenedor_edit();
+            $("#load_shipping").css('display', 'none');
+        } else {
+            $("#load_shipping").css('display', 'none');
+            event.preventDefault();
+            alertify.alert('Error!', 'Check empty fields, please');
+            return false;
+        }
+    }
+    function enviar_datos_contenedor_edit() {
+        $.ajax({
+            url: '/Shipping/enviar_informacion_contenedor_edicion',
+            data: "{'id':'" + $("#caja_id_contenedor_edit").val() + "','eco':'" + $("#caja_eco_con_edit").val() + "','plates':'" + $("#caja_plates_con_edit").val() + "'}",
+            contentType: 'application/json',
+            dataType: 'json',
+            type: 'post',
+            success: function (result) {
+                $("#caja_id_contenedor_edit").val("");
+                $("#caja_eco_con_edit").val("");
+                $("#caja_plates_con_edit").val("");
+                obtener_contenedores();
+                $("#editar_contenedor").toggle("slow");
+                alertify.success('Changes saved!');
+                alertify.set('notifier', 'position', 'top-right');
+            }
+        });
+    }
+    function eliminar_contenedor(ID) {
+        $.ajax({
+            url: '/Shipping/eliminar_contenedor',
+            data: "{'id':'" + ID + "'}",
+            contentType: 'application/json',
+            dataType: 'json',
+            type: 'post',
+            success: function (result) {
+                obtener_contenedores();
+            }
+        });
+    }
+    /*********CONTENEDORES************************************************************************************************************************************/
     /*********************************************************************************************************************************************/
+    function busqueda_extras_pk() {
+        //alert($("#caja_buscar_estilos_extras").val());
+        obtener_estilos_extras($("#caja_buscar_estilos_extras").val());
+    }
+    var columas_otros_tallas;
+    function obtener_estilos_extras(id) {
+        //$("#load_shipping").css('display', 'inline');       
+        $(".rows_estilos_otros").html("");
+        if (id == '') {
+            id = 0;
+        }
+        $.ajax({
+            url: '/Shipping/buscar_estilos_pk_extras',
+            data: "{'id':'" + id + "'}",
+            contentType: 'application/json',
+            dataType: 'json',
+            type: 'post',
+            success: function (jsonData) {
+                var lista_estilo = jsonData.Data.estilos_busqueda;
+                //tallas_extras = jsonData.Data.tallas;
+                //number_po = jsonData.Data.po_number;
+                var html = '';
+                $.each(lista_estilo, function (key, item) {
+                    if (item.tipo_empaque == 1 || item.tipo_empaque == 2 || item.tipo_empaque == 3) {
+                        tipo_packing = item.tipo_empaque;
+                    }
+                    html += '<tr>';
+                    html += '<td>' + item.id_summary + '</td>';
+                    html += '<td>' + item.estilo +' '+item.po+ '</td>';
+                    html += '<td>' + item.descripcion + '</td>';
+                    html += '<td>' + item.color + '</td>';
+                    html += '</tr>';
+                });
+                //$("#div_estilos_otros").css('display', 'inline');
+                $(".rows_estilos_otros").append(html);
+                //************************************************************
+                $("#div_otros_tallas").css('display', 'inline');
+                /*columnas_dc = 0;//same que el de abajo
+                columnas_estilos_dc = '';//USAR SOLAMENTE CUANDO ES OTROS
+                var html = '<td><select class="form-control dc_estilos"  ><option  value="0" selected>#</option></select></td>';
+                html += '<td><select class="form-control dc_estilos"  ><option  value="0" selected>Style</option></select></td>';
+                html += '<td><select class="form-control dc_estilos"  ><option  value="0" selected>Type</option></select></td>';
+                var x = 0;
+                $.each(tallas_extras, function (key, i) {
+                    html += '<td><select class="form-control dc_estilos"  ><option  value="' + i.id_talla + '" selected>' + i.talla + '</option></select></td>';
+                   
+                });            
+                html += '<td></td>'; //
+                $(".cabeceras_otros").html(html);*/
+                estilos_seleccionados = 0;
+                $("#modal_shipping_ratio").modal("show");
+               // $("#load_shipping").css('display', 'none');
+            }//success
+        });
+    }
+    var contador_tallas_extras;
+    $(document).on("dblclick", "#tabla_estilos_otros tr", function () {
+        var row = this.rowIndex;
+        if (row != 0) {
+            agregar_row_otros($('#tabla_estilos_otros tr:eq(' + row + ') td:eq(0)').html() + "&" + $('#tabla_estilos_otros tr:eq(' + row + ') td:eq(1)').html() + "-" + $('#tabla_estilos_otros tr:eq(' + row + ') td:eq(2)').html());
+        }
+    });
+
+    function agregar_row_otros(ID) {
+        var data = ID.split("&");
+
+        var html = '<tr>' +
+            '<td><input readonly  class="validacion form-control estilos_tablas"  value="' + data[0] + '"  /></td>' +
+            '<td>' + data[1].replace(/\s/g, '') + '</td>';
+        html += '<td><input class="validacion form-control " style="width: 6em !important;" id="" value="" /></td>';
+        html += '<td><select class="form-control js-example-basic-single "  >' +
+            '<option>DMG</option><option>EXT</option><option>EXAMPLES</option>'; //<option>EXT</option><option>DMG</option>
+        html += '</select ></td>';
+        
+        $.each(tallas_extras, function (key, i) {
+            html += '<td><input ondrop="return false;" onpaste="return false;" maxlength="6" class="numeric form-control check_item_otros  " id="" value="0" /></td>';  //boxes
+        });
+        html += '<td><button type="button" class="btn btn-light deleteRowOtros"><b>-</b></button></td></tr>';
+        estilos_seleccionados++;
+        $('#div_otros_tallas').css('visibility', 'visible');
+        $('.rows_otros').append(html);
+    }
+    function add_others(id) {
+        $("#load_shipping").css('display', 'inline');
+        $(".rows_estilos_otros").html("");
+        $.ajax({
+            url: '/Shipping/buscar_estilos_pk_otros',
+            data: "{'id':'" + id + "'}",
+            contentType: 'application/json',
+            dataType: 'json',
+            type: 'post',
+            success: function (jsonData) {
+                columas_otros_tallas = '';
+                contador_tallas_extras = 0;
+                var lista_estilo = jsonData.Data.estilos;
+                tallas_extras = jsonData.Data.tallas;
+                number_po = jsonData.Data.po_number;
+                var html = '';
+                $.each(lista_estilo, function (key, item) {
+                    if (item.tipo_empaque == 1 || item.tipo_empaque == 2 || item.tipo_empaque == 3) {
+                        tipo_packing = item.tipo_empaque;
+                    }
+                    html += '<tr>';
+                    html += '<td>' + item.id_summary + '</td>';
+                    html += '<td>' + item.estilo + ' ' + item.po + '</td>';
+                    html += '<td>' + item.descripcion + '</td>';
+                    html += '<td>' + item.color + '</td>';
+                    html += '</tr>';
+                });
+                $("#div_estilos_otros").css('display', 'inline');
+                $(".rows_estilos_otros").append(html);
+                //************************************************************
+                //$("#div_otros_tallas").css('display', 'inline');
+                columnas_dc = 0;//same que el de abajo
+                columnas_estilos_dc = '';//USAR SOLAMENTE CUANDO ES OTROS
+                var html = '<td><select class="form-control dc_estilos"  ><option  value="0" selected>#</option></select></td>';
+                html += '<td><select class="form-control dc_estilos"  ><option  value="0" selected>Style</option></select></td>';
+                html += '<td><select class="form-control dc_estilos"  ><option  value="0" selected>Ext</option></select></td>';
+                html += '<td><select class="form-control dc_estilos"  ><option  value="0" selected>Type</option></select></td>';
+                var x = 0;
+                columas_otros_tallas = 'SUMMARY*EXT*TIPO';
+                $.each(tallas_extras, function (key, i) {
+                    html += '<td><select class="form-control dc_estilos"  ><option  value="' + i.id_talla + '" selected>' + i.talla + '</option></select></td>';
+                    columas_otros_tallas += "*" + i.id_talla;
+                    contador_tallas_extras++;
+                });
+                html += '<td></td>'; //
+                $(".cabeceras_otros").html(html);
+                estilos_seleccionados = 0;
+                $("#modal_shipping_ratio").modal("show");
+                $("#load_shipping").css('display', 'none');
+            }       //success
+        });
+    }
+
+    $(document).on("click", ".deleteRowOtros", function () {
+        $(this).closest("tr").remove();
+        estilos_seleccionados--;
+        if (estilos_seleccionados <1) {
+            $('#div_otros_tallas').css('visibility', 'hidden');
+        } else {            
+            $('#div_otros_tallas').css('visibility', 'visible');
+        }
+    });
+
+    function limpiar_otros() {
+        $(".rows_estilos_otros").html('');
+        $(".cabeceras_otros").html('');
+        $(".rows_otros").html('');
+        $("#div_estilos_otros").css('display', 'none');
+    }
+    $(document).on("click", ".cerrar_extras", function () {
+        limpiar_otros();
+    });
+    var row_otro;
+    function guardar_estilos_otros(event) {
+        var error = 0;
+        var ceros = 0;
+
+        $(".check_item_otros").each(function () {
+            if ($(this).val() != 0) { ceros++; }
+            if ($(this).val() == '') {
+                $(this).css('border', '2px solid #e03f3f');
+                error++;
+            } else {
+                $(this).css('border', '1px solid #cccccc');
+            }
+        });
+        if (ceros == 0) { error++; }
+        if (error == 0) {
+            row_otro = []; var row;
+            row_otro.push(columas_otros_tallas);
+            $('#tabla_otros tbody tr').each(function () {
+                row = $(this).find('td:eq(0) input').val() + '*' + $(this).find('td:eq(2) input').val() + '*'+ $(this).find("select option:selected").text();
+                i = 4;
+                for (var counter = 4; counter < (contador_tallas_extras+4); counter++) {
+                    row += "*" + $(this).find('td:eq(' + counter + ') input').val();
+                }
+                row_otro.push(row);
+            });
+            enviar_otros();
+            $("#loading_pk").css('display', 'none');
+        } else {
+            $("#loading_pk").css('display', 'none');
+            event.preventDefault();
+            alertify.alert('Error!', 'Check empty fields, please');
+            return false;
+        }
+    }
+    function enviar_otros() {
+       // var actionData = "{'estilos':'" + columnas_estilos_dc + "','rows':'" + row_otro + "','number_po':'" + number_po + "'}";
+        var actionData = "{'rows':'" + row_otro + "'}";
+        $.ajax({
+            url: '/Shipping/agregar_otros_estilos',
+            data: actionData,
+            contentType: 'application/json',
+            dataType: 'json',
+            type: 'post',
+            success: function (result) {
+                alertify.success('Succes!');
+                alertify.set('notifier', 'position', 'top-right');
+                $("#modal_shipping_ratio").modal("hide");
+                limpiar_otros();
+
+            }
+        });
+    }
+   
+
+    /*********************************************************************************************************************************************/
+   
+
 </script>
 <a id="link_excel" href="@Url.Action("excel_pk", "Shipping")" style="visibility:hidden;">Daily</a>
-
-
 <a id="reporte1" href="@Url.Action("excel_reporte_po_abierto", "Shipping")" style="visibility:hidden;">Daily</a>
 <a id="reporte_estados" href="@Url.Action("excel_reporte_status", "Shipping")" style="visibility:hidden;">Daily</a>
 <a id="reporte_pos_estilo" href="@Url.Action("excel_reporte_por_estilos", "Shipping")" style="visibility:hidden;">Daily</a>
 <a id="reporte_year" href="@Url.Action("listado_year", "Shipping")" style="visibility:hidden;">Daily</a>
 <a id="reporte_estado_orden" href="@Url.Action("excel_reporte_status_orden", "Shipping")" style="visibility:hidden;">Daily</a>
 <a id="reporte_historial_ordenes" href="@Url.Action("estados_pedidos", "Shipping")" style="visibility:hidden;">Daily</a>
+
+<a id="link_bol" href="@Url.Action("imprimir_bol", "PDF")" style="visibility:hidden;">Daily</a>
 <style>
-    .boton_menu {
+.boton_menu {
         border: none;
         color: white;
         background: #69984c;
@@ -1675,7 +1965,13 @@
             </div>
 
             <div class="dropdown">
-                <a href="@Url.Action("new_pk","Shipping")">
+                <button class="dropbtn" type="button" id="boton_menu_contenedores" href="#modal_contenedores" data-toggle="modal">
+                    Containers
+                </button>
+            </div>
+
+            <div class="dropdown">
+                <a href="@Url.Action("new_packing_list","Shipping")">
                     <button class="dropbtn" type="button" id="boton_recibo_fantasy">New PK</button>
                 </a>
             </div>
@@ -1702,16 +1998,24 @@
     <!--------------------------------------------------------------------------------------------------------------------------->
     <div id="div_graficas" class="row" style="margin-left:0px !important;  width: 100%; margin:0px; ">
         <div class=" " style=" width: 100%; margin-top:1em;  ">
-            <b style="left:0em; float:left; padding-top:.5em; ">Search </b>
-            <input type="text" class="search_po form-control validacion" onkeyup="busqueda_pk()" placeholder="Type to search" id="caja_buscar_pk" style="width: 15em; float:left; margin-top:0px; margin-left:1em; margin-bottom:1em; ">
-        </div><br />
-        <div class="row" style="width: 100%;  height:600px !important; overflow:auto; margin:0px; border:3px solid #337ab7; border-radius:3px;">
-            <table id="tabla_pks" class="table table-striped table-hover">
+            <b style="left:0em; float:left; padding-top:2.5em; padding-left: 2em;">Search </b>
+            <input type="text" class="search_po form-control validacion" onkeyup="busqueda_pk()" placeholder="Type to search" id="caja_buscar_pk" style="width: 15em; float:left; margin-top:0px; margin-left:1em; margin-bottom:1em; margin-top: 2.5em; ">
+        </div>
+        <br />
+        <div class="row" style="width: 100%;  height:600px !important; margin:0px; border:3px solid #337ab7; border-radius:3px;">
+            <table id="" class="table table-striped table-hover" style="margin:0px;">
                 <thead style="background:#3479bf; color:white;">
-                    <tr><th>#</th><th>PK</th><th>DATE</th><th>CUSTOMER</th><th></th><th></th><th></th><th></th></tr>
+                    <tr>
+                        <th style="width:5%;">#</th><th style="width:20%;">PK</th><th style="width:20%;">DATE</th><th style="width:30%;">CUSTOMER</th>
+                        <th style="width:5%;"></th><th style="width:5%;"></th><th style="width:5%;"></th><th style="width:5%;"></th><th  style="width:5%;"></th>
+                    </tr>
                 </thead>
-                <tbody class="body_tabla_pk"></tbody>
             </table>
+            <div style="height:550px; overflow:auto;">
+                <table id="tabla_pks" class="table table-striped table-hover" style="margin:0px;">                   
+                    <tbody class="body_tabla_pk"></tbody>
+                </table>
+            </div>            
         </div>
 
     </div>
@@ -1732,22 +2036,29 @@
             </div>
             <div class="modal-body " id="contenedor_modal_shipping_ratio">
 
-                <div class="row" id="div_estilos_otros" style="display:none;margin:0px;padding:0px;">
-                    <h3>Styles</h3>
-                    <table id="tabla_estilos_otros" class="fold-table table table-striped table-hover ">
-                        <thead style="background:#3479bf; color:white;"><tr><th>#</th><th>Style</th><th>Description</th><th>Color</th></tr></thead>
-                        <tbody class="rows_estilos_otros"></tbody>
-                    </table>
-                </div>
+                <div class=" " style=" width: 100%; margin-top:1em;  ">
+                    <b style="left:0em; float:left; padding-top:.5em; ">Search </b>
+                    <input type="text" class="search_po form-control validacion" onkeyup="busqueda_extras_pk()" placeholder="Type style" id="caja_buscar_estilos_extras" style="width: 15em; float:left; margin-top:0px; margin-left:1em; margin-bottom:1em; ">
+                </div><br />
 
-                <div id="div_otros_tallas" class="row" style="display:none;margin:0px;padding:0px;">
+                <div class="" style="overflow:auto;border: 2px solid #3479bf; height:250px !important; width: 100%;">
+                    <div class="row" id="div_estilos_otros" style="margin:0px;padding:0px; ">
+                        <table id="tabla_estilos_otros" class="fold-table table table-striped table-hover ">
+                            <thead style="background:#3479bf; color:white;"><tr><th>#</th><th>Style</th><th>Description</th><th>Color</th></tr></thead>
+                            <tbody class="rows_estilos_otros"></tbody>
+                        </table>
+                    </div>
+                </div>               
+
+                <div id="div_otros_tallas" class="row" style="visibility:hidden;margin:0px;padding:0px;">
                     <h3></h3>
-                    <table id="tabla_otros" class="fold-table table table-striped table-hover " style="visibility:hidden;">
+                    <table id="tabla_otros" class="fold-table table table-striped table-hover " >
                         <thead class="cabeceras_otros" style="background:#3479bf; color:white;"></thead>
                         <tbody class="rows_otros"></tbody>
                     </table>
-                    <button type="button" class="btn btn-primary btn mb-2" id="boton_guardar_otros" onclick="guardar_estilos_otros(event);" style="float:right; visibility:hidden; margin:1em;">Save</button>
+                    <button type="button" class="btn btn-primary btn mb-2" id="boton_guardar_otros" onclick="guardar_estilos_otros(event);" style="float:right; margin:1em;">Save</button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -1763,27 +2074,29 @@
             </div>
             <div class="modal-body " id="contenedor_modal_agregar_ids">
 
-                <div class="form-group  " id="div_id_number" style="margin-top:3em;margin-bottom:1.5em;">
-                    <label class="">ID&nbsp; </label>
+                <div class="form-group  " id="div_id_number" style="margin-top:3em;margin-bottom:0px; margin-left:5em;">
+                    <label class="" style="float:left; padding-top:.5em;">ID&nbsp; </label>
                     <input type="text" class=" form-control numeric" placeholder="Type ID" maxlength="10" ondrop="return false;" onpaste="return false;" style="width:25%;" id="caja_numero_id">&nbsp;
                 </div>
                 <div id="ppk_bk_id" class="row" style=" display:none;margin:0px;padding:0px;">
                     <table id="tabla_estilos_ids" class="fold-table table table-striped table-hover ">
                         <thead class="cabecera_tabla_estilos_ids" style="background:#3479bf; color:white;">
-                            <tr><th>#</th><th>Style</th><th>Boxes</th><th>DC</th><th style="visibility:hidden;width:1em;"></th></tr>
+                            <tr>
+                            <th style="visibility:hidden; width:1em;">I</th>
+                            <th style="visibility:hidden; width:1em;">ISI</th>
+                            <th>Style</th>
+                            <th>Quantity</th>
+                            <th>DC</th>
+                            <th style="visibility:hidden; width:1em;">CBX</th>
+                            <th style="visibility:hidden; width:1em;">PK</th>
+                            <th style="visibility:hidden; width:1em;">INX</th>
+                            <th style="visibility:hidden; width:1em;">TE</th>
+                            </tr>
                         </thead>
                         <tbody class="rows_tabla_estilos_ids"></tbody>
                     </table>
-                </div>
-                <div id="assort_id" class="row" style=" display:none;margin:0px;padding:0px;">
-                    <table id="tabla_estilos_ids_assort" class="fold-table table table-striped table-hover ">
-                        <thead class="cabecera_tabla_estilos_ids_assort" style="background:#3479bf; color:white;">
-                            <tr><th>#</th><th>Assortment</th><th>Boxes</th><th style="visibility:hidden;width:1em;"></th></tr>
-                        </thead>
-                        <tbody class="rows_tabla_estilos_ids_assort"></tbody>
-                    </table>
-                </div>
-                <button type="button" class="btn btn-primary btn-lg mb-2" id="boton_guardar_bp" onclick="guardar_ids(event);" style="float:right; margin:1em;">Save</button>
+                </div>                
+                <button type="button" class="btn btn-primary mb-2" id="boton_guardar_bp" onclick="guardar_ids(event);" style="float:right; margin:1em;">Save</button>
 
             </div>
         </div>
@@ -1807,12 +2120,16 @@
                             <input type="text" readonly class="form-control numeric " ondrop="return false;" onpaste="return false;" maxlength="10" id="caja_pk_edit">
                         </div>
                         <div class="form-group col-sm-4 " id="div_driver_edit"></div>
-                        <div class="form-group col-sm-4 " id="div_container_edit"></div>
+                        <div class="form-group col-sm-4 " id="div_address_edit"></div>
+                        
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group ">
+
+                        <div class="form-group col-sm-4 " id="div_container_edit"></div>
+
                         <div class="form-group col-sm-4 ">
                             <label for="caja_by_trans" class=" col-form-label pk_edit">Seal </label>
                             <input type="text" class="form-control numeric pk_edit" ondrop="return false;" onpaste="return false;" maxlength="10" id="caja_seal_pk_edit">
@@ -1821,13 +2138,19 @@
                             <label for="caja_by_trans" class=" col-form-label pk_edit ">Replacement</label>
                             <input type="text" class="form-control validacion pk_edit" ondrop="return false;" onpaste="return false;" maxlength="50" id="caja_replacement_pk_edit">
                         </div>
-                        <div class="form-group col-sm-4 ">
-                            <label for="caja_by_trans" class=" col-form-label pk_edit "></label>
-                            <button type="button" class="btn btn-primary btn-lg mb-2" id="boton_guardar_bp" onclick="guardar_edicion(event);" style="float:left; margin:1em;">Save</button>
-                        </div>
+
                     </div>
                 </div>
 
+
+                <div class="row">
+                    <div class="form-group ">                    
+                        <div class="form-group col-sm-4 ">
+                            <label for="caja_by_trans" class=" col-form-label pk_edit "></label>
+                            <button type="button" class="btn btn-primary mb-2" id="boton_guardar_bp" onclick="guardar_edicion(event);" style="float:left; margin:1em;">Save</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1874,11 +2197,23 @@
                 </div>
 
                 <div id="div_tabla_drivers" class=" " style="padding: 0em 2em;  visibility:visible;   width: 100%;   height:250px; ">
-                    <div style="overflow:auto; height:250px; border: 1px solid #337ab7; border-radius: 5px;">
-                        <table id="tabla_drivers" class="table table-striped results_e">
-                            <thead class="cabecera_tabla" style="background:#3479bf; color:white;">
-                                <tr><th>#</th><th>CARRIER</th><th>NAME</th><th>PLATES</th><th>SCAC</th><th>CAAT</th><th>TRACTOR</th><th>EDIT</th><th>DELETE</th></tr>
-                            </thead>
+                    <table id="" class="table table-striped results_e" style="margin:0px;">
+                        <thead class="cabecera_tabla" style="background:#3479bf; color:white; ">
+                            <tr>
+                                <th style="width:3%;">#</th>
+                                <th style="width:24%;">CARRIER</th>
+                                <th style="width:25%;">NAME</th>
+                                <th style="width:10%;">PLATES</th>
+                                <th style="width:10%;">SCAC</th>
+                                <th style="width:10%;">CAAT</th>
+                                <th style="width:10%;">TRACTOR</th>
+                                <th style="width:4%;"></th>
+                                <th style="width:4%;"></th>
+                            </tr>
+                        </thead>                        
+                    </table>
+                    <div style="overflow:auto; height:250px; border: 1px solid #337ab7; border-radius: 5px; margin:0px;">
+                        <table id="tabla_drivers" class="table table-striped results_e" style="margin:0px;">
                             <tbody class="body_tabla_drivers"></tbody>
                         </table>
                     </div>
@@ -1960,7 +2295,7 @@
                     </div>
                     <div class="form-group col-sm-2  ">
                         <label class=" col-form-label">Zip Code</label>
-                        <input type="text" class=" form-control numeric check_dir" ondrop="return false;" onpaste="return false;" maxlength="7" id="caja_codigo_postal_dir">
+                        <input type="text" class=" form-control validacion check_dir" ondrop="return false;" onpaste="return false;" maxlength="7" id="caja_codigo_postal_dir">
                     </div>
                     <div class="form-group col-sm-2  ">
                         <br />
@@ -1969,11 +2304,21 @@
                 </div>
 
                 <div id="div_tabla_direcciones" class=" " style="padding: 0em 2em;  visibility:visible;   width: 100%;   height:250px; ">
+                    <table id="" class="table table-striped results_e" style="margin:0px;">
+                        <thead class="cabecera_tabla" style="background:#3479bf; color:white;">
+                            <tr>
+                                <th style="width:5%;">#</th>
+                                <th style="width:20%;">NAME</th>
+                                <th style="width:25%;">STREET</th>
+                                <th style="width:20%;">CITY/STATE</th>
+                                <th style="width:20%;">ZIP CODE</th>
+                                <th style="width:5%;"></th>
+                                <th style="width:5%;"></th>
+                            </tr>
+                        </thead>
+                    </table>
                     <div style="overflow:auto; height:250px; border: 1px solid #337ab7; border-radius: 5px;">
-                        <table id="tabla_direcciones" class="table table-striped results_e">
-                            <thead class="cabecera_tabla" style="background:#3479bf; color:white;">
-                                <tr><th>#</th><th>NAME</th><th>STREET</th><th>CITY/STATE</th><th>ZIP CODE</th><th></th><th></th></tr>
-                            </thead>
+                        <table id="tabla_direcciones" class="table table-striped results_e" style="margin:0px;">                          
                             <tbody class="body_tabla_direcciones"></tbody>
                         </table>
                     </div>
@@ -1997,7 +2342,7 @@
                     </div>
                     <div class="form-group col-sm-2  ">
                         <label class=" col-form-label">Zip Code</label>
-                        <input type="text" class=" form-control numeric check_dir_edit" ondrop="return false;" onpaste="return false;" maxlength="7" id="caja_codigo_postal_dir_edit">
+                        <input type="text" class=" form-control validacion check_dir_edit" ondrop="return false;" onpaste="return false;" maxlength="7" id="caja_codigo_postal_dir_edit">
                     </div>
                     <div class="form-group col-sm-2  ">
                         <br />
@@ -2187,6 +2532,83 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal_contenedores" data-target="#modal_contenedores">
+    <div class="modal-dialog modal-lg" style="width:80% !important; height:80% !important; overflow:auto;">
+        <div class="modal-content" style="width:100% !important; height:100% !important; overflow:auto;  ">
+            <div class="modal-header orange  modal-header-primary">
+                <button type="button" class="close x " data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"><strong></strong>Containers</h4>
+            </div>
+            <div class="modal-body " id="contenedor_modal_direccion">
+                <button type="button" id="boton_formulario_nuevo_contenedor" style="margin-top: 0.1em; margin: .5em 2em;" class="btn  btn-danger ">New container</button>
+
+                <div class="row" id="formulario_nuevo_contenedor" style="padding: 0em 2em; display:none;">
+                    <div class="form-group col-sm-2 ">
+                        <label class=" col-form-label">Eco</label>
+                        <input type="text" class=" form-control validacion check_con" ondrop="return false;" onpaste="return false;" maxlength="20" id="caja_eco_con">
+                    </div>
+                    <div class="form-group col-sm-2  ">
+                        <label class=" col-form-label">Plates</label>
+                        <input type="text" class=" form-control validacion check_con" ondrop="return false;" onpaste="return false;" maxlength="20" id="caja_plates_con">
+                    </div>
+                    
+                    <div class="form-group col-sm-2  ">
+                        <br />
+                        <button type="button" style="margin-top: 0.1em; " class="btn btn-sm btn-success" onclick="guardar_contenedor(event)" data-toggle="modal">Save</button>
+                    </div>
+                </div>
+
+                <div id="div_tabla_contenedores" class=" " style="padding: 0em 2em;  visibility:visible;   width: 100%;   height:250px; ">
+                    <table id="" class="table table-striped results_e" style="margin:0px;">
+                        <thead class="cabecera_tabla" style="background:#3479bf; color:white;">
+                            <tr>
+                            <th style="width:5%;">#</th>
+                            <th style="width:45%;">ECO</th>
+                            <th style="width:40%;">PLATES</th>
+                            <th style="width:5%;"></th>
+                            <th style="width:5%;"></th>
+                            </tr>
+                        </thead>                        
+                    </table>
+                    <div style="overflow:auto; height:250px; border: 1px solid #337ab7; border-radius: 5px;">
+                        <table id="tabla_contenedores" class="table table-striped results_e"  style="margin:0px;">                           
+                            <tbody class="body_tabla_contenedores"></tbody>
+                        </table>
+                    </div>
+                    <br />
+                </div>
+
+                <div id="editar_contenedor" class="row" style="padding:0em 2em; margin-top:2em; display:none;">
+
+                    <h4 style="margin-left:2em; margin-bottom:1em;">Edit container <button type="button" id="boton_cerrar_edicion_contenedor" style="margin-top: 0.1em; margin: .5em 2em;" class="btn btn-sm btn-danger ">x</button></h4>
+                    <div class="form-group col-sm-2 ">
+                        <label class=" col-form-label">#</label>
+                        <input type="text" readonly class=" form-control validacion check_con_edit" ondrop="return false;" onpaste="return false;" maxlength="50" id="caja_id_contenedor_edit">
+                    </div>
+                    <div class="form-group col-sm-2 ">
+                        <label class=" col-form-label">Eco</label>
+                        <input type="text" class=" form-control validacion check_con_edit" ondrop="return false;" onpaste="return false;" maxlength="20" id="caja_eco_con_edit">
+                    </div>
+                    <div class="form-group col-sm-2  ">
+                        <label class=" col-form-label">Plates</label>
+                        <input type="text" class=" form-control validacion check_con_edit" ondrop="return false;" onpaste="return false;" maxlength="20" id="caja_plates_con_edit">
+                    </div>
+
+                    <div class="form-group col-sm-2  ">
+                        <br />
+                        <button type="button" style="margin-top: 0.1em; " class="btn btn-sm btn-success" onclick="guardar_contenedor_edicion(event)" data-toggle="modal">Save</button>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

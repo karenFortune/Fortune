@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace FortuneSystem.Controllers
 {
@@ -18,9 +19,11 @@ namespace FortuneSystem.Controllers
         DescripcionItemData objSummary = new DescripcionItemData();
         public ActionResult Index()
         {
-           /*List<OrdenesCompra> listaPedidos = new List<OrdenesCompra>();
+			OrdenesCompra pedido = new OrdenesCompra();
+			ListaPeriodos(pedido);
+		   /*List<OrdenesCompra> listaPedidos = new List<OrdenesCompra>();
             listaPedidos = objPedido.ListaOrdenCompraWIP().ToList();*/
-            return View(); 
+			return View(); 
         }
 
         /*public JsonResult GetListadoPedido(string sidx, string sort, int page, int rows)
@@ -51,7 +54,17 @@ namespace FortuneSystem.Controllers
             return Json(listaPedidos, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult ListadoPedidoShipping()
+		public void ListaPeriodos(OrdenesCompra pedido)
+		{		
+			List<Periodo>  listaYear = objPedido.ListadoPeriodos().ToList();	
+			List<SelectListItem> items = new SelectList(listaYear, "NumPeriodo", "NumPeriodo", pedido.IdPeriodo).ToList();
+			items.Insert(0, (new SelectListItem { Text = "ALL", Value = "0" }));
+
+			ViewBag.listPeriodo = items;
+		}
+
+
+		public JsonResult ListadoPedidoShipping()
         {            
             List<OrdenesCompra> listaPedidos = new List<OrdenesCompra>();
             int estadoTab = 2;

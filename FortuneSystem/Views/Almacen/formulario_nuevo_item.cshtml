@@ -3,7 +3,7 @@
 <script>
     $(document).ready(function () {
         obtener_categorias();
-    });  
+    });
     function obtener_categorias() {
         $.ajax({
             url: "/Almacen/obtener_categorias_inventario",
@@ -11,7 +11,7 @@
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             success: function (result) {
-                var html = ' <label for="caja_tipo_recibo">Type </label><select type="text" class="form-control" id="caja_tipo_recibo"> <option value="0">Select</option>';                    
+                var html = ' <label for="caja_tipo_recibo">Type </label><select type="text" class="form-control" id="caja_tipo_recibo"> <option value="0">Select</option>';
                 $.each(result, function (key, item) {
                     html += '<option value="' + item.id_categoria_inventario+'">' + item.categoria_inventario + '</option>';
                 });
@@ -47,6 +47,8 @@
     $(document).on("input", "#caja_descripcion", function () { $('#caja_descripcion').autocomplete({ source: '@Url.Action("Autocomplete_trims")' }); });
 
     $(document).on("input", "#caja_yarn", function () { $('#caja_yarn').autocomplete({ source: '@Url.Action("Autocomplete_yarns")' }); });
+
+    $(document).on("input", "#caja_unit_trim", function () { $('#caja_unit_trim').autocomplete({ source: '@Url.Action("Autocomplete_units")' }); });
 
     $(document).on("input", ".numeric", function () {
         this.value = this.value.replace(/\D/g, '');
@@ -97,7 +99,7 @@
                //blanks_form  trims_form
                 $("#blanks_form").css('display', 'none');
                 $("#trims_form").css('display', 'none');
-            } 
+            }
             if ($("#caja_tipo_recibo").val() == "1") {
                 $("#blanks_form").css('display', 'inline');
                 $("#trims_form").css('display', 'none');
@@ -136,7 +138,7 @@
                 } else {
                     $("#" + id).css('border', '1px solid #cccccc');
                 }
-            });    
+            });
             $(".size_item").each(function () {
                 var id = $(this).attr('id');
                 if ($(this).val() == '') {
@@ -145,7 +147,7 @@
                 } else {
                     $(this).css('border', '1px solid #cccccc');
                 }
-            });    
+            });
         }
         if ($('#caja_tipo_recibo').val() == 2) {
             $(".must_trim").each(function () {
@@ -170,9 +172,8 @@
     function alta_de_item() {
         var tempScrollTop = $(window).scrollTop();
         $("#loading_nuevo_item").css('display', 'inline');
-        var item, manufacturer, color, size, body_type, gender, fabric_type, fabric_percent, yarn, division, type, descripcion;
+        var item, manufacturer, color, size, body_type, gender, fabric_type, fabric_percent, yarn, division, type, descripcion,unit,minimo;
         if ($("#caja_tipo_recibo").val() == 1) {
-           
             if ($("#caja_tipo_recibo").val() == "") { type = "N/A"; } else { type = $("#caja_tipo_recibo").val(); }
             if ($("#caja_item").val() == "") { item = "N/A"; } else { item = $("#caja_item").val(); }
             if ($("#caja_fabricante").val() == "") { manufacturer = "N/A"; } else { manufacturer = $("#caja_fabricante").val(); }
@@ -184,19 +185,22 @@
             if ($("#caja_fabric_percent").val() == "") { fabric_percent = "N/A"; } else { fabric_percent = $("#caja_fabric_percent").val(); }
             if ($("#caja_division").val() == "") { division = "N/A"; } else { division = $("#caja_division").val();}
             if ($("#caja_yarn").val() == "") { yarn = "N/A"; } else { yarn = $("#caja_yarn").val(); }
-            descripcion = manufacturer + " " + gender + " " + body_type + " " + color;
-            $(".size_item").each(function () { size += "+" + $(this).val(); });   
+            descripcion = manufacturer + " " + gender + " " + body_type + " " + color; minimo = 0;
+            $(".size_item").each(function () { size += "+" + $(this).val(); }); unit = "N/A";
         }
+        debugger
         if ($("#caja_tipo_recibo").val() == 2) {
             if ($("#caja_tipo_recibo").val() == "") { type = "N/A"; } else { type = $("#caja_tipo_recibo").val(); }
             if ($("#caja_trim_item").val() == "") { item = "N/A"; } else { item = $("#caja_trim_item").val(); }
-            if ($("#caja_descripcion").val() == "") { descripcion = "N/A"; } else { descripcion = $("#caja_descripcion").val(); }  
+            if ($("#caja_descripcion").val() == "") { descripcion = "N/A"; } else { descripcion = $("#caja_descripcion").val(); }
             if ($("#caja_family_trim").val() == "") { fabric_type = "N/A"; } else { fabric_type = $("#caja_family_trim").val(); }
-            size = "N/A"; manufacturer = "N/A"; color = "N/A"; body_type = "N/A"; gender = "N/A"; fabric_percent = "N/A"; division = "N/A"; yarn = "N/A"; 
-            descripcion = manufacturer + " " + gender + " " + body_type + " " + color;
+            if ($("#caja_minimo_trim").val() == "") { minimo = "N/A"; } else { minimo = $("#caja_minimo_trim").val(); }
+            if ($("#caja_unit_trim").val() == "") { unit = "N/A"; } else { unit = $("#caja_unit_trim").val(); }
+            size = "N/A"; manufacturer = "N/A"; color = "N/A"; body_type = "N/A"; gender = "N/A"; fabric_percent = "N/A"; division = "N/A"; yarn = "N/A";
+            //descripcion = manufacturer + " " + gender + " " + body_type + " " + color;
 
         }
-        var actionData = "{'actionData':'"+item + "*" + manufacturer + "*" + color + "*" + size + "*" + body_type + "*" + gender + "*" + fabric_type + "*" + fabric_percent + "*" + yarn + "*" + division + "*" + type + "*" + descripcion+"'}";
+        var actionData = "{'actionData':'" + item + "*" + manufacturer + "*" + color + "*" + size + "*" + body_type + "*" + gender + "*" + fabric_type + "*" + fabric_percent + "*" + yarn + "*" + division + "*" + type + "*" + descripcion + "','unit':'" + unit + "','minimo':'" + minimo +"'}";
 
         $.ajax({
             url: '/Almacen/agregar_item_catalogo',
@@ -233,8 +237,9 @@
     .ui-autocomplete {
         z-index: 2147483647 !important;
     }
+
     .col-sm {
-        margin-left:1em !important;
+        margin-left: 1em !important;
     }
 
     .columns {
@@ -249,6 +254,7 @@
         grid-auto-rows: 2em;
         grid-gap: .5em;
     }
+
     .load_item {
         position: fixed;
         z-index: 2001 !important;
@@ -278,6 +284,7 @@
 </style>
 <div id="loading_nuevo_item" class="load_item">
     <div id="spinner" class="imagen_loading2" style=""></div>
+</div>
 </div>
 <div class="container-fluid">
     <div id="formulario_campos_01" class="row" style="margin-top:2em;">
@@ -336,41 +343,49 @@
                             <td><button type="button" class="btn btn-danger mb-2" id="boton_tallas_items" onclick="agregar_talla_item()"><b>+</b></button></td>
                         </tr>
                     </tbody>
-                </table>                
+                </table>
             </div>
-
+            <button type="button" class="btn btn-primary mb-2" id="boton_guardar" onclick="recibir(event);">Save</button>
         </div>
 
-            <div class="form-group col-sm-4">
-                <br />
-                <button type="button" class="btn btn-primary mb-2" id="boton_guardar" onclick="recibir(event);">Save</button>
-            </div>
-        </div>
-<!-------------------------------------------------------------------TRIM-FORM-------------------------------------------------------------------------------->
-        
-        <div class="form-group" id="trims_form" style="display:none;">
-            <div class="form-group col-sm-3">
-                <label for="caja_trim_item" class=" col-form-label">Item</label>
-                <input type="text" ondrop="return false;" onpaste="return false;"  class="form-control validacion  must_trim " maxlength="30" onkeydown="upperCaseF(this)" id="caja_trim_item">
-            </div>
-            <div class="form-group col-sm-3">
-                <label for="caja_descripcion" class=" col-form-label">Description</label>
-                <input type="text" ondrop="return false;" onpaste="return false;"  class="form-control validacion  must_trim " maxlength="200" onkeydown="upperCaseF(this)" id="caja_descripcion">
-            </div>
-            <div class="form-group col-sm-3">
-                <label for="caja_family_trim" class=" col-form-label">Family trim</label>
-                <input type="text" ondrop="return false;" onpaste="return false;"  class="form-control validacion  must_trim " maxlength="50" onkeydown="upperCaseF(this)" id="caja_family_trim">
-            </div>
-            <div class="form-group col-sm-3">
-                <br />
-                <button type="button" class="btn btn-primary mb-2" id="boton_guardar_trim" onclick="recibir(event);">Save</button>
-            </div>
-        </div>
+        <div class="form-group col-sm-4">
+            <br />
 
-
+        </div>
     </div>
- 
+    <!-------------------------------------------------------------------TRIM-FORM-------------------------------------------------------------------------------->
+
+    <div class="form-group" id="trims_form" style="display:none;">
+        <div class="form-group col-sm-4">
+            <label for="caja_trim_item" class=" col-form-label">Item</label>
+            <input type="text" ondrop="return false;" onpaste="return false;" class="form-control validacion  must_trim " maxlength="30" onkeydown="upperCaseF(this)" id="caja_trim_item">
+        </div>
+        <div class="form-group col-sm-4">
+            <label for="caja_descripcion" class=" col-form-label">Description</label>
+            <input type="text" ondrop="return false;" onpaste="return false;" class="form-control validacion  must_trim " maxlength="200" onkeydown="upperCaseF(this)" id="caja_descripcion">
+        </div>
+        <div class="form-group col-sm-4">
+            <label for="caja_family_trim" class=" col-form-label">Family trim</label>
+            <input type="text" ondrop="return false;" onpaste="return false;" class="form-control validacion  must_trim " maxlength="50" onkeydown="upperCaseF(this)" id="caja_family_trim">
+        </div>
+        <div class="form-group col-sm-4">
+            <label for="caja_unit_trim" class=" col-form-label">Unit</label>
+            <input type="text" ondrop="return false;" onpaste="return false;" class="form-control validacion  must_trim " maxlength="50" onkeydown="upperCaseF(this)" id="caja_unit_trim">
+        </div>
+        <div class="form-group col-sm-4">
+            <label for="caja_minimo_trim" class=" col-form-label">Minimum</label>
+            <input type="text" ondrop="return false;" onpaste="return false;" class="form-control numeric  must_trim " maxlength="50" onkeydown="upperCaseF(this)" id="caja_minimo_trim" value="0">
+        </div>
+        <div class="form-group col-sm-3">
+            <br />
+            <button type="button" class="btn btn-primary mb-2" id="boton_guardar_trim" onclick="recibir(event);">Save</button>
+        </div>
+    </div>
+
+
 </div>
+
+
 
 
 

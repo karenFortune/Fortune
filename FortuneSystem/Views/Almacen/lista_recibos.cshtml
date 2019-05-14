@@ -77,9 +77,11 @@
         });
     }
     function imprimir_etiquetas() {
-        var h = screen.height - 100;
+        /*var h = screen.height - 100;
         var w = screen.width - 30;
-        window.open('/PDF/imprimir_etiquetas_recibos', '_blank', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');
+        window.open('/PDF/imprimir_etiquetas_recibos', '_blank', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');*/
+        var boton = document.getElementById('imprimir_cajas');
+        boton.click();
     }
 
     function ver_recibo(id) {
@@ -186,6 +188,7 @@
 
    
 </script>
+<a id="imprimir_cajas" href="@Url.Action("imprimir_etiquetas_recibos", "PDF")" style="visibility:hidden;">Daily</a>
 <style>
   
     .panel_sobrepuesto {

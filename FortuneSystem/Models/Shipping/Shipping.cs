@@ -69,6 +69,7 @@ namespace FortuneSystem.Models.Shipping
         public int total_piezas { get; set; }
         public string siglas_cliente { get; set; }
         public List<Labels> lista_labels{ get; set; }
+        public List<Talla> lista_tallas { get; set; }
     }
 
     public class Tarima {
@@ -253,6 +254,7 @@ namespace FortuneSystem.Models.Shipping
     public class Talla{
         public int id_talla{ get; set; }
         public string talla { get; set; }
+        public string tipo { get; set; }
         public int total { get; set; }
         public int ejemplos { get; set; }
         public int extras { get; set; }
@@ -321,8 +323,8 @@ namespace FortuneSystem.Models.Shipping
         public string fecha_cancelacion { get; set; }
         public string estado { get; set; }
     }
+   
 
-    
 
 
 

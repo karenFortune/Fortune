@@ -214,8 +214,41 @@ namespace FortuneSystem.Models.Staging
             }finally { con.CerrarConexion(); con.Dispose(); }
             return lista;
         }
+        public List<stag_conteo> obtener_staging_inicio_busqueda(string busqueda){
+            string query = "";
+            if (busqueda == "0"){
+                query = "SELECT top 20 s.id_staging,s.id_pedido,s.id_estilo,s.comentarios,s.fecha,s.id_usuario_captura,s.total  " +
+                    " from staging s order by s.id_staging desc";
+            }else {
+                query = "SELECT top 20 s.id_staging,s.id_pedido,s.id_estilo,s.comentarios,s.fecha,s.id_usuario_captura,s.total  " +
+                    " from staging s,PEDIDO p WHERE p.ID_PEDIDO=s.id_pedido AND p.PO like'%"+busqueda+"%' " +
+                    "order by s.id_staging desc";
+            }
+            List<stag_conteo> lista = new List<stag_conteo>();
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                //com.CommandText = "SELECT  s.id_staging,s.id_pedido,s.id_estilo,s.comentarios,s.fecha,s.id_usuario_captura,s.total  " +
+                //  " from staging s order by s.id_staging desc";
+                com.CommandText = query;
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    stag_conteo ps = new stag_conteo();
+                    ps.id_staging = Convert.ToInt32(leer["id_staging"]);
+                    ps.estilo_nombre = consultas.buscar_descripcion_estilo(Convert.ToInt32(leer["id_estilo"]));
+                    ps.po = consultas.obtener_po_id(leer["id_pedido"].ToString());
+                    ps.estilo = consultas.obtener_estilo(Convert.ToInt32(leer["id_estilo"]));
+                    ps.fecha = ((Convert.ToDateTime(leer["fecha"])).ToString("MMM dd yyyy")).ToUpper();
+                    ps.cantidad = Convert.ToString(leer["total"]);
+                    ps.usuario = (consultas.buscar_nombre_usuario(leer["id_usuario_captura"].ToString())).ToUpper();
+                    lista.Add(ps);
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
+            return lista;
+        }
 
-        
 
         public List<pedido_staging> buscar_pedidos_recibo(int sucursal, string busqueda)
         {
@@ -455,10 +488,111 @@ namespace FortuneSystem.Models.Staging
             return lista_tallas;
         }
 
+        public int buscar_inventario_stagging(int summary,int talla){
+            int temporal = 0;
+            Conexion con_u_r_i = new Conexion();
+            try{
+                SqlCommand com_u_r_i = new SqlCommand();
+                SqlDataReader leer_u_r_i = null;
+                com_u_r_i.Connection = con_u_r_i.AbrirConexion();
+                com_u_r_i.CommandText = "SELECT id_inventario FROM inventario WHERE id_summary='"+summary+"' AND id_size='"+talla+"' ";
+                leer_u_r_i = com_u_r_i.ExecuteReader();
+                while (leer_u_r_i.Read()){
+                    temporal = Convert.ToInt32(leer_u_r_i["id_inventario"]);
+                }leer_u_r_i.Close();
+            }finally{con_u_r_i.CerrarConexion();con_u_r_i.Dispose();}
+            return temporal;
+        }
+        public recibos_item buscar_recibo_stag(int inventario){
+            recibos_item r = new recibos_item();
+             Conexion con_u_r_i = new Conexion();
+            try{
+                SqlCommand com_u_r_i = new SqlCommand();
+                SqlDataReader leer_u_r_i = null;
+                com_u_r_i.Connection = con_u_r_i.AbrirConexion();
+                com_u_r_i.CommandText = "SELECT TOP 1 id_recibo_item,id_recibo,total FROM recibos_items " +
+                    " WHERE id_inventario='" + inventario + "' ORDER BY id_recibo_item DESC  ";
+                leer_u_r_i = com_u_r_i.ExecuteReader();
+                while (leer_u_r_i.Read()){
+                    r.id_recibo= Convert.ToInt32(leer_u_r_i["id_recibo"]);
+                    r.id_recibo_item= Convert.ToInt32(leer_u_r_i["id_recibo_item"]);
+                    r.total = Convert.ToInt32(leer_u_r_i["total"]);
+                }leer_u_r_i.Close();
+            }finally { con_u_r_i.CerrarConexion(); con_u_r_i.Dispose(); }
+            return r;
+        }
+        public void actualizar_cantidad_inventario(int inventario,int total_stag,int total_anterior){
+            Conexion con_r = new Conexion();
+            try{
+                SqlCommand com_r = new SqlCommand();
+                com_r.Connection = con_r.AbrirConexion();
+                com_r.CommandText = "UPDATE inventario SET total=(total-"+total_anterior+")+"+total_stag+" WHERE id_inventario="+inventario+" ";                   
+                com_r.ExecuteNonQuery();
+            }finally{ con_r.CerrarConexion(); con_r.Dispose(); }
+        }
+        public void actualizar_cantidad_recibos_item(int recibo_item, int total_stag, int total_anterior){
+            Conexion con_r = new Conexion();
+            try{
+                SqlCommand com_r = new SqlCommand();
+                com_r.Connection = con_r.AbrirConexion();
+                com_r.CommandText = "UPDATE recibos_items SET total=(total-" + total_anterior + ")+" + total_stag + " WHERE id_recibo_item=" + recibo_item + " ";
+                com_r.ExecuteNonQuery();
+            }finally { con_r.CerrarConexion(); con_r.Dispose(); }
+        }
 
+        public void actualizar_cantidad_recibos(int recibo){
+            Conexion con_r = new Conexion();
+            try{
+                SqlCommand com_r = new SqlCommand();
+                com_r.Connection = con_r.AbrirConexion();
+                com_r.CommandText = "UPDATE recibos SET total=(SELECT SUM(total) FROM recibos_items WHERE id_recibo="+recibo+" ) WHERE id_recibo=" + recibo + " ";
+                com_r.ExecuteNonQuery();
+            }
+            finally { con_r.CerrarConexion(); con_r.Dispose(); }
+        }
 
-
-
+        /****************************************************************************************************************************************/
+        public List<stag_conteo> obtener_lista_staging_summary(int summary){
+            List<stag_conteo> lista = new List<stag_conteo>();
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT id_staging,id_pedido,id_estilo,total,id_usuario_captura,comentarios,fecha FROM " +
+                    " staging WHERE id_summary='" + summary + "'" ;
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    stag_conteo s = new stag_conteo();
+                    s.id_staging = Convert.ToInt32(leer["id_staging"]);
+                    s.fecha = (Convert.ToDateTime(leer["fecha"])).ToString("MMM dd yyyy");
+                    s.usuario = consultas.buscar_nombre_usuario(Convert.ToString(leer["id_usuario_captura"]));
+                    s.total = Convert.ToInt32(leer["total"]);                   
+                    s.lista_staging = obtener_lista_items_customer_staging(s.id_staging, summary);
+                    lista.Add(s);
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
+            return lista;
+        }
+        public List<Talla_staging> obtener_lista_items_customer_staging(int id_staging, int summary){
+            List<Talla_staging> lista = new List<Talla_staging>();
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT id_staging_count,id_talla,total FROM staging_count  " +
+                    " WHERE id_staging='" + id_staging + "'  ";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    Talla_staging ts = new Talla_staging();
+                    ts.total = Convert.ToInt32(leer["total"]);
+                    ts.id_talla = Convert.ToInt32(leer["id_talla"]);
+                    lista.Add(ts);
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
+            return lista;
+        }
 
 
 

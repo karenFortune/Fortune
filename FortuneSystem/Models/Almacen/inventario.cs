@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using FortuneSystem.Models.Shipping;
+using FortuneSystem.Models.Almacen;
+using FortuneSystem.Models.Trims;
 
 namespace FortuneSystem.Models.Almacen
 {
@@ -97,15 +100,47 @@ namespace FortuneSystem.Models.Almacen
         public string fecha { get; set; }
         public int auditoria { get; set; }
         public int id_item { get; set; }
-        
-
-
+        public int id_summary{ get; set; }
     }
 
     public class lugares {
         public int id_lugar { get; set; }
         public string lugar { get; set; }
     }
+
+    public class Pedido_customer {
+        public int id_pedido { get; set; }
+        public string pedido { get; set; }
+        public string vpo { get; set; }
+        public int id_customer { get; set; }
+        public string customer { get; set; }
+        public int id_customer_final { get; set; }
+        public string customer_final { get; set; }
+        public string date_cancel { get; set; }
+        public string date_order { get; set; }
+        public int total { get; set; }
+        public int estado { get; set; }
+        public List<Estilo_customer> lista_estilos { get; set; }
+    }
+    public class Estilo_customer{
+        public int id_estilo { get; set; }
+        public string estilo { get; set; }
+        public string descripcion { get; set; }
+        public int id_summary { get; set; }
+        public int id_color { get; set; }
+        public string color { get; set; }
+        public int id_talla { get; set; }
+        public string talla { get; set; }
+        public int total { get; set; }
+        public int id_genero{ get; set; }
+        public string genero { get; set; }
+        public List<ratio_tallas> lista_ratio { get; set; }
+
+    }
+
+
+
+
 
 
 

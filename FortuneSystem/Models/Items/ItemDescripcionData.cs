@@ -27,8 +27,8 @@ namespace FortuneSystem.Models.Items
                 {
                     ItemDescripcion items = new ItemDescripcion();
                     items.ItemId = Convert.ToInt32(leerFilas["ITEM_ID"]);
-                    items.ItemEstilo = leerFilas["ITEM_STYLE"].ToString();
-                    items.Descripcion = leerFilas["DESCRIPTION"].ToString();
+                    items.ItemEstilo = leerFilas["ITEM_STYLE"].ToString().TrimEnd();
+                    items.Descripcion = leerFilas["DESCRIPTION"].ToString().TrimEnd();
                     listItems.Add(items);
 
                 }

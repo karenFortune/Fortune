@@ -313,14 +313,14 @@ function obtener_tallas_item(IdEstilo) {
 			var cadena_cantidadesTotal = "";
 			$.each(lista_estilo, function (key, item) {
 
-				html += '<td class="total" >' + item.Cantidad + '</td>';
+				html += '<td class="" >' + item.Cantidad + '</td>';
 				cantidadesPOTotal += item.Cantidad;
 				cadena_cantidadesTotal += "*" + item.Cantidad;
 			});
 			var cantidades_arrayTotal = cadena_cantidadesTotal.split('*');
 			html += '<td>' + cantidadesPOTotal + '</td>';
 			html += '</tr>';
-            html += '</tr><tr><td>PO Quantity</td>';
+            html += '</tr><tr><td>1rst Quantity</td>';
             var cantidadesPO = 0;
             var cadena_cantidades = "";
 			$.each(lista_Qty_Tallas, function (key, item) {
@@ -655,7 +655,7 @@ function obtener_bacth_estilo_PNL(IdEstilo) {
 
 function obtener_tallas_PO(IdEstilo) {
     $.ajax({
-        url: "/Pedidos/Lista_Tallas_Pnl_Estilo/" + IdEstilo,
+		url: "/Pedidos/Lista_Tallas_Estilo_Pnl/" + IdEstilo,
         type: "POST",
         contentType: "application/json;charset=UTF-8",
         dataType: "json",

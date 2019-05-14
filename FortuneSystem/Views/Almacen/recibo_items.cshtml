@@ -25,9 +25,9 @@
         var rowCount = $('.data-Talla').length + 1;
         var rows = '<tr class="data-Talla">' +
             '<td style="visibility:hidden;"><input readonly style="width:.5em; " ondrop="return false;" onpaste="return false;"  maxlength="10"  class="validacion form-control lectura" id="id_'+data[1]+'" value="' + data[1] + '" /></td>' +
-            '<td><input readonly style=width:20em;  ondrop="return false;" onpaste="return false;" class="validacion form-control lectura" id="" value="'+data[2]+'" /></td>' +
+            '<td><input readonly style=width:20em;  ondrop="return false;"  onpaste="return false;" class="validacion form-control lectura" id="" value="'+data[2]+'" /></td>' +
            // '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="10" class="numeric form-control check_item" id="" /></td>' +
-            '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="30" class="validacion form-control po " id="" /></td>' +
+            '<td><input   ondrop="return false;" onpaste="return false;" onchange="buscar_mill_po_pedido(this.value)" maxlength="30" class="validacion form-control po " id="" /></td>' +
             '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="100" class="validacion form-control estilo " id="" /></td>' +
             '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="30" class="validacion form-control check_item locacion" id="" /></td>' +
             '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="30" class="validacion form-control check_item pais" id="" /></td>' +
@@ -38,6 +38,19 @@
         rows_seleccionados++;
         $("#boton_guardar_recibo").css('display', 'inline');
         generar_tabla_cajas(data[1],data[0],data[2]);
+    }
+    function buscar_mill_po_pedido(valor) {
+      //  alert(valor);
+        $.ajax({
+            url: '/Almacen/buscar_mill_po_pedido',
+            data: "{'pedido':'"+valor+"'}",
+            contentType: 'application/json',
+            dataType: 'json',
+            type: 'post',
+            success: function (result) {
+                $("#caja_recibo_mill_po").val(result);
+            }
+        });
     }
 
     function generar_tabla_cajas(id, item,descripcion) {
@@ -113,10 +126,11 @@
         });
         return temp;
     }
+    var packing_number;
     function guardar_items_recibo(event) {
         id = ""; item = ""; quantity = ""; po = ""; style = ""; mill = ""; po_r = ""; locacion = ""; country = ""; customer = ""; caja = ""; cantidad = "";
+        packing_number = '';
         var error = 0;
-
         $(".check_item").each(function () {
             if ($(this).val() == '') {
                 $(this).css('border', '2px solid #e03f3f');
@@ -146,7 +160,7 @@
             } else {
                 po_r = 'N/A';
             }
-           
+            packing_number = $("#caja_packing_number_recibo").val();
             $('#tabla_items_recibos tbody tr').each(function () {
                 if (i > 0) {
                     id += "*" + $(this).find('td:eq(0) input').val();
@@ -168,8 +182,7 @@
                         style += "*0";
                     } else {
                         style += "*" + $(this).find('td:eq(3) input').val();
-                    }
-                  
+                    }                  
                     locacion += "*" + $(this).find('td:eq(4) input').val();
                     country += "*" + $(this).find('td:eq(5) input').val();
                     customer += "*" + $(this).find('td:eq(6) input').val();
@@ -193,7 +206,7 @@
         
         $("#loading").css('display', 'inline');
         // id = ""; item = "";  po = ""; style = ""; mill = ""; po_r = ""; locacion = ""; country = ""; customer = ""; caja = ""; cantidad = "";
-        var actionData = "{'id':'"+id+"','item':'"+item+"','po':'"+po+"','style':'"+style+"','mill':'"+mill+"','po_r':'"+po_r+"','locacion':'"+locacion+"','country':'"+country+"','customer':'"+customer+"','caja':'"+caja+"','cantidad':'"+cantidad+"'}";
+        var actionData = "{'id':'" + id + "','item':'" + item + "','po':'" + po + "','style':'" + style + "','mill':'" + mill + "','po_r':'" + po_r + "','locacion':'" + locacion + "','country':'" + country + "','customer':'" + customer + "','caja':'" + caja + "','cantidad':'" + cantidad + "','packing_number':'" + packing_number+"'}";
         $.ajax({
             url: '/Almacen/guardar_recibo_inventario',
             data: actionData,
@@ -273,16 +286,16 @@
                 var html = '';
                 $.each(result, function (key, item) {
                     html += '<tr>' +
-                        '<td>' + item.id_item + '</td>' +
-                        '<td>' + item.item_nombre+'</td>'+
-                        '<td>' + item.descripcion + '</td> ' +
-                        '<td>' + item.color + '</td> ' +
-                        '<td>' + item.size + '</td> '+
-                        '<td>' + item.gender+'</td> '+
-                        '<td>' + item.fabric_type+'</td> '+
-                        '<td>'+item.fabric_percent+'</td> '+
-                        '<td>' + item.yarn+'</td> '+
-                        '<td> <button type="button" id="boton_agregar_row" class="btn btn-success  classAdd agregar" onclick="agregar_row( \''+item.item_nombre+'&'+item.id_item+'&'+item.descripcion+' '+item.size+ '\' )" style="padding:0px 10px !important; margin:0px;"><b style="font-size:1.5em;">+</b></button> </td> '+
+                        '<td style="width:5%;">' + item.id_item + '</td>' +
+                        '<td style="width:10%;">' + item.item_nombre+'</td>'+
+                        '<td style="width:25%;">' + item.descripcion + '</td> ' +
+                        '<td style="width:10%;">' + item.color + '</td> ' +
+                        '<td style="width:5%;">' + item.size + '</td> '+
+                        '<td style="width:10%;">' + item.gender+'</td> '+
+                        '<td style="width:10%;">' + item.fabric_type+'</td> '+
+                        '<td style="width:10%;">'+item.fabric_percent+'</td> '+
+                        '<td style="width:10%;">' + item.yarn+'</td> '+
+                        '<td style="width:5%;"> <button type="button" id="boton_agregar_row" class="btn btn-success  classAdd agregar" onclick="agregar_row( \''+item.item_nombre+'&'+item.id_item+'&'+item.descripcion+' '+item.size+ '\' )" style="padding:0px 10px !important; margin:0px;"><b style="font-size:1.5em;">+</b></button> </td> '+
                     ' </tr>';
                 });
                 $(".resultados_items_recibo").html(html);
@@ -451,24 +464,29 @@
                   </div>               
           </div>
 
-              <div class="row panel panel-default panel-primary" style="overflow:auto; height:200px !important; width:auto; border:none; ">
-                  <table id="items_recibos" class="fold-table table table-striped table-hover " style="">
+              <div class="row panel panel-default panel-primary" style=" height:200px !important; width:auto; border:none; ">
+                  <table id="" class="fold-table table table-striped table-hover " style="margin:0px;">
                       <thead style="background:#3479bf; color:white;">
                           <tr>
-                              <th></th>
-                              <th>Style</th>
-                              <th>Description</th>
-                              <th>Color</th>
-                              <th>Size</th>
-                              <th>Gender</th>
-                              <th>Fabric</th>
-                              <th>Fabric percent</th>
-                              <th>Yarn</th>
-                              <th>Add</th>
+                              <th style="width:5%;"></th>
+                              <th style="width:10%;">Style</th>
+                              <th style="width:25%;">Description</th>
+                              <th style="width:10%;">Color</th>
+                              <th style="width:5%;">Size</th>
+                              <th style="width:10%;">Gender</th>
+                              <th style="width:10%;">Fabric</th>
+                              <th style="width:10%;">Fabric percent</th>
+                              <th style="width:10%;">Yarn</th>
+                              <th style="width:5%;">Add</th>
                           </tr>
                       </thead>
-                      <tbody class="resultados_items_recibo"></tbody>
                   </table>
+                  <div style="overflow:auto; height:150px ">
+                      <table id="items_recibos" class="fold-table table table-striped table-hover " style="margin:0px;">
+                          <tbody class="resultados_items_recibo"></tbody>
+                      </table>
+                  </div>
+                
               </div>
 
               <div id="tabla_recibos_temporal" class="row panel panel-default panel-primary" style="visibility:hidden; border:none; ">
@@ -484,11 +502,19 @@
                       <div class="form-group col-md-1">
                           <label class=" col-form-label">PO Reference</label>
                           <!--<input type="text" class=" form-control validacion" ondrop="return false;" onpaste="return false;" maxlength="20" id="caja_recibo_mill_po">-->
-                        </div>
-                        <div class="form-group col-md-2  ">
-                            <input type="text" class=" form-control validacion" ondrop="return false;" onpaste="return false;" maxlength="20" id="caja_recibo_po_referencia">
-                        </div>
-                    </div>
+                      </div>
+                      <div class="form-group col-md-2  ">
+                          <input type="text" class=" form-control validacion" ondrop="return false;" onpaste="return false;" maxlength="20" id="caja_recibo_po_referencia">
+                      </div>
+
+                      <div class="form-group col-md-1">
+                          <label class=" col-form-label">Packing number</label>
+                          <!--<input type="text" class=" form-control validacion" ondrop="return false;" onpaste="return false;" maxlength="20" id="caja_recibo_mill_po">-->
+                      </div>
+                      <div class="form-group col-md-2  ">
+                          <input type="text" class=" form-control validacion check_item" ondrop="return false;" onpaste="return false;" maxlength="20" id="caja_packing_number_recibo">
+                      </div>
+                  </div>
 
             <div style="overflow:auto; padding:0em 1.5em 0em 1.5em;" class=" row">
                 <table id="tabla_items_recibos" class="data-Talla table   table-hover" >

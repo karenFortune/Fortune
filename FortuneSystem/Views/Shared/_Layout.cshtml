@@ -93,7 +93,7 @@
                 <li class="has-subnav"><a href="@Url.Action("Index", "fantasy")" id="opc"> <i class="glyphicon glyphicon-list-alt fa-lg fa_menu"></i> <span class="nav-text">Fantasy</span></a></li>
                 <li class="has-subnav"><a href="@Url.Action("Index", "staging")" id="opc"> <i class="glyphicon glyphicon-equalizer fa-lg fa_menu"></i> <span class="nav-text">Stagging</span></a></li>
                 <li class="has-subnav"><a href="@Url.Action("Index", "shipping")" id="opc"> <i class="glyphicon glyphicon-envelope fa-lg fa_menu"></i> <span class="nav-text">Shipping</span></a></li>
-                <li class="has-subnav"><a href="@Url.Action("Index", "WIP")" id="opc"> <i class="fa fa-calendar fa-lg fa_menu"></i> <span class="nav-text">WIP</span></a></li>
+                @*<li class="has-subnav"><a href="@Url.Action("Index", "WIP")" id="opc"> <i class="fa fa-calendar fa-lg fa_menu"></i> <span class="nav-text">WIP</span></a></li>*@
                 <li class="has-subnav"><a href="@Url.Action("Index", "customerService")" id="opc"> <i class="fa fa-users fa-lg fa_menu"></i> <span class="nav-text">Customer Service</span></a></li>
             }
             else if ((int)Session["idCargo"] == 4)
@@ -407,23 +407,27 @@
 
         $("#selectEspecialidad").select2({
             placeholder: "Select a specialtyt"
+		});
+
+		  $("#selectFormPack").select2({
+         
         });
 
         $("#selectFechas").select2({
         });
 
         $('#selectCliente').select2({
+		});
+
+		$('#selectYear').select2({
+			   placeholder: "Select a year",
+            width: '100px'
         });
 
         $('#selectTipoOrden').select2({
         });
 
         $("#selectClienteFinal").select2({
-        });
-
-        $('#ListadoPeriodo').select2({
-            placeholder: "Select a year",
-            width: '100px'
         });
 
         $('#selectEstilos').select2({

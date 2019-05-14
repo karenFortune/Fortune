@@ -23,6 +23,45 @@
             $(this).closest("tr").remove();
 		});
 
+		//Desplazamiento
+$('.tbodyTallas').keydown(function(e){
+    var $table = $(this);
+    var $active = $('input:focus,select:focus',$table);
+    var $next = null;
+    var focusableQuery = 'input:visible,select:visible,textarea:visible';
+    var position = parseInt( $active.closest('td').index()) + 1;
+    console.log('position :',position);
+    switch(e.keyCode){
+        case 37: // <Left>
+            $next = $active.parent('td').prev().find(focusableQuery);   
+            break;
+        case 38: // <Up>                    
+            $next = $active
+                .closest('tr')
+                .prev()                
+                .find('td:nth-child(' + position + ')')
+                .find(focusableQuery)
+            ;
+            
+            break;
+        case 39: // <Right>
+            $next = $active.closest('td').next().find(focusableQuery);            
+            break;
+        case 40: // <Down>
+            $next = $active
+                .closest('tr')
+                .next()                
+                .find('td:nth-child(' + position + ')')
+                .find(focusableQuery)
+            ;
+            break;
+    }       
+    if($next && $next.length)
+    {        
+        $next.focus();
+    }
+});
+
 
         $("#selectTipoCamiseta").select2({
             placeholder: "Select a type of shirt",
@@ -70,10 +109,29 @@
                     return "Searching..";
                 }
             }
+		});
+
+		 $("#selectFormPack").select2({
+            //placeholder: "Select a specialty",
+            dropdownParent: $("#nuevoEstiloModal"),
+            language: {
+
+                noResults: function () {
+
+                    return "There is no result";
+                },
+                searching: function () {
+
+                    return "Searching..";
+                }
+            }
         });
 
         $("#selectEspecialidad").val('12');
-        $("#selectEspecialidad").trigger('change');
+		$("#selectEspecialidad").trigger('change');
+
+		 $("#selectFormPack").val('1');
+        $("#selectFormPack").trigger('change');
 
         $("#selectTela").select2({
             placeholder: "Select a type of fabric",
@@ -133,7 +191,9 @@
             data: { CodigoColor: colorEstilo, DescColor: colorDesc },
             method: 'post'
         }).done(function (data) {        });
-                $("#nuevoColor").prop("disabled", true);
+				$("#nuevoColor").prop("disabled", true);
+		    $("#nuevoColor").removeClass("btn btn-danger");
+			$("#nuevoColor").addClass("btn btn-success"); 
         alertify.set('notifier', 'position', 'top-right');
         alertify.notify('The color was registered correctly.', 'success', 10, null);
         });
@@ -146,7 +206,9 @@
             method: 'post'
         }).done(function (data) {
         });
-            $("#nuevoEstilo").prop("disabled", true);
+			$("#nuevoEstilo").prop("disabled", true);
+			$("#nuevoEstilo").removeClass("btn btn-danger");
+			$("#nuevoEstilo").addClass("btn btn-success"); 
             alertify.set('notifier', 'position', 'top-right');
         alertify.notify('the style was registered correctly.', 'success', 10, null);
     });
@@ -200,9 +262,10 @@
                 var IdGenero = $("#selectGenero option:selected").val();
                 var IdTela = $("#selectTela option:selected").val();
                 var TipoCamiseta = $("#selectTipoCamiseta option:selected").val();
-                var Especialidad = $("#selectEspecialidad option:selected").val();
-                $.ajax('@Url.Action("RegistrarNuevoItems", "POSummary")', {
-                    data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela, IdEspecialidad: Especialidad, IdPedido: IdPedido, ListaPackSytle: obj },
+				var Especialidad = $("#selectEspecialidad option:selected").val();
+				 var TipoFormPack = $("#selectFormPack option:selected").val();
+				$.ajax('@Url.Action("RegistrarNuevoItems", "POSummary")', {
+					data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela, IdEspecialidad: Especialidad, IdPedido: IdPedido, ListaPackSytle: obj, IdTipoFormPack: TipoFormPack },
                 type: "POST",
                 async: true,
                 dataType: "json",
@@ -227,16 +290,18 @@
                 data: { Genero: text},
                     method: 'GET',
                     success: function (result) {
-                        var html = '';
+						var html = '';
+						var cont = 0;
                         $.each(result, function (key, item) {
                             html += '<tr>';
                             html += '<td class="mover"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>';
                             html += '<td class="datoTalla"><input type="text" id="f-talla" class="form-control talla" value="' + item.CatTallaItem.Talla + '"/></td>';
-                            html += '<td class="datoTalla"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 numCantTall "  /></td>';
+                            html += '<td class="datoTalla"><input type="text" name="l-cantidad" id="l-cantidad'+cont+'" class="form-control l-name01 numCantTall"  onblur="sumar(' + cont + ')" /></td>';
                             html += '<td class="datoTalla"><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>';
-                            html += '<td class="datoTalla"><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 numEjmTall"  value="' + 0 + '"/></td>';
+                            html += '<td class="datoTalla"><input type="text" name="s-ejemplo" id="s-ejemplo'+cont+'" class="form-control s-name01 numEjmTall" onblur="sumarEjemplo(' + cont + ')" value="' + 0 + '"/></td>';
                             html += '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
-                            html += '</tr>';
+							html += '</tr>';
+							cont++;
                         });
                         $('.tbodyTallas').html(html);
                     },
@@ -485,7 +550,42 @@
             rep = eval(val);
             document.getElementById("CantidadT").value = rep;
         }
-    }, true);
+	}, true);
+
+		function sumar(index) {
+		$(".numCantTall").each(
+			function (index, value) {
+				var resp;
+				document.addEventListener("blur", function (event) {
+					debugger
+					var valor = "l-cantidad" + index;
+					var val = document.getElementById(valor).value;
+					if (val !== "") {
+						resp = eval(val);
+						document.getElementById(valor).value = resp;
+					}
+				}, true);
+			}
+		);
+	}
+
+			function sumarEjemplo(index) {
+		$(".numEjmTall").each(
+			function (index, value) {
+				var resp;
+				document.addEventListener("blur", function (event) {
+					debugger
+					var valor = "s-ejemplo" + index;
+					var val = document.getElementById(valor).value;
+					if (val !== "") {
+						resp = eval(val);
+						document.getElementById(valor).value = resp;
+					}
+				}, true);
+			}
+		);
+	}
+
 </script>
 <style>
     .ui-autocomplete {
@@ -520,19 +620,25 @@
 		<div class="panel-heading">
 			<h4>Reception of Items</h4>
 		</div>
+		<br />
 		<div class="container-fluid">
 			<div class="form-row ">
-				<div class="form-group col-md-5">
+				<div class="form-group col-md-4">
 					@Html.LabelFor(model => model.ItemDescripcion.ItemEstilo, htmlAttributes: new { @class = "control-label" })
 					@Html.EditorFor(model => model.ItemDescripcion.ItemEstilo, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
 					@Html.ValidationMessageFor(model => model.ItemDescripcion.ItemEstilo, "", new { @class = "text-danger" })
 				</div>
-				<div class="form-group col-md-5">
+				<div class="form-group col-sm-3">
+					@Html.LabelFor(model => model.CatTipoFormPack.TipoFormPack, htmlAttributes: new { @class = "control-label " }) <br />
+					@Html.DropDownList("listTipoFormPack", (SelectList)ViewBag.listTipoFormPack, string.Empty, new { @class = "form-control nuevo_item", @id = "selectFormPack", @name = "state", @style = "width: 60%;" })
+					@Html.ValidationMessageFor(model => model.IdTipoFormPack, "", new { @class = "text-danger" })
+				</div>
+				<div class="form-group col-md-4">
 					@Html.LabelFor(model => model.ItemDescripcion.Descripcion, htmlAttributes: new { @class = "control-label" })
 					@Html.EditorFor(model => model.ItemDescripcion.Descripcion, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
 					@Html.ValidationMessageFor(model => model.ItemDescripcion.Descripcion, "", new { @class = "text-danger" })
 				</div>
-				<div class="form-group col-md-3">
+				<div class="form-group col-md-2">
 					<br />
 					<button type="button" class="btn btn-success" id="nuevoEstilo" data-toggle="modal">
 						<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Style
@@ -540,16 +646,16 @@
 				</div>
 			</div>
 		</div>
-
+		<hr />
 		<div class="container-fluid">
 			<div class="form-row">
-				<div class="form-group col-md-5">
+				<div class="form-group col-md-4">
 					@Html.LabelFor(model => model.CatColores.CodigoColor, htmlAttributes: new { @class = "control-label" })
 					@Html.EditorFor(model => model.CatColores.CodigoColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
 					@Html.ValidationMessageFor(model => model.CatColores.CodigoColor, "", new { @class = "text-danger" })
 
 				</div>
-				<div class="form-group col-md-5">
+				<div class="form-group col-md-4">
 					@Html.LabelFor(model => model.CatColores.DescripcionColor, htmlAttributes: new { @class = "control-label" })
 					@Html.EditorFor(model => model.CatColores.DescripcionColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
 					@Html.ValidationMessageFor(model => model.CatColores.DescripcionColor, "", new { @class = "text-danger" })
@@ -564,12 +670,12 @@
 				</div>
 			</div>
 		</div>
-
+		<hr />
 
 		<div class="container-fluid">
 			<div class="form-row">
 
-				<div class="form-group col-sm-5">
+				<div class="form-group col-sm-4">
 					@Html.LabelFor(model => model.CantidadT, htmlAttributes: new { @class = "control-label" })
 					@Html.EditorFor(model => model.CantidadT, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
 					@Html.ValidationMessageFor(model => model.CantidadT, "", new { @class = "text-danger" })
@@ -622,7 +728,7 @@
 								<thead>
 									<tr>
 										<th class="index"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true" /></th>
-										<th>Packing</th>
+										<th>Item Packing</th>
 										<th></th>
 									</tr>
 								</thead>

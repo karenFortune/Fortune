@@ -134,6 +134,50 @@ namespace FortuneSystem.Models.Item
             return listTallas;
         }
 
+		//Muestra la lista de tallas por estilo
+		public IEnumerable<ItemTalla> ListaTallasHTPorEstilo(int? id)
+		{
+			Conexion conn = new Conexion();
+			List<ItemTalla> listTallas = new List<ItemTalla>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "Lista_Tallas_Por_Estilo";
+				comando.CommandType = CommandType.StoredProcedure;
+				comando.Parameters.AddWithValue("@Id", id);
+				leer = comando.ExecuteReader();
+				int calidad = 0;
+				while (leer.Read())
+				{
+					ItemTalla tallas = new ItemTalla()
+					{
+						Talla = leer["TALLA"].ToString(),
+						IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]),
+						Cantidad = Convert.ToInt32(leer["CANTIDAD"]),
+						Extras = Convert.ToInt32(leer["EXTRAS"]),
+						Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
+						Estilo = leer["ITEM_STYLE"].ToString(),
+						DescripcionEstilo = leer["DESCRIPTION"].ToString()
+
+					};
+					calidad = Convert.ToInt32(leer["CANTIDAD"]);
+
+					tallas.Cantidad = calidad;
+					listTallas.Add(tallas);
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+
+			return listTallas;
+		}
+
 		//Muestra la lista de tallas Packing
 		public IEnumerable<ItemTalla> ListaTallasPacking(int? id)
 		{

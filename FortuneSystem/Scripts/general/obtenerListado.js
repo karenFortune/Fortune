@@ -328,7 +328,7 @@ function obtener_tallas_item(IdEstilo) {
 			var cantidades_arrayTotal = cadena_cantidadesTotal.split('*');
 			html += '<td>' + cantidadesPOTotal + '</td>';
 			html += '</tr>';
-			html += '</tr><tr><td>PO Quantity</td>';
+			html += '</tr><tr><td>1rst Quantity</td>';
 			var cantidadesPO = 0;
 			var cadena_cantidades = "";
 			$.each(lista_Qty_Tallas, function (key, item) {

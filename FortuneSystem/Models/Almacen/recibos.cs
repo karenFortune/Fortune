@@ -22,8 +22,9 @@ namespace FortuneSystem.Models.Almacen
         public string po_referencia { get; set; }
         public virtual recibos_item ri { get; set; }
         public List<recibos_item> lista_recibos_item { get; set; }
-        public virtual Inventario Inventario { get; set; }
-        public string TallaRecibo { get; set; }
+		public Inventario Inventario { get; set; }
+		public string TallaRecibo { get; set; }
 
-    }
+
+	}
 }

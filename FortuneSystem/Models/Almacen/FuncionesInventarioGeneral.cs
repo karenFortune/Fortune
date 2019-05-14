@@ -1258,7 +1258,7 @@ namespace FortuneSystem.Models.Almacen
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
-                com.CommandText = "SELECT ID_COLOR from PO_SUMMARY where ITEM_ID='" + estilo + "' and ID_PEDIDOS='"+pedido+"'";
+                com.CommandText = "SELECT ID_COLOR from PO_SUMMARY where ITEM_ID='" + estilo + "' and ID_PEDIDOS='"+pedido+ "' AND ID_ESTADO!=6 AND ID_ESTADO!=7 ";
                 leer = com.ExecuteReader();
                 while (leer.Read()){
                     temp = Convert.ToInt32(leer["ID_COLOR"]);
@@ -1381,27 +1381,19 @@ namespace FortuneSystem.Models.Almacen
             return temp;
         }
 
-        public string obtener_sucursal_id_usuario(int cadena)
-        {
+        public string obtener_sucursal_id_usuario(int cadena){
             string temp = "";
             Conexion con = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
                 com.CommandText = "SELECT id_sucursal from Usuarios where Id='" + cadena + "'";
                 leer = com.ExecuteReader();
-                while (leer.Read())
-                {
+                while (leer.Read()){
                     temp = Convert.ToString(leer["id_sucursal"]);
-                }
-                leer.Close();
-            }
-            finally
-            {
-                con.CerrarConexion(); con.Dispose();
-            }
+                }leer.Close();
+            }finally{con.CerrarConexion(); con.Dispose();}
             return temp;
         }
 
@@ -1977,7 +1969,7 @@ namespace FortuneSystem.Models.Almacen
                 SqlDataReader leer = null;
                 com.Connection = con.AbrirConexion();
                 com.CommandText = "SELECT PS.ID_PO_SUMMARY from PO_SUMMARY PS,PEDIDO P where PS.ITEM_ID='" + estilo+ "' and PS.ID_PEDIDOS='"+po+"' " +
-                    " AND P.ID_PEDIDO=PS.ID_PEDIDOS AND P.ID_STATUS!=6 AND P.ID_STATUS!=7 ";
+                    " AND P.ID_PEDIDO=PS.ID_PEDIDOS AND P.ID_STATUS!=6 AND P.ID_STATUS!=7  AND PS.ID_ESTADO!=6 AND PS.ID_ESTADO!=7 ";
                 leer = com.ExecuteReader();
                 while(leer.Read()){
                     temp = Convert.ToInt32(leer["ID_PO_SUMMARY"]);
@@ -2250,7 +2242,7 @@ namespace FortuneSystem.Models.Almacen
             return Lista.Distinct().ToList(); 
         }
 
-
+        
 
 
 

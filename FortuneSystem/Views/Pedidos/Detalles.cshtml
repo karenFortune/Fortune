@@ -52,6 +52,11 @@
             transform: rotate(-45deg);
             transform-origin: center;
         }
+
+			body .editar {
+		width: 140% !important;
+		margin-left: -20% !important;
+	}
 </style>
 @{
     if (TempData["cancelarStylePO"] != null)
@@ -106,7 +111,8 @@
                     html += '<td>' + item.ItemDescripcion.Descripcion + '</td>';
                     html += '<td>' + item.CatColores.CodigoColor + '</td>';
                     html += '<td>' + item.CatColores.DescripcionColor + '</td>';
-                    html += '<td>' + item.Cantidad + '</td>';
+					html += '<td>' + item.Cantidad + '</td>';
+					html += '<td>' + item.CatTipoFormPack.TipoFormPack + '</td>';
                     html += '<td>' + item.NombreUsuario + '</td>';
                     html += '<td>' + item.Price + '</td>';
                     html += '<td>' + item.Total + '</td>';
@@ -261,7 +267,7 @@
 </div>
 <div class="modal fade" id="editarEstiloModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="editarEstiloModal">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <div class="modal-content editar">
             <div class="modal-header">
                 <h2 class="modal-title" id="exampleModalLabel">STYLE</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -291,9 +297,9 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="nuevoEstiloModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="nuevoEstiloModal" aria-hidden="true">
+<div class="modal fade" id="nuevoEstiloModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="nuevoEstiloModal" aria-hidden="true" style="width: 100% !important">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <div class="modal-content editar">
             <div class="modal-header">
                 <h2 class="modal-title" id="exampleModalLabel">REGISTER STYLES</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -304,6 +310,7 @@
                         PO
                         @Html.LabelFor(model => model.IdPedido, new { @class = "control-label" })
                         <label style="font-size: x-large; font-weight: 500">@Html.DisplayFor(model => model.IdPedido, new { @class = "control-label col-md-6" })</label>
+						- <label style="font-size: x-large; font-weight: 500">@Html.DisplayFor(model => model.PO, new { @class = "control-label col-md-6" })</label>
                     </label>
                 </div>
                 <div id="Contenedor"></div>
@@ -341,17 +348,28 @@
 			</div>
 			<br />
 			@if (Session["idCargo"] != null)
-		    {
-						if((int)Session["idCargo"] == 1 || (int)Session["idCargo"] == 6)
-						{
+			{
+				if ((int)Session["idCargo"] == 1 || (int)Session["idCargo"] == 6)
+				{
 
-								<p>
-								<a href="#" class="btn btn-primary  btnNuevo" title="ADD NEW STYLE" id="nuevo-estilo"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> ADD NEW STYLE</a>
-								</p>
-						}
-				
+					<p>
+						<a href="#" class="btn btn-primary  btnNuevo" title="ADD NEW STYLE" id="nuevo-estilo"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> ADD NEW STYLE</a>
+					</p>
+
+					@*<p>
+						<a href="@Url.Action("Screnn")">
+							<button type="button" class="btn btn-primary" id="nuevo-usuario" data-toggle="modal">
+								<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> SCREEN
+							</button>
+						</a>
+
+						<br />
+						<br />
+					</p>*@
+				}
+
 			}
-			else if(Session["idCargo"] == null || (int)Session["idCargo"] == 0 )
+			else if (Session["idCargo"] == null || (int)Session["idCargo"] == 0)
 			{
 				<script type="text/javascript">
                 var url = '@Url.Action("Login", "Login")';
@@ -381,18 +399,19 @@
             <div id="div_tabla_estilos" style="width: 100%; height:300px; overflow:auto; ">
                 <table id="tabless" class="table table-sm table-striped table-hover ">
                     <thead>
-                        <tr>
-                            <th style="border-top-left-radius:0px !important;">#</th>
-                            <th>ITEM</th>
-                            <th>ITEM DESCRIPTION</th>
-                            <th>COLOR CODE</th>
-                            <th>COLOR DESCRIPTION</th>
-                            <th>QTY</th>
-                            <th>USER</th>
-                            <th>PRICE</th>
-                            <th>TOTAL</th>
-                            <th>ACTIONS</th>
-                        </tr>
+						<tr>
+							<th style="border-top-left-radius:0px !important;">#</th>
+							<th>ITEM</th>
+							<th>ITEM DESCRIPTION</th>
+							<th>COLOR CODE</th>
+							<th>COLOR DESCRIPTION</th>
+							<th>QTY</th>
+							<th>FORM PACK</th>
+							<th>USER</th>
+							<th>PRICE</th>
+							<th>TOTAL</th>
+							<th>ACTIONS</th>
+						</tr>
                     </thead>
                     <tbody class="tbody"></tbody>
                 </table>

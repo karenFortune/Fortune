@@ -70,7 +70,8 @@ function buscar_estilos(ID) {
                 html += '<td>' + item.EstiloItem + '</td>';
                 html += '<td>' + item.ItemDescripcion.Descripcion + '</td>';
                 html += '<td>' + item.CatColores.CodigoColor + '</td>';
-                html += '<td>' + item.CatColores.DescripcionColor + '</td>';
+				html += '<td>' + item.CatColores.DescripcionColor + '</td>';
+				html += '<td>' + item.CatTipoFormPack.TipoFormPack + '</td>';
                 html += '<td>' + item.Cantidad + '</td>';
                 html += '<td>' + item.Price + '</td>';
                 html += '<td>' + item.Total + '</td>';
@@ -160,15 +161,15 @@ function obtenerListaTallas(EstiloId) {
                         $("#btnAdd").hide();
                         $("#nuevaTalla").hide();
                         $("#nuevoPallet").hide();
-                        $("#modificarBatch").hide();
-						$("#panelNoEstilosBPPK").css('display', 'inline');
+                        $("#modificarBatch").hide();					
 						$("#modificarPack").hide();
                         $("#imgPanelBPPK").css('cursor', 'none');
                         $("#div_estilo").hide();
                         $("#div_titulo").hide();
                         $("#tablePacking").hide();
                         $("#listaTallaBatch").hide();
-                        $("#consultaTalla").css('height', '700px');
+						$("#consultaTalla").css('height', '700px');
+						$("#panelNoEstilosBPPK").css('display', 'inline');
                     }
                 } else {
                     if (cargo !== 1 || cargo !== 9) {
@@ -176,11 +177,15 @@ function obtenerListaTallas(EstiloId) {
                         $("#panelNoEstilosBPPK").css('display', 'none');
                         $("#consultaTalla").css('height', '1380px');
 
-                    } else {
-                        $("#consultaTalla").css('height', '1600px');
+					} else {						
+						$("#consultaTalla").css('height', '1600px');
+						$("#panelNoEstilosBPPK").css('display', 'inline');
+						$("#imgPanelBPPK").css('cursor', 'none');
 					}
 					if (cargo === 15) {
 						$("#modificarPack").hide();
+						$("#panelNoEstilosBPPK").css('display', 'inline');
+						$("#imgPanelBPPK").css('cursor', 'none');
 					}
                     $("#btnAdd").hide();
                     $("#nuevaTalla").hide();
@@ -215,7 +220,7 @@ function obtenerListaTallas(EstiloId) {
 					var cantidadesTotal = 0;
 					var cadena_cantidadesTotal = "";
 					$.each(listaT, function (key, item) {
-						html += '<td class="calidad">' + item.Cantidad + '</td>';
+						html += '<td class="">' + item.Cantidad + '</td>';
 						cantidadesTotal += item.Cantidad;
 						cadena_cantidadesTotal += "*" + item.Cantidad;
 					});
@@ -374,7 +379,7 @@ function obtenerListaTallas(EstiloId) {
                         if (listaTBatch === 0) {
                             item = 0;
                         }
-						var resta = parseInt(item) - parseInt(cantidades_arrayTotal[i]);
+						var resta = parseInt(item) - parseInt(cantidades_array[i]);
 
                         if (resta === 0) {
                             html += '<td class="faltante" style="color:black;">' + resta + '</td>';
@@ -887,9 +892,11 @@ function obtener_bacth_estilo_pack(IdEstilo) {
             });
             if (numBatch === 0) {
                 // $("#div_tabla_talla").hide();
+				$("#panelNoEstilosBPPK").css('display', 'inline');
             } else {
                 var html = '';   
-                var estilos = jsonData.Data.estilos;
+				var estilos = jsonData.Data.estilos;
+				$("#panelNoEstilosBPPK").css('display', 'none');
                 if (estilos !== '') {
                     $("#div_titulo").html("<h3>BATCH REVIEW </h3>");
                     $("#div_titulo").css("display", "inline");

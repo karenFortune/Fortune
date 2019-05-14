@@ -39,21 +39,31 @@
 
 		$(document).on("click", ".pDelete", function () {
 			$(this).closest("tr").remove();
-		});
-
+	});
+	debugger
+	var cont;
+	var contadorGeneral;
     $(document).ready(function () {
 		buscar_Packing();
         $(document).on("click", ".classAdd", function () {
-            var rowCount = $('.data-Talla').length + 1;
+			var rowCount = $('.data-Talla').length + 1;
+			var contador = cont;
+			if (contador != 0) {
+				contador = cont
+			} else {
+				contador = contadorGeneral + 1;
+			}
+			
             var tallasdiv = '<tr class="data-Talla">' +  
 
                 '<td class="mover"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>' +
                 '<td class="datoTalla"><input type="text"  name="f-talla" id="f-talla" class="form-control talla" autocomplete="off" /></td>' +
-                '<td class="datoTalla"><input type="text" id="l-cantidad" name="l-cantidad" class="form-control l-name01 numCantTall"  /></td>' +
+                '<td class="datoTalla"><input type="text" id="l-cantidad'+contador+'" name="l-cantidad" class="form-control l-name01 numCantTall" onblur="sumar(' + contador + ')"  /></td>' +
                 '<td class="datoTalla"><input type="text" id="e-extras"  name="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>' +
-                '<td class="datoTalla"><input type="text" id="s-ejemplo" name="s-ejemplo" class="form-control s-name01 numEjmTall" value="' + 0 + '"/></td>' +              
+                '<td class="datoTalla"><input type="text" id="s-ejemplo'+contador+'" name="s-ejemplo" class="form-control s-name01 numEjmTall" onblur="sumarEjemplo(' + contador + ')" value="' + 0 + '"/></td>' +              
                 '<td><button type="button" id="btnDelete" class="delTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
-                '</tr>';
+				'</tr>';			
+			//contadorGeneral = contadorGeneral + 1;
             $('#tablaTallas').append(tallasdiv);
         });
 
@@ -84,6 +94,18 @@
 
         $('#selectEspecialidad').select2({
             placeholder: "Select a specialty",
+            dropdownParent: $("#editarEstiloModal"),
+            language: {
+                noResults: function () {
+                    return "There is no result";
+                },
+                searching: function () {
+                    return "Searching..";
+                }
+            }
+        });
+
+		        $('#selectFormPack').select2({       
             dropdownParent: $("#editarEstiloModal"),
             language: {
                 noResults: function () {
@@ -387,17 +409,19 @@
             dataType: "json",
             success: function (jsonData) {
                 var listaT = jsonData.Data.listaTalla;
-                var html = '';    
+				var html = '';  
+				cont = 0;
                 $.each(listaT, function (key, item) {          
                
-                    html += '<tr>';
+                    html += '<tr class="rowE">';
                     html += '<td class="mover"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>';
                     html += '<td class="datoTalla"><input type="text" id="f-talla" class="form-control talla" autocomplete="off" value="' + item.Talla + '"/></td>';
-                    html += '<td class="datoTalla"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 numCantTall" value="' + item.Cantidad + '"/></td>';
-                    html += '<td class="datoTalla"><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 numExtTall " value="' + item.Extras + '"/></td>';
-                    html += '<td class="datoTalla"><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 numEjmTall"  value="' + item.Ejemplos + '"/></td>';
+                    html += '<td class="datoTalla"><input type="text" name="l-cantidad" id="l-cantidad'+cont+'" class="form-control l-name01 move numCantTall" value="' + item.Cantidad + '"  onblur="sumar(' + cont + ')"/></td>';
+                    html += '<td class="datoTalla"><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 move numExtTall " value="' + item.Extras + '"/></td>';
+                    html += '<td class="datoTalla"><input type="text" name="s-ejemplo" id="s-ejemplo'+cont+'" class="form-control move s-name01 numEjmTall"  onblur="sumarEjemplo(' + cont + ')" value="' + item.Ejemplos + '"/></td>';
                     html += '<td class="datoTalla"><button type="button" id="btnDelete"  class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
-                    html += '</tr>';
+					html += '</tr>';
+					cont++;
                 });
                 $('.tbodyTallas').html(html);
 
@@ -405,7 +429,47 @@
             },
             error: function (errormessage) { alert(errormessage.responseText); }
         });
+	}
+
+//Desplazamiento
+$('.tbodyTallas').keydown(function(e){
+    var $table = $(this);
+    var $active = $('input:focus,select:focus',$table);
+    var $next = null;
+    var focusableQuery = 'input:visible,select:visible,textarea:visible';
+    var position = parseInt( $active.closest('td').index()) + 1;
+    console.log('position :',position);
+    switch(e.keyCode){
+        case 37: // <Left>
+            $next = $active.parent('td').prev().find(focusableQuery);   
+            break;
+        case 38: // <Up>                    
+            $next = $active
+                .closest('tr')
+                .prev()                
+                .find('td:nth-child(' + position + ')')
+                .find(focusableQuery)
+            ;
+            
+            break;
+        case 39: // <Right>
+            $next = $active.closest('td').next().find(focusableQuery);            
+            break;
+        case 40: // <Down>
+            $next = $active
+                .closest('tr')
+                .next()                
+                .find('td:nth-child(' + position + ')')
+                .find(focusableQuery)
+            ;
+            break;
+    }       
+    if($next && $next.length)
+    {        
+        $next.focus();
     }
+});
+
 
     function eliminarTallas(talla) {
             var idEstilo = $("#IdItems").val();
@@ -425,6 +489,7 @@
                 }
             });
     }
+
 
     function buscarGenero(genero) {
         $('#selectGenero option').each(function (i, e) {
@@ -590,19 +655,21 @@
                 var alert = alertify.alert("Message", 'All fields are required.').set('label', 'Aceptar');
                 alert.set({ transition: 'zoom' });
                 alert.set('modal', false);
-            } else {
+			} else {
+				debugger
                 $("#nuevoItem").prop("disabled", true);
                 $("#crearTallas").show();
                 var EstiloItem = $("#ItemDescripcion_ItemEstilo").val();
                 var IdColor = $("#CatColores_CodigoColor").val();
-                var Cantidad = $("#Cantidad").val();
+                var Cantidad = $("#CantidadT").val();
                 var Precio = $("#Precio").val();
                 var IdGenero = $("#selectGenero option:selected").val();
                 var IdTela = $("#selectTela option:selected").val();
                 var TipoCamiseta = $("#selectTipoCamiseta option:selected").val();
-                var Especialidad = $("#selectEspecialidad option:selected").val();
-                $.ajax('@Url.Action("Actualizar_Edicion_Estilo", "POSummary")', {
-                    data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela, IdEspecialidad: Especialidad, IdEstilo: IDEstilo, PedidoId: IDPEDIDO },
+				var Especialidad = $("#selectEspecialidad option:selected").val();
+				var TipoFormaPack = $("#selectFormPack option:selected").val();
+				$.ajax('@Url.Action("Actualizar_Edicion_Estilo", "POSummary")', {
+					data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela, IdEspecialidad: Especialidad, IdEstilo: IDEstilo, PedidoId: IDPEDIDO, IdTipoFormPack: TipoFormaPack },
                 method: 'get',
                 async: true,
                 success: function (data) {
@@ -620,8 +687,7 @@
         $('#ItemDescripcion_Descripcion').val('');
         $('#CatColores_CodigoColor').val('');
         $('#CatColores_DescripcionColor').val('');
-        $('#Cantidad').val(0);
-        $('#Precio').val(0);
+        $('#CantidadT').val(0);       
         $("#nuevoColor").prop("disabled", false);
         $("#nuevoEstilo").prop("disabled", false);
         limpiarInptCant();
@@ -647,7 +713,50 @@
     }
     $(document).ready(function () {
         $('.tbodyTallas').sortable();
-    });
+	});
+	    //Sumar cantidades
+    var rep;
+    document.addEventListener("blur", function (event) {
+        var val = document.getElementById("CantidadT").value;
+        if (val !== "") {
+            rep = eval(val);
+            document.getElementById("CantidadT").value = rep;
+        }
+	}, true);
+
+		function sumar(index) {
+		$(".numCantTall").each(
+			function (index, value) {
+				var resp;
+				document.addEventListener("blur", function (event) {
+					debugger
+					var valor = "l-cantidad" + index;
+					var val = document.getElementById(valor).value;
+					if (val !== "") {
+						resp = eval(val);
+						document.getElementById(valor).value = resp;
+					}
+				}, true);
+			}
+		);
+	}
+
+	function sumarEjemplo(index) {
+		$(".numEjmTall").each(
+			function (index, value) {
+				var resp;
+				document.addEventListener("blur", function (event) {
+					debugger
+					var valor = "s-ejemplo" + index;
+					var val = document.getElementById(valor).value;
+					if (val !== "") {
+						resp = eval(val);
+						document.getElementById(valor).value = resp;
+					}
+				}, true);
+			}
+		);
+	}
 
 </script>
 <style>
@@ -667,6 +776,8 @@
 		color: white !important;
 		background: #709ec5 !important;
 	}
+
+
 </style>
 
 @using (Html.BeginForm())
@@ -685,17 +796,22 @@
 			</div>
 			<div class="container-fluid">
 				<div class="form-row ">
-					<div class="form-group col-md-5">
+					<div class="form-group col-md-4">
 						@Html.LabelFor(model => model.ItemDescripcion.ItemEstilo, htmlAttributes: new { @class = "control-label" })
 						@Html.EditorFor(model => model.ItemDescripcion.ItemEstilo, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
 						@Html.ValidationMessageFor(model => model.ItemDescripcion.ItemEstilo, "", new { @class = "text-danger" })
 					</div>
-					<div class="form-group col-md-5">
+					<div class="form-group col-sm-3">
+						@Html.LabelFor(model => model.CatTipoFormPack.TipoFormPack, htmlAttributes: new { @class = "control-label " }) <br />
+						@Html.DropDownList("TipoFormPack", (SelectList)ViewBag.listTipoFormPack, string.Empty, new { @class = "form-control nuevo_item", @id = "selectFormPack", @name = "state", @style = "width: 60%;" })
+						@Html.ValidationMessageFor(model => model.IdTipoFormPack, "", new { @class = "text-danger" })
+					</div>
+					<div class="form-group col-md-4">
 						@Html.LabelFor(model => model.ItemDescripcion.Descripcion, htmlAttributes: new { @class = "control-label" })
 						@Html.EditorFor(model => model.ItemDescripcion.Descripcion, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
 						@Html.ValidationMessageFor(model => model.ItemDescripcion.Descripcion, "", new { @class = "text-danger" })
 					</div>
-					<div class="form-group col-md-3">
+					<div class="form-group col-md-2">
 						<br />
 						<button type="button" class="btn btn-success" id="nuevoEstilo" data-toggle="modal">
 							<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Style
@@ -703,16 +819,16 @@
 					</div>
 				</div>
 			</div>
-
+			<hr />
 			<div class="container-fluid">
 				<div class="form-row">
-					<div class="form-group col-md-5">
+					<div class="form-group col-md-4">
 						@Html.LabelFor(model => model.CatColores.CodigoColor, htmlAttributes: new { @class = "control-label" })
 						@Html.EditorFor(model => model.CatColores.CodigoColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
 						@Html.ValidationMessageFor(model => model.CatColores.CodigoColor, "", new { @class = "text-danger" })
 
 					</div>
-					<div class="form-group col-md-5">
+					<div class="form-group col-md-4">
 						@Html.LabelFor(model => model.CatColores.DescripcionColor, htmlAttributes: new { @class = "control-label" })
 						@Html.EditorFor(model => model.CatColores.DescripcionColor, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
 						@Html.ValidationMessageFor(model => model.CatColores.DescripcionColor, "", new { @class = "text-danger" })
@@ -725,16 +841,16 @@
 					</div>
 				</div>
 			</div>
-
+			<hr />
 			<div class="container-fluid">
 				<div class="form-row">
-					<div class="form-group col-sm-5">
-						@Html.LabelFor(model => model.Cantidad, htmlAttributes: new { @class = "control-label" })
-						@Html.EditorFor(model => model.Cantidad, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
-						@Html.ValidationMessageFor(model => model.Cantidad, "", new { @class = "text-danger" })
+					<div class="form-group col-sm-4">
+						@Html.LabelFor(model => model.CantidadT, htmlAttributes: new { @class = "control-label" })
+						@Html.EditorFor(model => model.CantidadT, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
+						@Html.ValidationMessageFor(model => model.CantidadT, "", new { @class = "text-danger" })
 					</div>
 
-					<div class="form-group col-sm-5">
+					<div class="form-group col-sm-4">
 						@Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label" })
 						@Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
 						@Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
@@ -746,6 +862,11 @@
 						@Html.ValidationMessageFor(model => model.IdEspecialidad, "", new { @class = "text-danger" })
 
 					</div>
+					
+				</div>
+			</div>
+			<div class="container-fluid">
+				<div class="form-row">
 					<div class="form-group col-sm-4 estilo">
 						@Html.LabelFor(model => model.IdGenero, htmlAttributes: new { @class = "control-label " }) <br />
 						@Html.DropDownList("Genero", (SelectList)ViewBag.listGenero, new { @class = "form-control nuevo_item", @id = "selectGenero", @name = "state", @style = "width: 80%;" })
@@ -756,10 +877,6 @@
 						@Html.DropDownList("Tela", (SelectList)ViewBag.listTela, new { @class = "form-control nuevo_item", @id = "selectTela", @name = "state", @style = "width: 80%;" })
 						@Html.ValidationMessageFor(model => model.IdTela, "", new { @class = "text-danger" })
 					</div>
-				</div>
-			</div>
-			<div class="container-fluid">
-				<div class="form-row">
 					<div class="form-group col-sm-4">
 						@Html.LabelFor(model => model.TipoCamiseta, htmlAttributes: new { @class = "control-label " }) <br />
 						@Html.DropDownList("DescripcionTipo", (SelectList)ViewBag.listTipoCamiseta, string.Empty, new { @class = "form-control nuevo_item", @id = "selectTipoCamiseta", @name = "state", @style = "width: 80%;" })
@@ -778,7 +895,7 @@
 									<thead>
 										<tr>
 											<th class="index"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true" /></th>
-											<th>Packing</th>
+											<th>Item Packing</th>
 											<th></th>
 										</tr>
 									</thead>

@@ -5,6 +5,7 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <style>
 	tr.highlighted td {
 		background: #b3e0ff;
@@ -145,7 +146,7 @@
 }
 
 </div>
-<div class="modal fade" id="editarEstiloModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="editarEstiloModal" style="width: 110% !important">
+<div class="modal fade" id="editarEstiloPOModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="editarEstiloPOModal" style="width: 110% !important">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content editar">
 			<div class="modal-header">
@@ -153,7 +154,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			</div>
 			<div class="modal-body">
-				<div id="ContenedorEditarModal"></div>
+				<div id="ContenedorEditarPOModal"></div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary " data-dismiss="modal">Cancel</button>
@@ -182,6 +183,13 @@
 				<br />
 			</p>
 		}
+		else if (Session["idCargo"] == null || (int)Session["idCargo"] == 0)
+		{
+			<script type="text/javascript">
+                var url = '@Url.Action("Login", "Login")';
+                window.location.href = url;
+			</script>
+		}
 		<p id="date_filter">
 			<span id="date-label-from" class="date-label">
 				&nbsp;&nbsp; Range Date:<select id="selectFechas">
@@ -195,9 +203,9 @@
 		</p>
 
 		@*<p id="date_filter_fo">
-					 <span id="date-label-from_fo" class="date-label">From Range Date Orden: </span><input class="date_range_filter date" type="text" id="datepicker_from_fo" />
-					<span id="date-label-to_fo" class="date-label">To:<input class="date_range_filter date" type="text" id="datepicker_to_fo" />
-			</p>*@
+				 <span id="date-label-from_fo" class="date-label">From Range Date Orden: </span><input class="date_range_filter date" type="text" id="datepicker_from_fo" />
+				<span id="date-label-to_fo" class="date-label">To:<input class="date_range_filter date" type="text" id="datepicker_to_fo" />
+		</p>*@
 
 
 		<div id="botones"></div>
@@ -318,8 +326,8 @@
 	$(document).on('click', '.btnEdit', function () {
 		$("#loading").css('display', 'none');
 		var id = $(this).data("value");
-		$("#editarEstiloModal").modal("show");
-		$("#ContenedorEditarModal").load("/Pedidos/EditarPO/" + id, function () {
+		$("#editarEstiloPOModal").modal("show");
+		$("#ContenedorEditarPOModal").load("/Pedidos/EditarPO/" + id, function () {
 			$("#IdPedido").val(id);
 		});
 	});
@@ -343,5 +351,6 @@
 		$("#loading").css('display', 'none');
 	}
 
+ 
 
 </script>

@@ -77,8 +77,6 @@ namespace FortuneSystem.Models.Shipping
             } finally { conn.CerrarConexion(); conn.Dispose(); }
             return listar;
         }
-
-
         public List<ratio_tallas> obtener_lista_tallas_estilo(int posummary, int estilo) {
             List<ratio_tallas> lista = new List<ratio_tallas>();
             Conexion conn = new Conexion();
@@ -86,13 +84,13 @@ namespace FortuneSystem.Models.Shipping
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leerFilas = null;
                 comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "select ID_TALLA from ITEM_SIZE where ID_SUMMARY='" + posummary + "' ";
+                comando.CommandText = "select TALLA_ITEM from ITEM_SIZE where ID_SUMMARY='" + posummary + "' ";
                 leerFilas = comando.ExecuteReader();
                 while (leerFilas.Read()) {
                     ratio_tallas e = new ratio_tallas();
                     e.id_estilo = estilo;
-                    e.id_talla = Convert.ToInt32(leerFilas["ID_TALLA"]);
-                    e.talla = consultas.obtener_size_id(Convert.ToString(leerFilas["ID_TALLA"]));
+                    e.id_talla = Convert.ToInt32(leerFilas["TALLA_ITEM"]);
+                    e.talla = consultas.obtener_size_id(Convert.ToString(leerFilas["TALLA_ITEM"]));
                     e.ratio = buscar_piezas_empaque_bull(posummary, e.id_talla);
                     lista.Add(e);
                 } leerFilas.Close();
@@ -1240,7 +1238,7 @@ namespace FortuneSystem.Models.Shipping
                     lista.Add(e);
                 }leerFilas.Close();
             }finally { conn.CerrarConexion(); conn.Dispose(); }
-            return lista;
+             return lista;
         }
 
         public List<ratio_tallas> obtener_lista_ratio_otros(int shipping) {
@@ -1304,21 +1302,134 @@ namespace FortuneSystem.Models.Shipping
         //***************************************************************
         public List<Pk> lista_buscar_pk_inicio(string busqueda) {
             List<Pk> lista = new List<Pk>();
+            if (busqueda != "0"){
+                lista.AddRange(lista_buscar_pk_inicio_pedido(busqueda));
+                lista.AddRange(lista_buscar_pk_inicio_fecha(busqueda));
+                lista.AddRange(lista_buscar_pk_inicio_cliente(busqueda));
+                lista.AddRange(lista_buscar_pk_inicio_cliente_final(busqueda));
+                lista.AddRange(lista_buscar_pk_inicio_packing(busqueda));
+            }else {                
+                Conexion connx = new Conexion();
+                try {
+                    SqlCommand comandox = new SqlCommand();
+                    SqlDataReader leerFilasx = null;
+                    comandox.Connection = connx.AbrirConexion();
+                    comandox.CommandText = "select top 50 id_packing_list from packing_list ";
+                    leerFilasx = comandox.ExecuteReader();
+                    while (leerFilasx.Read()) {
+                        Pk p = new Pk();
+                        p = obtener_packing(Convert.ToInt32(leerFilasx["id_packing_list"]));
+                        lista.Add(p);
+                    } leerFilasx.Close();
+                } finally { connx.CerrarConexion(); connx.Dispose(); }
+            }
+            List<Pk> lista_final = new List<Pk>();
+            foreach (Pk p in lista) {
+                int existencia = 0;
+                foreach (Pk pp in lista_final){
+                    if (pp.id_packing_list == p.id_packing_list){
+                        existencia++;
+                    }
+                }
+                if (existencia == 0){
+                    Pk rec = new Pk();
+                    rec = p;
+                    lista_final.Add(rec);
+                }
+            }
+            return lista_final;
+        }
+        public List<Pk> lista_buscar_pk_inicio_pedido(string busqueda){
+            List<Pk> lista = new List<Pk>();
             Conexion connx = new Conexion();
-            try {
+            try{
                 SqlCommand comandox = new SqlCommand();
                 SqlDataReader leerFilasx = null;
                 comandox.Connection = connx.AbrirConexion();
-                comandox.CommandText = "(select distinct used from shipping_ids where used like'%" + busqueda + "%') union (select distinct used from shipping_ids where id_tarima like'%" + busqueda + "%' ) union (select distinct used from shipping_ids where  number_po like'%" + busqueda + "%' ) union (select distinct used from shipping_ids where dc like'%" + busqueda + "%' ) union ( select id_packing_list from packing_list where pk like'%" + busqueda + "%' )";
+                comandox.CommandText = "SELECT DISTINCT top 50 s.used FROM shipping_ids s, PEDIDO p WHERE " +
+                    " p.PO LIKE'%" + busqueda + "%'  ";
                 leerFilasx = comandox.ExecuteReader();
-                while (leerFilasx.Read()) {
+                while (leerFilasx.Read()){
                     Pk p = new Pk();
                     p = obtener_packing(Convert.ToInt32(leerFilasx["used"]));
                     lista.Add(p);
-                } leerFilasx.Close();
-            } finally { connx.CerrarConexion(); connx.Dispose(); }
+                }leerFilasx.Close();
+            }finally { connx.CerrarConexion(); connx.Dispose(); }
             return lista;
         }
+        public List<Pk> lista_buscar_pk_inicio_fecha(string busqueda){
+            List<Pk> lista = new List<Pk>();
+            Conexion connx = new Conexion();
+            try{
+                SqlCommand comandox = new SqlCommand();
+                SqlDataReader leerFilasx = null;
+                comandox.Connection = connx.AbrirConexion();
+                comandox.CommandText = "SELECT DISTINCT top 50 id_packing_list FROM packing_list  WHERE fecha LIKE'%" + busqueda + "%'  ";
+                leerFilasx = comandox.ExecuteReader();
+                while (leerFilasx.Read()){
+                    Pk p = new Pk();
+                    p = obtener_packing(Convert.ToInt32(leerFilasx["id_packing_list"]));
+                    lista.Add(p);
+                }leerFilasx.Close();
+            }finally { connx.CerrarConexion(); connx.Dispose(); }
+            return lista;
+        }
+        public List<Pk> lista_buscar_pk_inicio_cliente(string busqueda){
+            List<Pk> lista = new List<Pk>();
+            Conexion connx = new Conexion();
+            try{
+                SqlCommand comandox = new SqlCommand();
+                SqlDataReader leerFilasx = null;
+                comandox.Connection = connx.AbrirConexion();
+                comandox.CommandText = "SELECT DISTINCT top 50 p.id_packing_list FROM packing_list p,CAT_CUSTOMER c  WHERE " +
+                    " p.id_customer=c.CUSTOMER AND c.NAME LIKE'%" + busqueda + "%'  ";
+                leerFilasx = comandox.ExecuteReader();
+                while (leerFilasx.Read()){
+                    Pk p = new Pk();
+                    p = obtener_packing(Convert.ToInt32(leerFilasx["id_packing_list"]));
+                    lista.Add(p);
+                }leerFilasx.Close();
+            }finally { connx.CerrarConexion(); connx.Dispose(); }
+            return lista;
+        }
+        public List<Pk> lista_buscar_pk_inicio_cliente_final(string busqueda){
+            List<Pk> lista = new List<Pk>();
+            Conexion connx = new Conexion();
+            try{
+                SqlCommand comandox = new SqlCommand();
+                SqlDataReader leerFilasx = null;
+                comandox.Connection = connx.AbrirConexion();
+                comandox.CommandText = "SELECT DISTINCT top 50 p.id_packing_list FROM packing_list p,CAT_CUSTOMER_PO c  WHERE " +
+                    " p.id_customer_po=c.CUSTOMER_FINAL AND c.NAME_FINAL LIKE'%" + busqueda + "%'  ";
+                leerFilasx = comandox.ExecuteReader();
+                while (leerFilasx.Read()){
+                    Pk p = new Pk();
+                    p = obtener_packing(Convert.ToInt32(leerFilasx["id_packing_list"]));
+                    lista.Add(p);
+                }leerFilasx.Close();
+            }finally { connx.CerrarConexion(); connx.Dispose(); }
+            return lista;
+        }
+        public List<Pk> lista_buscar_pk_inicio_packing(string busqueda){
+            List<Pk> lista = new List<Pk>();
+            Conexion connx = new Conexion();
+            try{
+                SqlCommand comandox = new SqlCommand();
+                SqlDataReader leerFilasx = null;
+                comandox.Connection = connx.AbrirConexion();
+                comandox.CommandText = "SELECT DISTINCT top 50 id_packing_list FROM packing_list WHERE pk LIKE'%" + busqueda + "%'  "; 
+                leerFilasx = comandox.ExecuteReader();
+                while (leerFilasx.Read()){
+                    Pk p = new Pk();
+                    p = obtener_packing(Convert.ToInt32(leerFilasx["id_packing_list"]));
+                    lista.Add(p);
+                }leerFilasx.Close();
+            }finally { connx.CerrarConexion(); connx.Dispose(); }
+            return lista;
+        }
+
+
+
         public Pk obtener_packing(int pk) {
             Pk p = new Pk();
             Conexion connx = new Conexion();
@@ -1634,8 +1745,8 @@ namespace FortuneSystem.Models.Shipping
                     estilos e = new estilos();
                     e.id_po_summary= Convert.ToInt32(leerFilasa2["ID_SUMMARY"]);
                     e.id_estilo = consultas.obtener_estilo_summary(e.id_po_summary);
-                    e.estilo = consultas.obtener_estilo(e.id_estilo);
-                    e.descripcion = consultas.buscar_descripcion_estilo(e.id_estilo);
+                    e.estilo = (consultas.obtener_estilo(e.id_estilo)).Trim();
+                    e.descripcion = (consultas.buscar_descripcion_estilo(e.id_estilo)).Trim();
                     e.id_color = consultas.obtener_color_id_item(pedido, e.id_estilo);
                     e.color = consultas.obtener_color_id((e.id_color).ToString());
                     //e.lista_ratio = obtener_lista_ratio(e.id_po_summary, e.id_estilo);
@@ -2689,7 +2800,8 @@ namespace FortuneSystem.Models.Shipping
             try{
                 SqlCommand com_s = new SqlCommand();
                 com_s.Connection = con_s.AbrirConexion();
-                com_s.CommandText = "UPDATE cajas_inventario SET cantidad_restante=0 where id_inventario='"+item+"' ";
+                //com_s.CommandText = "UPDATE cajas_inventario SET cantidad_restante=0 where id_inventario='"+item+"' ";
+                com_s.CommandText = "DELETE FROM cajas_inventario WHERE id_inventario='"+item+"' ";
                 com_s.ExecuteNonQuery();
             }finally { con_s.CerrarConexion(); con_s.Dispose(); }
         }
@@ -2698,7 +2810,8 @@ namespace FortuneSystem.Models.Shipping
             try{
                 SqlCommand com_s = new SqlCommand();
                 com_s.Connection = con_s.AbrirConexion();
-                com_s.CommandText = "UPDATE inventario SET total=0 where id_inventario='" + item + "' ";
+                //com_s.CommandText = "UPDATE inventario SET total=0 where id_inventario='" + item + "' ";
+                com_s.CommandText = "DELETE FROM inventario WHERE id_inventario='" + item + "' ";
                 com_s.ExecuteNonQuery();
             }finally { con_s.CerrarConexion(); con_s.Dispose(); }
         }
@@ -3138,23 +3251,141 @@ namespace FortuneSystem.Models.Shipping
         
 
 
-        public void guardar_ratio_otros(int id, string cantidad, string talla)
-        {
+        public void guardar_ratio_otros(int id, string cantidad, string talla){
             Conexion con_s = new Conexion();
-            try
-            {
+            try{
                 SqlCommand com_s = new SqlCommand();
                 com_s.Connection = con_s.AbrirConexion();
                 com_s.CommandText = "INSERT INTO shipping_ratio(id_talla,total,id_shipping_id) VALUES " +
                                      " ('" + talla + "','" + cantidad + "','" + id + "')";
                 com_s.ExecuteNonQuery();
-            }
-            finally { con_s.CerrarConexion(); con_s.Dispose(); }
+            }finally { con_s.CerrarConexion(); con_s.Dispose(); }
+        }
+
+        public void revisar_totales_estilo(int pedido){            
+            Conexion con_u_r = new Conexion();
+            try{
+                SqlCommand com_u_r = new SqlCommand();
+                SqlDataReader leer_u_r = null;
+                com_u_r.Connection = con_u_r.AbrirConexion();
+                com_u_r.CommandText = "SELECT ID_PO_SUMMARY,QTY FROM PO_SUMMARY where ID_PEDIDOS='" + pedido + "' ";
+                leer_u_r = com_u_r.ExecuteReader();
+                while (leer_u_r.Read()){
+                    int total_orden = Convert.ToInt32(leer_u_r["QTY"]);
+                    int total_enviado = buscar_total_enviado_estilo(Convert.ToInt32(leer_u_r["ID_PO_SUMMARY"]));
+                    if (total_enviado >= total_orden) {
+                        cerrar_estilo(Convert.ToInt32(leer_u_r["ID_PO_SUMMARY"]));
+                    }
+                }leer_u_r.Close();
+            }finally { con_u_r.CerrarConexion(); con_u_r.Dispose(); }            
+        }
+        public int buscar_total_enviado_estilo(int summary){
+            int total = 0;
+            Conexion con_u_r = new Conexion();
+            try{
+                SqlCommand com_u_r = new SqlCommand();
+                SqlDataReader leer_u_r = null;
+                com_u_r.Connection = con_u_r.AbrirConexion();
+                com_u_r.CommandText = "SELECT total FROM totales_envios WHERE id_summary='" + summary + "' ";
+                leer_u_r = com_u_r.ExecuteReader();
+                while (leer_u_r.Read()){
+                    total += Convert.ToInt32(leer_u_r["total"]);
+                }leer_u_r.Close();
+            }finally { con_u_r.CerrarConexion(); con_u_r.Dispose(); }
+            return total;
+        }
+        public void cerrar_estilos_pedido(int pedido){
+            Conexion con_u_r = new Conexion();
+            try{
+                SqlCommand com_u_r = new SqlCommand();
+                SqlDataReader leer_u_r = null;
+                com_u_r.Connection = con_u_r.AbrirConexion();
+                com_u_r.CommandText = "SELECT ID_PO_SUMMARY,QTY FROM PO_SUMMARY where ID_PEDIDOS='" + pedido + "' ";
+                leer_u_r = com_u_r.ExecuteReader();
+                while (leer_u_r.Read()){
+                   cerrar_estilo(Convert.ToInt32(leer_u_r["ID_PO_SUMMARY"]));
+                }leer_u_r.Close();
+            }finally { con_u_r.CerrarConexion(); con_u_r.Dispose(); }
+        }
+        public void cerrar_estilo(int summary){
+            Conexion con_s = new Conexion();
+            try{
+                SqlCommand com_s = new SqlCommand();
+                com_s.Connection = con_s.AbrirConexion();
+                com_s.CommandText = " UPDATE PO_SUMMARY SET ID_ESTADO=7 WHERE ID_PO_SUMMARY='"+summary+"' ";
+                com_s.ExecuteNonQuery();
+            }finally { con_s.CerrarConexion(); con_s.Dispose(); }
         }
 
 
-
-
+        public List<Pk> obtener_lista_shipping_summary(int summary,string tipo,List<Talla> lista_tallas){
+            List<Pk> lista = new List<Pk>();
+            Conexion con = new Conexion();
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                com.CommandText = "SELECT distinct p.id_packing_list,p.pk,p.fecha,p.id_direccion_envio FROM " +
+                    " packing_list p,shipping_ids s WHERE s.id_po_summary='" + summary + "' AND s.used=p.id_packing_list";
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    Pk p = new Pk();
+                    p.id_packing_list = Convert.ToInt32(leer["id_packing_list"]);
+                    p.packing = Convert.ToString(leer["pk"]);
+                    p.fecha = (Convert.ToDateTime(leer["fecha"])).ToString("MMM dd yyyy");
+                    p.destino = obtener_direccion(Convert.ToInt32(leer["id_direccion_envio"]));
+                    p.lista_tallas = obtener_lista_items_customer_staging(p.id_packing_list, summary,tipo,lista_tallas);
+                    lista.Add(p);
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
+            return lista;
+        }
+        public List<Talla> obtener_lista_items_customer_staging(int id_packing_list, int summary,string tipo,List<Talla> lista_tallas){
+            string query = "";
+            if (tipo == "NONE") {
+                query= "SELECT t.id_talla,t.total,t.tipo FROM totales_envios t,shipping_ids s WHERE  " +
+                    "  s.used='" + id_packing_list + "' AND s.id_shipping_id=t.id_shipping_id AND " +
+                    " t.id_summary='" + summary + "' AND t.tipo!='DMG' AND t.tipo!='EXT'";
+            } else {
+                query = "SELECT t.id_talla,t.total,t.tipo FROM totales_envios t,shipping_ids s WHERE  " +
+                    "  s.used='" + id_packing_list + "' AND s.id_shipping_id=t.id_shipping_id AND " +
+                    " t.id_summary='" + summary + "' AND t.tipo='"+tipo+"'  ";
+            }
+            List<Talla> lista_temporal = new List<Talla>();
+            List<Talla> lista= new List<Talla>();
+            Conexion con = new Conexion();            
+            try{
+                SqlCommand com = new SqlCommand();
+                SqlDataReader leer = null;
+                com.Connection = con.AbrirConexion();
+                //com.CommandText = "SELECT t.id_talla,t.total,t.tipo FROM totales_envios t,shipping_ids s WHERE  " +
+                //  " WHERE s.used='" + id_packing_list + "' AND s.id_shipping_id=t.id_shipping_id AND " +
+                // " t.id_summary='" + summary + "'  ";
+                com.CommandText = query;
+                leer = com.ExecuteReader();
+                while (leer.Read()){
+                    Talla ts = new Talla();
+                    ts.total = Convert.ToInt32(leer["total"]);
+                    ts.id_talla = Convert.ToInt32(leer["id_talla"]);
+                    ts.tipo = Convert.ToString(leer["tipo"]);
+                    lista_temporal.Add(ts);
+                }leer.Close();
+            }finally { con.CerrarConexion(); con.Dispose(); }
+            foreach (Talla t in lista_tallas) {
+                int total=0;
+                foreach (Talla lt in lista_temporal){
+                    if (t.id_talla == lt.id_talla) {
+                        total += lt.total;
+                    }
+                }
+                Talla ts = new Talla();
+                ts.total = total;
+                ts.id_talla =t.id_talla;
+                ts.tipo =tipo;
+                lista.Add(ts);
+            }
+            return lista;
+        }
 
 
 

@@ -19,9 +19,10 @@ namespace FortuneSystem.Models.POSummary
         PedidosData objPedido = new PedidosData();
         ItemTallaData objTallas = new ItemTallaData();
         CatUsuarioData objUsr = new CatUsuarioData();
+		CatTypeFormPackData objFormaPacking = new CatTypeFormPackData();
 
-        //Muestra la lista de PO Summary Por PO
-        public IEnumerable<POSummary> ListaItemsPorPO(int? id)
+		//Muestra la lista de PO Summary Por PO
+		public IEnumerable<POSummary> ListaItemsPorPO(int? id)
           {
                 Conexion conn = new Conexion();
             List<POSummary> listSummary = new List<POSummary>();
@@ -41,6 +42,8 @@ namespace FortuneSystem.Models.POSummary
                     ItemDescripcion Desc = new ItemDescripcion();
                     CatColores colores = new CatColores();
                     CatEspecialidades Especialidad = new CatEspecialidades();
+					CatTypeFormPack TipoFormPack = new CatTypeFormPack();
+
                     Especialidad.Especialidad = leer["SPECIALTIES"].ToString();                    
                     Desc.Descripcion = leer["DESCRIPCION_ITEM"].ToString();
                     colores.CodigoColor = leer["CODIGO_COLOR"].ToString();
@@ -54,7 +57,15 @@ namespace FortuneSystem.Models.POSummary
                     ItemSummary.CatColores = colores;
                     ItemSummary.ItemDescripcion = Desc;
                     ItemSummary.IdEstilo= Convert.ToInt32(leer["ITEM_ID"]);
-                    if (!Convert.IsDBNull(leer["ID_USUARIO"]))
+
+					if (!Convert.IsDBNull(leer["ID_FORM_PACK"]))
+					{
+						ItemSummary.IdTipoFormPack = Convert.ToInt32(leer["ID_FORM_PACK"]);
+					}
+					ItemSummary.IdTipoFormPack = (ItemSummary.IdTipoFormPack == 0 ? 1 : ItemSummary.IdTipoFormPack);
+					ItemSummary.CatTipoFormPack = objFormaPacking.ConsultarListatipoFormPack(ItemSummary.IdTipoFormPack);
+
+					if (!Convert.IsDBNull(leer["ID_USUARIO"]))
                     {
                         ItemSummary.IdUsuario = Convert.ToInt32(leer["ID_USUARIO"]);
                     }             
@@ -210,9 +221,16 @@ namespace FortuneSystem.Models.POSummary
                     estilos.IdTela = Convert.ToInt32(leerF["ID_TELA"]);
                     estilos.IdCamiseta = Convert.ToInt32(leerF["ID_PRODUCT_TYPE"]);
                     estilos.Cantidad = Convert.ToInt32(leerF["QTY"]);
-                    estilos.PedidosId = Convert.ToInt32(leerF["ID_PEDIDOS"]);
+					estilos.CantidadT = leerF["QTY"].ToString();
+					estilos.PedidosId = Convert.ToInt32(leerF["ID_PEDIDOS"]);
                     estilos.Precio = Convert.ToDouble(leerF["PRICE"]);
                     estilos.IdEspecialidad = Convert.ToInt32(leerF["ID_SPECIALTIES"]);
+
+					if (!Convert.IsDBNull(leerF["ID_FORM_PACK"]))
+					{
+						estilos.IdTipoFormPack = Convert.ToInt32(leerF["ID_FORM_PACK"]);
+					}
+					
 
 
                 }
@@ -251,6 +269,7 @@ namespace FortuneSystem.Models.POSummary
                 comando.Parameters.AddWithValue("@FechaUCC", DBNull.Value);
                 comando.Parameters.AddWithValue("@IdEstado", items.IdEstado);
 				comando.Parameters.AddWithValue("@IdSucursal", items.IdSucursal);
+				comando.Parameters.AddWithValue("@IdFormPack", items.IdTipoFormPack);
 
                 comando.ExecuteNonQuery();
             }
@@ -427,6 +446,7 @@ namespace FortuneSystem.Models.POSummary
                 comando.Parameters.AddWithValue("@IdTela", items.IdTela);
                 comando.Parameters.AddWithValue("@TipoCamiseta", items.IdCamiseta);
                 comando.Parameters.AddWithValue("@IdEspecialidad", items.IdEspecialidad);
+				comando.Parameters.AddWithValue("@IdTipoForm", items.IdTipoFormPack);
 
                 comando.ExecuteNonQuery();
             }

@@ -238,13 +238,13 @@
                     } else {
                         html += '<tr style="color:#a94442;">';
                     }                    
-                    html += '<td>' + item.id_inventario + '</td>';
-                    html += '<td>' + item.sucursal + '</td>';
-                    html += '<td>' + item.po + '</td>';
-                    html += '<td>' + item.total + '</td>';
-                    html += '<td>' + item.categoria_inventario + '</td>';
-                    html += '<td>' + item.descripcion + '</td>';
-                    html += '<td>' + item.estado + '</td>';
+                    html += '<td style="width:5%;">' + item.id_inventario + '</td>';
+                    html += '<td style="width:10%;">' + item.sucursal + '</td>';
+                    html += '<td style="width:15%;">' + item.po + '</td>';
+                    html += '<td style="width:10%;">' + item.total + '</td>';
+                    html += '<td style="width:10%;">' + item.categoria_inventario + '</td>';
+                    html += '<td style="width:40%;">' + item.descripcion + '</td>';
+                    html += '<td style="width:10%;">' + item.estado + '</td>';
                     html += '</tr>';
                 });
                 $(".body_tabla_inventario").html(html);
@@ -259,6 +259,7 @@
         $("#loading").css('display', 'none'); 
     });
 
+   
 </script>
 <link href="~/Content/base_m.css" rel="stylesheet" />
 
@@ -640,7 +641,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+    
+    
+
+    </div>
     <!----LISTADO DE INVENTARIO----->
    
     <div class="panel panel-default panel-primary " style="margin-left:7em; margin-right:3em;">
@@ -650,20 +654,24 @@
             <input type="text" class="search_po form-control validacion" onkeyup="busqueda_items_almacen()" placeholder="Type to search" id="caja_buscar_item" style="width: 15em; float:left; margin-top: 0px; margin-left:1em; margin-bottom:1em; ">
         </div><br /><br /><br />
         <div style="overflow:auto; height:500px;  ">
-            <table id="tabla_inventario" class="table table-striped ">
-                <thead style=" pointer-events:none; cursor:not-allowed;">
-                    <tr>
-                        <th>#</th>
-                        <th>OFFICE</th>
-                        <th>ORDER</th>
-                        <th>QUANTITY</th>
-                        <th>CATEGORY</th>
-                        <th>DESCRIPTION</th>
-                        <th>STOCK</th>
-                    </tr>
-                </thead>
-                <tbody class="body_tabla_inventario"></tbody>
-            </table>
+            <table id="" class="table table-striped " style="margin:0px;">
+                    <thead style=" pointer-events:none; cursor:not-allowed;">
+                        <tr>
+                            <th style="width:5%;">#</th>
+                            <th style="width:10%;">OFFICE</th>
+                            <th style="width:15%;">ORDER</th>
+                            <th style="width:10%;">QUANTITY</th>
+                            <th style="width:10%;">CATEGORY</th>
+                            <th style="width:40%;">DESCRIPTION</th>
+                            <th style="width:10%;">STOCK</th>
+                        </tr>
+                    </thead>                    
+                </table>
+            <div style="height:450px; overflow:auto;">
+                <table id="tabla_inventario" class="table table-striped " style="margin:0px;">
+                    <tbody class="body_tabla_inventario"></tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div class=" col-md-4">

@@ -14,6 +14,7 @@ using FortuneSystem.Models.Trims;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -44,8 +45,9 @@ namespace FortuneSystem.Controllers
         CatEspecialidadesData objEspecialidad = new CatEspecialidadesData();
         CatTipoOrdenData objTipoOrden = new CatTipoOrdenData();
 		ReportController reporte = new ReportController();
-  
-        public int estado;
+		CatTypeFormPackData objFormaPacking = new CatTypeFormPackData();
+
+		public int estado;
         public int IdPO;
         public int pedidos;
 
@@ -198,7 +200,8 @@ namespace FortuneSystem.Controllers
         [HttpPost]
         public JsonResult Lista_Tallas_Estilo_PrintShop(int? id)
         {
-            List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstiloPrint(id).ToList();
+			List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstiloPrint(id).ToList();
+			//List<ItemTalla> listaTallas = objTallas.ListadoTallasPorEstilos(id).ToList();
 			List<ItemTalla> listaTallasQty = objTallas.ListadoTallasPorEstilos(id).ToList();
 			List<StagingD> listaTallasStaging = objTallas.ListaTallasStagingPorEstilo(id).ToList();
             List<StagingDatos> listaDatosStaging = objTallas.ListaTallasStagingDatosPorEstilo(id).ToList();
@@ -579,8 +582,31 @@ namespace FortuneSystem.Controllers
             ListaTipoCamiseta(summary);
             ListaEspecialidades(summary);
             ListaTipoOrden(pedido);
-            return View();
+			ListaTipoFormaPacking(summary);
+			return View();
         }
+
+		public void Screnn()
+		{
+			Process snippingToolProcess = new Process();
+			snippingToolProcess.EnableRaisingEvents = true;
+			if (!Environment.Is64BitProcess)
+			{
+				snippingToolProcess.StartInfo.FileName = "C:\\Windows\\sysnative\\SnippingTool.exe";
+				snippingToolProcess.Start();
+			}
+			else
+			{
+				snippingToolProcess.StartInfo.FileName = "C:\\Windows\\system32\\SnippingTool.exe";
+				snippingToolProcess.Start();
+			}
+			/*Process SnippingTool = new Process();
+			String FilePath = @"C:\WINDOWS\system32\SnippingTool.exe";
+			SnippingTool.StartInfo.FileName = System.IO.Path.GetDirectoryName(FilePath);
+			SnippingTool.StartInfo.Arguments = "SnippingTool.exe";
+			SnippingTool.Start();*/
+
+		}
         [HttpPost]
         public JsonResult RegistrarPO([Bind] OrdenesCompra ordenCompra, string po, string VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades, int IdTipoOrden, List<string> ListaMillPO)
         {
@@ -948,16 +974,20 @@ namespace FortuneSystem.Controllers
             ListaTela(items);
             ListaTipoCamiseta(items);
             ListaEspecialidades(items);
-            items.CatColores = objColores.ConsultarListaColores(items.ColorId);
+			ListaTipoFormaPacking(items);
+			items.CatColores = objColores.ConsultarListaColores(items.ColorId);
             items.ItemDescripcion = objEst.ConsultarListaItemDesc(items.IdItems);
             items.CatEspecialidades = objEspecialidad.ConsultarListaEspecialidad(items.IdEspecialidad);
+			items.CatTipoFormPack = objFormaPacking.ConsultarListatipoFormPack(items.IdTipoFormPack);
             items.PedidosId = items.PedidosId;
             SeleccionarGenero(items);
             SeleccionarTela(items);
             SeleccionarTipoCamiseta(items);
             SeleccionarTipoEspecialidad(items);
+			SeleccionarTipoFormaPack(items);
 
-            if (items == null)
+
+			if (items == null)
             {
 
                 return View();
@@ -1198,7 +1228,18 @@ namespace FortuneSystem.Controllers
             ViewBag.listEspecialidad = new SelectList(listaEspecialidades, "IdEspecialidad", "Especialidad", items.IdEspecialidad);
         }
 
-        public void ListasClientes(OrdenesCompra pedido)
+		public void SeleccionarTipoFormaPack(POSummary items)
+		{
+
+			List<CatTypeFormPack> listaTipoFormPack = items.ListaTipoFormPack;
+			listaTipoFormPack = objFormaPacking.ListaTipoFormaPack().ToList();
+			items.CatTipoFormPack = objFormaPacking.ConsultarListatipoFormPack(items.IdTipoFormPack);
+			items.IdTipoFormPack = (items.IdTipoFormPack == 0 ? 1 : items.IdTipoFormPack);
+			items.CatTipoFormPack.IdTipoFormPack = items.IdTipoFormPack;
+			ViewBag.listTipoFormPack = new SelectList(listaTipoFormPack, "IdTipoFormPack", "TipoFormPack", items.IdTipoFormPack);
+		}
+
+		public void ListasClientes(OrdenesCompra pedido)
         {
             List<CatCliente> listaClientes = pedido.ListaClientes;
             listaClientes = objCliente.ListaClientes().ToList();
@@ -1270,9 +1311,17 @@ namespace FortuneSystem.Controllers
 
         }
 
-       
+		public void ListaTipoFormaPacking(POSummary summary)
+		{
+			List<CatTypeFormPack> listaFomPack = summary.ListaTipoFormPack;
+			listaFomPack = objFormaPacking.ListaTipoFormaPack().ToList();
+			ViewBag.listTipoFormPack = new SelectList(listaFomPack, "IdTipoFormPack", "TipoFormPack", summary.IdTipoFormPack);
 
-        public void ListaEstados(OrdenesCompra pedido)
+		}
+
+
+
+		public void ListaEstados(OrdenesCompra pedido)
         {
             List<CatStatus> listaEstados = pedido.ListaCatStatus;
             listaEstados = objEstados.ListarEstados().ToList();

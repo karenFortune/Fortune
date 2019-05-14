@@ -117,10 +117,11 @@
 
 	.letrero{
 		font-family: impact, sans-serif;
-		font-size: 2em;
+		font-size: 3em;
 		text-align: center;
 		letter-spacing: 3.8pt;
-		word-spacing: -12.6pt;
+		word-spacing: -14.6pt;
+		color: #2f77b5;
 	}
 </style>
 <script>
@@ -152,7 +153,7 @@
 		</div>
 	</div>
 </div>
-<div class="container-fluid" style="padding-left:18em; padding-right:10em;">
+<div class="container-fluid" style="padding-left:12em; padding-right:10em;">
 	<div class="letrero">PNL</div>
 	<div class="panel panel-primary" id="consultaPO">
 		<div class="panel-heading">
@@ -208,12 +209,12 @@
 	<br />
 	<div class="row" style="display:none;" id="panelPNL">
 		<div class="col-sm-11">
-			<div class="panel panel-primary" id="consultaTalla" style="visibility:hidden;  height: 1550px;">
+			<div class="panel panel-primary" id="consultaTalla" style="visibility:hidden;  height: 1600px;">
 
 				<div class="panel-heading">
 					<h4>PNL</h4>
 				</div>
-				<div id="div_tabla_tallas" style="width: 100%; height:490px; overflow:auto;  ">
+				<div id="div_tabla_tallas" style="width: 100%; height:530px; overflow:auto;  ">
 					<div id="div_datos_staging" style=" overflow:auto; visibility:hidden; background-color:lightblue; text-align:center; font:bold; "></div>
 					<div id="div_estilo" style=" overflow:auto; visibility:hidden; background-color:lightblue; text-align:center "></div>
 					<table id="tableGeneral" class="table table-sm table-striped table-hover ">
@@ -283,6 +284,13 @@
 						<button type="button" class="btn btn-success btn-md pull-right btn-sm" id="modificarBatch" onclick="event.preventDefault(); ConfirmRev(this);"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Modify</button>
 
 					</div>
+				}
+				else if (Session["idCargo"] == null || (int)Session["idCargo"] == 0)
+				{
+					<script type="text/javascript">
+					var url = '@Url.Action("Login", "Login")';
+					window.location.href = url;
+					</script>
 				}
 				@if ((int)Session["idCargo"] == 15)
 				{

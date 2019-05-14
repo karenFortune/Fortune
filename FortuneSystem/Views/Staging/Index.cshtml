@@ -3,10 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link href="~/Content/base_m.css" rel="stylesheet" />
-<script src="~/Content/Chart.js-master/Chart.bundle.js"></script>
-<script src="~/Content/Chart.js-master/Chart.bundle.min.js"></script>
-<script src="~/Content/Chart.js-master/Chart.min.js"></script>
-<script src="~/Content/Chart.js-master/moment.js"></script>
+
 <script>
     function obtenerImagenPNL(nombreEstilo) {
        // $('#imagenPNL').attr('src', '/Arte/ConvertirImagenPNLEstilo?nombreEstilo=' + nombreEstilo);
@@ -14,50 +11,8 @@
     function obtenerImagenArte(nombreEstilo) {
         // $('#imagenArte').attr('src', '/Arte/ConvertirImagenArteEstilo?nombreEstilo=' + nombreEstilo);
     }
-    $(document).ready(function () {
-        $(".search_staging").keyup(function () {
-            var searchTerm = $(".search_staging").val();
-            var listItem = $('.results_staging tbody').children('tr');
-            var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
-            $.extend($.expr[':'], {
-                'containsi': function (elem, i, match, array) {
-                    return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
-                }
-            });
-            $(".results_staging tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
-                $(this).attr('visible', 'false');
-            });
-            $(".results_staging tbody tr:containsi('" + searchSplit + "')").each(function (e) {
-                $(this).attr('visible', 'true');
-            });
-            var jobCount = $('.results_staging tbody tr[visible="true"]').length;
-            $('.counter_staging').text(jobCount + ' items');
-            if (jobCount == '0') { $('.no-result_staging').show(); }
-            else { $('.no-result').hide(); }
-        });
-    });
-    $(document).ready(function () {
-        $(".search_s").keyup(function () {
-            var searchTerm = $(".search_s").val();
-            var listItem = $('.results_s tbody').children('tr');
-            var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
-            $.extend($.expr[':'], {
-                'containsi': function (elem, i, match, array) {
-                    return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
-                }
-            });
-            $(".results_s tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
-                $(this).attr('visible', 'false');
-            });
-            $(".results_s tbody tr:containsi('" + searchSplit + "')").each(function (e) {
-                $(this).attr('visible', 'true');
-            });
-            var jobCount = $('.results_s tbody tr[visible="true"]').length;
-            $('.counter_s').text(jobCount + ' items');
-            if (jobCount == '0') { $('.no-result_s').show(); }
-            else { $('.no-result').hide(); }
-        });
-    });
+
+
     //VALIDACIONES
     $(document).on("input", ".numeric", function () {
         this.value = this.value.replace(/\D/g, '');
@@ -76,71 +31,23 @@
     var row;
     $(document).ready(function () {
         row = 0;
-        $("#loading_staging").css('display', 'inline');
-        obtener_staging();
-        obtener_pedidos_estilos();
-        $("#loading_staging").css('display', 'none');
-        //obtener_charts();
-        //cambiar_info_tabla();
+        obtener_staging("0");
+        obtener_pedidos_estilos("0");
     });
     var datos;
-    function obtener_charts() {
-        /*$.ajax({
-            url: "/Staging/buscar_datos_grafica",
-            type: "POST",
-            contentType: "application/json;charset=utf-8",
-            dataType: "json",
-            success: function (result) { 
-                datos = result.split('*');
-                var ctx = document.getElementById("staging_chart");
-                var staging_chart = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: ["Today", "Yesterday", "Last 7 days", "Current month", "Current year"],
-                        datasets: [{
-                            label: 'Totals',
-                            //data: [12, 19, 3, 5, 2, 3],                   
-                            data: datos,
-                            backgroundColor: [
-                                '#2ecc71',
-                                '#3498db',
-                                '#32CFD0',
-                                '#9b59b6',
-                                '#F45151'
-                            ],
-                            borderColor: [
-                                '#2ecc71',
-                                '#3498db',
-                                '#32CFD0',
-                                '#9b59b6',
-                                '#F45151'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        legend: {
-                            display: true,
-                            position: 'right',
-                            labels: {
-                                position: 'right',
-                                padding:10
-                            },
-                        },
-                    }
-                });
-            },
-            error: function (errormessage) {
-                alert(errormessage.responseText);
-            }
-        });
 
-        */
-
+    function busqueda_estilos_stag(event) {
+        if (event.keyCode === 13) {
+            obtener_pedidos_estilos($("#caja_estilo_po").val());
+        }
     }
-    function obtener_pedidos_estilos() {
+    function obtener_pedidos_estilos(busqueda) {
+       
+        if (busqueda == "") { busqueda = "0"; }
+       
         $.ajax({
             url: "/Staging/buscar_pedidos_inicio",
+            data:"{'busqueda':'"+busqueda+"'}",
             type: "POST",
             contentType: "application/json;charset=utf-8",
             dataType: "json",
@@ -148,10 +55,12 @@
                 var html = '';
                 $.each(result, function (key, item) {
                     html += '<tr>';
-                    html += '<td>' + item.id_inventario + '</td>';
-                    html += '<td>' + item.po + '</td><td>' + item.estilo + ' ' + item.estilo_nombre + '</td>';
-                    html += '<td>' + item.descripcion + '</td><td>' + item.total + '</td><td>' + item.fecha + '</td>';
-                    html += '<td><button type="button" id="boton_agregar_row" class="btn btn-success glyphicon glyphicon-copy" onclick="imprimir_papeleta_staging( \'' + item.id_inventario + '&' + item.id_estilo + '&' + item.id_pedido + '\' )" style="padding:0px 10px !important; margin:0px;"></button></td>';
+                    //html += '<td>' + item.id_inventario + '</td>';
+                    html += '<td style="width:5%;">' + item.id_pedido + ' </td>';
+                    html += '<td style="width:25%;">' + item.po + '</td><td style="width:30%;">' + item.estilo + '</td>';
+                    html += '<td style="width:30%;">' + item.descripcion + '</td>';
+                    html += '<td style="width:9%;"><button type="button" id="boton_agregar_row" class="btn btn-success glyphicon glyphicon-copy" onclick="imprimir_papeleta_staging( \'' + 0 + '&' + item.id_estilo + '&' + item.id_pedido + '\' )" style="padding:0px 10px !important; margin:0px;"></button></td>';
+                    html += '<td style="visibility:hidden; width:1%;">' + item.id_estilo + '*' + item.id_pedido +'*'+item.id_summary+ '</td>';
                     html += '</tr>';
                 });
                 $(".body_tabla_inicio").html(html);
@@ -161,21 +70,25 @@
                 alert(errormessage.responseText);
             }
         });
-        $("#loading_staging").css('display', 'none');
     }
+
+
     function obtener_staging() {
+        
+        //if (busqueda == "") { busqueda = "0";}
         $.ajax({
             url: "/Staging/buscar_staging_inicio",
             type: "POST",
+         // data: "{'busqueda':'" + busqueda + "'}",
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             success: function (result) {
                 var html = '';
                 $.each(result, function (key, item) {
                     html += '<tr>';
-                    html += '<td>' + item.id_staging + '</td>';
-                    html += '<td>' + item.po + '</td><td>' + item.estilo + ' ' + item.estilo_nombre + '</td>';
-                    html += '<td>' + item.usuario + '</td><td>' + item.cantidad + '</td><td>' + item.fecha + '</td>';
+                    html += '<td style="width:5%;">' + item.id_staging + '</td>';
+                    html += '<td style="width:22%;">' + item.po + '</td><td style="width:22%;">' + item.estilo + ' ' + item.estilo_nombre + '</td>';
+                    html += '<td style="width:17%;">' + item.usuario + '</td><td style="width:17%;">' + item.cantidad + '</td><td style="width:17%;">' + item.fecha + '</td>';
                     html += '</tr>';
                 });
                 $(".body_tabla_inicio_stag").html(html);
@@ -186,6 +99,36 @@
             }
         });
     }
+    function busqueda_ordenes_stag(event) {
+        if (event.keyCode == 13)  {
+            var busqueda;
+           
+            if ($("#caja_stag").val() == "") { busqueda = "0"; } else { busqueda = $("#caja_stag").val(); }
+            $.ajax({
+                url: "/Staging/buscar_staging_inicio_busqueda",
+                type: "POST",
+                 data: "{'busqueda':'" + busqueda + "'}",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var html = '';
+                    $.each(result, function (key, item) {
+                        html += '<tr>';
+                        html += '<td style="width:5%;">' + item.id_staging + '</td>';
+                        html += '<td style="width:22%;">' + item.po + '</td><td style="width:22%;">' + item.estilo + ' ' + item.estilo_nombre + '</td>';
+                        html += '<td style="width:17%;">' + item.usuario + '</td><td style="width:17%;">' + item.cantidad + '</td><td style="width:17%;">' + item.fecha + '</td>';
+                        html += '</tr>';
+                    });
+                    $(".body_tabla_inicio_stag").html(html);
+                  
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+    }
+
     function imprimir_papeleta_staging(ID) {
         $.ajax({
             url: "/Staging/imprimir_papeleta_vacia_staging/",
@@ -199,9 +142,11 @@
         });
     }
     function imprimir_papeleta() {
-        var h = screen.height - 100;
+       /* var h = screen.height - 100;
         var w = screen.width - 30;
-        window.open('/PDF/papeleta_staging_vacias', '_blank', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');
+        window.open('/PDF/papeleta_staging_vacias', '_blank', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');*/
+        var boton = document.getElementById('boton_papeleta_staging_vacias');
+        boton.click();
     }
     //CAMBIAR LOS ROW DE COLOR
     $(document).on("click", "#tabla_inicio tr", function () {
@@ -214,48 +159,144 @@
             $(this).css('color', 'black');
         }
     });
-    $(document).on("dblclick", "#tabla_inicio tr", function () {
+    $(document).on("dblclick", "#tabla_inicio tr", function () {       
         var row = this.rowIndex;
         //alert($('#items_recibos tr:eq('+row+') td:eq(0)').html()); //empieza las columas desde 0
         //alert($('#items_recibos tr:eq(' + row + ') td:nth-child(2)').html());     //empieza las columnas desde 1
-        agregar_stag($('#tabla_inicio tr:eq(' + row + ') td:eq(0)').html());
+        agregar_stag($('#tabla_inicio tr:eq(' + row + ') td:eq(5)').html());
         $("html, body").animate({ scrollTop: $(document).height() }, 500);
     });
+    var lista_totales_orden, lista_staging,nombre_estilo;
     function agregar_stag(ID) {
+        obtener_informacion_comparaciones();
         $.ajax({
             url: "/Staging/buscar_pedido_estilo_tallas",
             type: "POST",
-            data:"{'id':'"+ID+"'}",
+            data:"{'datos':'"+ID+"'}",
             contentType: "application/json;charset=utf-8",
             dataType: "json",
-            success: function (result) {
-                var html = '';
+            success: function (jsonData) {
+                var result = jsonData.Data.result;
+                /*lista_totales_orden = jsonData.Data.lista_totales_orden;
+                lista_staging = jsonData.Data.lista_staging;
+                nombre_estilo = jsonData.Data.estilo;*/
                 $.each(result, function (key, item) {
                     $(".po_caja").html('<label class=" col-form-label">PO</label><select type="text" class=" form-control "  id="caja_po" ><option value="' + item.id_pedido + '">' + item.po + '</option>');
-                    $(".estilo_caja").html('<label class=" col-form-label">STYLE</label><select type="text" class=" form-control "  id="caja_estilo" ><option value="' + item.id_estilo + '">' + item.estilo + ' ' + item.estilo_nombre+'</option>');
+                    $(".estilo_caja").html('<label class=" col-form-label">STYLE</label><select type="text" class=" form-control "  id="caja_estilo" ><option value="' + item.id_estilo + '">' + item.estilo + ' ' + item.estilo_nombre + '</option>');
                 });
                 agregar_row();
-            },
-            error: function (errormessage) {
-                alert(errormessage.responseText);
-            }
+                //***********************************************************************************************************************************************************************************
+                //llenar_tabla_comparaciones();
+                //obtener_informacion_comparaciones();
+               
+            },error: function (errormessage) { alert(errormessage.responseText); }
         });
     }
+    function obtener_informacion_comparaciones() {
+        $.ajax({
+            url: "/Staging/buscar_conteos_estilo",
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (jsonData) {
+                var result = jsonData.Data.result;
+                lista_totales_orden = jsonData.Data.lista_totales_orden;
+                lista_staging = jsonData.Data.lista_staging;
+                nombre_estilo = jsonData.Data.estilo;
+
+                var html = '';
+                $("#titulo_estilo_comparacion").html(nombre_estilo);
+                var totales = [];
+                //CREAR CABECERA DE LA TABLA DE COMPARACIONES
+                html += '<tr style="font-weight:bolder;">';
+                html += '<td></td>';
+                $.each(lista_totales_orden, function (key, item) {
+                    html += '<td>' + item.talla + '</td>';
+                });
+                html += '<td>Total</td>';
+                html += '</tr>';
+                $(".cabecera_tabla_comparaciones_estilo").html(html);
+
+                var i = 0, suma_orden = 0, suma_stag = 0;
+                html = '<tr >';
+                html += '<td>Order </td>';
+                $.each(lista_totales_orden, function (key, item) {
+                    html += '<td>' + item.total + '</td>';
+                    totales.push(item.total);
+                    suma_orden += item.total;
+                });
+                html += '<td>' + suma_orden + '</td>';
+                html += '</tr>';
+
+                html += '<tr>';
+                html += '<td>Counted </td>';
+                $.each(lista_staging, function (key, item) {
+                    suma_stag += item.total;
+                    html += '<td>' + item.total + '</td>';
+                    totales[i] = item.total - totales[i];
+                    i++;
+                });
+                html += '<td>' + suma_stag + '</td>';
+                html += '</tr>';
+
+                html += '<tr style="font-weight:bolder;">';
+                html += '<td>+/- </td>';
+                $.each(totales, function (key, item) {
+                    if (item > 0) {
+                        html += '<td>+' + item + '</td>';
+                    } else {
+                        html += '<td>' + item + '</td>';
+                    }
+
+                });
+                if ((suma_stag - suma_orden)>0) {
+                    html += '<td>+' + (suma_stag - suma_orden) + '</td>';
+                } else {
+                    html += '<td>' + (suma_stag - suma_orden) + '</td>';
+                }
+                html += '</tr>';
+                $(".body_tabla_comparaciones_estilo").html(html);
+                $("#div_tabla_diferencias_estilos").css('visibility', 'visible');
+            }, error: function (errormessage) { alert(errormessage.responseText); }
+        });
+    }
+       
     $(document).on("input", ".pais", function () { $('.pais').autocomplete({ source: '@Url.Action("Autocomplete_paises")' }); });
     $(document).on("input", ".color", function () { $('.color').autocomplete({ source: '@Url.Action("Autocomplete_colores")' }); });
     $(document).on("input", ".talla", function () { $('.talla').autocomplete({ source: '@Url.Action("Autocomplete_tallas")' }); });
     $(document).on("input", ".porcentaje", function () { $('.porcentaje').autocomplete({ source: '@Url.Action("Autocomplete_percents")' }); });
     $(document).on("input", ".empleado", function () { $('.empleado').autocomplete({ source: '@Url.Action("Autocomplete_empleados")' }); });
     function agregar_row() {
+        var contador_rows = 0;
+        $('#tabla_staging_temporal tbody tr').each(function () {
+            contador_rows++;
+        });
+        if (contador_rows!= 0) {
+            $('#tabla_staging_temporal tbody tr').each(function () {
+                size = $(this).find('td:eq(0) input').val();
+                quantity = $(this).find('td:eq(1) input').val();
+                employee = $(this).find('td:eq(2) input').val();
+                fabric_percent = $(this).find('td:eq(3) input').val();
+                country = $(this).find('td:eq(4) input').val();
+                color = $(this).find('td:eq(5) input').val();
+            });
+        } else {
+            size ="";
+            quantity = "";
+            employee = "";
+            fabric_percent ="";
+            country = "";
+            color = "";
+        }
         row++;
        var rowCount = $('.data-Talla').length + 1;
         var rows = '<tr class="data-Talla">' +
-            '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="10" class="must validation form-control talla" id="" /></td>' +
-            '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="30" class="must numeric form-control " id="" /></td>' +
-            '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="100" class="must validacion form-control empleado " id="" /></td>' +
-            '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="30" class="must validacion form-control porcentaje" id="" /></td>' +
-            '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="30" class="must validacion form-control pais" id="" /></td>' +
-            '<td><input   ondrop="return false;" onpaste="return false;"  maxlength="20" class="must validacion form-control color" id="" /></td>' +
+            '<td><input ondrop="return false;" onpaste="return false;"  maxlength="10" class="must validacion form-control talla" value="'+size+'" /></td>' +
+            '<td><input ondrop="return false;" onpaste="return false;"  maxlength="30" class="must numeric form-control " value=" " /></td>' +
+            '<td><input ondrop="return false;" onpaste="return false;"  maxlength="100" class="must validacion form-control empleado " value="' + employee +'" /></td>' +
+            '<td><input ondrop="return false;" onpaste="return false;"  maxlength="30" class="must validacion form-control porcentaje" value="' + fabric_percent + '" /></td>' +
+            '<td><input ondrop="return false;" onpaste="return false;"  maxlength="30" class="must validacion form-control pais" value="' + country + '"/></td>' +
+            '<td><input ondrop="return false;" onpaste="return false;"  maxlength="20" class="must validacion form-control color" value="' + color +'" /></td>' +
             '<td><button type="button" class="btn btn-light eliminar_row"><b>-</b></button></td></tr>';
         $('.body_temporal').append(rows);
         $('#div_tabla_staging_temporal').css('visibility', 'visible');
@@ -275,6 +316,7 @@
         }
     });
     var size, quantity, employee, fabric_percent, country, color;
+
     function crear_transferencia(event) {
         size = ''; quantity = ''; employee = ''; fabric_percent = ''; country = ''; color = '';
         var error = 0;
@@ -303,8 +345,7 @@
         }
     }
     function guardar_stag() {
-        //size, quantity, employee, fabric_percent, country, color;
-        $("#loading_staging").css('display', 'inline');
+        //size, quantity, employee, fabric_percent, country, color;       
         var po = $("#caja_po").val();
         var estilo = $("#caja_estilo").val();
         var comentarios;
@@ -313,30 +354,33 @@
         } else {
             comentarios = $("#caja_comentarios").val();
         }
-        var actionData = "{'po':'" + po + "','estilo':'" + estilo + "','size':'" + size + "','quantity':'" + quantity + "','employee':'" + employee + "','fabric_percent':'" + fabric_percent + "','country':'" + country + "','color':'" + color + "','comentario':'" + comentarios + "'}";
+        //var actionData = "{'po':'" + po + "','estilo':'" + estilo + "','size':'" + size + "','quantity':'" + quantity + "','employee':'" + employee + "','fabric_percent':'" + fabric_percent + "','country':'" + country + "','color':'" + color + "','comentario':'" + comentarios + "'}";
         $.ajax({
             url: '/Staging/guardar_stag_bd',
-            data: actionData,
+            data: "{'po':'" + po + "','estilo':'" + estilo + "','size':'" + size + "','quantity':'" + quantity + "','employee':'" + employee + "','fabric_percent':'" + fabric_percent + "','country':'" + country + "','color':'" + color + "','comentario':'" + comentarios + "'}",
             contentType: 'application/json',
             dataType: 'json',
             type: 'post',
-            success: function (jsonData) {
-               debugger
-               $("#loading_staging").css('display', 'none');
-               alertify.success('Succes!');
-               alertify.set('notifier', 'position', 'top-right');
+            success: function (result) {              
+                alertify.success('Succes!');
+                alertify.set('notifier', 'position', 'top-right');
                 $('.body_temporal').html('');
                 $('#div_tabla_staging_temporal').css('visibility', 'hidden');
+                obtener_staging();
                 $("#boton_guardar_stag").css('display', 'none');
-                imprimir_etiquetas();
-               // setTimeout(redireccionarPagina(), 1000);
+                $("#blocker").css("z-index", "-1");
+                // return false;
+                // setTimeout(redireccionarPagina(), 1000);
+                obtener_informacion_comparaciones();
             }
-        });
+        });        
     }
     function imprimir_etiquetas() {
-        var h = screen.height - 100;
+       /* var h = screen.height - 100;
         var w = screen.width - 30;
-        window.open('/PDF/papeleta_staging', '_blank', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');
+        window.open('/PDF/papeleta_staging', '_blank', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');*/
+        var boton = document.getElementById('boton_papeleta_staging');
+        boton.click();
     }
     $(document).on("click", "#tabla_inicio_stag tr", function () {
         var row = this.rowIndex;
@@ -344,7 +388,6 @@
             if (this.style.background == "" || this.style.background == "white") {
                 $(this).css('background', '#46a772');
                 $(this).css('color', 'white');
-
             } else {
                 $(this).css('background', 'white');
                 $(this).css('color', 'black');
@@ -372,14 +415,58 @@
         //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
         $("#loading").css('display', 'none');
     });
+    function cerrar_comparaciones() {
+        $("#div_tabla_diferencias_estilos").css('visibility', 'hidden');
+    }
+
+ /***********************************************************************************************************************************************************************/
+
 
 
 </script>
 <style>
- 
+    .boton_x {
+        cursor: pointer;
+        float: right;
+        font-size: 1.5em;
+        margin-right: 1em;
+        color: white;
+        font-weight: bolder;
+        border: solid #3479bf 2px;
+        padding: 0px 10px 2px 10px;
+        border-radius: 43px;
+        background: #3479bf;
+        margin-top: 5px;
+    }
+
+        .boton_x:hover {
+            cursor: pointer;
+            float: right;
+            font-size: 1.5em;
+            margin-right: 1em;
+            color: #3479bf;
+            font-weight: bolder;
+            border: solid white 2px;
+            padding: 0px 10px 2px 10px;
+            border-radius: 43px;
+            background: white;
+            margin-top: 5px;
+            -webkit-animation: spin 1s infinite linear;
+        }
+
+    @@-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
     .ui-dialog > .ui-widget-header {
         background: #3479bf;
-        color: white;
+        color: blue;
     }
 
     .load_recibos {
@@ -490,6 +577,7 @@
             transform: rotate(-45deg);
             transform-origin: center;
         }
+
     .boton_menu {
         border: none;
         color: white;
@@ -510,6 +598,8 @@
         }
 </style>
 
+<a id="boton_papeleta_staging_vacias" href="@Url.Action("papeleta_staging_vacias", "PDF")" style="visibility:hidden;">Daily</a>
+<a id="boton_papeleta_staging" href="@Url.Action("papeleta_staging", "PDF")" style="visibility:hidden;">Daily</a>
 </div>
 <div id="loading_staging" class="load_recibos">
     <div id="spinner" class="imagen_loading2" style=""></div>
@@ -518,132 +608,169 @@
 <div id="div_tabla_staging" class="container-fluid" style="padding-left:8em; padding-right:3em; ">
 
     <div class="row" style="   ">
-        <div style="float:left;"> <h1 style="color:#337ab7; "><b>STAGING</b></h1></div>
+        <center><h2 style="color:#337ab7; "><b>S T A G I N G</b></h2></center>
     </div>
     <!---<div style="float:left; height:250px; width:250px;"><canvas id="staging_chart" width="50" height="50"> </canvas></div>---->
-
 
     <div style="margin-right:.5em; margin-left:.5em;">
         <div class="panel-heading " style=" width: 100%;  ">
             <b style="left:1em;">PREVIOUS STAGING</b>
-            <span class="counter_s" style="right:1em;"></span>
-            <input type="text" class="search_s form-control validacion" placeholder="Search something" id="caja_stag" style=" float:right; margin-top: -5px; ">
+            <input type="text" class="search_s form-control validacion" onkeyup="busqueda_ordenes_stag(event)" placeholder="Search something" id="caja_stag" style=" float:right; margin-top: -5px; ">
         </div>
-        <div id="div_tabla_inicio_stag" class="panel panel-default panel-primary " style="  overflow:auto; height:250px; border-top-left-radius:0px !important;border-top-right-radius:0px !important;">
-            <table id="tabla_inicio_stag" class="table table-striped results_s">
+        <div id="div_tabla_inicio_stag" class="panel panel-default panel-primary " style="height:250px; border-top-left-radius:0px !important;border-top-right-radius:0px !important;">
+            <table id="" class="table table-striped results_s" style="margin:0px;">
                 <thead class="cabecera_tabla">
                     <tr>
-                        <th style="border-top-left-radius:0px !important;">#</th>
-                        <th>ORDER</th>
-                        <th>STYLE</th>
-                        <th>USER</th>
-                        <th>TOTAL UNITS</th>
-                        <th style="border-top-right-radius:0px !important;">DATE</th>
+                        <th style="border-top-left-radius:0px !important; width:5%; ">#</th>
+                        <th style="width:22%;">ORDER</th>
+                        <th style="width:22%;">STYLE</th>
+                        <th style="width:17%;">USER</th>
+                        <th style="width:17%;">TOTAL UNITS</th>
+                        <th style="border-top-right-radius:0px !important;width:17%;">DATE</th>
                     </tr>
                 </thead>
-                <tbody class="body_tabla_inicio_stag"></tbody>
             </table>
+            <div style="overflow:auto; height:200px; ">
+                <table id="tabla_inicio_stag" class="table table-striped results_s" style="margin:0px;">
+                    <tbody class="body_tabla_inicio_stag"></tbody>
+                </table>
+            </div>
+
         </div>
     </div>
 </div>
 
-    <div class="container-fluid" style="padding-left:8em; padding-right:3em;">
-        <div id="blocker" style="width:90%; height:300px; background:none; position:absolute; z-index:-1;"></div>
-        <div class="panel-heading " style="margin-left:.5em; margin-right:.5em;">
-            <b style="left:1em;">STYLES RECEIVED</b>
-            <span class="counter_staging" style="right:1em;"></span>
-            <input type="text" class="search_staging form-control validacion" placeholder="Search something" id="caja_estilo_po" style=" float:right;margin-top: -5px; ">
-        </div>
+<div class="container-fluid" style="padding-left:8em; padding-right:3em;">
+    <div id="blocker" style="width:90%; height:300px; background:none; position:absolute; z-index:-1;"></div>
+    <div class="panel-heading " style="margin-left:.5em; margin-right:.5em;">
+        <b style="left:1em;">STYLES RECEIVED</b>
+        <span class="counter_staging" style="right:1em;"></span>
+        <input type="text" class="search_staging form-control validacion" placeholder="Type order" onkeyup="busqueda_estilos_stag(event)" id="caja_estilo_po" style=" float:right;margin-top: -5px; ">
+    </div>
 
-        <div id="div_tabla_inicio" class="panel panel-default panel-primary row" style="overflow:auto; height:250px; margin-left:.5em; margin-right:.5em; border-top-left-radius:0px !important;border-top-right-radius:0px !important;">
-            <table id="tabla_inicio" class="table table-striped results_staging" style="border-radius:0px !important;">
-                <thead class="cabecera_tabla disableclick">
-                    <tr class="disableclick" disabled="true">
-                        <th style="border-top-left-radius:0px !important;">#</th>
-                        <th>ORDER</th>
-                        <th>STYLE</th>
-                        <th>DESCRIPTION</th>
-                        <th>TOTAL UNITS</th>
-                        <th>RECEIVE DATE</th>
-                        <th style="border-top-right-radius:0px !important;"></th>
-                    </tr>
-                </thead>
+    <div id="div_tabla_inicio" class="panel panel-default panel-primary row" style=" height:250px; margin-left:.5em; margin-right:.5em; border-top-left-radius:0px !important;border-top-right-radius:0px !important;">
+        <table id="" class="table table-striped results_staging" style="border-radius:0px !important; margin:0px;">
+            <thead class="cabecera_tabla disableclick">
+                <tr class="disableclick" disabled="true">
+                    <th style="border-top-left-radius:0px !important; width:5%;">#</th>
+                    <th style="width:25%;">ORDER</th>
+                    <th style="width:30%;">STYLE</th>
+                    <th style="width:30%;">DESCRIPTION</th>                   
+                    <th style="border-top-right-radius:0px !important;  width:9%;"></th>
+                    <th style="border-top-right-radius:0px !important;  width:1%;"></th>
+                </tr>
+            </thead>
+        </table>
+        <div style="overflow:auto; height:200px;">
+            <table id="tabla_inicio" class="table table-striped results_staging" style="border-radius:0px !important; margin:0px;">
                 <tbody id="datos_bloqueo" class="body_tabla_inicio"></tbody>
             </table>
         </div>
-
-        <div id="div_tabla_staging_temporal" class="row panel panel-default panel-primary" style="margin:.5em; visibility:hidden;  ">
-
-            <div class="panel-heading">Staging by size</div>
-            <div class="row" style="padding:1em 0em 0em 1em;">
-                <div class="form-group col-md-3 po_caja">
-
-                </div>
-                <div class="form-group col-md-3  estilo_caja">
-
-
-                </div>
-                <div class="form-group col-md-6 ">
-                    <label class=" col-form-label">Comments</label>
-                    <input type="text" class=" form-control validacion" ondrop="return false;" onpaste="return false;" maxlength="1000" id="caja_comentarios">
-                </div>
-            </div>
-            <div style="overflow:auto; padding:1.5em;" class=" ">
-                <table id="tabla_staging_temporal" class="data-Talla table table-striped table-hover" style="">
-                    <thead class="cabecera_tabla ">
-                        <tr>
-                            <th>Size</th>
-                            <th>Quantity</th>
-                            <th>Employee</th>
-                            <th>Fabric percent</th>
-                            <th>Country</th>
-                            <th>Color</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody class="body_temporal"></tbody>
-                </table>
-                <button type="button" id="boton_agregar_row" class="btn btn-success  classAdd agregar" onclick="agregar_row()" style="padding:0px 10px !important; margin:0px;"><b style="font-size:1.5em;">+</b></button>
-            </div>
-
-        </div>
-        <div class="col-sm-2" style="display:none;">
-            <div class="panel panel-primary" id="arte" style=" visibility:hidden; width:150px; height: 420px; ">
-                <div class="panel-heading">
-                    <h4>ART</h4>
-                </div>
-                <p class="tImagen">STYLE IMAGE</p>
-                <br />
-                <img id="imagenArte" class="center" />
-                <br />
-                <br />
-                <p class="tImagen">PNL IMAGE</p>
-                <br />
-                <img id="imagenPNL" class="center" />
-            </div>
-        </div>
-
-
-        <button type="button" class="btn btn-primary " style="display:none; float:right;  margin:1em;" id="boton_guardar_stag" onclick="crear_transferencia(event)">Finish and save</button>
-
-
-        <div class="modal fade" id="enlargeImageModal" tabindex="-1" role="dialog" aria-labelledby="enlargeImageModal" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2 class="modal-title" id="exampleModalLabel">ART</h2>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <img class="enlargeImageModalSource center" style="width: 80%;">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
     </div>
+
+    <div id="div_tabla_diferencias_estilos" class="row panel panel-default panel-primary" style="margin:.5em; visibility:hidden;  ">
+        <div id="boton_cerrar_graficas" class="boton_x" onclick="cerrar_comparaciones()" style="">x</div>
+        <div class="panel-heading"><label id="titulo_estilo_comparacion"></label></div>
+
+        <table id="tabla_comparaciones_estilo" class="data-Talla table table-striped table-hover" style="">
+            <thead class="cabecera_tabla cabecera_tabla_comparaciones_estilo "></thead>
+            <tbody class="body_tabla_comparaciones_estilo"></tbody>
+        </table>
+    </div>
+       
+
+    <div id="div_tabla_staging_temporal" class="row panel panel-default panel-primary" style="margin:.5em; visibility:hidden;  ">
+
+        <div class="panel-heading">Staging by size</div>
+        <div class="row" style="padding:1em 0em 0em 1em;">
+            <div class="form-group col-md-3 po_caja"></div>
+            <div class="form-group col-md-3  estilo_caja"></div>
+            <div class="form-group col-md-6 ">
+                <label class=" col-form-label">Comments</label>
+                <input type="text" class=" form-control validacion" ondrop="return false;" onpaste="return false;" maxlength="1000" id="caja_comentarios">
+            </div>
+        </div>
+        <div style="overflow:auto; padding:1.5em;" class=" ">
+            <table id="tabla_staging_temporal" class="data-Talla table table-striped table-hover" style="">
+                <thead class="cabecera_tabla ">
+                    <tr>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Employee</th>
+                        <th>Fabric percent</th>
+                        <th>Country</th>
+                        <th>Color</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="body_temporal"></tbody>
+            </table>
+            <button type="button" id="boton_agregar_row" class="btn btn-success  classAdd agregar" onclick="agregar_row()" style="padding:0px 10px !important; margin:0px;"><b style="font-size:1.5em;">+</b></button>
+        </div>
+        <button type="button" class="btn btn-primary " style=" float:right;  margin:1em;" id="boton_guardar" onclick="crear_transferencia(event)">Save</button>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+<!-- <div class="col-sm-2" style="display:none;">
+      <div class="panel panel-primary" id="arte" style=" visibility:hidden; width:150px; height: 420px; ">
+          <div class="panel-heading">
+              <h4>ART</h4>
+          </div>
+          <p class="tImagen">STYLE IMAGE</p>
+          <br />
+          <img id="imagenArte" class="center" />
+          <br />
+          <br />
+          <p class="tImagen">PNL IMAGE</p>
+          <br />
+          <img id="imagenPNL" class="center" />
+      </div>
+  </div>
+
+ <div class="modal fade" id="enlargeImageModal" tabindex="-1" role="dialog" aria-labelledby="enlargeImageModal" aria-hidden="true">
+     <div class="modal-dialog modal-lg" role="document">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <h2 class="modal-title" id="exampleModalLabel">ART</h2>
+                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+             </div>
+             <div class="modal-body">
+                 <img class="enlargeImageModalSource center" style="width: 80%;">
+             </div>
+             <div class="modal-footer">
+                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+             </div>
+         </div>
+     </div>
+ </div>-->

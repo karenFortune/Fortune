@@ -652,6 +652,8 @@
     <Compile Include="Models\Catalogos\CatTipoOrdenData.cs" />
     <Compile Include="Models\Catalogos\CatTypeBrand.cs" />
     <Compile Include="Models\Catalogos\CatTypeBrandData.cs" />
+    <Compile Include="Models\Catalogos\CatTypeFormPack.cs" />
+    <Compile Include="Models\Catalogos\CatTypeFormPackData.cs" />
     <Compile Include="Models\Catalogos\estilos.cs" />
     <Compile Include="Models\Catalogos\family_trims.cs" />
     <Compile Include="Models\Catalogos\hilos.cs" />
@@ -697,6 +699,7 @@
     <Compile Include="Models\Staging\Staging.cs" />
     <Compile Include="Models\Staging\StagingGeneral.cs" />
     <Compile Include="Models\Trims\DatosTrim.cs" />
+    <Compile Include="Models\Trims\RawPrinterHelper.cs" />
     <Compile Include="Models\Trims\Trim.cs" />
     <Compile Include="Models\Usuarios\CatUsuario.cs" />
     <Compile Include="Models\Usuarios\CatUsuarioData.cs" />
@@ -1269,6 +1272,14 @@
     <Content Include="Content\Chart.js-master\test\specs\scale.radialLinear.tests.js" />
     <Content Include="Content\Chart.js-master\test\specs\scale.time.tests.js" />
     <Content Include="Content\Chart.js-master\test\utils.js" />
+    <Content Include="Content\dropzone\dist\basic.css" />
+    <Content Include="Content\dropzone\dist\dropzone-amd-module.js" />
+    <Content Include="Content\dropzone\dist\dropzone.css" />
+    <Content Include="Content\dropzone\dist\dropzone.js" />
+    <Content Include="Content\dropzone\dist\min\basic.min.css" />
+    <Content Include="Content\dropzone\dist\min\dropzone-amd-module.min.js" />
+    <Content Include="Content\dropzone\dist\min\dropzone.min.css" />
+    <Content Include="Content\dropzone\dist\min\dropzone.min.js" />
     <Content Include="Content\dx.android5.light.css" />
     <Content Include="Content\dx.carmine.compact.css" />
     <Content Include="Content\dx.carmine.css" />
@@ -5705,6 +5716,7 @@
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile2.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\cldr.js" />
     <Content Include="Scripts\cldr\event.js" />
@@ -6005,6 +6017,19 @@
     <Content Include="Views\Pedidos\EditarPO.cshtml" />
     <Content Include="Views\WIP\Index3.cshtml" />
     <Content Include="Views\CustomerService\Index.cshtml" />
+    <Content Include="Views\Almacen\customer_recibos.cshtml" />
+    <Content Include="Views\Almacen\editar_transferencia.cshtml" />
+    <Content Include="Views\Shipping\customer_shipping.cshtml" />
+    <Content Include="Views\Shipping\edicion_pk.cshtml" />
+    <Content Include="Views\Shipping\new_packing_list.cshtml" />
+    <Content Include="Views\Staging\customer_stagging.cshtml" />
+    <Content Include="Views\Trims\customer_trims.cshtml" />
+    <Content Include="Views\Trims\formulario_nuevo_item.cshtml" />
+    <Content Include="Views\Trims\Index.cshtml" />
+    <Content Include="Views\Trims\packing_instruction.cshtml" />
+    <Content Include="Views\Trims\trim_card.cshtml" />
+    <Content Include="Views\Trims\trim_card_datos.cshtml" />
+    <Content Include="Views\Trims\trim_card_nuevo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -12,6 +12,8 @@ namespace FortuneSystem.Models.Almacen
         public int id_inventario { get; set; }
         public int total { get; set; }
 
+        public int id_talla { get; set; }
+        public string talla { get; set; }
         public Inventario item { get; set; }
 
         public virtual caja_inventario ci { get; set; }

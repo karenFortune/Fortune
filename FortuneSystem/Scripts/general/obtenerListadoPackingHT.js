@@ -74,7 +74,8 @@ function buscar_estilos(ID) {
                 html += '<td>' + item.EstiloItem + '</td>';
                 html += '<td>' + item.ItemDescripcion.Descripcion + '</td>';
                 html += '<td>' + item.CatColores.CodigoColor + '</td>';
-                html += '<td>' + item.CatColores.DescripcionColor + '</td>';
+				html += '<td>' + item.CatColores.DescripcionColor + '</td>';
+				html += '<td>' + item.CatTipoFormPack.TipoFormPack + '</td>';
                 html += '<td>' + item.Cantidad + '</td>';
                 html += '<td>' + item.Price + '</td>';
                 html += '<td>' + item.Total + '</td>';
@@ -109,7 +110,8 @@ function obtenerListaTallas(EstiloId) {
         success: function (jsonData) {
             //var listaT = jsonData.Data.listaTalla;
             //var listaPacking = jsonData.Data.listaPackingS;
-            var listaPO = jsonData.Data.lista;
+			var listaPO = jsonData.Data.lista;
+			var listaQty = jsonData.Data.listaT;
             var listaPBulk = jsonData.Data.listaPTBulk;
             var listaEPPK = jsonData.Data.listaEmpPPK;
             var listaPPPK = jsonData.Data.listaPTPPK;
@@ -125,13 +127,25 @@ function obtenerListaTallas(EstiloId) {
                 $.each(listaPO, function (key, item) {
                     html += '<th>' + item.Talla + '</th>';
                 });
-                html += '<th width="30%"> Total </th>';
+			html += '<th width="30%"> Total </th>'; 
+			html += '</tr><tr><td width="30%">Total Orden</td>';
+			var cantidades_total = 0;
+			var cadena_cantidades_total = "";
+			var lPOtotalorden = listaPO.length;
+
+			$.each(listaPO, function (key, item) {
+				html += '<td class="">' + item.Cantidad + '</td>';
+				cantidades_total += item.Cantidad;
+				cadena_cantidades_total += "*" + item.Cantidad;
+			});
+			var cantidades_array_total = cadena_cantidades_total.split('*');
+			html += '<td>' + cantidades_total + '</td>';
                 html += '</tr><tr><td width="30%">1rst QTY</td>';
                 var cantidades = 0;
             var cadena_cantidades = "";
-            var lPO = listaPO.length;         
+			var lPOTotal = listaQty.length;         
               
-                $.each(listaPO, function (key, item) {
+			$.each(listaQty, function (key, item) {
                     html += '<td class="calidad">' + item.Cantidad + '</td>';
                     cantidades += item.Cantidad;
                     cadena_cantidades += "*" + item.Cantidad;
@@ -264,8 +278,8 @@ function obtenerListaTallas(EstiloId) {
 			$('.tbodyPHT').html(html);
             var nColumnas = $("#tablePackingHT tr:last td").length;
             var totalRows = $("#tablePackingHT tr").length;
-             for (var v = 1; v < lPO+1; v++) {
-                 datosPO += "*" + $('#tablePackingHT tr:eq(1) td:eq(' + v + ')').html();
+			for (var v = 1; v < lPOTotal+1; v++) {
+                 datosPO += "*" + $('#tablePackingHT tr:eq(2) td:eq(' + v + ')').html();
               }
 
             var temp = "";
@@ -278,10 +292,10 @@ function obtenerListaTallas(EstiloId) {
                 var valor = $('#tablePackingHT tr:eq(' + z + ') td:eq(0)').html();
                 var contener = "";
                 if ( valor !== undefined) {
-                    contener = valor.includes('Packages');
+					contener = valor.includes('Packed');
                 }               
                 if (contener === true) {
-                    for (var j = 1; j < lPO+1; j++) {
+					for (var j = 1; j < lPOTotal+1; j++) {
                         temp += "*" + $('#tablePackingHT tr:eq(' + z + ') td:eq(' + j + ')').html();
                     }
                     arrayCantidades.push(temp);
@@ -350,19 +364,20 @@ function obtenerListaTallas(EstiloId) {
 					} else {
 						$("#btnNext").prop("disabled", true);
 					}
-					$("#consultaTallaHT").css('height', '1600px');
-					TallasEmpaqueBulkHT(EstiloId);
+					$("#consultaTallaHT").css('height', '1800px');
+					TallasEmpaqueBulkHT(EstiloId);					
 				} else {
 					$("#grupoBotones").hide();
 					$('label[id="numTotalUnitLabel"]').hide();
 					$("#numTotalUnit").hide();
-					$("#panelNoEstilosHT").css('display', 'inline');
+					$("#panelNoEstilosHT").css('display', 'inline');					
 					$("#consultaTallaHT").css('height', '1080px');
 					$("#containerHTPie").css('display', 'none');
+				
 				}
 			} else {
 				if (cargo === 1 || cargo === 9) {
-					$("#consultaTallaHT").css('height', '1600px');
+					$("#consultaTallaHT").css('height', '1800px');
 					$("#grupoBotones").hide();
 					$("#div_titulo_Register").css("display", "inline");
 					$("#div_titulo_Register").html("<h3>REGISTRATION OF PALLET</h3>");
@@ -374,13 +389,13 @@ function obtenerListaTallas(EstiloId) {
 					$('label[id="numTotalUnitLabel"]').hide();
 					$("#numTotalUnit").hide();
 					$("#div_titulo_Bulk").css("display", "none");
-					$("#opciones").css("display", "none");
+					$("#opciones").css("display", "none");					
 					obtener_bacth_estilo(estiloId);
 				} else {
 					$("#grupoBotones").hide();
 					$('label[id="numTotalUnitLabel"]').hide();
 					$("#numTotalUnit").hide();
-					obtener_bacth_estilo(estiloId);
+				    obtener_bacth_estilo(estiloId);
 				} 
             }            
       
@@ -1208,7 +1223,10 @@ function obtener_bacth_estilo(IdEstilo) {
             });
             if (numBatch === 0) {
                 // $("#div_tabla_talla").hide();
-            } else {
+				$("#panelNoEstilosHT").css('display', 'inline');
+
+			} else {
+				$("#panelNoEstilosHT").css('display', 'none');
                 var html = '';
                 var estilos = jsonData.Data.estilos;
                 if (estilos !== '') {

@@ -162,7 +162,10 @@ namespace FortuneSystem.Models.Pedidos
 		public List<InfoMillPO> ListaMillPO { get; set; }
 		//Lista Tipo de Packing Estilo
 		public List<CatTypePackItem> ListaTypePack { get; set; }
-
+		//Lista periodo
+		public List<Periodo> ListaPeriodos { get; set; }
+		[Display(Name = "SEARCH YEAR:")]
+		public int IdPeriodo { get; set; }
 
 	}
 
@@ -220,6 +223,11 @@ namespace FortuneSystem.Models.Pedidos
 		public int IdMillPO { get; set; }
 		public string MillPO { get; set; }
 		public int IdPedido { get; set; }
+	}
+
+	public class Periodo
+	{
+	   public int NumPeriodo { get; set; }
 	}
 
 

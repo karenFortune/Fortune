@@ -113,7 +113,7 @@
 	}
 
 	#modificarPack {
-		margin-left: 1100px;
+		margin-left: 800px;
 		margin-top: 1px;
 		width: 180px;
 		height: 40px;
@@ -282,10 +282,11 @@
 	}
 		.letrero{
 		font-family: impact, sans-serif;
-		font-size: 2em;
+		font-size: 3em;
 		text-align: center;
 		letter-spacing: 3.8pt;
 		word-spacing: -12.6pt;
+		color: #2f77b5;
 	}
 
 </style>
@@ -354,7 +355,7 @@
 		</div>
 	</div>
 </div>
-<div class="container-fluid" style="padding-left:20em; padding-right:10em;">
+<div class="container-fluid" style="padding-left:12em; padding-right:10em;">
 	<div class="letrero">PACKING</div>
 	<div class="panel panel-primary" id="consultaPO">
 		<div class="panel-heading">
@@ -387,7 +388,7 @@
 		</div>
 		<div id="div_tabla_estilos" style="width: 100%; height:350px; overflow:auto; ">
 			<br />
-			@if (Model.NombreClienteFinal != "HOT TOPIC")
+			@if (Model.NombreClienteFinal != "HOT TOPIC" && Model.NombreClienteFinal != "URBAN OUTFITTERS")
 			{
 				if (Model.HistorialPacking == 0)
 				{
@@ -406,6 +407,7 @@
 						<th>ITEM DESCRIPTION</th>
 						<th>COLOR CODE</th>
 						<th>COLOR DESCRIPTION</th>
+						<th>FORM PACK</th>
 						<th>QTY</th>
 						<th>PRICE</th>
 						<th>TOTAL</th>
@@ -425,15 +427,12 @@
 		<script src="~/Scripts/general/obtenerListadoPackingHT.js"></script>
 		<div class="row" style="display:none;" id="panelHotTopic">
 			<div class="col-sm-11">
-				<div class="panel panel-primary" id="consultaTallaHT" style="visibility:hidden;  height: 1600px;">
+				<div class="panel panel-primary" id="consultaTallaHT" style="visibility:hidden;  height: 1800px;">
 
 					<div class="panel-heading">
 						<h4>PACKING HOT TOPIC</h4>
 					</div>
 					<br />
-
-
-
 					<!--<div class="btn-group mr-6" role="group" aria-label="First group">
 						<button type="button" id="btnNewP" class="btn btn-primary">+ New Registration Packing</button>
 					</div>-->
@@ -580,16 +579,34 @@
 			</div>
 		</div>
 	}
-	else
+	else if (Model.NombreClienteFinal == "URBAN OUTFITTERS")
 	{
-		<div class="row" style="display:none;" id="panelPacking">
-			<div class="col-sm-10">
-				<div class="panel panel-primary" id="consultaTalla" style="visibility:hidden; width: 100%; height: 1350px;">
+		<script src="~/Scripts/general/obtenerListadoPackingHT.js"></script>
+		<div class="row" style="display:none;" id="panelHotTopic">
+			<div class="col-sm-11">
+				<div class="panel panel-primary" id="consultaTallaHT" style="visibility:hidden;  height: 1000px;">
 					<div class="panel-heading">
-						<h4>PACKING</h4>
+						<h4>PACKING URBAN</h4>
 					</div>
-					<div id="packBPPK">
-						<div id="panelNoEstilosBPPK" style="display:none;">
+					<br />
+					<!--<div class="btn-group mr-6" role="group" aria-label="First group">
+						<button type="button" id="btnNewP" class="btn btn-primary">+ New Registration Packing</button>
+					</div>-->
+					<div class="container-fluid" style=" overflow:auto;">
+						<br />
+						<div id="div_estilo_ht"></div>
+						<button type="button" id="btnAdd" class="btn btn-xs btn-primary classAddQ">+ Add Size</button>
+						<br />
+						<div id="listaTallaHT"></div>
+						<table id="tablePackingHTUrban" class="table table-sm table-striped table-hover ">
+							<thead class="encabezado"></thead>
+							<tbody class="tbodyPHT"></tbody>
+						</table>
+						<button type="button" id="nuevaTalla" class="btn btn-success btn-md pull-right btn-sm">Save Sizes</button>
+						<br />
+					</div>
+					<div class="panelHT">
+						<div id="panelNoEstilosHT" style="display:none;">
 							@{
 								string[] imgsB = { "~/Content/img/iconoEmpaque.png" };
 							}
@@ -603,10 +620,137 @@
 							}
 						</div>
 						<div class="container-fluid" style=" overflow:auto;">
+							<div id="div_titulo_Bulk" style=" overflow:auto; display:none; "></div>
+							<div id="listaBatchHT" style="overflow: auto; height: 100px; display:none;"></div>
+							<div id="listaTallaBatchHT" style="overflow: auto; height: 100px; display:none;"></div>
+							<br />
+							<div id="opciones" style="display: none;">
+								<div class="form-row">
+									<div class="form-group col-sm-12 tipoP">
+										@Html.LabelFor(model => model.Packing.PackingTypeSize.FormaEmpaque, htmlAttributes: new { @class = "control-label " })
+										@Html.EnumDropDownListFor(model => model.Packing.PackingTypeSize.FormaEmpaque, "Select the packaging form", new { @class = "form-control"/*, @onchange = "ObtenerTallasPorTipo(this);"*/})
+										@Html.ValidationMessageFor(model => model.Packing.PackingTypeSize.FormaEmpaque, "", new { @class = "text-danger" })
+
+										@Html.LabelFor(model => model.Packing.PackingTypeSize.NumberPO, htmlAttributes: new { @class = "control-label " })
+										@Html.EditorFor(model => model.Packing.PackingTypeSize.NumberPO, new { htmlAttributes = new { @class = "form-control" } })
+										@Html.ValidationMessageFor(model => model.Packing.PackingTypeSize.NumberPO, "", new { @class = "text-danger" })
+
+									</div>
+									<br />
+									<div class="form-group col-sm-12" id="opcionTotal" style="display: none;">
+										@Html.LabelFor(model => model.Packing.PackingTypeSize.TotalUnits, htmlAttributes: new { @class = "control-label " })<br />
+										@Html.EditorFor(model => model.Packing.PackingTypeSize.TotalUnits, new { htmlAttributes = new { @class = "form-control" } })
+										@Html.ValidationMessageFor(model => model.Packing.PackingTypeSize.TotalUnits, "", new { @class = "text-danger" })
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<div class="container-fluid">
+							<div id="div_titulo_Register" style=" overflow:auto; display:none; "></div>
+							<div class="form-row" id="opcionesRegistro" style="display:none; ">
+								<div class="col-sm-5">
+									@Html.LabelFor(model => model.Packing.PackingTypeSize.TipoEmpaque, htmlAttributes: new { @class = "control-label " })
+									@Html.EnumDropDownListFor(model => model.Packing.PackingTypeSize.TipoEmpaque, "Select a type of packaging", new { @class = "form-control", id = "TipoEmp" })
+									@Html.ValidationMessageFor(model => model.Packing.PackingTypeSize.TipoEmpaque, "", new { @class = "text-danger" })
+								</div>
+								<div class="col-sm-5">
+									@Html.LabelFor(model => model.Packing.Turnos, htmlAttributes: new { @class = "control-label " })
+									@Html.EnumDropDownListFor(model => model.Packing.Turnos, "Select Shift", new { @class = "form-control" })
+									@Html.ValidationMessageFor(model => model.Packing.Turnos, "", new { @class = "text-danger" })
+								</div>
+								<div class="col-sm-4">
+									<br />
+									@Html.LabelFor(model => model.Packing.PackingTypeSize.NumberPO, htmlAttributes: new { @class = "control-label " })
+									@Html.EditorFor(model => model.Packing.PackingTypeSize.NumberPO, new { htmlAttributes = new { @class = "form-control", id = "numeroPOHT" } })
+									@Html.ValidationMessageFor(model => model.Packing.PackingTypeSize.NumberPO, "", new { @class = "text-danger" })
+								</div>
+								<div class="col-sm-4">
+									<br />
+									@Html.LabelFor(model => model.Packing.CantidadPPKS, htmlAttributes: new { @class = "control-label " })
+									@Html.EditorFor(model => model.Packing.CantidadPPKS, new { htmlAttributes = new { @class = "form-control cantPPK" } })
+									@Html.ValidationMessageFor(model => model.Packing.CantidadPPKS, "", new { @class = "text-danger" })
+								</div>
+								<div class="col-sm-4">
+									<br />
+									@Html.LabelFor(model => model.Packing.CantBox, htmlAttributes: new { @class = "control-label " })
+									@Html.EditorFor(model => model.Packing.CantBox, new { htmlAttributes = new { @class = "form-control cantCajas", id = "numeroCajas" } })
+									@Html.ValidationMessageFor(model => model.Packing.CantBox, "", new { @class = "text-danger" })
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="col-sm-4">
+									<br />
+									@Html.LabelFor(model => model.Packing.PackingTypeSize.TotalUnits, htmlAttributes: new { @class = "control-label ", id = "numTotalUnitLabel" })
+									@Html.EditorFor(model => model.Packing.PackingTypeSize.TotalUnits, new { htmlAttributes = new { @class = "form-control", id = "numTotalUnit" } })
+									@Html.ValidationMessageFor(model => model.Packing.PackingTypeSize.TotalUnits, "", new { @class = "text-danger" })
+								</div>
+							</div>
+							<!-- <button type="button" id="btnAddP" class="btn btn-xs btn-primary classAdd">+ Add Size</button>-->
+							<br />
+							<br />
+							<div id="listaTallaPHT"></div>
+							<br />
+							<br />
+							<br />
+							<div class="btn-toolbar pull-right" role="toolbar" id="grupoBotones" aria-label="Toolbar with button groups">
+								<div class="btn-group mr-2" role="group" aria-label="First group">
+									<button type="button" id="btnDone" class="btn btn-success">Done</button>
+								</div>
+								<div class="btn-group mr-2" role="group" aria-label="Second group">
+									<button type="button" id="btnNuevo" class="btn btn-success" onclick="event.preventDefault(); ConfirmEmpaqueBulk(this);">+ New Bulk</button>
+								</div>
+								<div class="btn-group mr-2" role="group" aria-label="Second group">
+									<button type="button" id="btnNuevoPPK" class="btn btn-success" onclick="event.preventDefault(); ConfirmEmpaquePPK(this);">+ New PPK</button>
+								</div>
+								<div class="btn-group" role="group" aria-label="Third group">
+									<button type="button" id="btnNext" class="btn btn-success">Next PPK</button>
+								</div>
+							</div>
+						</div>
+						<!--contenedor ppk-->
+						@if ((int)Session["idCargo"] == 15)
+						{
+							<div class="pies-container" id="containerHTPie">
+								<div id="pieht"></div>
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-1">
+				<div class="panel panel-primary" id="arte" style=" display:none; width:150px; height: 450px; ">
+					<div class="panel-heading">
+						<h4>ART</h4>
+					</div>
+					<p class="tImagen">STYLE IMAGE</p>
+					<br />
+					<img id="imagenArte" class="center" />
+					<br />
+					<br />
+					<p class="tImagen">PNL IMAGE</p>
+					<br />
+					<img id="imagenPNL" class="center" />
+				</div>
+			</div>
+		</div>
+	}
+	else
+	{
+		<div class="row"  style="display:none;" id="panelPacking">
+			<div class="col-sm-11">
+				<div class="panel panel-primary" id="consultaTalla" style="visibility:hidden; width: 100%; height: 1350px;">
+					<div class="panel-heading">
+						<h4>PACKING</h4>
+					</div>
+					<div id="packBPPK">
+						<div class="container-fluid" style=" overflow:auto;">
 							<br />
 							<div id="div_Desc_Estilo" style="background-color:lightblue; text-align:center"></div>
 							<div id="titulo_Tipo_Empaque" style="display:none; text-align:center"></div>
-							<button type="button" class="btn btn-success btn-md pull-right btn-sm" id="modificarPack" onclick="event.preventDefault(); ConfirmCambioPack(this);"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Change Pack</button>
+
+							<button type="button" class="btn btn-success btn-md pull-right " id="modificarPack" onclick="event.preventDefault(); ConfirmCambioPack(this);"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Change Pack</button>
+							<div></div>
 							<div id="div_estilo"></div>
 							<button type="button" id="btnAdd" class="btn btn-xs btn-primary classAddQ">+ Add Size</button>
 							<br />
@@ -617,6 +761,19 @@
 							</table>
 							<button type="button" id="nuevaTalla" class="btn btn-success btn-md pull-right btn-sm">Save Sizes</button>
 							<br />
+						</div>
+						<div id="panelNoEstilosBPPK" style="display:none;">
+							@{
+								string[] imgsB = { "~/Content/img/iconoEmpaque.png" };
+							}
+
+							@foreach (var imgB in imgsB)
+							{
+								<img src="@Url.Content(imgB)" alt="tbd" id="imgPanelBPPK" class="centerImg" />
+								<p style="font-size:180%; text-align:center;">
+									At the moment, there is no registered packaging for order.
+								</p>
+							}
 						</div>
 						<div class="container-fluid">
 							<div id="div_titulo" style="display:none; "></div>
@@ -800,6 +957,7 @@
 								</div>
 
 							</div>
+							<br />
 							<div class="form-row" id="opcionesCantidadesPack" style="display:none;  margin-right: 0px; ">
 
 								<div class="col-sm-4 turn" style="margin-right: -130px;">

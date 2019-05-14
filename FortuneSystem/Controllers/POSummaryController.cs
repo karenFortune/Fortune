@@ -27,6 +27,7 @@ namespace FortuneSystem.Controllers
         CatTipoCamisetaData objTipoC = new CatTipoCamisetaData();
         ArteData objArte = new ArteData();
         CatEspecialidadesData objEspecialidad = new CatEspecialidadesData();
+		CatTypeFormPackData objFormaPacking = new CatTypeFormPackData();
     
 
         public int IdPedido;
@@ -72,7 +73,8 @@ namespace FortuneSystem.Controllers
             ListaTela(summary);
             ListaTipoCamiseta(summary);
             ListaEspecialidades(summary);
-            summary.PedidosId = Convert.ToInt32(Session["idPedidoRevision"]);
+			ListaTipoFormaPacking(summary);
+			summary.PedidosId = Convert.ToInt32(Session["idPedidoRevision"]);
 
             if (summary == null)
             {
@@ -92,9 +94,10 @@ namespace FortuneSystem.Controllers
             ListaTela(summary);
             ListaTipoCamiseta(summary);
             ListaEspecialidades(summary);
-            //summary.PedidosId = IDPO;
+			ListaTipoFormaPacking(summary);
+			//summary.PedidosId = IDPO;
 
-            if (summary == null)
+			if (summary == null)
             {
 
                 return View();
@@ -139,10 +142,19 @@ namespace FortuneSystem.Controllers
 
         }
 
+		public void ListaTipoFormaPacking(POSummary summary)
+		{
+			List<CatTypeFormPack> listaFomPack = summary.ListaTipoFormPack;
+			listaFomPack = objFormaPacking.ListaTipoFormaPack().ToList();
+			ViewBag.listTipoFormPack = new SelectList(listaFomPack, "IdTipoFormPack", "TipoFormPack", summary.IdTipoFormPack);
+
+		}
 
 
 
-        public void RegistrarArte(string EstiloItem)
+
+
+		public void RegistrarArte(string EstiloItem)
         {
             IMAGEN_ARTE arte = new IMAGEN_ARTE();
             int idEstilo = objItemsDes.ObtenerIdEstilo(EstiloItem);
@@ -783,7 +795,49 @@ namespace FortuneSystem.Controllers
             return View();
         }
 
+		public ActionResult Upload()
+		{
+			bool isSavedSuccessfully = true;
+			string fName = "";
+			try
+			{
+				foreach (string fileName in Request.Files)
+				{
+					HttpPostedFileBase file = Request.Files[fileName];
+					fName = file.FileName;
+					if (file != null && file.ContentLength > 0)
+					{
+						var path = Path.Combine(Server.MapPath("~/MyImages"));
+						string pathString = System.IO.Path.Combine(path.ToString());
+						var fileName1 = Path.GetFileName(file.FileName);
+						bool isExists = System.IO.Directory.Exists(pathString);
+						if (!isExists) System.IO.Directory.CreateDirectory(pathString);
+						var uploadpath = string.Format("{0}\\{1}", pathString, file.FileName);
+						file.SaveAs(uploadpath);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				isSavedSuccessfully = false;
+			}
+			if (isSavedSuccessfully)
+			{
+				return Json(new
+				{
+					Message = fName
+				});
+			}
+			else
+			{
+				return Json(new
+				{
+					Message = "Error in saving file"
+				});
+			}
+		}
 
 
-    }
+
+		}
 }

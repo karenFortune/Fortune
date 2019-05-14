@@ -147,9 +147,9 @@
                 var html = '';
                 $.each(result, function (key, item) {
                     html += '<tr>';
-                    html += '<td>' + item.id_inventario + '</td>';
-                    html += '<td>' + item.po + '</td><td>' + item.descripcion + '</td>';
-                    html += '<td>' + item.total + '</td>';
+                    html += '<td style="width:10%;">' + item.id_inventario + '</td>';
+                    html += '<td style="width:30%;">' + item.po + '</td><td style="width:45%;">' + item.descripcion + '</td>';
+                    html += '<td style="width:15%;">' + item.total + '</td>';
                     html += '</tr>';
                 });
 
@@ -171,6 +171,7 @@
         $("#caja_from_trans").change(function () {
             if ($("#caja_from_trans").val() != "Select") {
                 $("#loading").css('display', 'inline');
+
                 buscar_sellos($("#caja_from_trans").val());
                 buscar_lista_lugares_destino($("#caja_from_trans").val());
                 buscar_inventario();
@@ -205,7 +206,7 @@
         });
         if ($("#caja_date_trans").val() == '') { $("#caja_date_trans").css('border', '2px solid #e03f3f'); error++; } else { $("#caja_date_trans").css('border', '1px solid #cccccc'); }
         if ($("#caja_by_trans").val() == '') { $("#caja_by_trans").css('border', '2px solid #e03f3f'); error++; } else { $("#caja_by_trans").css('border', '1px solid #cccccc'); }
-        if ($("#caja_sello_trans").val() == '') { $("#caja_sello_trans").css('border', '2px solid #e03f3f'); error++; } else { $("#caja_sello_trans").css('border', '1px solid #cccccc'); }
+        if ($("#caja_sello_trans").val() == '') { $("#caja_sello_trans").css('border', '2px solid #e03f3f'); error++; } else { $("#caja_sello_trans").css('border', '1px solid #cccccc'); }        
         if ($("#caja_from_trans").val() == 'Select') { $("#caja_from_trans").css('border', '2px solid #e03f3f'); error++; } else { $("#caja_from_trans").css('border', '1px solid #cccccc'); }
         if ($("#caja_destino_trans").val() == 'Select') { $("#caja_destino_trans").css('border', '2px solid #e03f3f'); error++; } else { $("#caja_destino_trans").css('border', '1px solid #cccccc'); }
         if ($("#caja_pallet_trans").val() == '') { $("#caja_pallet_trans").css('border', '2px solid #e03f3f'); error++; } else { $("#caja_pallet_trans").css('border', '1px solid #cccccc'); }
@@ -220,17 +221,24 @@
             return false;
         }
     }
+    $(document).on("change", "#caja_no_sello", function () {
+        //$("#caja_id_sello_trans").val("0");
+        //$("#caja_sello_trans").val("0");
+    });
+
     function guardar_transferencia() {
+        var id_sello,sello;
         $("#loading").css('display', 'inline');
         var fecha = $("#caja_date_trans").val();
         var persona = $("#caja_by_trans").val();
-        var sello = $("#caja_sello_trans").val();
+        if ($("#caja_no_sello").is(":checked")) { sello = 0; } else { sello = $("#caja_sello_trans").val() }
+        //var sello = $("#caja_sello_trans").val();
         var origen = $("#caja_from_trans").val();
         var destino = $("#caja_destino_trans").val();
         var driver = $("#caja_driver_trans").val();
         var pallet = $("#caja_pallet_trans").val();
         var envio = $("#caja_envio_trans").val();
-        var id_sello = $("#caja_id_sello_trans").val();
+        if ($("#caja_no_sello").is(":checked")) { id_sello = 0; } else { id_sello = $("#caja_id_sello_trans").val(); }
         // caja_car_trans   caja_placas_trans
         var car, placas;
         if ($("#caja_car_trans").val() == "") { car = 'N/A'; } else { car = $("#caja_car_trans").val(); }
@@ -519,6 +527,22 @@
             transform: rotate(-45deg);
             transform-origin: center;
         }
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+        margin-top: 1em;
+    }
+
+    /* Might want to wrap a span around your checkbox text */
+    .checkboxtext {
+        /* Checkbox text */
+        font-size: 110%;
+        display: inline;
+    }
 </style>
 </div>
 <div id="loading" class="load3">
@@ -538,9 +562,17 @@
                     <label for="" class=" col-form-label must_trans">Whse to </label>
                     <input type="text" readonly class="form-control numeric " id="" value="">
                 </div>
-                <div class="form-group col-sm-3 ">
+                <div class="form-group col-sm-2 ">
                     <label for="caja_sello_trans" class=" col-form-label must_trans">Seal </label>
-                    <input type="text" readonly class="form-control numeric " id="caja_sello_trans" value="">
+                    <input type="text" readonly class="form-control numeric " id="caja_sello_trans" style="" value="">
+                    
+                </div>
+                <div class="form-group col-sm-1 ">  
+                    <br />
+                    <input type="checkbox" id="caja_no_sello"  />
+                    <span class="checkboxtext">
+                        &nbsp;&nbsp;No seal
+                    </span>
                 </div>
                 <div class="form-group col-sm-3 ">
                     <label for="caja_driver_trans" class=" col-form-label must_trans">Driver </label>
@@ -586,20 +618,24 @@
             <input type="text" class="search form-control validacion" placeholder="Search" id="caja_busqueda_inventario" onkeyup="buscar_inventario()">
         </div>
 
-        <div id="div_tabla_inventario" class="row panel panel-default panel-primary" style="margin-top:2em; overflow:auto; height:200px;">
+        <div id="div_tabla_inventario" class="row panel panel-default panel-primary" style="margin-top:2em;  height:200px;">
             <div class="panel-heading">Available Items</div>
-                <div style="overflow:auto; padding:0px; padding-left:15px;" class=" row">
-                    <table class="table table-striped table-hover " id="tabla_inventario_articulos">
+                <div style="overflow:auto; " >
+                    <table class="table table-striped table-hover " id="" style="margin:0px;" >
                         <thead style="background:#3479bf; color:white;">
                             <tr>
-                                <th>#</th>
-                                <th>ORDER</th>
-                                <th>DESCRIPTION</th>
-                                <th>AVAILABLE</th>
+                                <th style="width:10%;">#</th>
+                                <th style="width:30%;">ORDER</th>
+                                <th style="width:45%;">DESCRIPTION</th>
+                                <th style="width:15%;">AVAILABLE</th>
                             </tr>
-                        </thead>
-                        <tbody class="cuerpo_tabla"></tbody>
+                        </thead>                       
                     </table>
+                    <div style="height:115px; overflow:auto; " >
+                        <table class="table table-striped table-hover " id="tabla_inventario_articulos" style="margin:0px;">                        
+                            <tbody class="cuerpo_tabla"></tbody>
+                        </table>
+                    </div>
                  </div>
             </div>
         </div>

@@ -67,7 +67,11 @@ namespace FortuneSystem.Models.Packing
     public enum FormaEmpaque
     {
         STORE = 1,
-        ECOM = 2
+        ECOM = 2,
+		RETAIL = 4,
+		DIRECT = 5,
+		RETAIL_GAP = 6,
+		RETAIL_ECHO = 7
         //ASSORTMENT = 3
     }
 }

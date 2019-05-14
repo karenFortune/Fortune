@@ -1586,5 +1586,40 @@ namespace FortuneSystem.Models.Pedidos
 
 		}
 
+
+		//Muestra la lista periodos de la tabla Pedidos
+		public IEnumerable<Periodo> ListadoPeriodos()
+		{
+			Conexion conn = new Conexion();
+			List<Periodo> listPeriodo = new List<Periodo>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "select DISTINCT YEAR(DATE_CANCEL) AS PERIODO from pedido ";
+				comando.CommandType = CommandType.Text;
+				leer = comando.ExecuteReader();
+
+				while (leer.Read())
+				{
+					Periodo year = new Periodo() {
+						NumPeriodo = Convert.ToInt32(leer["PERIODO"])
+					};
+			
+					listPeriodo.Add(year);
+
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+
+			return listPeriodo;
+		}
+
 	}
 }

@@ -27,8 +27,8 @@ namespace FortuneSystem.Models.Catalogos
                 {
                     CatColores colores = new CatColores();
                     colores.IdColor = Convert.ToInt32(leer["ID_COLOR"]);
-                    colores.CodigoColor = leer["CODIGO_COLOR"].ToString();
-                    colores.DescripcionColor = leer["DESCRIPCION"].ToString();
+                    colores.CodigoColor = leer["CODIGO_COLOR"].ToString().TrimEnd();
+                    colores.DescripcionColor = leer["DESCRIPCION"].ToString().TrimEnd();
                     listColores.Add(colores);
                 }
                 leer.Close();

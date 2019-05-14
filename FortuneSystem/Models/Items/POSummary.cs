@@ -96,7 +96,6 @@ namespace FortuneSystem.Models.POSummary
         [DisplayFormat(DataFormatString = "{0:#.####}")]
         [Display(Name = "TOTAL")]
         public string Total { get; set; }
-
         public List<OrdenesCompra> ListaPO { get; set; }
         public virtual IMAGEN_ARTE ImagenArte { get; set; }
         public string ExtensionArte { get; set; }
@@ -111,12 +110,10 @@ namespace FortuneSystem.Models.POSummary
         public DateTime FechaUCC { get; set; } 
         public int IdEstado { get; set; }
 		public int IdSucursal { get; set; }
-
-
-
-
-
-
-
+		public int IdTipoFormPack { get; set; }
+		public CatTypeFormPack CatTipoFormPack { get; set; }
+		public List<CatTypeFormPack> ListaTipoFormPack { get; set; }
     }
+
+	
 }

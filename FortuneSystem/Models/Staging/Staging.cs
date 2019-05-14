@@ -96,6 +96,9 @@ namespace FortuneSystem.Models.Staging
         public string fecha { get; set; }
         public string observaciones { get; set; }
         public string turno { get; set; }
+
+        public List<Talla_staging> lista_staging { get; set; }
+        public int total { get; set; }
     }
 
     public class StagingD {
@@ -114,15 +117,13 @@ namespace FortuneSystem.Models.Staging
         public int piezas { get; set; }
     }
 
-    public class StagingDatos
-    {
-        public string Pais { get; set; }
-        public string Porcentaje { get; set; }
-        public string NombreColor { get; set; }
+	public class StagingDatos
+	{
+		public string Pais { get; set; }
+		public string Porcentaje { get; set; }
+		public string NombreColor { get; set; }
 
-    }
-
-
+	}
 
 
 

@@ -327,6 +327,7 @@ namespace FortuneSystem.Controllers
                             break;
                     }
                 }
+                ds.revisar_totales_estilo(Convert.ToInt32(Session["pedido"]));
                 verificar_estado_pedido(Convert.ToInt32(Session["pedido"]));
                 return Json("0", JsonRequestBehavior.AllowGet);
             }
@@ -335,12 +336,14 @@ namespace FortuneSystem.Controllers
         public void verificar_estado_pedido(int pedido){           
             int total_enviado = ds.obtener_total_enviado_pedido(pedido), total_pedido = ds.obtener_total_pedido(pedido);
             if (total_enviado >= total_pedido){
-                ds.cerrar_pedido(pedido);
                 ds.eliminar_inventario_pedido(pedido);
+                ds.cerrar_pedido(pedido);               
             }
         }
         public JsonResult cerrar_po(string po) {
-            ds.cerrar_pedido(consultas.buscar_pedido(po));
+            int id_pedido = consultas.buscar_pedido(po);
+            ds.cerrar_estilos_pedido(id_pedido);
+            ds.cerrar_pedido(id_pedido);
             return Json("", JsonRequestBehavior.AllowGet);
         }
        
@@ -3285,8 +3288,20 @@ namespace FortuneSystem.Controllers
             }
             return Json("", JsonRequestBehavior.AllowGet);
         }
+        public ActionResult customer_shipping() {
+            return View();
+        }
 
-
+        public JsonResult buscar_informacion_shipping(string estilo){
+            List<Talla> lista_tallas = di.obtener_lista_tallas_summary(Convert.ToInt32(estilo));
+            var result = Json(new{
+                tallas = di.obtener_lista_tallas_summary(Convert.ToInt32(estilo)),
+                tallas_primera_calidad = ds.obtener_lista_shipping_summary(Convert.ToInt32(estilo),"NONE",lista_tallas),
+                tallas_extras = ds.obtener_lista_shipping_summary(Convert.ToInt32(estilo),"EXT", lista_tallas),
+                tallas_dmg = ds.obtener_lista_shipping_summary(Convert.ToInt32(estilo),"DMG", lista_tallas),
+            });
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
 
 

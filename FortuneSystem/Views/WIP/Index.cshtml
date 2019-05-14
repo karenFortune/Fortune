@@ -192,7 +192,7 @@
 		</div>
 	</div>
 </div>
-<div class="container-fluid" style="margin-left:15em; margin-right:5em; ">
+<div class="container-fluid" style="margin-left:12em; margin-right:5em; ">
 	<div class="panel panel-primary" id="listaWIP">
 		<div class="panel-heading">
 			<h2>WIP</h2>
@@ -205,18 +205,27 @@
 		<div class="demo-container">
 			<!-- <div class="form-group has-feedback">
 
-				<input class="btn btn-primary btnNuevo" title="WIP" id="downloadButton" type="button" value="REPORT WIP" />
+		<input class="btn btn-primary btnNuevo" title="WIP" id="downloadButton" type="button" value="REPORT WIP" />
 
 
-			</div>-->
+	</div>-->
+			@*<div class="form-group col-md-4">
+				@Html.LabelFor(model => model.IdPeriodo, htmlAttributes: new { @class = "control-label " }) <br />
+				@Html.DropDownList("listPeriodo", (IEnumerable<System.Web.Mvc.SelectListItem>)ViewData["listPeriodo"], new { @class = "form-control nuevo_po", @id = "selectYear", @name = "state" })
+				@Html.ValidationMessageFor(model => model.IdPeriodo, "", new { @class = "text-danger" })
+			</div>*@
+			
+			<br />
 			<button class="btn btn-primary bntXls" title="WIP" id="downloadButton" type="button">
 				<i class="fa fa-file-excel-o" aria-hidden="true"></i> REPORT WIP
 			</button>
+			<br />
+			<br />
 
 			<!-- <p>
-				<a id="reporte_WIP" href="#" class="btn btn-primary  btnNuevo" title="ADD NEW STYLE"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> REPORT WIP</a>
-			</p>-->
-			<div id="tabs">
+		<a id="reporte_WIP" href="#" class="btn btn-primary  btnNuevo" title="ADD NEW STYLE"> <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> REPORT WIP</a>
+	</p>-->
+			<div id="tabs" style="display:none">
 				<div class="tabs-container"></div>
 				<div class="content  dx-fieldset">
 					<div class="dx-field gridWip" style="display:inline;">
@@ -290,15 +299,48 @@
                 $("#loading").css('display', 'none');
             }
         });
-    });
+	});
 
-    $(function () {
+
+	$(function () {
+
+		$('#selectYear').change(function () {
+				var text = $(this).find('option:selected').text();
+				$("#tabs").css('display', 'inline');
+                @*$.ajax('@Url.Action("List", "POSummary")', {
+                data: { Genero: text},
+                    method: 'GET',
+                    success: function (result) {
+                        var html = '';   
+                        $.each(result, function (key, item) {
+                            html += '<tr>';
+                            html += '<td class="mover"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>';
+                            html += '<td class="datoTalla"><input type="text" id="f-talla" class="form-control talla" value="' + item.CatTallaItem.Talla + '"/></td>';
+                            html += '<td class="datoTalla"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control l-name01 numCantTall "  /></td>';
+                            html += '<td class="datoTalla"><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>';
+                            html += '<td class="datoTalla"><input type="text" name="s-ejemplo" id="s-ejemplo" class="form-control s-name01 numEjmTall"  value="' + 0 + '"/></td>';
+                            html += '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
+                            html += '</tr>';
+
+                        });
+                        $('.tbodyTallas').html(html);
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                    },
+            }).done(function(data) {
+
+            });*@
+		});
+		$("#tabs").css('display', 'inline');
+
             var output= FilterFecha();
             //Lista de Pedidos
             var orders = new DevExpress.data.CustomStore({
                 loadMode: "raw",
                 load: function (loadOptions) {
-                    var d = $.Deferred();
+					var d = $.Deferred();
+					var periodo = $("#selectYear option:selected").val();
                     $.ajax({
                         type: 'GET',
                         url: "/WIP/ListadoPedido",

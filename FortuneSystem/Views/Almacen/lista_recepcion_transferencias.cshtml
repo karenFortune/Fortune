@@ -2,6 +2,7 @@
 <link href="~/Content/base_m.css" rel="stylesheet" type="text/css" />
 <script>
     $(document).ready(function () {
+        obtener_transferencias();
         $(".search_ltr").keyup(function () {
             var searchTerm = $(".search_ltr").val();
             var listItem = $('.results_ltr tbody').children('tr');
@@ -27,15 +28,17 @@
         //setTimeout(function () { $("#loading").css('display', 'none'); }, 1000);
         $("#loading").css('display', 'none');
     });
-    function recibir_transferencia(ID) {
-        $("#loading_lrt").css('display', 'inline');
-        
+    
+    function recibir_transferencia_inventario(ID) {
+        $("#loading_lrt").css('display', 'inline');        
         $.ajax({
-            url: '/Almacen/aceptar_transferencia/' + ID,
+            url: '/Almacen/aceptar_transferencia',
+            data:"{'id':'"+ID+"'}",
             contentType: 'application/json',
             dataType: 'json',
             type: 'post',
-            success: function (jsonData) {
+            success: function (result) {
+               // alert("Success!");
                 alertify.success('Succes!');
                 alertify.set('notifier', 'position', 'top-right');   
                 $('#tabla_listado_transferencias_recibir tbody tr').each(function () {
@@ -43,7 +46,7 @@
                     var tabla = parseFloat($(this).find('td:eq(0) ').html());
                     var id = parseFloat(ID);
                     if (tabla == id) {
-                        $(this).find('td:eq(9) ').html("").addClass("table-striped").css('display', 'none');
+                        $(this).find('td:eq(10) ').html("").addClass("table-striped").css('display', 'none');
                     }
                 });
             }
@@ -200,7 +203,7 @@
             <th>@Html.DisplayNameFor(model => model.usuario)</th>
             <th>@Html.DisplayNameFor(model => model.origen)</th>
             <th>@Html.DisplayNameFor(model => model.destino)</th>
-            <th></th><th></th>
+            <th></th><th></th><th></th>
         </tr>
     </thead>
     <tbody>
@@ -215,9 +218,9 @@
             <td>@Html.DisplayFor(modelItem => item.usuario)</td>
             <td>@Html.DisplayFor(modelItem => item.origen)</td>
             <td>@Html.DisplayFor(modelItem => item.destino)</td>
-            <td><button type="button" onclick="recibir_transferencia( @item.id_salida )" title="Approve transfer" class="btn btn-default glyphicon glyphicon-ok aprobar" style="color:black; padding:0px 5px 0px 5px;"></button></td>
-            <td>
-                   </td>
+            <td><button type="button" onclick="imprimir_transfer_ticket(@item.id_salida)" title="Print" class="btn btn-default glyphicon glyphicon-print" style="color: #3479bf; padding:0px 5px 0px 5px;"></button></td>
+            <td><button type="button" onclick="recibir_transferencia_inventario(@item.id_salida)" title="Approve transfer" class="btn btn-default glyphicon glyphicon-ok aprobar" style="color:black; padding:0px 5px 0px 5px;"></button></td>
+            <td></td>
 
         </tr>
         }
