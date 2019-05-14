@@ -123,13 +123,14 @@ function obtenerListaTallas(EstiloId) {
                 var estilos = jsonData.Data.estilos;
                // if (tPiezasPack <= tPiezasEstilos) { 
                 if (listaPacking.length === 0) {
-                    if (cargo === 1 || cargo === 9) {
+					if (cargo === 1 || cargo === 9) {
+						$("#panelNoEstilosBPPK").css('display', 'none');
                         $("#btnAdd").show();
                         $("#nuevaTalla").show();
                         $("#nuevoPallet").hide();
                         $("#modificarBatch").hide();
                         $("#registrarNuevo").hide();
-                        $("#tableTallasBulk").hide();                       
+						$("#tableTallasBulk").hide();				
                         $("#titulo_Tipo_Empaque").css('display', 'none');
                         var lista_estilo_Desc = jsonData.Data.lista;
                         $.each(lista_estilo_Desc, function (key, item) {
@@ -140,11 +141,6 @@ function obtenerListaTallas(EstiloId) {
                         $("#div_Desc_Estilo").html("<h2>Item: " + estilos + "-" + $.trim(EstiloDescription) + "</h2>");                                           
                         $("#div_estilo").html("<h3>REGISTER 1rst QUALITY OF SIZES</h3>");
                         $("#modificarPack").hide();
-                        html += '<table class="table" id="tablaTallas"><thead>';
-                        html += '<tr><th>Size</th>' +
-                            ' <th>1rst QTY</th>' +
-                            '</tr>' +
-                            '</thead><tbody>';
                         var cont = 0;
 						$.each(listadoPack, function (key, item) {                           
                             html += '<tr id="pallet' + cont + '" class="pallet">';
@@ -154,20 +150,24 @@ function obtenerListaTallas(EstiloId) {
                             html += '</tr>';
                             cont = cont + 1;
                         });
-                        html += '</tbody> </table>';
+                       // html += '</tbody > ';
                         ocultarOpciones();
-                        $('#listaTalla').html(html);
+						$('.tbodyQtyTall').html(html);					
                     } else {
                         $("#btnAdd").hide();
                         $("#nuevaTalla").hide();
-                        $("#nuevoPallet").hide();
+						$("#nuevoPallet").hide();
+						$("#tableQtySize").hide();
                         $("#modificarBatch").hide();					
 						$("#modificarPack").hide();
                         $("#imgPanelBPPK").css('cursor', 'none');
                         $("#div_estilo").hide();
                         $("#div_titulo").hide();
                         $("#tablePacking").hide();
-                        $("#listaTallaBatch").hide();
+						$("#listaTallaBatch").hide();
+						$("#div_Desc_Estilo").hide();
+						$("#containerPie").css('display', 'none');
+						$("#titulo_Tipo_Empaque").hide();
 						$("#consultaTalla").css('height', '700px');
 						$("#panelNoEstilosBPPK").css('display', 'inline');
                     }
@@ -190,7 +190,8 @@ function obtenerListaTallas(EstiloId) {
                     $("#btnAdd").hide();
                     $("#nuevaTalla").hide();
                     $("#nuevoPallet").hide();
-                    $("#tablaTallas").hide();
+					$("#tablaTallas").hide();
+					$("#tableQtySize").hide();
                     $("#tablePacking").show();
                     $("#modificarBatch").hide();       
                     $.each(listaEmpaque, function (key, item) {
@@ -202,7 +203,8 @@ function obtenerListaTallas(EstiloId) {
 
                         EstiloDescrip = item.DescripcionEstilo;
 
-                    });
+					});
+					$("#div_Desc_Estilo").show();
                     $("#div_Desc_Estilo").html("<h2>Item: " + estilos + "-" + $.trim(EstiloDescrip) + "</h2>"); 
                     $("#titulo_Tipo_Empaque").css('display', 'inline');                      
                     $("#titulo_Tipo_Empaque").html("<h1> Packing- " + tipoEmp +"</h1>");
@@ -445,6 +447,8 @@ function obtenerListaTallas(EstiloId) {
 
     });
 }
+
+
 
 $(document).on('click', '#registrarNuevo', function () {
     if (tipoEmp === "BULK") {
@@ -892,7 +896,7 @@ function obtener_bacth_estilo_pack(IdEstilo) {
             });
             if (numBatch === 0) {
                 // $("#div_tabla_talla").hide();
-				$("#panelNoEstilosBPPK").css('display', 'inline');
+				//$("#panelNoEstilosBPPK").css('display', 'inline');
             } else {
                 var html = '';   
 				var estilos = jsonData.Data.estilos;

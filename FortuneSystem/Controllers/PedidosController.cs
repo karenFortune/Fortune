@@ -716,7 +716,7 @@ namespace FortuneSystem.Controllers
         {
             OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
             SeleccionarClientes(pedido);
-            SeleccionarClienteFinal(pedido);
+            SeleccionarClienteFinal(pedido);			
             /*int revisiones = objRevision.ObtenerNumeroRevisiones(id);
             int identificador = 0;
             string rev;
@@ -809,7 +809,9 @@ namespace FortuneSystem.Controllers
             ListaGenero(summary);
             ListaTela(summary);
             ListaTipoCamiseta(summary);
-            if (id == null)
+			ListaTipoFormaPacking(summary);
+
+			if (id == null)
             {
                 return View();
             }

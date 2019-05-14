@@ -6,30 +6,35 @@
 }
 <style>
 
-    #nuevo-estilo {
-        margin-left: 30px;
-        margin-top: 1px;
-        width: 180px;
-        height: 40px;
-        border: none;
-        font-size: 14px;
-        font-weight: 600;
-    }
+	#nuevo-estilo {
+		margin-left: 30px;
+		margin-top: 1px;
+		width: 180px;
+		height: 40px;
+		border: none;
+		font-size: 14px;
+		font-weight: 600;
+	}
 
-   /* .ui-autocomplete {
+	/* .ui-autocomplete {
         height: 200px;
         overflow-y: scroll;
         overflow-x: hidden;
     }*/
 
-       .edit_driver {
-    }
+	.edit_driver {
+	}
 
-        .edit_driver:hover {
-            color: white !important;
-            background: #3479bf !important;
-            border-radius: 15px;
-        }
+		.edit_driver:hover {
+			color: white !important;
+			background: #3479bf !important;
+			border-radius: 15px;
+		}
+
+	body .editar {
+		width: 140% !important;
+		margin-left: -20% !important;
+	}
 </style>
 
 <script>
@@ -181,7 +186,8 @@
         @Html.HiddenFor(model => model.Cliente)
         @Html.HiddenFor(model => model.ClienteFinal)
 
-        <div class="container-fluid" style="padding-left:20em; padding-right:10em;">
+        <div class="container-fluid" style="		padding-left: 20em;
+		padding-right: 10em;">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4>PURCHASE ORDER REVIEW</h4>
@@ -244,7 +250,9 @@
                 @* @{
              Html.RenderAction("Listado_Estilos_PO", "Pedidos");
         }*@
-                <div id="div_tabla_estilos" style="width: 100%; height:350px; overflow:auto; ">
+                <div id="div_tabla_estilos" style="		width: 100%;
+		height: 350px;
+		overflow: auto;">
                     <br />
                     <table id="tabless" class="table table-sm table-striped table-hover ">
                         <thead>
@@ -280,7 +288,7 @@
 }
 <div class="modal fade" id="nuevoEstiloModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <div class="modal-content editar">
             <div class="modal-header">
                 <h2 class="modal-title" id="exampleModalLabel">REGISTER STYLES</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

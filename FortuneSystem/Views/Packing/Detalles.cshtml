@@ -754,7 +754,17 @@
 							<div id="div_estilo"></div>
 							<button type="button" id="btnAdd" class="btn btn-xs btn-primary classAddQ">+ Add Size</button>
 							<br />
-							<div id="listaTalla"></div>
+							<div id="listaTalla">
+								<table id="tableQtySize" class="table table-sm table-striped table-hover ">
+									<thead>
+										<tr>											
+											<th>Size</th>
+											<th>1rst QTY</th>	
+										</tr>
+									</thead>
+									<tbody class="tbodyQtyTall"></tbody>
+								</table>
+							</div>
 							<table id="tablePacking" class="table table-sm table-striped table-hover ">
 								<thead class="encabezado"></thead>
 								<tbody class="tbodyP"></tbody>
@@ -1014,6 +1024,43 @@
 	</a>
 </div>
 <script>
+	//Desplazamiento
+$('.tbodyQtyTall').keydown(function (e) {
+	var $table = $(this);
+	var $active = $('input:focus,select:focus', $table);
+	var $next = null;
+	var focusableQuery = 'input:visible,select:visible,textarea:visible';
+	var position = parseInt($active.closest('td').index()) + 1;
+	console.log('position :', position);
+	switch (e.keyCode) {
+		case 37: // <Left>
+			$next = $active.parent('td').prev().find(focusableQuery);
+			break;
+		case 38: // <Up>                    
+			$next = $active
+				.closest('tr')
+				.prev()
+				.find('td:nth-child(' + position + ')')
+				.find(focusableQuery)
+				;
+
+			break;
+		case 39: // <Right>
+			$next = $active.closest('td').next().find(focusableQuery);
+			break;
+		case 40: // <Down>
+			$next = $active
+				.closest('tr')
+				.next()
+				.find('td:nth-child(' + position + ')')
+				.find(focusableQuery)
+				;
+			break;
+	}
+	if ($next && $next.length) {
+		$next.focus();
+	}
+});
 	function obtenerListaPacking(IdEstiloInf) {
         var orders = new DevExpress.data.CustomStore({
             loadMode: "raw",

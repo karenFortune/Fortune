@@ -389,12 +389,14 @@ function obtenerListaTallas(EstiloId) {
 					$('label[id="numTotalUnitLabel"]').hide();
 					$("#numTotalUnit").hide();
 					$("#div_titulo_Bulk").css("display", "none");
-					$("#opciones").css("display", "none");					
+					$("#opciones").css("display", "none");		
+					$("#panelNoEstilosHT").css('display', 'none');
 					obtener_bacth_estilo(estiloId);
 				} else {
 					$("#grupoBotones").hide();
 					$('label[id="numTotalUnitLabel"]').hide();
 					$("#numTotalUnit").hide();
+					$("#panelNoEstilosHT").css('display', 'inline');
 					obtener_bacth_estilo(estiloId);
 				} 
             }            
@@ -439,8 +441,7 @@ function TallasEmpaqueBulkHT(idEst) {
             $("#div_titulo_Bulk").css("display", "inline"); 
             $("#opciones").css("display", "inline");
                 $("#div_titulo_Register").css("display", "none");
-                $("#opcionesRegistro").css("display", "none");
-                          
+                $("#opcionesRegistro").css("display", "none");                          
             
                 html += '<table class="table" id="tablaTallasBulkHT"><thead>';
                 html += '<tr><th>Size</th>' +
@@ -1223,7 +1224,7 @@ function obtener_bacth_estilo(IdEstilo) {
             });
             if (numBatch === 0) {
                 // $("#div_tabla_talla").hide();
-				$("#panelNoEstilosHT").css('display', 'inline');
+				
 
 			} else {
 				$("#panelNoEstilosHT").css('display', 'none');
