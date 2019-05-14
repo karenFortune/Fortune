@@ -120,8 +120,17 @@ function obtenerListaTallas(EstiloId) {
             var html = '';
 			var estilos = jsonData.Data.estilos;
 			var cargo = jsonData.Data.cargoUser;
+			var lista_estilo_Descrip = jsonData.Data.lista;
+			var EstiloDescrip;
+			$.each(lista_estilo_Descrip, function (key, item) {
+
+				EstiloDescrip = item.DescripcionEstilo;
+
+			});
             $("#btnAdd").hide();
-            $("#nuevaTalla").hide();
+			$("#nuevaTalla").hide();
+			$("#div_Desc_Estilo").show();
+			$("#div_Desc_Estilo").html("<h2>Item: " + estilos + "-" + $.trim(EstiloDescrip) + "</h2>"); 
                $("#div_estilo_ht").html("<h3>QUALITY OF SIZES</h3>");
                     html += '<tr> <th width="30%"> Size </th>';
                 $.each(listaPO, function (key, item) {
