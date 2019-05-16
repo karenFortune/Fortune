@@ -1,79 +1,92 @@
 ﻿@model FortuneSystem.Models.Usuarios.CatUsuario
 
 @{
-    ViewBag.Title = "Details Users";
+	ViewBag.Title = "Details Users";
 
 }
 
+<style type="text/css">
+	#flecha {
+		cursor: auto;
+	}
 
+	dd {
+		font-style: italic;
+		font-size: 18px;
+	}
+
+	dt {
+		font-size: 20px;
+	}
+</style>
 
 <div>
 
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.NoEmpleado)
-        </dt>
+	<dl class="dl-horizontal">
+		<dt>
+			@Html.DisplayNameFor(model => model.NoEmpleado)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.NoEmpleado)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.NoEmpleado)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Nombres)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Nombres)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Nombres)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Nombres)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Apellidos)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Apellidos)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Apellidos)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Apellidos)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Cargo)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Cargo)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CatRoles.Rol)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.IdSucursal)
-        </dt>
+		<dd>
+			@Html.DisplayFor(model => model.CatRoles.Rol)
+		</dd>
+		<dt>
+			@Html.DisplayNameFor(model => model.IdSucursal)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CatSucursal.Sucursal)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.CatSucursal.Sucursal)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Turnos)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Turnos)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Turnos)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Turnos)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Email)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Email)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Contrasena)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Contrasena)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Contrasena)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Contrasena)
+		</dd>
 
-    </dl>
+	</dl>
 </div>
 <p>
 

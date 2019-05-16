@@ -538,6 +538,7 @@
     </Compile>
     <Compile Include="Controllers\AlmacenController.cs" />
     <Compile Include="Controllers\ArteController.cs" />
+    <Compile Include="Controllers\Catalogos\ItemDescripcionController.cs" />
     <Compile Include="Controllers\CustomerServiceController.cs" />
     <Compile Include="Controllers\CatalogosController.cs" />
     <Compile Include="Controllers\Catalogos\CatStatusController.cs" />
@@ -1321,6 +1322,7 @@
     <Content Include="Content\img\ARTE.png" />
     <Content Include="Content\img\backFlecha.png" />
     <Content Include="Content\img\backToPage.png" />
+    <Content Include="Content\img\camiseta2.png" />
     <Content Include="Content\img\CustomerService-icon.png" />
     <Content Include="Content\img\CustomerService-icon2.png" />
     <Content Include="Content\img\customerService.jpg" />
@@ -6030,6 +6032,11 @@
     <Content Include="Views\Trims\trim_card.cshtml" />
     <Content Include="Views\Trims\trim_card_datos.cshtml" />
     <Content Include="Views\Trims\trim_card_nuevo.cshtml" />
+    <Content Include="Views\ItemDescripcion\CrearItemDesc.cshtml" />
+    <Content Include="Views\ItemDescripcion\Detalles.cshtml" />
+    <Content Include="Views\ItemDescripcion\Editar.cshtml" />
+    <Content Include="Views\ItemDescripcion\Eliminar.cshtml" />
+    <Content Include="Views\ItemDescripcion\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

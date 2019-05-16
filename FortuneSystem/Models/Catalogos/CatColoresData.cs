@@ -29,6 +29,7 @@ namespace FortuneSystem.Models.Catalogos
                     colores.IdColor = Convert.ToInt32(leer["ID_COLOR"]);
                     colores.CodigoColor = leer["CODIGO_COLOR"].ToString().TrimEnd();
                     colores.DescripcionColor = leer["DESCRIPCION"].ToString().TrimEnd();
+					colores.DescripcionColor.TrimStart();
                     listColores.Add(colores);
                 }
                 leer.Close();
@@ -90,8 +91,8 @@ namespace FortuneSystem.Models.Catalogos
                 while (leer.Read())
                 {
                     colores.IdColor = Convert.ToInt32(leer["ID_COLOR"]);
-                    colores.CodigoColor = leer["CODIGO_COLOR"].ToString();
-                    colores.DescripcionColor = leer["DESCRIPCION"].ToString();
+                    colores.CodigoColor = leer["CODIGO_COLOR"].ToString().TrimEnd();
+					colores.DescripcionColor = leer["DESCRIPCION"].ToString().TrimEnd();
 
                 }
             }

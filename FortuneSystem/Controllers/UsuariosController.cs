@@ -146,6 +146,7 @@ namespace FortuneSystem.Controllers
             ViewBag.listSucursal = new SelectList(listaSucursal, "IdSucursal", "Sucursal", usuario.IdSucursal);
 
             usuario.Turnos = (Turno)usuario.TipoTurno;
+			
 
             if (usuario == null)
             {

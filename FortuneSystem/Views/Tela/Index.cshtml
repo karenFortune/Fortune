@@ -197,16 +197,16 @@
     </div>
 </div>
 <script>
-    $('#tablaTela tr').click(function (e) {
+
+	    $(document).ready(function () {
+        $('#table').DataTable();
+	});
+
+	$('#tablaTela tr').click(function (e) {
         $('#tablaTela tr').removeClass('highlighted');
         $(this).addClass('highlighted');
     });
 
-    $(document).ready(function () {
-        $('#tablaTela').dataTable({
-            responsive: true
-        });
-    });
 
     $(document).on('click', '.btnSearch', function () {
         $("#loading").css('display', 'none');

@@ -172,7 +172,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.TipoGrupo)
                     </th>
-                    <th></th>
+                    <th>ACTIONS</th>
                 </tr>
             </thead>
             <tbody>
@@ -203,14 +203,13 @@
     </div>
 </div>
 <script>
+	$(document).ready(function () {
+		$('#table').DataTable();
+	});
+
     $('#tablaTipoCamiseta tr').click(function (e) {
         $('#tablaTipoCamiseta tr').removeClass('highlighted');
         $(this).addClass('highlighted');
-    });
-    $(document).ready(function () {
-        $('#tablaTipoCamiseta').dataTable({
-            responsive: true
-        });
     });
 
     $(document).on('click', '.btnSearch', function () {

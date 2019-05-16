@@ -1,32 +1,45 @@
 ﻿@model FortuneSystem.Models.Catalogos.CatTela
 
 @{
-    ViewBag.Title = "Detalles Tela";
+	ViewBag.Title = "Detalles Tela";
 
 }
 
+<style type="text/css">
+	#flecha {
+		cursor: auto;
+	}
 
+	dd {
+		font-style: italic;
+		font-size: 18px;
+	}
+
+	dt {
+		font-size: 20px;
+	}
+</style>
 
 <div>
 
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Tela)
-        </dt>
+	<dl class="dl-horizontal">
+		<dt>
+			@Html.DisplayNameFor(model => model.Tela)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Tela)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Tela)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CodigoTela)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.CodigoTela)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CodigoTela)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.CodigoTela)
+		</dd>
 
-    </dl>
+	</dl>
 </div>
 <p>
 

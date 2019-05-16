@@ -13,8 +13,7 @@ namespace FortuneSystem.Controllers.Catalogos
         // GET: Colores
         public ActionResult Index()
         {
-            List<CatColores> listaColores = new List<CatColores>();
-            listaColores = objColores.ListaColores().ToList();
+			List<CatColores>  listaColores = objColores.ListaColores().ToList();
             return View(listaColores);
         }
 
@@ -22,7 +21,7 @@ namespace FortuneSystem.Controllers.Catalogos
         public ActionResult CrearColor()
         {
             return View();
-        }
+		}
 
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -142,62 +142,61 @@
         </div>
     </div>
 </div>
-<div class="container-fluid" style="padding-left:20em; padding-right:10em;">
-    <div class="panel panel-primary" id="consultaPO">
-        <div class="panel-heading">
-            <h3>
-                Administration of Colors
-            </h3>
-        </div>
-        <br />
-        <p>
-          <button type="button" class="btn btn-primary" id="nuevo-color" data-toggle="modal">
-             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> ADD NEW COLOR
-          </button>            
-        </p>
-        <br />
-        <table class="table table-striped" id="tablaColores">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.IdColor)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CodigoColor)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DescripcionColor)
-                    </th>
-                    <th>ACTIONS</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.IdColor)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CodigoColor)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DescripcionColor)
-                        </td>
-                        <td>
+<div class="container-fluid" style="padding-left:12em; padding-right:10em;">
+	<div class="panel panel-primary" id="consultaPO">
+		<div class="panel-heading">
+			<h3>
+				Administration of Colors
+			</h3>
+		</div>
+		<br />
+		<p>
+			<button type="button" class="btn btn-primary" id="nuevo-color" data-toggle="modal">
+				<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> ADD NEW COLOR
+			</button>
+		</p>
+		<br />
 
+			<table class="table table-striped" id="tablaColores">
+				<thead>
+					<tr>
+						<th>
+							@Html.DisplayNameFor(model => model.IdColor)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.CodigoColor)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.DescripcionColor)
+						</th>
+						<th>ACTIONS</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model)
+					{
+						<tr>
+							<td>
+								@Html.DisplayFor(modelItem => item.IdColor)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.CodigoColor)
+							</td>
+							<td>
+								@Html.DisplayFor(modelItem => item.DescripcionColor)
+							</td>
+							<td>
+								<a href="#" class="btn edit_driver edicion_driver btnEdit" data-value="@item.IdColor" title="Edit Color"><span class="glyphicon glyphicon-edit " aria-hidden="true" style="padding: 0px !important;"></span></a>
+								<a href="#" class="btn edit_driver edicion_driver btnSearch" data-value="@item.IdColor" title="Details Color"><span class="glyphicon glyphicon-search " aria-hidden="true" style="padding: 0px !important;"></span></a>
+								<a href="#" class="btn edit_driver edicion_driver btnDelete" data-value="@item.IdColor" title="Delete Color"><span class="glyphicon glyphicon-trash " aria-hidden="true" style="padding: 0px !important;"></span></a>
 
-                            <a href="#" class="btn edit_driver edicion_driver btnEdit" data-value="@item.IdColor" title="Edit Color"><span class="glyphicon glyphicon-edit " aria-hidden="true" style="padding: 0px !important;"></span></a>
-                            <a href="#" class="btn edit_driver edicion_driver btnSearch" data-value="@item.IdColor" title="Details Color"><span class="glyphicon glyphicon-search " aria-hidden="true" style="padding: 0px !important;"></span></a>
-                            <a href="#" class="btn edit_driver edicion_driver btnDelete" data-value="@item.IdColor" title="Delete Color"><span class="glyphicon glyphicon-trash " aria-hidden="true" style="padding: 0px !important;"></span></a>
-
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
 <script>
 
     $(document).ready(function () {

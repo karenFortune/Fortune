@@ -1,32 +1,45 @@
 ﻿@model FortuneSystem.Models.Catalogos.CatCliente
 
 @{
-    ViewBag.Title = "Details Customer";
+	ViewBag.Title = "Details Customer";
 
 }
 
 
+<style type="text/css">
+	#flecha {
+		cursor: auto;
+	}
 
+	dd {
+		font-style: italic;
+		font-size: 18px;
+	}
+
+	dt {
+		font-size: 20px;
+	}
+</style>
 <div>
 
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Customer)
-        </dt>
+	<dl class="dl-horizontal">
+		<dt>
+			@Html.DisplayNameFor(model => model.Customer)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Customer)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Customer)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Nombre)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Nombre)
+		</dd>
 
-    </dl>
+	</dl>
 </div>
 <p>
 

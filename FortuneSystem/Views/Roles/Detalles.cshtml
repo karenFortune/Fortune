@@ -1,31 +1,44 @@
 ﻿@model FortuneSystem.Models.Roles.CatRoles
 
 @{
-    ViewBag.Title = "Details Role";
+	ViewBag.Title = "Details Role";
 
 }
+<style type="text/css">
+	#flecha {
+		cursor: auto;
+	}
 
+	dd {
+		font-style: italic;
+		font-size: 18px;
+	}
+
+	dt {
+		font-size: 20px;
+	}
+</style>
 
 <div>
 
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
+	<dl class="dl-horizontal">
+		<dt>
+			@Html.DisplayNameFor(model => model.Id)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Id)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Id)
+		</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Rol)
-        </dt>
+		<dt>
+			@Html.DisplayNameFor(model => model.Rol)
+		</dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Rol)
-        </dd>
+		<dd>
+			@Html.DisplayFor(model => model.Rol)
+		</dd>
 
-    </dl>
+	</dl>
 </div>
 <p>
 

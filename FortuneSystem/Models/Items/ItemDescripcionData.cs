@@ -70,8 +70,51 @@ namespace FortuneSystem.Models.Items
 
         }
 
-        //Permite consultar los detalles de un Item Desc
-        public ItemDescripcion ConsultarListaItemDesc(int? id)
+		//Permite actualiza la informacion de un estilo 
+		public void ActualizarItemDesc(ItemDescripcion itemDesc)
+		{
+			Conexion conn = new Conexion();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "Actualizar_Items_Desc";
+				comando.CommandType = CommandType.StoredProcedure;
+				comando.Parameters.AddWithValue("@Id", itemDesc.ItemId);
+				comando.Parameters.AddWithValue("@Item", itemDesc.ItemEstilo);
+				comando.Parameters.AddWithValue("@ItemDesc", itemDesc.Descripcion);
+				comando.ExecuteNonQuery();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+		}
+
+		//Permite eliminar la informacion de un estilo
+		public void EliminarItemDesc(int? id)
+		{
+			Conexion conn = new Conexion();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "EliminarItemDesc";
+				comando.CommandType = CommandType.StoredProcedure;
+				comando.Parameters.AddWithValue("@Id", id);
+				comando.ExecuteNonQuery();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+		}
+
+		//Permite consultar los detalles de un Item Desc
+		public ItemDescripcion ConsultarListaItemDesc(int? id)
         {
 
             Conexion conex = new Conexion();
@@ -91,7 +134,7 @@ namespace FortuneSystem.Models.Items
                 {
                     string descripcion = leer["DESCRIPTION"].ToString();
                     itemDesc.ItemId = Convert.ToInt32(leer["ITEM_ID"]);
-                    itemDesc.ItemEstilo = leer["ITEM_STYLE"].ToString();
+                    itemDesc.ItemEstilo = leer["ITEM_STYLE"].ToString().TrimEnd();
                     itemDesc.Descripcion = descripcion.TrimEnd(' ');
 
                 }

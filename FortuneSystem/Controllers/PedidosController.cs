@@ -911,17 +911,19 @@ namespace FortuneSystem.Controllers
             ListaTela(items);
             ListaTipoCamiseta(items);
             ListaEspecialidades(items);
-            items.CatColores = objColores.ConsultarListaColores(items.ColorId);
+			ListaTipoFormaPacking(items);
+			items.CatColores = objColores.ConsultarListaColores(items.ColorId);
             items.ItemDescripcion = objEst.ConsultarListaItemDesc(items.IdItems);
             items.CatEspecialidades = objEspecialidad.ConsultarListaEspecialidad(items.IdEspecialidad);
-            items.PedidosId = items.PedidosId;
+			items.CatTipoFormPack = objFormaPacking.ConsultarListatipoFormPack(items.IdTipoFormPack);
+			items.PedidosId = items.PedidosId;
             SeleccionarGenero(items);
             SeleccionarTela(items);
             SeleccionarTipoCamiseta(items);
             SeleccionarTipoEspecialidad(items);
+			SeleccionarTipoFormaPack(items);
 
-
-            if (items == null)
+			if (items == null)
             {
 
                 return View();

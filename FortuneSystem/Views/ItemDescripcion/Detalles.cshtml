@@ -1,7 +1,7 @@
-﻿@model FortuneSystem.Models.Catalogos.CatTallaItem
+﻿@model FortuneSystem.Models.Items.ItemDescripcion
 
 @{
-	ViewBag.Title = "Details Size";
+	ViewBag.Title = "Details STYLE";
 	//Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -19,22 +19,23 @@
 		font-size: 20px;
 	}
 </style>
+
 <div>
 	<dl class="dl-horizontal">
 		<dt>
-			@Html.DisplayNameFor(model => model.Talla)
+			@Html.DisplayNameFor(model => model.ItemEstilo)
 		</dt>
 
 		<dd>
-			@Html.DisplayFor(model => model.Talla)
+			@Html.DisplayFor(model => model.ItemEstilo)
 		</dd>
 
 		<dt>
-			@Html.DisplayNameFor(model => model.Orden)
+			@Html.DisplayNameFor(model => model.Descripcion)
 		</dt>
 
 		<dd>
-			@Html.DisplayFor(model => model.Orden)
+			@Html.DisplayFor(model => model.Descripcion)
 		</dd>
 
 	</dl>

@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 </div>
-<div class="container-fluid" style="padding-left:20em; padding-right:10em;">
+<div class="container-fluid" style="padding-left:12em; padding-right:10em;">
     <div class="panel panel-primary"  id="catalagoGrl">
         <div class="panel-heading">
             <h2 style="text-align:center">CATALOGS ADMINISTRATION</h2>
@@ -50,27 +50,34 @@
 
                 }
             </div>
-            <div class="row">
-                @if ((int)Session["id_Empleado"] == 29)
-                {
-
-                }
-                else if ((int)Session["idCargo"] == 1)
-                {
-                    <div class="col-lg-3">
-                        <a href="@Url.Action("Index", "genero")"> <img width="200" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/genero.png"> </a>
-                        <h2 style="padding-left: 10%;">Gender</h2>
-                    </div><!-- /.col-lg-4 -->
-                    <div class="col-lg-3">
-                        <a href="@Url.Action("Index", "tela")"> <img width="140" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/telas.png"> </a>
-                        <h2 style="padding-left: 5%;">Fabrics</h2>
-                    </div><!-- /.col-lg-4 -->
-                    <div class="col-lg-3">
-                        <a href="@Url.Action("Index", "tipoCamiseta")"> <img width="220" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/tipoMangas.png"> </a>
-                        <h2>Type of shirt</h2>
-                    </div><!-- /.col-lg-4 -->
-                }
-            </div>
+			<div class="row">
+				@if ((int)Session["id_Empleado"] == 29)
+				{
+					<div class="col-lg-3">
+						<a href="@Url.Action("Index", "ItemDescripcion")"> <img width="140" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/camiseta2.png"></a>
+						<h2 style="padding-left: 10%;">Styles</h2>
+					</div><!-- /.col-lg-4 -->
+				}
+				else if ((int)Session["idCargo"] == 1)
+				{
+					<div class="col-lg-3">
+						<a href="@Url.Action("Index", "ItemDescripcion")"> <img width="140" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/camiseta2.png"></a>
+						<h2 style="padding-left: 10%;">Styles</h2>
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-3">
+						<a href="@Url.Action("Index", "genero")"> <img width="200" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/genero.png"> </a>
+						<h2 style="padding-left: 10%;">Gender</h2>
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-3">
+						<a href="@Url.Action("Index", "tela")"> <img width="140" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/telas.png"> </a>
+						<h2 style="padding-left: 5%;">Fabrics</h2>
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-3">
+						<a href="@Url.Action("Index", "tipoCamiseta")"> <img width="220" height="140" class="rounded-circle" alt="Generic placeholder image" src="~/Content/img/tipoMangas.png"> </a>
+						<h2>Type of shirt</h2>
+					</div><!-- /.col-lg-4 -->
+				}
+			</div>
             <div class="row">
                 <div class="col-lg-4">
 
@@ -84,3 +91,8 @@
         </div>
         </div>
     </div>
+<script>
+	   $("a").on('click', function () {
+            $("#loading").show();
+        });
+</script>
