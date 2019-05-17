@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web;
 
@@ -9,17 +10,22 @@ namespace FortuneSystem.Models
 {
     public class MyDbContext : DbContext
     {
-        public MyDbContext() : base("Fortune")
-        {
+        public MyDbContext() : base("name=FortuneTestEntities")
+		{
 
         }
-    
-        public DbSet<IMAGEN_ARTE> ImagenArte { get; set; }
-        public DbSet<IMAGEN_ARTE_PNL> ImagenArtePnl { get; set; }
 
-        public DbSet<ARTE> Arte { get; set; }
+		protected override void OnModelCreating(DbModelBuilder modelBuilder)
+		{
+			throw new UnintentionalCodeFirstException();
+		}
+
+		public virtual DbSet<IMAGEN_ARTE> ImagenArte { get; set; }
+        public virtual DbSet<IMAGEN_ARTE_PNL> ImagenArtePnl { get; set; }
+		public virtual  DbSet<IMAGEN_ARTE_ESTILO> ImagenArteEstilo { get; set; }
+        public virtual DbSet<ARTE> Arte { get; set; }
+		public virtual DbSet<UPC> UPCs { get; set; }
 
 
-
-    }
+	}
 }

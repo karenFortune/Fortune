@@ -31,10 +31,10 @@ namespace FortuneSystem.Controllers
         PedidosData objPedido = new PedidosData();
         DescripcionItemData objItems = new DescripcionItemData();
         CatEspecialidadesData objEspecialidad = new CatEspecialidadesData();
-        private MyDbContext db = new MyDbContext();
+        private readonly MyDbContext db = new MyDbContext();
+		
 
-
-        public ActionResult Index()
+		public ActionResult Index()
         {
             List<IMAGEN_ARTE> listaArtes = new List<IMAGEN_ARTE>();
             listaArtes = objArte.ListaInvArtes().ToList();        
@@ -227,16 +227,19 @@ namespace FortuneSystem.Controllers
         [HttpPost]
         public ActionResult UploadFiles()
         {
-            if (Request.Files.Count > 0)
+			if (Request.Files.Count > 0)
             {
                 try
                 {
+					IMAGEN_ARTE_ESTILO arte = new IMAGEN_ARTE_ESTILO();
                     HttpFileCollectionBase files = Request.Files;
-                    for (int i = 0; i < files.Count; i++)
+					HttpPostedFileBase file= Request.Files[0];
+					string fname="";
+					for (int i = 0; i < files.Count; i++)
                     {
 
-                        HttpPostedFileBase file = files[i];
-                        string fname;
+                         file= files[i];
+                       
 
                         if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER" || Request.Browser.Browser.ToUpper() == "FF")
                         {
@@ -247,11 +250,29 @@ namespace FortuneSystem.Controllers
                         {
                             fname = file.FileName;
                         }
-                        fname = Path.Combine(Server.MapPath("~/Content/imagenesEstilos"), fname);
-                        file.SaveAs(fname);
-                    }
-                    return Json("File Uploaded Successfully!");
-                }
+						string ext = Path.GetFileName(file.FileName);
+						fname = Path.Combine(Server.MapPath("~/Content/imagenesEstilos"), fname);
+						if (System.IO.File.Exists(fname))
+						{
+							//System.IO.File.Delete(path);
+							arte.extensionArt = ext;
+						}
+						else
+						{
+							arte.extensionArt = ext;
+							file.SaveAs(fname);
+						}
+
+						arte.StatusArt = 3;
+						arte.fecha = DateTime.Today;
+						arte.IdSummary = Convert.ToInt32(Session["IdItems"]);
+						string nomEstilo = Convert.ToString(Session["nombreEstilo"]);
+						arte.IdEstilo = objDesc.ObtenerIdEstilo(nomEstilo);
+						objArte.AgregarArteEstilo(arte);
+					}				
+
+						return Json(file.FileName);
+				}
                 catch (Exception ex)
                 {
                     return Json("Error occurred. Error details: " + ex.Message);
@@ -262,8 +283,8 @@ namespace FortuneSystem.Controllers
                 return Json("No files selected.");
             }
         }
-        // GET: Arte
 
+        // GET: Arte
         public ActionResult ListaImgArte(int id)
         {
             List<IMAGEN_ARTE> listaArtes = new List<IMAGEN_ARTE>();
@@ -429,8 +450,10 @@ namespace FortuneSystem.Controllers
 
         public ActionResult ConvertirImagenPNLEstilo(string nombreEstilo)
         {
-            int idEstilo= objDesc.ObtenerIdEstilo(nombreEstilo);
-            var arte = db.ImagenArtePnl.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
+			var context = new FortuneTestEntities();	
+
+			int idEstilo= objDesc.ObtenerIdEstilo(nombreEstilo);
+            var arte = context.IMAGEN_ARTE_PNL.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
             if(arte != null)
             {
                 if (arte.ExtensionPNL != null && arte.ExtensionPNL != "")

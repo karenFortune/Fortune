@@ -346,8 +346,28 @@ namespace FortuneSystem.Models.Arte
 
         }
 
+		public void AgregarArteEstilo(IMAGEN_ARTE_ESTILO arte)
+		{
+			Conexion conn = new Conexion();
+			SqlCommand comando = new SqlCommand();
 
-        public void AgregarArtePnlImagen(IMAGEN_ARTE_PNL arte)
+			comando.Connection = conn.AbrirConexion();
+			try
+			{
+				comando.CommandText = "INSERT INTO  IMAGEN_ARTE_ESTILO (IdEstilo,StatusArt,extensionArt,fecha,IdSummary) " +
+					" VALUES('" + arte.IdEstilo + "','" + arte.StatusArt + "','" + arte.extensionArt + "','" + arte.fecha + "','" + arte.IdSummary + "')";
+				comando.ExecuteNonQuery();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+
+		}
+
+
+		public void AgregarArtePnlImagen(IMAGEN_ARTE_PNL arte)
         {
             Conexion conn = new Conexion();
             SqlCommand comando = new SqlCommand();

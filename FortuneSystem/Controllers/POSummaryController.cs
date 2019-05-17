@@ -235,7 +235,8 @@ namespace FortuneSystem.Controllers
             descItem.Cantidad = Int32.Parse(Cantidad);
             descItem.IdEstado = 1;
 			descItem.IdSucursal = 1;
-            objItems.AgregarItems(descItem);
+			Session["nombreEstiloRev"] = EstiloItem;
+			objItems.AgregarItems(descItem);
             Session["IdItemsRev"] = objItems.Obtener_Utlimo_Item();
             return View(descItem);
         }
@@ -249,6 +250,7 @@ namespace FortuneSystem.Controllers
             descItem.Cantidad = Int32.Parse(Cantidad);
             descItem.IdEstado = 1;
 			descItem.IdSucursal = 1;
+			Session["nombreEstiloNuevo"] = EstiloItem;
 			objItems.AgregarItems(descItem);
             Session["IdItemsNuevo"] = objItems.Obtener_Utlimo_Item();
             this.RegistrarArteNuevo(EstiloItem);
@@ -268,6 +270,7 @@ namespace FortuneSystem.Controllers
             descItem.Cantidad = Int32.Parse(Cantidad);
             descItem.IdEstado = 1;
 			descItem.IdSucursal = 1;
+			Session["nombreEstilo"] = EstiloItem;
 			objItems.AgregarItems(descItem);
             Session["IdItems"] = objItems.Obtener_Utlimo_Item();
             this.RegistrarArte(EstiloItem);

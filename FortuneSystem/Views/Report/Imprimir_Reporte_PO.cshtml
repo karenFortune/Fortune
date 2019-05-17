@@ -196,9 +196,9 @@
                     <tbody>
 
                         <tr>
-                            <td class="texto_t">
-                                -
-                            </td>
+							<td class="texto_t">
+								@Html.DisplayFor(modelItem => item.CatTela.Tela)
+							</td>
                             <td class="texto_t">
                                 -
                             </td>
@@ -275,9 +275,12 @@
                 <br />
                 <img src="@Url.Action("ConvertirImagenArteEstilo", "Arte", new {nombreEstilo= item.EstiloItem})" style="width:180px;height:200px;" />
             </div>
+			
         </div>
 
     </div>
+	<br />
+	<br />
     }
 </body>
 </html>

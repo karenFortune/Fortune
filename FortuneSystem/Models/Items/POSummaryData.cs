@@ -114,7 +114,11 @@ namespace FortuneSystem.Models.POSummary
                     ItemDescripcion Desc = new ItemDescripcion();
                     CatColores colores = new CatColores();
                     CatEspecialidades Especialidad = new CatEspecialidades();
-                    Desc.Descripcion = leer["DESCRIPCION_ITEM"].ToString();
+					CatTela Tela = new CatTela
+					{
+						Tela = leer["FABRIC"].ToString()
+					};
+					Desc.Descripcion = leer["DESCRIPCION_ITEM"].ToString();
                     colores.CodigoColor = leer["CODIGO_COLOR"].ToString();
                     colores.DescripcionColor = leer["DESCRIPCION"].ToString();
                     Especialidad.Especialidad = leer["SPECIALTIES"].ToString();
@@ -126,6 +130,7 @@ namespace FortuneSystem.Models.POSummary
                     ItemSummary.CatColores = colores;
                     ItemSummary.ItemDescripcion = Desc;
                     ItemSummary.CatEspecialidades = Especialidad;
+					ItemSummary.CatTela = Tela;
                     ItemSummary.PedidosId = Convert.ToInt32(leer["ID_PEDIDOS"]);
                     listaPO = objPedido.ConsultarListaPO(ItemSummary.PedidosId);
                     listaTallas = objTallas.ListadoTallasPorEstilo(ItemSummary.IdItems).ToList();

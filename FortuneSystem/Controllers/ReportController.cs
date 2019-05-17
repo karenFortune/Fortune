@@ -26,7 +26,7 @@ namespace FortuneSystem.Controllers
 			return new Rotativa.ViewAsPdf("Imprimir_Reporte_PO", de.ListadoInfEstilo(id))
 			{
 				FileName = filename,
-				PageOrientation = Rotativa.Options.Orientation.Portrait,
+				PageOrientation = Rotativa.Options.Orientation.Landscape,
 				PageSize = Rotativa.Options.Size.Letter,
 				PageMargins = new Rotativa.Options.Margins(5, 10, 15, 10),
 				CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",

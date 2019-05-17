@@ -52,7 +52,7 @@
         }).done(function (data) {        });
 				$("#nuevoColor").prop("disabled", true);
 				$("#nuevoColor").removeClass("btn btn-danger");
-			$("#nuevoColor").addClass("btn btn-success"); 
+			$("#nuevoColor").addClass("btn btn-success");
         alertify.set('notifier', 'position', 'top-right');
                 alertify.notify('The color was registered correctly.', 'success', 10, null);
         });
@@ -67,7 +67,7 @@
         });
 			$("#nuevoEstilo").prop("disabled", true);
 			$("#nuevoEstilo").removeClass("btn btn-danger");
-			$("#nuevoEstilo").addClass("btn btn-success"); 
+			$("#nuevoEstilo").addClass("btn btn-success");
             alertify.set('notifier', 'position', 'top-right');
             alertify.notify('The description of the style was correctly registered.', 'success', 10, null);
         });
@@ -374,7 +374,8 @@
         });
     });
 
-    $(function () {
+	$(function () {//chooseFile
+		debugger
         $('#chooseFile').change(function (e) {
             addImage(e);
         });
@@ -490,7 +491,7 @@
         $('#ItemDescripcion_Descripcion').val('');
         $('#CatColores_CodigoColor').val('');
         $('#CatColores_DescripcionColor').val('');
-        $('#CantidadT').val('');        
+        $('#CantidadT').val('');
         $("#nuevoColor").prop("disabled", false);
         $("#nuevoEstilo").prop("disabled", false);
         limpiarInptCant();
@@ -602,6 +603,44 @@
 		width: 120% !important;
 		margin-left: -20% !important;
 	}
+
+	body {
+		font-family: arial;
+	}
+
+	#drop-container {
+		background: #ffffff;
+		min-height: 200px;
+		padding: 10px;
+		border: #07c6f1 2px dashed;
+		max-width: 600px;
+	}
+
+	.drop-area-text {
+		text-align: center;
+		color: #e0dfdf;
+		font-size: 1.5em;
+		padding-bottom: 20px;
+	}
+
+	.drop-image {
+		display: none;
+	}
+
+	.preview {
+		margin: 20px;
+		width: 150px;
+		height: 150px;
+		display: inline-block;
+	}
+
+	@@media screen and (max-width: 500px) {
+		.preview {
+			margin: 15px;
+			width: 100px;
+			height: 100px;
+		}
+	}
 </style>
 
 <h2></h2>
@@ -609,39 +648,28 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content editar">
 			<div class="modal-header">
-				<h2 class="modal-title" id="exampleModalLabel">EDIT CUSTOMER</h2>
+				<h2 class="modal-title" id="exampleModalLabel">ADD ART IMAGE</h2>
 			</div>
 			<div class="modal-body">
 				@*<div class="jumbotron">
-					<form action="~/POSummary/Upload"  style="background-color:#00BFFF"></form>
-					<button id="submit-all">Submit All Files</button>
-				</div>*@
+						<form action="~/POSummary/Upload"  style="background-color:#00BFFF"></form>
+						<button id="submit-all">Submit All Files</button>
+					</div>*@
 				<div class="form-horizontal">
-						<div class="row">
-							<div class="form-group">
-								<div class="col-sm-1">
-								</div>
-								<div class="col-sm-5">
-									@Html.LabelFor(model => model.ImgArte, htmlAttributes: new { @class = "control-label col-md-4" })
-									<div class="file-upload col-md-10">
-										<div class="file-select">
-											<div class="file-select-button" id="fileName">Browser File</div>
-											<div class="file-select-name" id="noFile">No file chosen...</div>
-											@Html.TextBoxFor(model => model.FileArte, new { type = "file", id = "chooseFile" })
-										</div>
-									</div>
-									<img id="imgSalida" width="70" height="70" />
-								</div>
-							</div>
-						</div>
+					<div class="row">
 						<div class="form-group">
-							<div class="col-md-offset-2 col-md-10">
-								<input type="button" value="SAVE" id="btnSaveArt" class="btn btn-success" />
+							<div class="col-sm-1">
+							</div>
+							<div class="col-sm-5">
+								<div id="drop-container">
+									<div class="drop-area-text">Drag and Drop Images Here</div>
+								</div>
+								<img src="" class="drop-image" />
 							</div>
 						</div>
-
-
 					</div>
+
+				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -668,7 +696,7 @@
 			<div class="container-fluid">
 				<br />
 				<div class="form-row ">
-					<div class="form-group col-md-3">
+					<div class="form-group col-md-4">
 						@Html.LabelFor(model => model.ItemDescripcion.ItemEstilo, htmlAttributes: new { @class = "control-label" })
 						@Html.EditorFor(model => model.ItemDescripcion.ItemEstilo, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
 						@Html.ValidationMessageFor(model => model.ItemDescripcion.ItemEstilo, "", new { @class = "text-danger" })
@@ -679,12 +707,12 @@
 						@Html.ValidationMessageFor(model => model.IdTipoFormPack, "", new { @class = "text-danger" })
 
 					</div>
-					<div class="form-group col-md-3">
+					<div class="form-group col-md-4">
 						@Html.LabelFor(model => model.ItemDescripcion.Descripcion, htmlAttributes: new { @class = "control-label" })
 						@Html.EditorFor(model => model.ItemDescripcion.Descripcion, new { htmlAttributes = new { @class = "form-control nuevo_item", @onkeyup = "InputToUpper(this);" } })
 						@Html.ValidationMessageFor(model => model.ItemDescripcion.Descripcion, "", new { @class = "text-danger" })
 					</div>
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-3">
 						<br />
 						<button type="button" class="btn btn-success" id="nuevoEstilo" data-toggle="modal">
 							<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Style
@@ -854,6 +882,7 @@
 		<br />
 
 	</div>
+
 	<script>
 		Dropzone.options.dropzoneForm =
 			{
@@ -865,47 +894,96 @@
 				}
 			};
 
-			//Desplazamiento
-$('.tbodyTallas').keydown(function(e){
-    var $table = $(this);
-    var $active = $('input:focus,select:focus',$table);
-    var $next = null;
-    var focusableQuery = 'input:visible,select:visible,textarea:visible';
-    var position = parseInt( $active.closest('td').index()) + 1;
-    console.log('position :',position);
-    switch(e.keyCode){
-        case 37: // <Left>
-            $next = $active.parent('td').prev().find(focusableQuery);   
-            break;
-        case 38: // <Up>                    
-            $next = $active
-                .closest('tr')
-                .prev()                
-                .find('td:nth-child(' + position + ')')
-                .find(focusableQuery)
-            ;
-            
-            break;
-        case 39: // <Right>
-            $next = $active.closest('td').next().find(focusableQuery);            
-            break;
-        case 40: // <Down>
-            $next = $active
-                .closest('tr')
-                .next()                
-                .find('td:nth-child(' + position + ')')
-                .find(focusableQuery)
-            ;
-            break;
-    }       
-    if($next && $next.length)
-    {        
-        $next.focus();
-    }
-});
+		//Desplazamiento
+		$('.tbodyTallas').keydown(function (e) {
+			var $table = $(this);
+			var $active = $('input:focus,select:focus', $table);
+			var $next = null;
+			var focusableQuery = 'input:visible,select:visible,textarea:visible';
+			var position = parseInt($active.closest('td').index()) + 1;
+			console.log('position :', position);
+			switch (e.keyCode) {
+				case 37: // <Left>
+					$next = $active.parent('td').prev().find(focusableQuery);
+					break;
+				case 38: // <Up>
+					$next = $active
+						.closest('tr')
+						.prev()
+						.find('td:nth-child(' + position + ')')
+						.find(focusableQuery)
+						;
+
+					break;
+				case 39: // <Right>
+					$next = $active.closest('td').next().find(focusableQuery);
+					break;
+				case 40: // <Down>
+					$next = $active
+						.closest('tr')
+						.next()
+						.find('td:nth-child(' + position + ')')
+						.find(focusableQuery)
+						;
+					break;
+			}
+			if ($next && $next.length) {
+				$next.focus();
+			}
+		});
+
+		$(document).ready(function () {
+			$("#drop-container").on('dragenter', function (e) {
+				e.preventDefault();
+				$(this).css('border', '#39b311 2px dashed');
+				$(this).css('background', '#f1ffef');
+			});
+
+			$("#drop-container").on('dragover', function (e) {
+				e.preventDefault();
+			});
+
+
+			$("#drop-container").on('drop', function (e) {
+				$(this).css('border', '#07c6f1 2px dashed');
+				$(this).css('background', '#FFF');
+				e.preventDefault();
+				var image = e.originalEvent.dataTransfer.files;
+				createFormData(image);
+			});
+		});
+
+		function createFormData(image) {
+			var formImage = new FormData();
+			formImage.append('dropImage', image[0]);
+			//var IdEstilo = $("#IdItems").val();
+			//formData.append('IdEstilo', IdEstilo);
+			uploadFormData(formImage);
+		}
+
+		function uploadFormData(formData) {
+			$.ajax({
+				url: "/Arte/UploadFiles",
+				type: "POST",
+				data: formData,
+				contentType: false,
+				cache: false,
+				processData: false,
+				success: function (response) {
+					
+					var imagePreview = $(".drop-image").clone();
+					var path = '/Content/imagenesEstilos/' + response;
+					imagePreview.attr("src", path);
+					imagePreview.removeClass("drop-image");
+					imagePreview.addClass("preview");
+					$('#drop-container').append(imagePreview);
+				}
+			});
+		}
 	</script>
 
 }
+
 
 
 @section Scripts {
