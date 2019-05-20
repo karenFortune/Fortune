@@ -28,9 +28,8 @@ namespace FortuneSystem.Controllers
 
         public ActionResult Login()
         {
-            CatUsuario suc = new CatUsuario();
-            List<CatSucursal> listaSucursal = suc.ListaSucursal;
-            listaSucursal = objSucursal.ListaSucursales().ToList();
+            CatUsuario suc = new CatUsuario();          
+			List<CatSucursal>  listaSucursal = objSucursal.ListaSucursales().ToList();
 
             ViewBag.listSucursal = new SelectList(listaSucursal, "IdSucursal", "Sucursal", suc.IdSucursal);
             return View();
@@ -52,7 +51,7 @@ namespace FortuneSystem.Controllers
                     Session["nombre"] = usuario.Nombres;
                     int noEmpleado = objUsr.Obtener_Datos_Usuarios(empleado);
                     Session["id_Empleado"] = noEmpleado;
-                    Session["idCargo"] = usuario.Cargo;
+					Session["idCargo"] = usuario.Cargo;                    
                     usuario.CatRoles = objCaRoles.ConsultarListaRoles(usuario.Cargo);
                     Session["rolUser"] = usuario.CatRoles.Rol;
                     string pass = objUsr.Obtener_Contraseña_Usuario(empleado);

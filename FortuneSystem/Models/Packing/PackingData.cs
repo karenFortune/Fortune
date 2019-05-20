@@ -13,8 +13,9 @@ namespace FortuneSystem.Models.Packing
 {
     public class PackingData
     {
-        PedidosData objPedido = new PedidosData();
-        CatUsuarioData objCatUser = new CatUsuarioData();
+		readonly PedidosData objPedido = new PedidosData();
+		readonly CatUsuarioData objCatUser = new CatUsuarioData();
+
         //Muestra la lista de tallas de Packing por estilo
         public IEnumerable<PackingM> ListaTallasPacking(int? id)
         {
@@ -500,10 +501,12 @@ namespace FortuneSystem.Models.Packing
                         TotalUnits = Convert.ToInt32(leer["TOTAL_UNITS"])
                         
                     };
-                    PackingM packingM = new PackingM();
-                    packingM.CantBox = Convert.ToInt32(leer["CANT_BOX"]);
-                    packingM.TotalPiezas = Convert.ToInt32(leer["TOTAL_PIECES"]);
-                    ObtenerNombreTipoEmpaque(tallas);
+					PackingM packingM = new PackingM
+					{
+						CantBox = Convert.ToInt32(leer["CANT_BOX"]),
+						TotalPiezas = Convert.ToInt32(leer["TOTAL_PIECES"])
+					};
+					ObtenerNombreTipoEmpaque(tallas);
                     tallas.PackingM = packingM;
                     listTallas.Add(tallas);
                 }
@@ -618,14 +621,16 @@ namespace FortuneSystem.Models.Packing
                 {
 
                     PackingM pack = new PackingM();
-                    PackingTypeSize tallas = new PackingTypeSize();
-                    tallas.IdPackingTypeSize = Convert.ToInt32(leer["ID_PACKING_TYPE_SIZE"]);
-                    tallas.IdTalla = Convert.ToInt32(leer["ID_TALLA"]);
-                    tallas.Talla = leer["TALLA"].ToString();
-                    tallas.Pieces = Convert.ToInt32(leer["PIECES"]);
-                    tallas.Ratio = Convert.ToInt32(leer["RATIO"]);
-                    tallas.IdTipoEmpaque = Convert.ToInt32(leer["TYPE_PACKING"]);
-                    pack.IdPacking = Convert.ToInt32(leer["ID_PACKING"]);
+					PackingTypeSize tallas = new PackingTypeSize
+					{
+						IdPackingTypeSize = Convert.ToInt32(leer["ID_PACKING_TYPE_SIZE"]),
+						IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
+						Talla = leer["TALLA"].ToString(),
+						Pieces = Convert.ToInt32(leer["PIECES"]),
+						Ratio = Convert.ToInt32(leer["RATIO"]),
+						IdTipoEmpaque = Convert.ToInt32(leer["TYPE_PACKING"])
+					};
+					pack.IdPacking = Convert.ToInt32(leer["ID_PACKING"]);
                     pack.CantBox = Convert.ToInt32(leer["CANT_BOX"]);
                     pack.TotalPiezas = Convert.ToInt32(leer["TOTAL_PIECES"]);
                     if (!Convert.IsDBNull(leer["PARTIAL"]))
@@ -666,14 +671,16 @@ namespace FortuneSystem.Models.Packing
                 {
 
                     PackingM pack = new PackingM();
-                    PackingTypeSize tallas = new PackingTypeSize();
-                    tallas.IdPackingTypeSize = Convert.ToInt32(leer["ID_PACKING_TYPE_SIZE"]);
-                    tallas.IdTalla = Convert.ToInt32(leer["ID_TALLA"]);
-                    tallas.Talla = leer["TALLA"].ToString();
-                    tallas.Pieces = Convert.ToInt32(leer["PIECES"]);
-                    tallas.Ratio = Convert.ToInt32(leer["RATIO"]);
-                    tallas.IdTipoEmpaque = Convert.ToInt32(leer["TYPE_PACKING"]);
-                    pack.IdPacking = Convert.ToInt32(leer["ID_PACKING"]);
+					PackingTypeSize tallas = new PackingTypeSize
+					{
+						IdPackingTypeSize = Convert.ToInt32(leer["ID_PACKING_TYPE_SIZE"]),
+						IdTalla = Convert.ToInt32(leer["ID_TALLA"]),
+						Talla = leer["TALLA"].ToString(),
+						Pieces = Convert.ToInt32(leer["PIECES"]),
+						Ratio = Convert.ToInt32(leer["RATIO"]),
+						IdTipoEmpaque = Convert.ToInt32(leer["TYPE_PACKING"])
+					};
+					pack.IdPacking = Convert.ToInt32(leer["ID_PACKING"]);
                     pack.CantBox = Convert.ToInt32(leer["CANT_BOX"]);
                     pack.TotalPiezas = Convert.ToInt32(leer["TOTAL_PIECES"]);
 
@@ -908,7 +915,6 @@ namespace FortuneSystem.Models.Packing
 					"INNER JOIN CAT_ITEM_SIZE S ON S.ID=T.ID_TALLA " +
 					"WHERE T.ID_SUMMARY= '" + id + "' GROUP by S.ORDEN, T.ID_TALLA, S.TALLA ORDER BY cast(S.ORDEN AS int) ASC ";
 				leer = comando.ExecuteReader();
-				int total = 0;
 				while (leer.Read())
 				{
 					PackingM tallas = new PackingM()
@@ -946,7 +952,6 @@ namespace FortuneSystem.Models.Packing
 								 "WHERE P.ID_BATCH in(" + query + ")  AND P.ID_SUMMARY='" + id + "' AND S.ID=P.ID_TALLA AND U.Id=P.ID_USUARIO AND PZ.ID_PACKING_TYPE_SIZE=P.ID_PACKING_TYPE_SIZE " +
 								 "ORDER by cast(S.ORDEN AS int) ASC ";
 				leer = comando.ExecuteReader();
-				int total = 0;
 				while (leer.Read())
 				{
 					PackingM tallas = new PackingM()
@@ -1697,7 +1702,6 @@ namespace FortuneSystem.Models.Packing
         {
             Conexion conn = new Conexion();
             List<PackingM> listTallas = new List<PackingM>();
-            List<PackingTypeSize> listaEmpaque = new List<PackingTypeSize>();
             try
             {
                 SqlCommand comando = new SqlCommand();
@@ -1718,9 +1722,9 @@ namespace FortuneSystem.Models.Packing
                         TotalPiezas = Convert.ToInt32(leer["TOTAL_PIECES"])
                     
                 };
-                    
 
-                    listaEmpaque = ObtenerListaPackingTypeSizePiezasyRatioPorEstilo(idEstilo);
+
+					List<PackingTypeSize> listaEmpaque = ObtenerListaPackingTypeSizePiezasyRatioPorEstilo(idEstilo);
                     tallas.ListEmpaque = listaEmpaque;
                     listTallas.Add(tallas);
                 }
@@ -1816,9 +1820,11 @@ namespace FortuneSystem.Models.Packing
                         tallas.NombreUsrModif = "-";
                     }
 
-                    PackingTypeSize tipoEmp = new PackingTypeSize();
-                    tipoEmp.IdTipoEmpaque = ObtenerTipoEmpaque(id);
-                    tallas.PackingTypeSize = tipoEmp;
+					PackingTypeSize tipoEmp = new PackingTypeSize
+					{
+						IdTipoEmpaque = ObtenerTipoEmpaque(id)
+					};
+					tallas.PackingTypeSize = tipoEmp;
                     listTallas.Add(tallas);
                 }
                 leerF.Close();
@@ -1938,10 +1944,12 @@ namespace FortuneSystem.Models.Packing
                         tallas.NombreUsrModif = "-";
                     }
 
-                    PackingTypeSize tipoEmp = new PackingTypeSize();
-                    tipoEmp.NumberPO = Convert.ToInt32(leerF["NUMBER_PO"]);
-                    tipoEmp.IdTipoEmpaque = Convert.ToInt32(leerF["TYPE_PACKING"]);
-                    tallas.PackingTypeSize = tipoEmp;
+					PackingTypeSize tipoEmp = new PackingTypeSize
+					{
+						NumberPO = Convert.ToInt32(leerF["NUMBER_PO"]),
+						IdTipoEmpaque = Convert.ToInt32(leerF["TYPE_PACKING"])
+					};
+					tallas.PackingTypeSize = tipoEmp;
                     listTallas.Add(tallas);
                 }
                 leerF.Close();
@@ -2047,12 +2055,14 @@ namespace FortuneSystem.Models.Packing
             Conexion conex = new Conexion();
             try
             {
-                SqlCommand com = new SqlCommand();
-                com.Connection = conex.AbrirConexion();
-                com.CommandText = "AgregarPacking";
-                com.CommandType = CommandType.StoredProcedure;
+				SqlCommand com = new SqlCommand
+				{
+					Connection = conex.AbrirConexion(),
+					CommandText = "AgregarPacking",
+					CommandType = CommandType.StoredProcedure
+				};
 
-                com.Parameters.AddWithValue("@idSummary", packing.IdSummary);
+				com.Parameters.AddWithValue("@idSummary", packing.IdSummary);
                 com.Parameters.AddWithValue("@idBatch", packing.IdBatch);
                 com.Parameters.AddWithValue("@idTalla", packing.IdTalla);
                 com.Parameters.AddWithValue("@cantB", packing.CantBox);
@@ -2079,12 +2089,14 @@ namespace FortuneSystem.Models.Packing
             Conexion conex = new Conexion();
             try
             {
-                SqlCommand com = new SqlCommand();
-                com.Connection = conex.AbrirConexion();
-                com.CommandText = "AgregarPackingAssort";
-                com.CommandType = CommandType.StoredProcedure;
+				SqlCommand com = new SqlCommand
+				{
+					Connection = conex.AbrirConexion(),
+					CommandText = "AgregarPackingAssort",
+					CommandType = CommandType.StoredProcedure
+				};
 
-                com.Parameters.AddWithValue("@idBatch", packing.PackingAssort.IdBatch);
+				com.Parameters.AddWithValue("@idBatch", packing.PackingAssort.IdBatch);
                 com.Parameters.AddWithValue("@idBlock", packing.PackingAssort.IdBlock);
                 com.Parameters.AddWithValue("@turno", packing.PackingAssort.IdTurno);
                 com.Parameters.AddWithValue("@cart", packing.PackingAssort.CantCartons);
@@ -2110,13 +2122,15 @@ namespace FortuneSystem.Models.Packing
             Conexion conex = new Conexion();
             try
             {
-                SqlCommand com = new SqlCommand();
-                com.Connection = conex.AbrirConexion();
-                com.CommandText = "AgregarPackingSize";
-                com.CommandType = CommandType.StoredProcedure;
+				SqlCommand com = new SqlCommand
+				{
+					Connection = conex.AbrirConexion(),
+					CommandText = "AgregarPackingSize",
+					CommandType = CommandType.StoredProcedure
+				};
 
 
-                com.Parameters.AddWithValue("@idTalla", packing.PackingSize.IdTalla);
+				com.Parameters.AddWithValue("@idTalla", packing.PackingSize.IdTalla);
                 com.Parameters.AddWithValue("@calidad", packing.PackingSize.Calidad);
                 com.Parameters.AddWithValue("@idSummary", packing.PackingSize.IdSummary);
                 com.ExecuteNonQuery();
@@ -2138,12 +2152,14 @@ namespace FortuneSystem.Models.Packing
             Conexion conex = new Conexion();
             try
             {
-                SqlCommand com = new SqlCommand();
-                com.Connection = conex.AbrirConexion();
-                com.CommandText = "AgregarTypePackingSize";
-                com.CommandType = CommandType.StoredProcedure;
+				SqlCommand com = new SqlCommand
+				{
+					Connection = conex.AbrirConexion(),
+					CommandText = "AgregarTypePackingSize",
+					CommandType = CommandType.StoredProcedure
+				};
 
-                com.Parameters.AddWithValue("@idTalla", packing.PackingTypeSize.IdTalla);
+				com.Parameters.AddWithValue("@idTalla", packing.PackingTypeSize.IdTalla);
                 com.Parameters.AddWithValue("@piece", packing.PackingTypeSize.Pieces);
                 com.Parameters.AddWithValue("@ratio", packing.PackingTypeSize.Ratio);
                 com.Parameters.AddWithValue("@typeP", packing.PackingTypeSize.IdTipoEmpaque);
@@ -2176,12 +2192,14 @@ namespace FortuneSystem.Models.Packing
             Conexion conex = new Conexion();
             try
             {
-                SqlCommand com = new SqlCommand();
-                com.Connection = conex.AbrirConexion();
-                com.CommandText = "ActualizarBatchPacking";
-                com.CommandType = CommandType.StoredProcedure;
+				SqlCommand com = new SqlCommand
+				{
+					Connection = conex.AbrirConexion(),
+					CommandText = "ActualizarBatchPacking",
+					CommandType = CommandType.StoredProcedure
+				};
 
-                com.Parameters.AddWithValue("@id", packing.IdPacking);
+				com.Parameters.AddWithValue("@id", packing.IdPacking);
                 com.Parameters.AddWithValue("@idSummary", packing.IdSummary);
                 com.Parameters.AddWithValue("@idBatch", packing.IdBatch);
                 com.Parameters.AddWithValue("@idTalla", packing.IdTalla);

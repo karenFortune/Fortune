@@ -593,6 +593,9 @@
     <Compile Include="IMAGEN_ARTE.cs">
       <DependentUpon>FortunespDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="IMAGEN_ARTE_ESTILO.cs">
+      <DependentUpon>FortunespDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="IMAGEN_ARTE_PNL.cs">
       <DependentUpon>FortunespDB.tt</DependentUpon>
     </Compile>
@@ -6037,6 +6040,7 @@
     <Content Include="Views\ItemDescripcion\Editar.cshtml" />
     <Content Include="Views\ItemDescripcion\Eliminar.cshtml" />
     <Content Include="Views\ItemDescripcion\Index.cshtml" />
+    <Content Include="Views\Report\Imprimir_Reporte_PO.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -6046,7 +6050,6 @@
     <Folder Include="Models\Shared\" />
     <Folder Include="Models\WIP\" />
     <Folder Include="Views\Estilos\" />
-    <Folder Include="Views\NewFolder1\" />
     <Folder Include="Views\ReportPDF\" />
   </ItemGroup>
   <ItemGroup>

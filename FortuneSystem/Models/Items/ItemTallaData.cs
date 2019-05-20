@@ -12,18 +12,20 @@ namespace FortuneSystem.Models.Item
 {
     public class ItemTallaData
     {
-        PackingData packing = new PackingData();
+		readonly PackingData packing = new PackingData();
 
         public void RegistroTallas(ItemTalla tallas)
         {
             Conexion conn = new Conexion();
             try
             {
-                SqlCommand comando = new SqlCommand();
-                comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "INSERT INTO  ITEM_SIZE (TALLA_ITEM,CANTIDAD,EXTRAS,EJEMPLOS,ID_SUMMARY) " +
-                    " VALUES((SELECT ID FROM CAT_ITEM_SIZE WHERE TALLA ='" + tallas.Talla + "'),'" + tallas.Cantidad + "','" + tallas.Extras + "','" + tallas.Ejemplos + "','" + tallas.IdSummary + "')";
-                comando.ExecuteNonQuery();
+				SqlCommand comando = new SqlCommand
+				{
+					Connection = conn.AbrirConexion(),
+					CommandText = "INSERT INTO  ITEM_SIZE (TALLA_ITEM,CANTIDAD,EXTRAS,EJEMPLOS,ID_SUMMARY) " +
+					" VALUES((SELECT ID FROM CAT_ITEM_SIZE WHERE TALLA ='" + tallas.Talla + "'),'" + tallas.Cantidad + "','" + tallas.Extras + "','" + tallas.Ejemplos + "','" + tallas.IdSummary + "')"
+				};
+				comando.ExecuteNonQuery();
             }
             finally
             {
@@ -37,11 +39,13 @@ namespace FortuneSystem.Models.Item
             Conexion conn = new Conexion();
             try
             {
-                SqlCommand comando = new SqlCommand();
-                comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "INSERT INTO  CAT_TYPE_PACK_STYLE (ID_SUMMARY,DESC_PACK) " +
-                    " VALUES('" + TypePack.IdSummary + "','" + TypePack.DescripcionPack.ToUpper() + "')";
-                comando.ExecuteNonQuery();
+				SqlCommand comando = new SqlCommand
+				{
+					Connection = conn.AbrirConexion(),
+					CommandText = "INSERT INTO  CAT_TYPE_PACK_STYLE (ID_SUMMARY,DESC_PACK) " +
+					" VALUES('" + TypePack.IdSummary + "','" + TypePack.DescripcionPack.ToUpper() + "')"
+				};
+				comando.ExecuteNonQuery();
             }
             finally
             {
@@ -77,11 +81,13 @@ namespace FortuneSystem.Models.Item
             Conexion conn = new Conexion();
             try
             {
-                SqlCommand comando = new SqlCommand();
-                comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "INSERT INTO  UPC (IdTalla,IdSummary,UPC) " +
-                    " VALUES((SELECT ID FROM CAT_ITEM_SIZE WHERE TALLA ='" + tallas.Talla + "'),'" + tallas.IdSummary + "','" + tallas.UPC1 + "')";
-                comando.ExecuteNonQuery();
+				SqlCommand comando = new SqlCommand
+				{
+					Connection = conn.AbrirConexion(),
+					CommandText = "INSERT INTO  UPC (IdTalla,IdSummary,UPC) " +
+					" VALUES((SELECT ID FROM CAT_ITEM_SIZE WHERE TALLA ='" + tallas.Talla + "'),'" + tallas.IdSummary + "','" + tallas.UPC1 + "')"
+				};
+				comando.ExecuteNonQuery();
             }
             finally
             {
@@ -515,7 +521,6 @@ namespace FortuneSystem.Models.Item
                 leer = comando.ExecuteReader();
                 int calidad = 0;
                 int cant = 0;
-                int ext = 0;
                 int ejm = 0;
                 while (leer.Read())
                 {
@@ -621,9 +626,6 @@ namespace FortuneSystem.Models.Item
         {
             Conexion conn = new Conexion();
             List<Staging.StagingDatos> listaDatos = new List<Staging.StagingDatos>();
-            int idPais = 0;
-            int idColor = 0;
-            int idPorcentaje = 0;
             try
             {
                 SqlCommand comando = new SqlCommand();
@@ -637,9 +639,9 @@ namespace FortuneSystem.Models.Item
 
                 while (leer.Read())
                 {
-                    idPais = Convert.ToInt32(leer["id_pais"]);
-                    idColor = Convert.ToInt32(leer["id_color"]);
-                    idPorcentaje = Convert.ToInt32(leer["id_porcentaje"]);
+					int idPais = Convert.ToInt32(leer["id_pais"]);
+					int idColor = Convert.ToInt32(leer["id_color"]);
+					int idPorcentaje = Convert.ToInt32(leer["id_porcentaje"]);
 
                     Staging.StagingDatos Datos = new Staging.StagingDatos() {
                         Pais = ObtenerPais(idPais),
@@ -746,12 +748,14 @@ namespace FortuneSystem.Models.Item
             Conexion conexion = new Conexion();
             try
             {
-                SqlCommand com = new SqlCommand();
-                com.Connection = conexion.AbrirConexion();
-                com.CommandText = "Actualizar_Tallas_Estilo";
-                com.CommandType = CommandType.StoredProcedure;
+				SqlCommand com = new SqlCommand
+				{
+					Connection = conexion.AbrirConexion(),
+					CommandText = "Actualizar_Tallas_Estilo",
+					CommandType = CommandType.StoredProcedure
+				};
 
-                com.Parameters.AddWithValue("@Id", tallas.Id);
+				com.Parameters.AddWithValue("@Id", tallas.Id);
                 com.Parameters.AddWithValue("@IdTalla", tallas.IdTalla);
                 com.Parameters.AddWithValue("@Cantidad", tallas.Cantidad);
                 com.Parameters.AddWithValue("@Extras", tallas.Extras);

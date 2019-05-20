@@ -23,9 +23,19 @@
           <Property Name="StatusPNL" Type="int" />
           <Property Name="extensionArte" Type="varchar" MaxLength="100" />
           <Property Name="extensionPNL" Type="varchar" MaxLength="100" />
+          <Property Name="fecha" Type="date" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'FortuneTest.dbo.IMAGEN_ARTE_PNL' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="IMAGEN_ARTE_ESTILO">
+          <Key>
+            <PropertyRef Name="IdImgArteEstilo" />
+          </Key>
+          <Property Name="IdImgArteEstilo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdEstilo" Type="int" />
+          <Property Name="StatusArt" Type="int" />
+          <Property Name="extensionArt" Type="varchar" MaxLength="100" />
+          <Property Name="fecha" Type="date" />
+          <Property Name="IdSummary" Type="int" />
+        </EntityType>
         <EntityType Name="IMAGEN_ARTE_PNL">
           <Key>
             <PropertyRef Name="IdImgArtePNL" />
@@ -34,6 +44,7 @@ advertencia 6002: La tabla o vista 'FortuneTest.dbo.IMAGEN_ARTE_PNL' no tiene de
           <Property Name="IdEstilo" Type="int" />
           <Property Name="StatusPNL" Type="int" />
           <Property Name="extensionPNL" Type="varchar" MaxLength="100" />
+          <Property Name="fecha" Type="date" />
           <Property Name="IdSummary" Type="int" />
         </EntityType>
         <EntityType Name="UPC">
@@ -60,9 +71,9 @@ advertencia 6002: La tabla o vista 'FortuneTest.dbo.IMAGEN_ARTE_PNL' no tiene de
         <EntityContainer Name="FortuneTestModelStoreContainer">
           <EntitySet Name="ARTE" EntityType="Self.ARTE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IMAGEN_ARTE" EntityType="Self.IMAGEN_ARTE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IMAGEN_ARTE_ESTILO" EntityType="Self.IMAGEN_ARTE_ESTILO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IMAGEN_ARTE_PNL" EntityType="Self.IMAGEN_ARTE_PNL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UPC" EntityType="Self.UPC" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="IMAGEN_ARTE_PNL" EntityType="Self.IMAGEN_ARTE_PNL" store:Type="Tables" Schema="dbo">
-          </EntitySet>
           <AssociationSet Name="FK__ARTE__IdImgArte__467D75B8" Association="Self.FK__ARTE__IdImgArte__467D75B8">
             <End Role="IMAGEN_ARTE" EntitySet="IMAGEN_ARTE" />
             <End Role="ARTE" EntitySet="ARTE" />
@@ -92,6 +103,7 @@ advertencia 6002: La tabla o vista 'FortuneTest.dbo.IMAGEN_ARTE_PNL' no tiene de
           <NavigationProperty Name="ARTE" Relationship="Self.FK__ARTE__IdImgArte__467D75B8" FromRole="IMAGEN_ARTE" ToRole="ARTE" />
           <Property Name="extensionArte" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="extensionPNL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="fecha" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="UPC">
           <Key>
@@ -123,6 +135,7 @@ advertencia 6002: La tabla o vista 'FortuneTest.dbo.IMAGEN_ARTE_PNL' no tiene de
             <End Role="ARTE" EntitySet="ARTEs" />
           </AssociationSet>
           <EntitySet Name="IMAGEN_ARTE_PNL" EntityType="FortuneTestModel.IMAGEN_ARTE_PNL" />
+          <EntitySet Name="IMAGEN_ARTE_ESTILO" EntityType="FortuneTestModel.IMAGEN_ARTE_ESTILO" />
         </EntityContainer>
         <EntityType Name="IMAGEN_ARTE_PNL">
           <Key>
@@ -132,6 +145,18 @@ advertencia 6002: La tabla o vista 'FortuneTest.dbo.IMAGEN_ARTE_PNL' no tiene de
           <Property Name="IdEstilo" Type="Int32" />
           <Property Name="StatusPNL" Type="Int32" />
           <Property Name="ExtensionPNL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IdSummary" Type="Int32" />
+          <Property Name="fecha" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="IMAGEN_ARTE_ESTILO">
+          <Key>
+            <PropertyRef Name="IdImgArteEstilo" />
+          </Key>
+          <Property Name="IdImgArteEstilo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdEstilo" Type="Int32" />
+          <Property Name="StatusArt" Type="Int32" />
+          <Property Name="extensionArt" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="fecha" Type="DateTime" Precision="0" />
           <Property Name="IdSummary" Type="Int32" />
         </EntityType>
       </Schema>
@@ -152,6 +177,7 @@ advertencia 6002: La tabla o vista 'FortuneTest.dbo.IMAGEN_ARTE_PNL' no tiene de
           <EntitySetMapping Name="IMAGEN_ARTE">
             <EntityTypeMapping TypeName="FortuneTestModel.IMAGEN_ARTE">
               <MappingFragment StoreEntitySet="IMAGEN_ARTE">
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
                 <ScalarProperty Name="extensionPNL" ColumnName="extensionPNL" />
                 <ScalarProperty Name="extensionArte" ColumnName="extensionArte" />
                 <ScalarProperty Name="IdImgArte" ColumnName="IdImgArte" />
@@ -174,11 +200,24 @@ advertencia 6002: La tabla o vista 'FortuneTest.dbo.IMAGEN_ARTE_PNL' no tiene de
           <EntitySetMapping Name="IMAGEN_ARTE_PNL">
             <EntityTypeMapping TypeName="FortuneTestModel.IMAGEN_ARTE_PNL">
               <MappingFragment StoreEntitySet="IMAGEN_ARTE_PNL">
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
                 <ScalarProperty Name="IdSummary" ColumnName="IdSummary" />
                 <ScalarProperty Name="ExtensionPNL" ColumnName="extensionPNL" />
                 <ScalarProperty Name="StatusPNL" ColumnName="StatusPNL" />
                 <ScalarProperty Name="IdEstilo" ColumnName="IdEstilo" />
                 <ScalarProperty Name="IdImgArtePNL" ColumnName="IdImgArtePNL" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IMAGEN_ARTE_ESTILO">
+            <EntityTypeMapping TypeName="FortuneTestModel.IMAGEN_ARTE_ESTILO">
+              <MappingFragment StoreEntitySet="IMAGEN_ARTE_ESTILO">
+                <ScalarProperty Name="IdSummary" ColumnName="IdSummary" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="extensionArt" ColumnName="extensionArt" />
+                <ScalarProperty Name="StatusArt" ColumnName="StatusArt" />
+                <ScalarProperty Name="IdEstilo" ColumnName="IdEstilo" />
+                <ScalarProperty Name="IdImgArteEstilo" ColumnName="IdImgArteEstilo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

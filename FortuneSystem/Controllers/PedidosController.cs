@@ -53,7 +53,18 @@ namespace FortuneSystem.Controllers
 
         public ActionResult Index()
         {
-			List<OrdenesCompra> listaPedidos = objPedido.ListaOrdenCompra().ToList();
+			List<OrdenesCompra> listaPedidos = new List<OrdenesCompra>();
+			int cargo = Convert.ToInt32(Session["idCargo"]);
+			if (cargo != 0)
+			{
+				listaPedidos = objPedido.ListaOrdenCompra().ToList();
+			}
+			else
+			{
+				Session["idCargo"] = 0;
+				listaPedidos = objPedido.ListaOrdenCompra().ToList();
+			}
+			
             return View(listaPedidos);
         }
 

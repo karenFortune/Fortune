@@ -169,7 +169,6 @@
 		</div>
 		<br />
 
-
 		@if ((int)Session["idCargo"] == 1 || (int)Session["idCargo"] == 6)
 		{
 			<p>
@@ -183,7 +182,7 @@
 				<br />
 			</p>
 		}
-		else if (Session["idCargo"] == null || (int)Session["idCargo"] == 0)
+		else if ((int)Session["idCargo"] == 0 || Session["idCargo"] == null)
 		{
 			<script type="text/javascript">
                 var url = '@Url.Action("Login", "Login")';

@@ -10,7 +10,7 @@ namespace FortuneSystem.Models
 {
     public class MyDbContext : DbContext
     {
-        public MyDbContext() : base("name=FortuneTestEntities")
+        public MyDbContext() : base("name=Fortune")
 		{
 
         }

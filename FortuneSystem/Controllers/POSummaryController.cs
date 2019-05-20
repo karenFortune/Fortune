@@ -16,18 +16,18 @@ namespace FortuneSystem.Controllers
 {
     public class POSummaryController : Controller
     {
-        DescripcionItemData objItems= new DescripcionItemData();
-        CatColoresData objColores = new CatColoresData();
-        CatGeneroData objGenero = new CatGeneroData();
-        ItemDescripcionData objItemsDes = new ItemDescripcionData();
-        PedidosData objPedido = new PedidosData();
-        ItemTallaData objTalla = new ItemTallaData();
-        CatTallaItemData objTallas = new CatTallaItemData();
-        CatTelaData objTela = new CatTelaData();
-        CatTipoCamisetaData objTipoC = new CatTipoCamisetaData();
-        ArteData objArte = new ArteData();
-        CatEspecialidadesData objEspecialidad = new CatEspecialidadesData();
-		CatTypeFormPackData objFormaPacking = new CatTypeFormPackData();
+		readonly DescripcionItemData objItems = new DescripcionItemData();
+		readonly CatColoresData objColores = new CatColoresData();
+		readonly CatGeneroData objGenero = new CatGeneroData();
+		readonly ItemDescripcionData objItemsDes = new ItemDescripcionData();
+		readonly PedidosData objPedido = new PedidosData();
+		readonly ItemTallaData objTalla = new ItemTallaData();
+		readonly CatTallaItemData objTallas = new CatTallaItemData();
+		readonly CatTelaData objTela = new CatTelaData();
+		readonly CatTipoCamisetaData objTipoC = new CatTipoCamisetaData();
+		readonly ArteData objArte = new ArteData();
+		readonly CatEspecialidadesData objEspecialidad = new CatEspecialidadesData();
+		readonly CatTypeFormPackData objFormaPacking = new CatTypeFormPackData();
     
 
         public int IdPedido;
@@ -109,8 +109,7 @@ namespace FortuneSystem.Controllers
 
         public void ListaGenero(POSummary summary)
         {
-            List<CatGenero> listaGenero = summary.ListaGeneros;
-            listaGenero = objGenero.ListaGeneros().ToList();
+			List<CatGenero> listaGenero = objGenero.ListaGeneros().ToList();
             summary.ListaGeneros = listaGenero;
             ViewBag.listGenero = new SelectList(listaGenero, "GeneroCode", "Genero", summary.IdGenero);
 
@@ -118,8 +117,7 @@ namespace FortuneSystem.Controllers
 
         public void ListaTela(POSummary summary)
         {
-            List<CatTela> listaTela = summary.ListaTelas;
-            listaTela = objTela.ListaTela().ToList();
+			List<CatTela> listaTela = objTela.ListaTela().ToList();
             summary.ListaTelas = listaTela;
             ViewBag.listTela = new SelectList(listaTela, "Id_Tela", "Tela", summary.IdTela);
 
@@ -127,8 +125,7 @@ namespace FortuneSystem.Controllers
 
         public void ListaTipoCamiseta(POSummary summary)
         {
-            List<CatTipoCamiseta> listaTipoCamiseta = summary.ListaTipoCamiseta;
-            listaTipoCamiseta = objTipoC.ListaTipoCamiseta().ToList();
+			List<CatTipoCamiseta>  listaTipoCamiseta = objTipoC.ListaTipoCamiseta().ToList();
             summary.ListaTipoCamiseta = listaTipoCamiseta;
             ViewBag.listTipoCamiseta = new SelectList(listaTipoCamiseta, "TipoProducto", "DescripcionTipo", summary.TipoCamiseta);
 
@@ -136,16 +133,14 @@ namespace FortuneSystem.Controllers
 
         public void ListaEspecialidades(POSummary summary)
         {
-            List<CatEspecialidades> listaEspecialidades = summary.ListaEspecialidades;
-            listaEspecialidades = objEspecialidad.ListaEspecialidades().ToList();
+			List<CatEspecialidades> listaEspecialidades = objEspecialidad.ListaEspecialidades().ToList();
             ViewBag.listEspecialidad = new SelectList(listaEspecialidades, "IdEspecialidad", "Especialidad", summary.IdEspecialidad);
 
         }
 
 		public void ListaTipoFormaPacking(POSummary summary)
 		{
-			List<CatTypeFormPack> listaFomPack = summary.ListaTipoFormPack;
-			listaFomPack = objFormaPacking.ListaTipoFormaPack().ToList();
+			List<CatTypeFormPack>  listaFomPack = objFormaPacking.ListaTipoFormaPack().ToList();
 			ViewBag.listTipoFormPack = new SelectList(listaFomPack, "IdTipoFormPack", "TipoFormPack", summary.IdTipoFormPack);
 
 		}
@@ -227,7 +222,7 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpGet]
-        public ActionResult RegistrarItemsRev([Bind] POSummary descItem, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad)
+        public ActionResult RegistrarItemsRev([Bind] POSummary descItem, string EstiloItem,/* string IdColor,*/ string Cantidad/* float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad*/)
         {
             int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
             descItem.IdUsuario = noEmpleado;
@@ -261,7 +256,7 @@ namespace FortuneSystem.Controllers
 		}
 
         [HttpPost]
-        public JsonResult RegistrarItem([Bind] POSummary descItem, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad, List<string> ListaPackSytle)
+        public JsonResult RegistrarItem([Bind] POSummary descItem, string EstiloItem, /*string IdColor,*/ string Cantidad,/* float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad, */List<string> ListaPackSytle)
         {
             int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
             int PedidosId = Convert.ToInt32(Session["idPedido"]);
@@ -284,9 +279,9 @@ namespace FortuneSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                string colorEstilo = descItem.CatColores.CodigoColor;
-                string  colorDesc = descItem.CatColores.DescripcionColor;
-                return View();
+				_ = descItem.CatColores.CodigoColor;
+				_ = descItem.CatColores.DescripcionColor;
+				return View();
             }
             else
                 return View("Index");
@@ -518,7 +513,7 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpGet]
-        public ActionResult Actualizar_Edicion_Estilo_Rev([Bind] POSummary items, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad, string IdEstilo, string PedidoId)
+        public ActionResult Actualizar_Edicion_Estilo_Rev([Bind] POSummary items, string EstiloItem, string IdColor, /*string Cantidad, float Precio,*/ string IdGenero, /*int IdTela,*/ string TipoCamiseta,/* int IdEspecialidad,*/ string IdEstilo, string PedidoId)
         {
             items.IdItems = Int32.Parse(IdEstilo);
             items.PedidosId = Int32.Parse(PedidoId);
@@ -635,7 +630,7 @@ namespace FortuneSystem.Controllers
 		}
 
 		[HttpGet]
-        public ActionResult Actualizar_Edicion_Estilo([Bind] POSummary items, string EstiloItem, string IdColor, string Cantidad, float Precio, string IdGenero, int IdTela, string TipoCamiseta, int IdEspecialidad, string IdEstilo, string PedidoId)
+        public ActionResult Actualizar_Edicion_Estilo([Bind] POSummary items, string EstiloItem, string IdColor,/* string Cantidad, float Precio,*/ string IdGenero, /*int IdTela,*/ string TipoCamiseta, /*int IdEspecialidad,*/ string IdEstilo, string PedidoId)
         {
             items.IdItems = Int32.Parse(IdEstilo);
             items.PedidosId = Int32.Parse(PedidoId);
@@ -753,8 +748,7 @@ namespace FortuneSystem.Controllers
         public ActionResult ListarTallasPorGenero(string Genero)
         {
                 POSummary summary = new POSummary();
-                List<CatGenero> listaGenero = summary.ListarTallasPorGenero;
-                listaGenero = objGenero.ListarTallasPorGenero(Genero).ToList();
+			    List<CatGenero> listaGenero = objGenero.ListarTallasPorGenero(Genero).ToList();
                 summary.ListarTallasPorGenero = listaGenero;
 
                 return View(summary);       
@@ -764,8 +758,7 @@ namespace FortuneSystem.Controllers
         public JsonResult List(string Genero)
         {
             POSummary summary = new POSummary();
-            List<CatGenero> listaGenero = summary.ListarTallasPorGenero;
-            listaGenero = objGenero.ListarTallasPorGenero(Genero).ToList();
+			List<CatGenero>  listaGenero = objGenero.ListarTallasPorGenero(Genero).ToList();
             summary.ListarTallasPorGenero = listaGenero;
             return Json(listaGenero, JsonRequestBehavior.AllowGet);
         }
@@ -774,8 +767,7 @@ namespace FortuneSystem.Controllers
         {
             Session["id_estilo"] = idEstilos;
             POSummary summary = new POSummary();
-            List<ItemTalla> listaTallas = summary.ListarTallasPorEstilo;
-            listaTallas = objTalla.ListaTallasPorEstilo(idEstilos).ToList();
+			List<ItemTalla> listaTallas = objTalla.ListaTallasPorEstilo(idEstilos).ToList();
             summary.ListarTallasPorEstilo = listaTallas;
             return Json(listaTallas, JsonRequestBehavior.AllowGet);
         }
@@ -784,8 +776,7 @@ namespace FortuneSystem.Controllers
         {
             Session["id_estilo"] = id;
             POSummary summary = new POSummary();
-            List<ItemTalla> listaTallas = summary.ListarTallasPorEstilo;
-            listaTallas = objTalla.ListaTallasPorEstiloRev(id).ToList();
+			List<ItemTalla> listaTallas = objTalla.ListaTallasPorEstiloRev(id).ToList();
             summary.ListarTallasPorEstilo = listaTallas;
             var result = Json(new { listaTalla = listaTallas });
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -820,7 +811,7 @@ namespace FortuneSystem.Controllers
 					}
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				isSavedSuccessfully = false;
 			}

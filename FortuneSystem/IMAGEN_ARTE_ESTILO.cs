@@ -12,12 +12,13 @@ namespace FortuneSystem
     using System;
     using System.Collections.Generic;
     
-    public partial class UPC
+    public partial class IMAGEN_ARTE_ESTILO
     {
-        public int IdUPC { get; set; }
-        public Nullable<int> IdTalla { get; set; }
+        public int IdImgArteEstilo { get; set; }
+        public Nullable<int> IdEstilo { get; set; }
+        public Nullable<int> StatusArt { get; set; }
+        public string extensionArt { get; set; }
+        public Nullable<System.DateTime> fecha { get; set; }
         public Nullable<int> IdSummary { get; set; }
-        public Nullable<long> UPC1 { get; set; }
-		public string Talla { get; set; }
-	}
+    }
 }

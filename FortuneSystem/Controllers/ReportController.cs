@@ -15,20 +15,18 @@ namespace FortuneSystem.Controllers
 {
     public class ReportController : Controller
     {
-		PedidosData objPedido = new PedidosData();
-		DescripcionItemData de = new DescripcionItemData();
-		string filename;
+		readonly PedidosData objPedido = new PedidosData();
+		readonly DescripcionItemData de = new DescripcionItemData();
 
 		[AllowAnonymous]
 		public ActionResult Imprimir_Reporte_PO()
 		{
 			int id = Convert.ToInt32(Session["idPed"]);
 			return new Rotativa.ViewAsPdf("Imprimir_Reporte_PO", de.ListadoInfEstilo(id))
-			{
-				FileName = filename,
+			{				
 				PageOrientation = Rotativa.Options.Orientation.Landscape,
 				PageSize = Rotativa.Options.Size.Letter,
-				PageMargins = new Rotativa.Options.Margins(5, 10, 15, 10),
+				PageMargins = new Rotativa.Options.Margins(5, 5, 5, 5),
 				CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
 			};
 
@@ -43,7 +41,7 @@ namespace FortuneSystem.Controllers
 			List<OrdenesCompra> listaCancelled = objPedido.ListaOrdenCompraWIP(3).ToList();
 
 
-			int row = 1, column = 1;
+			int row = 1;
 			using (XLWorkbook libro_trabajo = new XLWorkbook())
 			{ //Regex.Replace(pedido, @"\s+", " "); 
 				var wp = libro_trabajo.Worksheets.Add("WIP");
@@ -53,15 +51,35 @@ namespace FortuneSystem.Controllers
 				ws.TabColor = XLColor.Yellow;
 				wc.TabColor = XLColor.Red;
 
-
-
 				//CABECERAS TABLA
 				var headers = new List<String[]>();
-				List<String> titulos = new List<string>();
-				titulos.Add("CUSTOMER"); titulos.Add("RETAILER"); titulos.Add("P.O. RECVD DATA"); titulos.Add("PO NO."); titulos.Add("BRAND NAME"); titulos.Add("AMT PO"); titulos.Add("REG/BULK"); titulos.Add("BALANCE QTY");
-				titulos.Add("EXPECTED SHIP DATE"); titulos.Add("ORIGINAL CUST DUE DATE"); titulos.Add("DESIGN NAME"); titulos.Add("STYLE"); titulos.Add("MillPO"); titulos.Add("COLOR"); titulos.Add("GENDER");
-				titulos.Add("BLANKS RECEIVED"); titulos.Add("PARTIAL/COMPLETE BLANKS"); titulos.Add("ART RECEIVED"); titulos.Add("TRIM RECEIVED"); titulos.Add("PACK INST.RCVD"); titulos.Add("PRICE TICKET RECEIVED");
-				titulos.Add("UCC RECEIVED"); titulos.Add("COMMENTS UPDATE"); titulos.Add("COMMENTS");
+				List<String> titulos = new List<string>
+				{
+					"CUSTOMER",
+					"RETAILER",
+					"P.O. RECVD DATA",
+					"PO NO.",
+					"BRAND NAME",
+					"AMT PO",
+					"REG/BULK",
+					"BALANCE QTY",
+					"EXPECTED SHIP DATE",
+					"ORIGINAL CUST DUE DATE",
+					"DESIGN NAME",
+					"STYLE",
+					"MillPO",
+					"COLOR",
+					"GENDER",
+					"BLANKS RECEIVED",
+					"PARTIAL/COMPLETE BLANKS",
+					"ART RECEIVED",
+					"TRIM RECEIVED",
+					"PACK INST.RCVD",
+					"PRICE TICKET RECEIVED",
+					"UCC RECEIVED",
+					"COMMENTS UPDATE",
+					"COMMENTS"
+				};
 				headers.Add(titulos.ToArray());
 				ws.Cell(row, 1).Value = headers;
 				ws.Range(row, 1, row, 24).Style.Fill.BackgroundColor = XLColor.FromArgb(0, 0, 0);

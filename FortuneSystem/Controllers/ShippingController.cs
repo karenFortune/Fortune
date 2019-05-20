@@ -372,7 +372,7 @@ namespace FortuneSystem.Controllers
             int rerferw = 0;
             rerferw++;
             List<Pk> lista = ds.obtener_packing_list(Convert.ToInt32(Session["pk"]));
-            crear_excel(lista);
+            //crear_excel(lista);
         }
         public void crear_excel(List<Pk> lista){
             string clave_packing = "";

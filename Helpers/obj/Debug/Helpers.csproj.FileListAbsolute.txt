@@ -9,3 +9,9 @@ C:\Users\karen\Source\Repos\Fortune\Helpers\obj\Debug\Helpers.csprojAssemblyRefe
 C:\Users\karen\Source\Repos\Fortune\Helpers\obj\Debug\Helpers.csproj.CoreCompileInputs.cache
 C:\Users\karen\Source\Repos\Fortune\Helpers\obj\Debug\Helpers.dll
 C:\Users\karen\Source\Repos\Fortune\Helpers\obj\Debug\Helpers.pdb
+C:\Users\karen\Documents\FortuneResp\Fortune\Helpers\bin\Debug\Helpers.dll
+C:\Users\karen\Documents\FortuneResp\Fortune\Helpers\bin\Debug\Helpers.pdb
+C:\Users\karen\Documents\FortuneResp\Fortune\Helpers\obj\Debug\Helpers.csproj.CoreCompileInputs.cache
+C:\Users\karen\Documents\FortuneResp\Fortune\Helpers\obj\Debug\Helpers.dll
+C:\Users\karen\Documents\FortuneResp\Fortune\Helpers\obj\Debug\Helpers.pdb
+C:\Users\karen\Documents\FortuneResp\Fortune\Helpers\obj\Debug\Helpers.csprojAssemblyReference.cache

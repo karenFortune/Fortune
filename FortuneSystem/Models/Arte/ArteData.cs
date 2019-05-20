@@ -332,10 +332,11 @@ namespace FortuneSystem.Models.Arte
             Conexion conn = new Conexion();
             SqlCommand comando = new SqlCommand();
 
-            comando.Connection = conn.AbrirConexion();
+            
             try
             {
-                comando.CommandText = "INSERT INTO  IMAGEN_ARTE (IdEstilo,StatusArte,StatusPNL,extensionArte,extensionPNL) " +
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "INSERT INTO  IMAGEN_ARTE (IdEstilo,StatusArte,StatusPNL,extensionArte,extensionPNL) " +
                     " VALUES('"+ arte.IdEstilo + "','" + arte.StatusArte + "','" + arte.StatusPNL + "','" + arte.extensionArte + "','" + arte.extensionPNL + "')";
                 comando.ExecuteNonQuery();
             }
@@ -349,11 +350,10 @@ namespace FortuneSystem.Models.Arte
 		public void AgregarArteEstilo(IMAGEN_ARTE_ESTILO arte)
 		{
 			Conexion conn = new Conexion();
-			SqlCommand comando = new SqlCommand();
-
-			comando.Connection = conn.AbrirConexion();
+			SqlCommand comando = new SqlCommand();			
 			try
 			{
+				comando.Connection = conn.AbrirConexion();
 				comando.CommandText = "INSERT INTO  IMAGEN_ARTE_ESTILO (IdEstilo,StatusArt,extensionArt,fecha,IdSummary) " +
 					" VALUES('" + arte.IdEstilo + "','" + arte.StatusArt + "','" + arte.extensionArt + "','" + arte.fecha + "','" + arte.IdSummary + "')";
 				comando.ExecuteNonQuery();
@@ -371,11 +371,11 @@ namespace FortuneSystem.Models.Arte
         {
             Conexion conn = new Conexion();
             SqlCommand comando = new SqlCommand();
-
-            comando.Connection = conn.AbrirConexion();
+			          
             try
             {
-                comando.CommandText = "INSERT INTO  IMAGEN_ARTE_PNL (IdEstilo,StatusPNL,extensionPNL,IdSummary) " +
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "INSERT INTO  IMAGEN_ARTE_PNL (IdEstilo,StatusPNL,extensionPNL,IdSummary) " +
                     " VALUES('" + arte.IdEstilo + "','" + arte.StatusPNL + "','" + arte.ExtensionPNL + "','" + arte.IdSummary + "')";
                 comando.ExecuteNonQuery();
             }
@@ -392,10 +392,11 @@ namespace FortuneSystem.Models.Arte
             Conexion conn = new Conexion();
             SqlCommand comando = new SqlCommand();
 
-            comando.Connection = conn.AbrirConexion();
+     
             try
             {
-                comando.CommandText = "INSERT INTO ARTE (IdImgArte,IdSummary) " +
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "INSERT INTO ARTE (IdImgArte,IdSummary) " +
                     " VALUES('" + idImgArte + "','" + idSummary + "')";
                 comando.ExecuteNonQuery();
             }

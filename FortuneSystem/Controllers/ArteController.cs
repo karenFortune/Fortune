@@ -25,27 +25,25 @@ namespace FortuneSystem.Controllers
 {
     public class ArteController : Controller
     {
-        ArteData objArte = new ArteData();
-        CatTallaItemData objItem = new CatTallaItemData();
-        ItemDescripcionData objDesc = new ItemDescripcionData();
-        PedidosData objPedido = new PedidosData();
-        DescripcionItemData objItems = new DescripcionItemData();
-        CatEspecialidadesData objEspecialidad = new CatEspecialidadesData();
+		readonly ArteData objArte = new ArteData();
+		readonly CatTallaItemData objItem = new CatTallaItemData();
+		readonly ItemDescripcionData objDesc = new ItemDescripcionData();
+		readonly PedidosData objPedido = new PedidosData();
+		readonly DescripcionItemData objItems = new DescripcionItemData();
+		readonly CatEspecialidadesData objEspecialidad = new CatEspecialidadesData();
         private readonly MyDbContext db = new MyDbContext();
 		
 
 		public ActionResult Index()
         {
-            List<IMAGEN_ARTE> listaArtes = new List<IMAGEN_ARTE>();
-            listaArtes = objArte.ListaInvArtes().ToList();        
+			List<IMAGEN_ARTE> listaArtes = objArte.ListaInvArtes().ToList();        
             return View(listaArtes);
 
         }
 
         public ActionResult IndexPNL()
         {
-            List<IMAGEN_ARTE_PNL> listaArtes = new List<IMAGEN_ARTE_PNL>();
-            listaArtes = objArte.ListaInvArtesPnl().ToList();
+			List<IMAGEN_ARTE_PNL> listaArtes = objArte.ListaInvArtesPnl().ToList();
             return View(listaArtes);
         }
 
@@ -58,9 +56,11 @@ namespace FortuneSystem.Controllers
         {          
             IMAGEN_ARTE IArte = db.ImagenArte.Find(idArte);
             ARTE art = db.Arte.Where(x => x.IdImgArte == idArte).FirstOrDefault();
-            CatEspecialidades catEspecialidad = new CatEspecialidades();
-            catEspecialidad.IdEspecialidad = objItems.ObtenerEspecialidadPorIdSummary(art.IdSummary);
-            if(catEspecialidad.IdEspecialidad == 0)
+			CatEspecialidades catEspecialidad = new CatEspecialidades
+			{
+				IdEspecialidad = objItems.ObtenerEspecialidadPorIdSummary(art.IdSummary)
+			};
+			if (catEspecialidad.IdEspecialidad == 0)
             {
                 catEspecialidad.IdEspecialidad = 12;
             }
@@ -287,15 +287,13 @@ namespace FortuneSystem.Controllers
         // GET: Arte
         public ActionResult ListaImgArte(int id)
         {
-            List<IMAGEN_ARTE> listaArtes = new List<IMAGEN_ARTE>();
-            listaArtes = objArte.ListaArtes(id).ToList();
+			List<IMAGEN_ARTE> listaArtes = objArte.ListaArtes(id).ToList();
             return PartialView(listaArtes);
         }
 
         public ActionResult ListaImgArtePNL(int id)
         {
-            List<IMAGEN_ARTE_PNL> listaArtes = new List<IMAGEN_ARTE_PNL>();
-            listaArtes = objArte.ListaArtesPNL(id).ToList();
+			List<IMAGEN_ARTE_PNL> listaArtes = objArte.ListaArtesPNL(id).ToList();
             return PartialView(listaArtes);
         }
 
@@ -420,7 +418,8 @@ namespace FortuneSystem.Controllers
             {
                 int idEstilo = objDesc.ObtenerIdEstilo(nombreEstilo);
                 var arte = db.ImagenArte.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
-                if (arte != null)
+			   var arteEstilo = db.ImagenArteEstilo.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
+                if (arte != null && arteEstilo != null)
                 {
                     if (arte.extensionArte != null && arte.extensionArte != "")
                     {
@@ -434,7 +433,18 @@ namespace FortuneSystem.Controllers
                                 return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Application.Octet);
                         }
                    
-                    }
+                    }else if(arteEstilo.extensionArt != null && arteEstilo.extensionArt != "")
+					{
+						switch (arteEstilo.extensionArt.ToLower())
+						{
+							case "gif":
+								return new FilePathResult("~/Content/imagenesEstilos/" + arteEstilo.extensionArt, System.Net.Mime.MediaTypeNames.Image.Gif);
+							case "jpeg":
+								return new FilePathResult("~/Content/imagenesEstilos/" + arteEstilo.extensionArt, System.Net.Mime.MediaTypeNames.Image.Jpeg);
+							default:
+								return new FilePathResult("~/Content/imagenesEstilos/" + arteEstilo.extensionArt, System.Net.Mime.MediaTypeNames.Application.Octet);
+						}
+					}
                     else
                     {
                         return File("~/Content/img/noImagen.png", "image/png");
@@ -450,10 +460,10 @@ namespace FortuneSystem.Controllers
 
         public ActionResult ConvertirImagenPNLEstilo(string nombreEstilo)
         {
-			var context = new FortuneTestEntities();	
+			
 
 			int idEstilo= objDesc.ObtenerIdEstilo(nombreEstilo);
-            var arte = context.IMAGEN_ARTE_PNL.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
+            var arte = db.ImagenArtePnl.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
             if(arte != null)
             {
                 if (arte.ExtensionPNL != null && arte.ExtensionPNL != "")
@@ -505,7 +515,7 @@ namespace FortuneSystem.Controllers
             IMAGEN_ARTE_PNL IArte = db.ImagenArtePnl.Find(idArte);
 
             Session["id"] = id;
-            int Summary = Convert.ToInt32(Session["id"]);
+          //  int Summary = Convert.ToInt32(Session["id"]);
             IArte.IdSummary = id;
             IArte.Tienda = objArte.ObtenerclienteSummary(IArte.IdSummary);       
             Regex kohl = new Regex("KOHL");
@@ -519,7 +529,7 @@ namespace FortuneSystem.Controllers
             return View(IArte);
         }
 
-        public ActionResult ActualizarImagenPNL(int? id, int idArte)
+        public ActionResult ActualizarImagenPNL(int idArte)
         {
             IMAGEN_ARTE_PNL IArte = db.ImagenArtePnl.Find(idArte);
 
@@ -750,7 +760,7 @@ namespace FortuneSystem.Controllers
             IMAGEN_ARTE_PNL IArte = db.ImagenArtePnl.Find(artePNL.IdImgArtePNL);
 
             //Session["id"] = id;
-            int Summary = Convert.ToInt32(Session["id"]);
+            //int Summary = Convert.ToInt32(Session["id"]);
             artePNL.IdSummary = IArte.IdSummary;
             artePNL.Tienda = objArte.ObtenerclienteSummary(IArte.IdSummary);
             Regex kohl = new Regex("KOHL");
@@ -870,7 +880,7 @@ namespace FortuneSystem.Controllers
 
                 bitmap.Save(CapturedFilePath, ImageFormat.Bmp);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                
             }

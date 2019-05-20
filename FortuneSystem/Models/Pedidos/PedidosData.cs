@@ -19,12 +19,13 @@ namespace FortuneSystem.Models.Pedidos
     public class PedidosData
     {
 
-        RevisionesData objRevision = new RevisionesData();
-        CatTipoOrdenData objTipoOrden = new CatTipoOrdenData();
-        CatComentariosData objComent = new CatComentariosData();
-        CatTypeBrandData objTipoBrand = new CatTypeBrandData();
-        // DescripcionItemData objSummary = new DescripcionItemData();
-        ArteData objArte = new ArteData();
+		readonly RevisionesData objRevision = new RevisionesData();
+		readonly CatTipoOrdenData objTipoOrden = new CatTipoOrdenData();
+		readonly CatComentariosData objComent = new CatComentariosData();
+		readonly CatTypeBrandData objTipoBrand = new CatTypeBrandData();
+
+		// DescripcionItemData objSummary = new DescripcionItemData();
+		readonly ArteData objArte = new ArteData();
 
         //Muestra la lista de PO
         public IEnumerable<OrdenesCompra> ListaOrdenCompra()
@@ -97,8 +98,7 @@ namespace FortuneSystem.Models.Pedidos
             {
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leer = null;
-                comando.Connection = conn.AbrirConexion();
-                string bd = "";
+                comando.Connection = conn.AbrirConexion();               
                 // comando.CommandText = "Listar_Pedidos";
                 if (estadoTab == 1){
                     //bd = "PEDIDO P";
@@ -212,12 +212,12 @@ namespace FortuneSystem.Models.Pedidos
                         
                         infSummary.FechaUCC = "";
                     }
-                    
 
-
-                    CatTipoOrden tipoOrden = new CatTipoOrden();
-                    tipoOrden.TipoOrden = objTipoOrden.Obtener_Tipo_Orden_Por_id(pedidos.IdTipoOrden);
-                    if (tipoOrden.TipoOrden == "")
+					CatTipoOrden tipoOrden = new CatTipoOrden
+					{
+						TipoOrden = objTipoOrden.Obtener_Tipo_Orden_Por_id(pedidos.IdTipoOrden)
+					};
+					if (tipoOrden.TipoOrden == "")
                     {
                         tipoOrden.TipoOrden = "N/A";
                     }
@@ -236,9 +236,11 @@ namespace FortuneSystem.Models.Pedidos
                     }
 
                     string codigoBrand = estilosI.ItemEstilo.Substring(0, 4);
-                    CatTypeBrand tipoBrand = new CatTypeBrand();
-                    tipoBrand.TipoBrandName = objTipoBrand.Obtener_Tipo_Brand_Por_Estilo(codigoBrand);
-                    if (tipoBrand.TipoBrandName == "")
+					CatTypeBrand tipoBrand = new CatTypeBrand
+					{
+						TipoBrandName = objTipoBrand.Obtener_Tipo_Brand_Por_Estilo(codigoBrand)
+					};
+					if (tipoBrand.TipoBrandName == "")
                     {
                         tipoBrand.TipoBrandName = "GENERIC";
                     }
@@ -458,7 +460,6 @@ namespace FortuneSystem.Models.Pedidos
            
             Conexion conn = new Conexion();
             List<Shipped> listShipped = new List<Shipped>();
-            int contador = 0;
             try
             {
                 SqlCommand comando = new SqlCommand();
@@ -793,12 +794,14 @@ namespace FortuneSystem.Models.Pedidos
             Conexion conn = new Conexion();
             try
             {
-                SqlCommand comando = new SqlCommand();
-                comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "AgregarPedido";
-                comando.CommandType = CommandType.StoredProcedure;
+				SqlCommand comando = new SqlCommand
+				{
+					Connection = conn.AbrirConexion(),
+					CommandText = "AgregarPedido",
+					CommandType = CommandType.StoredProcedure
+				};
 
-                comando.Parameters.AddWithValue("@idPO", ordenCompra.PO.ToUpper());
+				comando.Parameters.AddWithValue("@idPO", ordenCompra.PO.ToUpper());
                 comando.Parameters.AddWithValue("@idPOF", ordenCompra.VPO.ToUpper());
                 comando.Parameters.AddWithValue("@Customer", ordenCompra.Cliente);
                 comando.Parameters.AddWithValue("@CustomerF", ordenCompra.ClienteFinal);
@@ -825,12 +828,14 @@ namespace FortuneSystem.Models.Pedidos
             Conexion conn = new Conexion();
             try
             {
-                SqlCommand comando = new SqlCommand();
-                comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "Actualizar_Pedido";
-                comando.CommandType = CommandType.StoredProcedure;
+				SqlCommand comando = new SqlCommand
+				{
+					Connection = conn.AbrirConexion(),
+					CommandText = "Actualizar_Pedido",
+					CommandType = CommandType.StoredProcedure
+				};
 
-                comando.Parameters.AddWithValue("@Id", ordenCompra.IdPedido);
+				comando.Parameters.AddWithValue("@Id", ordenCompra.IdPedido);
                 comando.Parameters.AddWithValue("@PO", ordenCompra.PO.ToUpper());
                 comando.Parameters.AddWithValue("@VPO", ordenCompra.VPO.ToUpper());
                 comando.Parameters.AddWithValue("@IdCliente", ordenCompra.Cliente);
@@ -1038,13 +1043,15 @@ namespace FortuneSystem.Models.Pedidos
 
                 while (leer.Read())
                 {
-                    InfoSummary ItemSummary = new InfoSummary();
-                    ItemSummary.Talla = leer["TALLA"].ToString();
-                    ItemSummary.TotalEstilo = Convert.ToInt32(leer["QTY"]);
-                    ItemSummary.IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]);
-                    ItemSummary.IdItems = Convert.ToInt32(leer["ID_PO_SUMMARY"]);
-                    ItemSummary.CantidadTalla = Convert.ToInt32(leer["CANTIDAD"]) + Convert.ToInt32(leer["EJEMPLOS"]);
-                    listSummary.Add(ItemSummary);
+					InfoSummary ItemSummary = new InfoSummary
+					{
+						Talla = leer["TALLA"].ToString(),
+						TotalEstilo = Convert.ToInt32(leer["QTY"]),
+						IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]),
+						IdItems = Convert.ToInt32(leer["ID_PO_SUMMARY"]),
+						CantidadTalla = Convert.ToInt32(leer["CANTIDAD"]) + Convert.ToInt32(leer["EJEMPLOS"])
+					};
+					listSummary.Add(ItemSummary);
 
                 }
                 leer.Close();
@@ -1232,8 +1239,7 @@ namespace FortuneSystem.Models.Pedidos
             SqlDataReader reader;
             Conexion conex = new Conexion();
             int destino = 0;
-            int cont = 0;
-            try
+           try
             {
                 cmd.Connection = conex.AbrirConexion();
                 cmd.CommandText = "SELECT SI.id_salida, S.id_destino  FROM salidas_items SI " +
@@ -1526,10 +1532,12 @@ namespace FortuneSystem.Models.Pedidos
 			Conexion conn = new Conexion();
 			try
 			{
-				SqlCommand comando = new SqlCommand();
-				comando.Connection = conn.AbrirConexion();
-				comando.CommandText = "INSERT INTO  MILLPO_LIST (MILLPO, ID_PEDIDO) " +
-					" VALUES('" + datosMPO.MillPO.ToUpper() + "','" + datosMPO.IdPedido + "')";
+				SqlCommand comando = new SqlCommand
+				{
+					Connection = conn.AbrirConexion(),
+					CommandText = "INSERT INTO  MILLPO_LIST (MILLPO, ID_PEDIDO) " +
+					" VALUES('" + datosMPO.MillPO.ToUpper() + "','" + datosMPO.IdPedido + "')"
+				};
 				comando.ExecuteNonQuery();
 			}
 			finally
