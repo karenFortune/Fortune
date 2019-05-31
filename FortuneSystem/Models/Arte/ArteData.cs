@@ -375,8 +375,8 @@ namespace FortuneSystem.Models.Arte
             try
             {
 				comando.Connection = conn.AbrirConexion();
-				comando.CommandText = "INSERT INTO  IMAGEN_ARTE_PNL (IdEstilo,StatusPNL,extensionPNL,IdSummary) " +
-                    " VALUES('" + arte.IdEstilo + "','" + arte.StatusPNL + "','" + arte.ExtensionPNL + "','" + arte.IdSummary + "')";
+				comando.CommandText = "INSERT INTO  IMAGEN_ARTE_PNL (IdEstilo,StatusPNL,extensionPNL,fecha,IdSummary) " +
+                    " VALUES('" + arte.IdEstilo + "','" + arte.StatusPNL + "','" + arte.ExtensionPNL + "','" + arte.fecha + "','" + arte.IdSummary + "')";
                 comando.ExecuteNonQuery();
             }
             finally
@@ -391,7 +391,6 @@ namespace FortuneSystem.Models.Arte
         {
             Conexion conn = new Conexion();
             SqlCommand comando = new SqlCommand();
-
      
             try
             {
@@ -538,8 +537,8 @@ namespace FortuneSystem.Models.Arte
 
                     if (!Convert.IsDBNull(leerF["fecha"]))
                     {
-                        arte.Fecha = Convert.ToDateTime(leerF["fecha"]);
-                        arte.FechaArte = String.Format("{0:dd/MM/yyyy}", arte.Fecha);
+                        arte.fecha = Convert.ToDateTime(leerF["fecha"]);
+                        arte.FechaArte = String.Format("{0:dd/MM/yyyy}", arte.fecha);
                     }
                     else
                     {
@@ -580,8 +579,8 @@ namespace FortuneSystem.Models.Arte
 
 					if (!Convert.IsDBNull(leerF["fecha"]))
 					{
-						arte.Fecha = Convert.ToDateTime(leerF["fecha"]);
-						arte.FechaArtePnl = String.Format("{0:dd/MM/yyyy}", arte.Fecha);
+						arte.fecha = Convert.ToDateTime(leerF["fecha"]);
+						arte.FechaArtePnl = String.Format("{0:dd/MM/yyyy}", arte.fecha);
 					}
 					else
 					{
@@ -747,7 +746,7 @@ namespace FortuneSystem.Models.Arte
             try
             {
                 cmd.Connection = conex.AbrirConexion();
-                cmd.CommandText = "UPDATE IMAGEN_ARTE SET extensionArte ='" + imagenArte.extensionArte + "' , StatusArte ='" + imagenArte.StatusArte + "', Fecha ='" + imagenArte.Fecha + "' WHERE IdImgArte='" + imagenArte.IdImgArte + "'";
+                cmd.CommandText = "UPDATE IMAGEN_ARTE SET extensionArte ='" + imagenArte.extensionArte + "' , StatusArte ='" + imagenArte.StatusArte + "', Fecha ='" + imagenArte.fecha + "' WHERE IdImgArte='" + imagenArte.IdImgArte + "'";
                 cmd.CommandType = CommandType.Text;
                 reader = cmd.ExecuteReader();
                 conex.CerrarConexion();

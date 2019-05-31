@@ -15,11 +15,11 @@ namespace FortuneSystem.Models.POSummary
 {
     public class DescripcionItemData
     {
-        PackingData objPacking = new PackingData();
-        PedidosData objPedido = new PedidosData();
-        ItemTallaData objTallas = new ItemTallaData();
-        CatUsuarioData objUsr = new CatUsuarioData();
-		CatTypeFormPackData objFormaPacking = new CatTypeFormPackData();
+        readonly PackingData objPacking = new PackingData();
+		readonly PedidosData objPedido = new PedidosData();
+		readonly ItemTallaData objTallas = new ItemTallaData();
+		readonly CatUsuarioData objUsr = new CatUsuarioData();
+		readonly CatTypeFormPackData objFormaPacking = new CatTypeFormPackData();
 
 		//Muestra la lista de PO Summary Por PO
 		public IEnumerable<POSummary> ListaItemsPorPO(int? id)
@@ -96,8 +96,6 @@ namespace FortuneSystem.Models.POSummary
         {
             Conexion conn = new Conexion();
             List<POSummary> listSummary = new List<POSummary>();
-            OrdenesCompra listaPO = new OrdenesCompra();
-            List<ItemTalla> listaTallas = new List<ItemTalla>();
             try
             {
                 SqlCommand comando = new SqlCommand();
@@ -132,8 +130,8 @@ namespace FortuneSystem.Models.POSummary
                     ItemSummary.CatEspecialidades = Especialidad;
 					ItemSummary.CatTela = Tela;
                     ItemSummary.PedidosId = Convert.ToInt32(leer["ID_PEDIDOS"]);
-                    listaPO = objPedido.ConsultarListaPO(ItemSummary.PedidosId);
-                    listaTallas = objTallas.ListadoTallasPorEstilo(ItemSummary.IdItems).ToList();
+					OrdenesCompra listaPO = objPedido.ConsultarListaPO(ItemSummary.PedidosId);
+					List<ItemTalla> listaTallas = objTallas.ListadoTallasPorEstilo(ItemSummary.IdItems).ToList();
                     ItemSummary.Pedidos = listaPO;
                     ItemSummary.ListarTallasPorEstilo = listaTallas;         
                     listSummary.Add(ItemSummary);
@@ -170,10 +168,12 @@ namespace FortuneSystem.Models.POSummary
                     CatColores colores = new CatColores();
                     CatTipoCamiseta tipoCamiseta = new CatTipoCamiseta();
                     CatGenero genero = new CatGenero();
-                    CatEspecialidades especial = new CatEspecialidades();
-                    especial.Especialidad = leer["SPECIALTIES"].ToString();
-                    especial.IdEspecialidad = Convert.ToInt32(leer["ID_SPECIALTIES"]);
-                    colores.CodigoColor = leer["CODIGO_COLOR"].ToString();
+					CatEspecialidades especial = new CatEspecialidades
+					{
+						Especialidad = leer["SPECIALTIES"].ToString(),
+						IdEspecialidad = Convert.ToInt32(leer["ID_SPECIALTIES"])
+					};
+					colores.CodigoColor = leer["CODIGO_COLOR"].ToString();
                     ItemSummary.EstiloItem = leer["ITEM_STYLE"].ToString();
                     ItemSummary.Cantidad = Convert.ToInt32(leer["QTY"]);
                     genero.GeneroCode = leer["GENERO_CODE"].ToString();
@@ -256,12 +256,14 @@ namespace FortuneSystem.Models.POSummary
             Conexion conex = new Conexion();
             try
             {
-                SqlCommand comando = new SqlCommand();
-                comando.Connection = conex.AbrirConexion();
-                comando.CommandText = "AgregarItem";
-                comando.CommandType = CommandType.StoredProcedure;
+				SqlCommand comando = new SqlCommand
+				{
+					Connection = conex.AbrirConexion(),
+					CommandText = "AgregarItem",
+					CommandType = CommandType.StoredProcedure
+				};
 
-                comando.Parameters.AddWithValue("@Item", items.EstiloItem);
+				comando.Parameters.AddWithValue("@Item", items.EstiloItem);
                 comando.Parameters.AddWithValue("@Color", items.IdColor);
                 comando.Parameters.AddWithValue("@Qty", items.Cantidad);
                 comando.Parameters.AddWithValue("@Price", items.Precio);
@@ -436,12 +438,14 @@ namespace FortuneSystem.Models.POSummary
              Conexion conex = new Conexion();
             try
             {
-                SqlCommand comando = new SqlCommand();
-                comando.Connection = conex.AbrirConexion();
-                comando.CommandText = "Actualizar_Estilos";
-                comando.CommandType = CommandType.StoredProcedure;
+				SqlCommand comando = new SqlCommand
+				{
+					Connection = conex.AbrirConexion(),
+					CommandText = "Actualizar_Estilos",
+					CommandType = CommandType.StoredProcedure
+				};
 
-                comando.Parameters.AddWithValue("@Id", items.IdItems);
+				comando.Parameters.AddWithValue("@Id", items.IdItems);
                 comando.Parameters.AddWithValue("@Item", items.IdEstilo);
                 comando.Parameters.AddWithValue("@Color", items.ColorId);
                 comando.Parameters.AddWithValue("@Qty", items.Cantidad);
@@ -469,11 +473,13 @@ namespace FortuneSystem.Models.POSummary
             Conexion conex = new Conexion();           
             try
             {
-                SqlCommand comando = new SqlCommand();
-                comando.Connection = conex.AbrirConexion();
-                comando.CommandText = "EliminarEstilo";
-                comando.CommandType = CommandType.StoredProcedure;
-                comando.Parameters.AddWithValue("@Id", id);
+				SqlCommand comando = new SqlCommand
+				{
+					Connection = conex.AbrirConexion(),
+					CommandText = "EliminarEstilo",
+					CommandType = CommandType.StoredProcedure
+				};
+				comando.Parameters.AddWithValue("@Id", id);
                 comando.ExecuteNonQuery();
             }
             finally
@@ -489,11 +495,13 @@ namespace FortuneSystem.Models.POSummary
             Conexion conex = new Conexion();
             try
             {
-                SqlCommand comando = new SqlCommand();
-                comando.Connection = conex.AbrirConexion();
-                comando.CommandText = "EliminarTallasEstilo";
-                comando.CommandType = CommandType.StoredProcedure;
-                comando.Parameters.AddWithValue("@Id", id);
+				SqlCommand comando = new SqlCommand
+				{
+					Connection = conex.AbrirConexion(),
+					CommandText = "EliminarTallasEstilo",
+					CommandType = CommandType.StoredProcedure
+				};
+				comando.Parameters.AddWithValue("@Id", id);
                 comando.ExecuteNonQuery();
             }
             finally

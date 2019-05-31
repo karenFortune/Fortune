@@ -52,14 +52,18 @@ namespace FortuneSystem.Controllers
             return View();
         }
 
-        public ActionResult FileUpload(int idArte)
+        public ActionResult FileUpload(int idArte, string estilo)
         {          
             IMAGEN_ARTE IArte = db.ImagenArte.Find(idArte);
             ARTE art = db.Arte.Where(x => x.IdImgArte == idArte).FirstOrDefault();
-			CatEspecialidades catEspecialidad = new CatEspecialidades
+			CatEspecialidades catEspecialidad = new CatEspecialidades();
+			if (art != null)
 			{
-				IdEspecialidad = objItems.ObtenerEspecialidadPorIdSummary(art.IdSummary)
-			};
+
+				catEspecialidad.IdEspecialidad = objItems.ObtenerEspecialidadPorIdSummary(art.IdSummary);
+				
+			}
+			
 			if (catEspecialidad.IdEspecialidad == 0)
             {
                 catEspecialidad.IdEspecialidad = 12;
@@ -68,6 +72,7 @@ namespace FortuneSystem.Controllers
             ViewBag.listEspecialidad = new SelectList(IArte.ListaTecnicas, "IdEspecialidad", "Especialidad", catEspecialidad.IdEspecialidad);
             IArte.CATARTE = art;
             IArte.CatEspecialidades = catEspecialidad;
+			IArte.Estilo = estilo;
             ObtenerEstados(IArte.StatusArte, IArte);
             
             return View(IArte);
@@ -75,22 +80,22 @@ namespace FortuneSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult FileUpload([Bind] IMAGEN_ARTE Arte, HttpPostedFileBase fileArte)
+        public ActionResult FileUpload([Bind] IMAGEN_ARTE imagen_arte, HttpPostedFileBase fileArte)
         {
-            if(Arte.extensionArte == null)
+            if(imagen_arte.extensionArte == null)
             {
-                fileArte = Arte.FileArte;
+			 fileArte = imagen_arte.FileArte;
                 if (fileArte != null)
                 {
                     string ext = Path.GetFileName(fileArte.FileName);
                     string path = Path.Combine(Server.MapPath("~/Content/imagenesArte"), ext);
                     if (System.IO.File.Exists(path))
                     {
-                        Arte.extensionArte = ext;
+                        imagen_arte.extensionArte = ext;
                     }
                     else
                     {
-                        Arte.extensionArte = ext;
+                        imagen_arte.extensionArte = ext;
                         fileArte.SaveAs(path);
                     }                       
                     
@@ -98,63 +103,65 @@ namespace FortuneSystem.Controllers
                 }
             }
 
-            ObtenerEstadosPorId(Arte);
+            ObtenerEstadosPorId(imagen_arte);
 
             if (ModelState.IsValid)
             {
-                db.Entry(Arte).State = EntityState.Modified;
+                db.Entry(imagen_arte).State = EntityState.Modified;
                 db.SaveChanges();
 
                 return RedirectToAction("Index");
             }          
-            return View(Arte);
+            return View(imagen_arte);
         }
         
-        public ActionResult FileUploadPNL(int id, int idEst, string descItem)
+        public ActionResult FileUploadPNL(int id, int idEst)
         {
             IMAGEN_ARTE_PNL IArtes = new IMAGEN_ARTE_PNL();
             IMAGEN_ARTE_PNL IArte = db.ImagenArtePnl.Where(x => x.IdSummary == id).FirstOrDefault();
             int? idStatus = 0;
-            if (IArte == null)
+			
+			if (IArte == null)
             {
                 IArte = IArtes;
                 IArte.StatusPNL = 4;
                 idStatus = IArte.StatusPNL;
                 IArte.IdSummary = id;
                 IArte.EstadosPNL = 0;
-                IArte.IdEstilo = idEst;
-                IArte.DescripcionEstilo = descItem;       
+                IArte.IdEstilo = idEst;				
+				IArte.DescripcionEstilo = objDesc.ObtenerEstiloPorId(IArte.IdEstilo);   
 
             } else{
                 idStatus = IArte.StatusPNL;
-                IArte.DescripcionEstilo = descItem;
-            }
-            IArte.Tienda = objArte.ObtenerclienteSummary(id);
+                IArte.DescripcionEstilo = objDesc.ObtenerEstiloPorId(IArte.IdEstilo);
+			}
+			IArte.Estilo = objDesc.ObtenerEstiloPorId(IArte.IdEstilo);
+			IArte.Tienda = objArte.ObtenerclienteSummary(id);
             Regex kohl = new Regex("KOHL");
             Regex walmart = new Regex("WAL-");
             IArte.ResultadoK = kohl.Matches(IArte.Tienda);
-            IArte.ResultadoW = walmart.Matches(IArte.Tienda);
-            IArte.Estilo = objDesc.ObtenerEstiloPorId(IArte.IdEstilo);
-            ObtenerEstadosPNL(IArte.StatusPNL, IArte);    
+            IArte.ResultadoW = walmart.Matches(IArte.Tienda); 
+			IArte.fecha= DateTime.Today;
+			ObtenerEstadosPNL(IArte.StatusPNL, IArte);    
             if(IArte.IdImgArtePNL == 0)
             {
                 objArte.AgregarArtePnlImagen(IArte);
                 IArte.IdImgArtePNL= objItems.Obtener_Utlimo_Id_Arte_Pnl();
-            }            
+            }          
                 return PartialView(IArte);          
            
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult FileUploadPNL([Bind] IMAGEN_ARTE_PNL artePNL, HttpPostedFileBase filePNL)
+         public ActionResult FileUploadPNL(IMAGEN_ARTE_PNL artePNL)
         {
-            if (artePNL.ExtensionPNL == null)
+		
+			if (artePNL.ExtensionPNL == null)
             {
-                filePNL = artePNL.FilePNL;
-                if (filePNL != null)
+				//filePNL = artePNL.FilePNL;
+                if (artePNL.FilePNL != null)
                 {
-                    string ext = Path.GetFileName(filePNL.FileName);
+                    string ext = Path.GetFileName(artePNL.FilePNL.FileName);
                     string path = Path.Combine(Server.MapPath("~/Content/imagenesPNL"), ext);
                    if(System.IO.File.Exists(path))
                     {
@@ -164,7 +171,7 @@ namespace FortuneSystem.Controllers
                     else
                     {
                         artePNL.ExtensionPNL = ext;
-                        filePNL.SaveAs(path);
+						artePNL.FilePNL.SaveAs(path);
                     }
                     
                     TempData["imagPnlOK"] = "The PNL image was registered correctly.";
@@ -187,30 +194,100 @@ namespace FortuneSystem.Controllers
             {
                 artePNL.StatusPNL = 4;
             }
-            artePNL.Tienda = objArte.ObtenerclienteSummary(artePNL.IdSummary);
-            Regex kohl = new Regex("KOHL");
-            Regex walmart = new Regex("WAL-");
-            artePNL.ResultadoK = kohl.Matches(artePNL.Tienda);
-            artePNL.ResultadoW = walmart.Matches(artePNL.Tienda);
-            int idPedido = objPedido.Obtener_Id_Pedido(artePNL.IdSummary);     
-            if (ModelState.IsValid)
-            {
-                db.Entry(artePNL).State = EntityState.Modified;
-                db.SaveChanges();
+         
+            int idPedido = objPedido.Obtener_Id_Pedido(artePNL.IdSummary);
+			artePNL.fecha = DateTime.Today;
+			 if (ModelState.IsValid)
+			 {
+				 db.Entry(artePNL).State = EntityState.Modified;
+				 db.SaveChanges();
 
-                return RedirectToAction("Detalles", "Pedidos", new { id = idPedido });
-            }
+				 return RedirectToAction("Detalles", "Pedidos", new { id = idPedido });
+			 }
 
-            return View(artePNL);
+			return View(artePNL);
         }
+		public ActionResult ActualizarImagenArt(/*int? id,*/ int idArte, string status, int idEspecialidad)
+		{
+			IMAGEN_ARTE IArte = db.ImagenArte.Find(idArte);
+			if (Request.Files.Count > 0)
+			{
+				try
+				{
+					HttpFileCollectionBase files = Request.Files;
+					for (int i = 0; i < files.Count; i++)
+					{
+						HttpPostedFileBase file = files[i];
+						string fname;
 
-         [HttpPost]
+						if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER" || Request.Browser.Browser.ToUpper() == "FF")
+						{
+							string[] testfiles = file.FileName.Split(new char[] { '\\' });
+							fname = testfiles[testfiles.Length - 1];
+						}
+						else
+						{
+							fname = file.FileName;
+						}
+						string ext = Path.GetFileName(file.FileName);
+						fname = Path.Combine(Server.MapPath("~/Content/imagenesArte"), ext);
+						if (System.IO.File.Exists(ext))
+						{
+
+							System.IO.File.Replace(IArte.extensionArte, ext, ext);
+							IArte.extensionArte = ext;
+							file.SaveAs(fname);
+						}
+						else
+						{
+							IArte.extensionArte = ext;
+							file.SaveAs(fname);
+						}
+
+
+					}
+					ActualizarInfoImagenArte(idArte, status, idEspecialidad, IArte);
+					TempData["imgArteOK"] = "The Art was modified correctly.";
+					return Json(new
+					{
+						redirectUrl = Url.Action("Index", "Arte"),
+						isRedirect = true
+					});
+				}
+				catch (Exception ex)
+				{
+					TempData["imgArteError"] = "The Art could not be modified, try it later." + ex.Message;
+					return Json(new
+					{
+						redirectUrl = Url.Action("Index", "Arte"),
+						isRedirect = true
+					});
+				}
+			}
+			else
+			{
+				ActualizarInfoImagenArte(idArte, status, idEspecialidad, IArte);
+				TempData["imgArteOK"] = "The Art was modified correctly.";
+				return Json(new
+				{
+					redirectUrl = Url.Action("Index", "Arte"),
+					isRedirect = true
+				});
+			}
+
+
+			//IArte.ExtensionL = objArte.BuscarExtensionPNLPorId(IArte.IdImgArtePNL);
+
+			//return View(IArte);
+		}
+
+		[HttpPost]
          public ActionResult FileUploadEstilo(HttpPostedFileBase FileArte)
          {
              POSummary arte = new POSummary();
              if (arte.ExtensionArte == null)
              {
-                 FileArte = arte.FileArte;
+			    FileArte = arte.FileArte;
                  if (FileArte != null)
                  {
                      string ext = Path.GetFileName(FileArte.FileName);
@@ -504,7 +581,7 @@ namespace FortuneSystem.Controllers
             Regex walmart = new Regex("WAL-");
             IArte.ResultadoK = kohl.Matches(IArte.Tienda);
             IArte.ResultadoW = walmart.Matches(IArte.Tienda);
-            IArte.Fecha = DateTime.Today;
+            IArte.fecha = DateTime.Today;
             ObtenerEstados(IArte.StatusArte, IArte);     
         
             return View(IArte);
@@ -515,7 +592,7 @@ namespace FortuneSystem.Controllers
             IMAGEN_ARTE_PNL IArte = db.ImagenArtePnl.Find(idArte);
 
             Session["id"] = id;
-          //  int Summary = Convert.ToInt32(Session["id"]);
+            int Summary = Convert.ToInt32(Session["id"]);
             IArte.IdSummary = id;
             IArte.Tienda = objArte.ObtenerclienteSummary(IArte.IdSummary);       
             Regex kohl = new Regex("KOHL");
@@ -523,7 +600,7 @@ namespace FortuneSystem.Controllers
             IArte.ResultadoK = kohl.Matches(IArte.Tienda);
             IArte.ResultadoW = walmart.Matches(IArte.Tienda);
             IArte.Estilo = objDesc.ObtenerEstiloPorId(IArte.IdEstilo);
-			IArte.Fecha = DateTime.Today;
+			IArte.fecha = DateTime.Today;
 			ObtenerEstadosPNL(IArte.StatusPNL, IArte);  
 
             return View(IArte);
@@ -538,7 +615,7 @@ namespace FortuneSystem.Controllers
             return View(IArte);
         }
 
-        public ActionResult ActualizarImagenArt(/*int? id,*/ int idArte,string status, int idEspecialidad)
+        public ActionResult ActualizarImagenArtePNL(/*int? id,*/ int idArte,string status, int idEspecialidad)
         {
             IMAGEN_ARTE IArte = db.ImagenArte.Find(idArte);
             if (Request.Files.Count > 0)
@@ -633,7 +710,7 @@ namespace FortuneSystem.Controllers
             {
                 IArte.StatusArte = 4;
             }
-            IArte.Fecha = DateTime.Today;
+            IArte.fecha = DateTime.Today;
             objArte.ActualizarImagen(IArte);
             List<int> listado = objArte.ListaEstilosPorImagenesArte(idArte).ToList();
             foreach (int id in listado)
@@ -736,7 +813,7 @@ namespace FortuneSystem.Controllers
         {
             if (artePNL.ExtensionPNL == null)
             {
-                filePNL = artePNL.FilePNL;
+				filePNL = artePNL.FilePNL;
                 if (filePNL != null)
                 {
                     string ext = Path.GetFileName(filePNL.FileName);
@@ -813,9 +890,9 @@ namespace FortuneSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind] IMAGEN_ARTE Arte, HttpPostedFileBase imgArte, HttpPostedFileBase imgPNL)
+		public ActionResult Edit([Bind] IMAGEN_ARTE Arte, HttpPostedFileBase imgArte, HttpPostedFileBase imgPNL)
         {
-            imgArte = Arte.FileArte;
+			 imgArte = Arte.FileArte;
 
             if (imgArte != null)
             {
@@ -825,7 +902,7 @@ namespace FortuneSystem.Controllers
                 imgArte.SaveAs(path);
             }
 
-            imgPNL = Arte.FilePNL;
+	       imgPNL = Arte.FilePNL;
             if (imgPNL != null)
             {
                 string ext = Path.GetFileName(imgPNL.FileName);

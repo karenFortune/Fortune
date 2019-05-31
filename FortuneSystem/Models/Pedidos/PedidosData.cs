@@ -337,8 +337,9 @@ namespace FortuneSystem.Models.Pedidos
                         
                         if (item.Id_summary == itemsPO.IdItems)
                         {
-                            itemsPO.Cantidad = itemsPO.Cantidad - item.Cantidad;
-                            datosShipped.Cantidad = item.Cantidad;
+                           // itemsPO.Cantidad = itemsPO.Cantidad - item.Cantidad;
+							itemsPO.Cantidad -= item.Cantidad;
+							datosShipped.Cantidad = item.Cantidad;
                         }
 
                     }

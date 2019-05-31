@@ -92,7 +92,7 @@
         obtener_tallas_item(numEstilo);
     });
     var idStyle;
-    var EstiloItem;
+    var EstiloI;
     function buscar_estilos(ID) {
         $.ajax({
             url: "/Pedidos/Lista_Estilos_PO/" + ID,
@@ -117,8 +117,7 @@
                     html += '<td>' + item.Price + '</td>';
                     html += '<td>' + item.Total + '</td>';
                     totalUnitsReg += item.Cantidad;
-                    idStyle = item.IdEstilo;
-                    EstiloItem = item.EstiloItem;
+					idStyle = item.IdEstilo;					
                     if (cargo == 1) {
                         html += '<td><a href="#" data-value="' + item.IdItems + '" class = "btn edit_driver edicion_driver btnEdit"  Title = "Edit Style"> <span class="glyphicon glyphicon-edit" aria-hidden="true" style="padding: 0px !important;"></span></a>';
                         html += '<a href="#" data-value="' + item.IdItems + '" class = "btn edit_driver edicion_driver btnArte"  Title = "Art PNL"> <span class="fa fa-paint-brush fa-lg" aria-hidden="true" style="padding: 0px !important;"></span></a>';
@@ -481,10 +480,9 @@
         $(document).on('click', '.btnArte', function () {
             debugger
             var id = $(this).data("value");
-            var link = '@Url.Action("FileUploadPNL", "Arte", new { id = "valor" , idEst = "valor2", descItem = "valor3" })';
+            var link = '@Url.Action("FileUploadPNL", "Arte", new { id = "valor" , idEst = "valorid"})';
             link = link.replace("valor", id);
-            link = link.replace("valor2", idStyle);
-            link = link.replace("valor3", EstiloItem);
+			link = link.replace("valorid", idStyle);		
             $("#loading").css('display', 'none');
             $("#ContenedorAgregarPNLModal").load(link, function () {
                 $("#agregarArteEstiloModal").modal("show");

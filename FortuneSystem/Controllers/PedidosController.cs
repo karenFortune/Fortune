@@ -28,24 +28,24 @@ namespace FortuneSystem.Controllers
     {
 		// GET: Pedido
 		readonly PedidosData objPedido = new PedidosData();
-        CatClienteData objCliente = new CatClienteData();
-        CatClienteFinalData objClienteFinal = new CatClienteFinalData();
-        CatStatusData objEstados = new CatStatusData();
-        CatGeneroData objGenero = new CatGeneroData();
-        CatColoresData objColores = new CatColoresData();
-        DescripcionItemData objItems = new DescripcionItemData();
-        CatTelaData objTela = new CatTelaData();
-        CatTipoCamisetaData objTipoC = new CatTipoCamisetaData();
-        ItemTallaData objTallas = new ItemTallaData();
-        RevisionesData objRevision = new RevisionesData();
-        ItemDescripcionData objEst = new ItemDescripcionData();
-        PrintShopData objPrint = new PrintShopData();
-        PackingData objPacking = new PackingData();
-        PnlData objPnl = new PnlData();
-        CatEspecialidadesData objEspecialidad = new CatEspecialidadesData();
-        CatTipoOrdenData objTipoOrden = new CatTipoOrdenData();
-		ReportController reporte = new ReportController();
-		CatTypeFormPackData objFormaPacking = new CatTypeFormPackData();
+		readonly CatClienteData objCliente = new CatClienteData();
+		readonly CatClienteFinalData objClienteFinal = new CatClienteFinalData();
+		readonly CatStatusData objEstados = new CatStatusData();
+		readonly CatGeneroData objGenero = new CatGeneroData();
+		readonly CatColoresData objColores = new CatColoresData();
+		readonly DescripcionItemData objItems = new DescripcionItemData();
+		readonly CatTelaData objTela = new CatTelaData();
+		readonly CatTipoCamisetaData objTipoC = new CatTipoCamisetaData();
+		readonly ItemTallaData objTallas = new ItemTallaData();
+		readonly RevisionesData objRevision = new RevisionesData();
+		readonly ItemDescripcionData objEst = new ItemDescripcionData();
+		readonly PrintShopData objPrint = new PrintShopData();
+		readonly PackingData objPacking = new PackingData();
+		readonly PnlData objPnl = new PnlData();
+		readonly CatEspecialidadesData objEspecialidad = new CatEspecialidadesData();
+		readonly CatTipoOrdenData objTipoOrden = new CatTipoOrdenData();
+		readonly ReportController reporte = new ReportController();
+		readonly CatTypeFormPackData objFormaPacking = new CatTypeFormPackData();
 
 		public int estado;
         public int IdPO;
@@ -53,8 +53,8 @@ namespace FortuneSystem.Controllers
 
         public ActionResult Index()
         {
-			List<OrdenesCompra> listaPedidos = new List<OrdenesCompra>();
-			int cargo = Convert.ToInt32(Session["idCargo"]);
+		    int cargo = Convert.ToInt32(Session["idCargo"]);
+			List<OrdenesCompra> listaPedidos;
 			if (cargo != 0)
 			{
 				listaPedidos = objPedido.ListaOrdenCompra().ToList();
@@ -64,8 +64,8 @@ namespace FortuneSystem.Controllers
 				Session["idCargo"] = 0;
 				listaPedidos = objPedido.ListaOrdenCompra().ToList();
 			}
-			
-            return View(listaPedidos);
+
+			return View(listaPedidos);
         }
 
         public void Reporte(int? id)
@@ -97,7 +97,7 @@ namespace FortuneSystem.Controllers
          }*/
 
         [HttpPost]
-        public JsonResult Lista_Estilos_PO(int? id)
+		public JsonResult Lista_Estilos_PO(int? id)
         {
 
             List<POSummary> listaItems = objItems.ListaItemsPorPO(id).ToList();
@@ -109,8 +109,7 @@ namespace FortuneSystem.Controllers
         [ChildActionOnly]
         public ActionResult Listado_Estilos_PO()
         {
-            int? id = Convert.ToInt32(Convert.ToInt32(Session["idPedidoNuevo"])); //id_pedido
-
+            int? id = Convert.ToInt32(Convert.ToInt32(Session["idPedidoNuevo"])); //id_pedido			
             List<POSummary> listaItems = objItems.ListaItemsPorPO(id).ToList();
 
             return PartialView(listaItems);
@@ -126,8 +125,7 @@ namespace FortuneSystem.Controllers
 
         public ActionResult HistorialPedidos(int id)
         {
-            List<OrdenesCompra> listaPedidosRev = new List<OrdenesCompra>();
-            listaPedidosRev = objPedido.ListaRevisionesPO(id).ToList();
+			List<OrdenesCompra> listaPedidosRev = objPedido.ListaRevisionesPO(id).ToList();
 
             return View(listaPedidosRev);
         }
@@ -289,7 +287,7 @@ namespace FortuneSystem.Controllers
 
 
 		[HttpPost]
-        public JsonResult Lista_Tallas_Estilo_Recibos(int? idSummary, int? idPedido, int? idEstilo)
+        public JsonResult Lista_Tallas_Estilo_Recibos(int? idSummary/*, int? idPedido, int? idEstilo*/)
         {
             List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstiloRecibo(idSummary).ToList();
             List<recibo> listaTallasRecibo = objPedido.ListaRecibos(idSummary).ToList();
@@ -599,8 +597,10 @@ namespace FortuneSystem.Controllers
 
 		public void Screnn()
 		{
-			Process snippingToolProcess = new Process();
-			snippingToolProcess.EnableRaisingEvents = true;
+			Process snippingToolProcess = new Process
+			{
+				EnableRaisingEvents = true
+			};
 			if (!Environment.Is64BitProcess)
 			{
 				snippingToolProcess.StartInfo.FileName = "C:\\Windows\\sysnative\\SnippingTool.exe";
@@ -619,7 +619,7 @@ namespace FortuneSystem.Controllers
 
 		}
         [HttpPost]
-        public JsonResult RegistrarPO([Bind] OrdenesCompra ordenCompra, string po, string VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades, int IdTipoOrden, List<string> ListaMillPO)
+        public JsonResult RegistrarPO([Bind] OrdenesCompra ordenCompra,/* string po, string VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades, int IdTipoOrden,*/ List<string> ListaMillPO)
         {
             ListaEstados(ordenCompra);
             int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
@@ -654,7 +654,7 @@ namespace FortuneSystem.Controllers
 				i++;
 			}
 
-			i = i - 1;
+			i -= 1;
 			for (int v = 0; v < i; v++)
 			{
 				
@@ -847,7 +847,7 @@ namespace FortuneSystem.Controllers
         [HttpPost]
         public ActionResult RegistrarRevisionPO([Bind] OrdenesCompra pedido)
         {
-            List<POSummary> listaItems = objItems.ListaItemsPorPO(pedido.IdPedido).ToList();
+            //List<POSummary> listaItems = objItems.ListaItemsPorPO(pedido.IdPedido).ToList();
 
 
             // List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstilo(id).ToList();
@@ -882,7 +882,7 @@ namespace FortuneSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Revision(int id, [Bind] OrdenesCompra pedido)
+        public ActionResult Revision([Bind] OrdenesCompra pedido)
         {
             string cliente = Request.Form["Nombre"].ToString();
             pedido.Cliente = Int32.Parse(cliente);
@@ -1093,7 +1093,7 @@ namespace FortuneSystem.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult ActualizarInfPO( [Bind] OrdenesCompra pedido,int id, string po, string VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades, int IdTipoOrden, List<string> ListaMPO)
+		public JsonResult ActualizarInfPO( [Bind] OrdenesCompra pedido,int id,/* string po, string VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades, int IdTipoOrden,*/ List<string> ListaMPO)
         {
             pedido.IdPedido = id;
 
@@ -1182,8 +1182,7 @@ namespace FortuneSystem.Controllers
 
         public void SeleccionarClientes(OrdenesCompra pedido)
         {
-            List<CatCliente> listaClientes = pedido.LCliente;
-            listaClientes = objCliente.ListaClientes().ToList();
+			List<CatCliente> listaClientes = objCliente.ListaClientes().ToList();
             pedido.CatCliente = objCliente.ConsultarListaClientes(pedido.Cliente);
             pedido.CatCliente.Customer = pedido.Cliente;
             ViewBag.listCliente = new SelectList(listaClientes, "Customer", "Nombre", pedido.Cliente);
@@ -1193,9 +1192,7 @@ namespace FortuneSystem.Controllers
 
         public void SeleccionarClienteFinal(OrdenesCompra pedido)
         {
-
-            List<CatClienteFinal> listaClientesFinal = pedido.LClienteFinal;
-            listaClientesFinal = objClienteFinal.ListaClientesFinal().ToList();
+			List<CatClienteFinal> listaClientesFinal = objClienteFinal.ListaClientesFinal().ToList();
             pedido.CatClienteFinal = objClienteFinal.ConsultarListaClientesFinal(pedido.ClienteFinal);
             pedido.CatClienteFinal.CustomerFinal = pedido.ClienteFinal;
             ViewBag.listClienteFinal = new SelectList(listaClientesFinal, "CustomerFinal", "NombreCliente", pedido.ClienteFinal);
@@ -1204,9 +1201,7 @@ namespace FortuneSystem.Controllers
 
         public void SeleccionarGenero(POSummary items)
         {
-
-            List<CatGenero> listaGenero = items.ListaGeneros;
-            listaGenero = objGenero.ListaGeneros().ToList();
+			List<CatGenero> listaGenero = objGenero.ListaGeneros().ToList();
             items.CatGenero = objGenero.ConsultarListaGenero(items.Id_Genero);
             items.CatGenero.IdGender = items.Id_Genero;
             ViewBag.listGenero = new SelectList(listaGenero, "GeneroCode", "Genero", items.CatGenero.GeneroCode);
@@ -1215,9 +1210,7 @@ namespace FortuneSystem.Controllers
 
         public void SeleccionarTela(POSummary items)
         {
-
-            List<CatTela> listaTela = items.ListaTelas;
-            listaTela = objTela.ListaTela().ToList();
+			List<CatTela> listaTela = objTela.ListaTela().ToList();
             items.CatTela = objTela.ConsultarListaTelas(items.IdTela);
             items.CatTela.Id_Tela = items.IdTela;
             ViewBag.listTela = new SelectList(listaTela, "Id_Tela", "Tela", items.IdTela);
@@ -1225,9 +1218,7 @@ namespace FortuneSystem.Controllers
 
         public void SeleccionarTipoCamiseta(POSummary items)
         {
-
-            List<CatTipoCamiseta> listaTipoCamiseta = items.ListaTipoCamiseta;
-            listaTipoCamiseta = objTipoC.ListaTipoCamiseta().ToList();
+			List<CatTipoCamiseta> listaTipoCamiseta = objTipoC.ListaTipoCamiseta().ToList();
             items.CatTipoCamiseta = objTipoC.ConsultarListaCamisetas(items.IdCamiseta);
             items.CatTipoCamiseta.IdTipo = items.IdCamiseta;
             ViewBag.listTipoCamiseta = new SelectList(listaTipoCamiseta, "TipoProducto", "DescripcionTipo", items.CatTipoCamiseta.TipoProducto);
@@ -1235,9 +1226,7 @@ namespace FortuneSystem.Controllers
 
         public void SeleccionarTipoEspecialidad(POSummary items)
         {
-
-            List<CatEspecialidades> listaEspecialidades = items.ListaEspecialidades;
-            listaEspecialidades = objEspecialidad.ListaEspecialidades().ToList();
+			List<CatEspecialidades> listaEspecialidades = objEspecialidad.ListaEspecialidades().ToList();
             items.CatEspecialidades = objEspecialidad.ConsultarListaEspecialidad(items.IdEspecialidad);
             items.CatEspecialidades.IdEspecialidad = items.IdEspecialidad;
             ViewBag.listEspecialidad = new SelectList(listaEspecialidades, "IdEspecialidad", "Especialidad", items.IdEspecialidad);
@@ -1245,9 +1234,7 @@ namespace FortuneSystem.Controllers
 
 		public void SeleccionarTipoFormaPack(POSummary items)
 		{
-
-			List<CatTypeFormPack> listaTipoFormPack = items.ListaTipoFormPack;
-			listaTipoFormPack = objFormaPacking.ListaTipoFormaPack().ToList();
+			List<CatTypeFormPack> listaTipoFormPack = objFormaPacking.ListaTipoFormaPack().ToList();
 			items.CatTipoFormPack = objFormaPacking.ConsultarListatipoFormPack(items.IdTipoFormPack);
 			items.IdTipoFormPack = (items.IdTipoFormPack == 0 ? 1 : items.IdTipoFormPack);
 			items.CatTipoFormPack.IdTipoFormPack = items.IdTipoFormPack;
@@ -1256,20 +1243,17 @@ namespace FortuneSystem.Controllers
 
 		public void ListasClientes(OrdenesCompra pedido)
         {
-            List<CatCliente> listaClientes = pedido.ListaClientes;
-            listaClientes = objCliente.ListaClientes().ToList();
+			List<CatCliente> listaClientes = objCliente.ListaClientes().ToList();
 
             ViewBag.listCliente = new SelectList(listaClientes, "Customer", "Nombre", pedido.Cliente);
 
-            List<CatClienteFinal> listaClientesFinal = pedido.ListaClientesFinal;
-            listaClientesFinal = objClienteFinal.ListaClientesFinal().ToList();
+			List<CatClienteFinal> listaClientesFinal = objClienteFinal.ListaClientesFinal().ToList();
             ViewBag.listClienteFinal = new SelectList(listaClientesFinal, "CustomerFinal", "NombreCliente", pedido.ClienteFinal);
         }
 
         public void ListaTipoOrden(OrdenesCompra pedido)
         {
-            List<CatTipoOrden> listaTipoOrden = pedido.ListadoTipoOrden;
-            listaTipoOrden = objTipoOrden.ListaTipoOrden().ToList();
+			List<CatTipoOrden> listaTipoOrden = objTipoOrden.ListaTipoOrden().ToList();
 
             ViewBag.listTipoOrden = new SelectList(listaTipoOrden, "IdTipoOrden", "TipoOrden", pedido.IdTipoOrden);
 
@@ -1292,8 +1276,7 @@ namespace FortuneSystem.Controllers
 
         public void ListaGenero(POSummary summary)
         {
-            List<CatGenero> listaGenero = summary.ListaGeneros;
-            listaGenero = objGenero.ListaGeneros().ToList();
+			List<CatGenero> listaGenero = objGenero.ListaGeneros().ToList();
 
             ViewBag.listGenero = new SelectList(listaGenero, "GeneroCode", "Genero", summary.IdGenero);
 
@@ -1301,8 +1284,7 @@ namespace FortuneSystem.Controllers
 
         public void ListaTela(POSummary summary)
         {
-            List<CatTela> listaTela = summary.ListaTelas;
-            listaTela = objTela.ListaTela().ToList();
+			List<CatTela> listaTela = objTela.ListaTela().ToList();
 
             ViewBag.listTela = new SelectList(listaTela, "Id_Tela", "Tela", summary.IdTela);
 
@@ -1310,8 +1292,7 @@ namespace FortuneSystem.Controllers
 
         public void ListaTipoCamiseta(POSummary summary)
         {
-            List<CatTipoCamiseta> listaTipoCamiseta = summary.ListaTipoCamiseta;
-            listaTipoCamiseta = objTipoC.ListaTipoCamiseta().ToList();
+			List<CatTipoCamiseta> listaTipoCamiseta = objTipoC.ListaTipoCamiseta().ToList();
 
             ViewBag.listTipoCamiseta = new SelectList(listaTipoCamiseta, "TipoProducto", "DescripcionTipo", summary.TipoCamiseta);
 
@@ -1319,8 +1300,7 @@ namespace FortuneSystem.Controllers
 
         public void ListaEspecialidades(POSummary summary)
         {
-            List<CatEspecialidades> listaEspecialidades = summary.ListaEspecialidades;
-            listaEspecialidades = objEspecialidad.ListaEspecialidades().ToList();
+			List<CatEspecialidades> listaEspecialidades = objEspecialidad.ListaEspecialidades().ToList();
 
             ViewBag.listEspecialidad = new SelectList(listaEspecialidades, "IdEspecialidad", "Especialidad", summary.IdEspecialidad);
 
@@ -1328,18 +1308,14 @@ namespace FortuneSystem.Controllers
 
 		public void ListaTipoFormaPacking(POSummary summary)
 		{
-			List<CatTypeFormPack> listaFomPack = summary.ListaTipoFormPack;
-			listaFomPack = objFormaPacking.ListaTipoFormaPack().ToList();
+			List<CatTypeFormPack> listaFomPack = objFormaPacking.ListaTipoFormaPack().ToList();
 			ViewBag.listTipoFormPack = new SelectList(listaFomPack, "IdTipoFormPack", "TipoFormPack", summary.IdTipoFormPack);
 
 		}
 
-
-
 		public void ListaEstados(OrdenesCompra pedido)
         {
-            List<CatStatus> listaEstados = pedido.ListaCatStatus;
-            listaEstados = objEstados.ListarEstados().ToList();
+			List<CatStatus> listaEstados = objEstados.ListarEstados().ToList();
 
             ViewBag.listEstados = new SelectList(listaEstados, "IdStatus", "Estado", pedido.IdStatus);
             foreach (var item in listaEstados)
@@ -1354,8 +1330,7 @@ namespace FortuneSystem.Controllers
         }
         public void ObtenerEstadoRevisado(OrdenesCompra pedido)
         {
-            List<CatStatus> listaEstados = pedido.ListaCatStatus;
-            listaEstados = objEstados.ListarEstados().ToList();
+			List<CatStatus> listaEstados = objEstados.ListarEstados().ToList();
 
             ViewBag.listEstados = new SelectList(listaEstados, "IdStatus", "Estado", pedido.IdStatus);
             foreach (var item in listaEstados)

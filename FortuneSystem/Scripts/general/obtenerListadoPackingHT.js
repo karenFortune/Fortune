@@ -506,9 +506,10 @@ function RegistrarEmpaqueBulkHT(nPO, tEmpaque) {
             html += '<tr><th>Size</th>' +
                 ' <th>Box#</th>' +
                 ' <th>QTY</th>' +
-                ' <th>TOTALCARTONS#</th>' +
+				' <th>TOTALCARTONS#</th>' +
+				' <th>CARTONSFALTANTES#</th>' +
                 '</tr>' +
-                '</thead><tbody>';
+                '</thead><tbody class="tbodyHTPack">';
             if (listaPackingBox.length === 0) {
                 listaPackingBox = listaPacking;
             } else {
@@ -520,33 +521,41 @@ function RegistrarEmpaqueBulkHT(nPO, tEmpaque) {
                 var tallaTemp = listaPackingBox[0].Talla;
                 var cajaTemp = 0;
                 if (listaPackingBox[0].PackingM !== null) {
-                    cajaTemp = parseFloat(listaPackingBox[0].PackingM.CantBox);
+                   // cajaTemp = parseFloat(listaPackingBox[0].PackingM.CantBox);
                 }
                 var cantTemp = parseFloat(listaPackingBox[0].Cantidad);
                 var cartonsTemp = parseFloat(listaPackingBox[0].TotalCartones);
                 var i = 0;
-                var cont = 0;
+				var cont = 0;
+				var valorTempCaja = 0;
             $.each(listaPackingBox, function (key, item) {
                     i++;
                 if (tallaTemp === item.Talla) {
                     if (item.PackingM !== null)
                     {
-                        cajaTemp += parseFloat(item.PackingM.CantBox);
+                       cajaTemp += parseFloat(item.PackingM.CantBox);
                     } 
                    
                 } else {
                     cadenaCantidad += cajaTemp + "*";
                     cont = cont + 1;
                     html += '<tr id="pallet' + cont + '" class="pallet">';
-                    html += '<td width="20%"><input type="text" id="f-talla" class="form-control talla" value="' + tallaTemp + '" readonly/></td>';
-                    if (cajaTemp === 0) {
-                        html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " onkeyup="obtTotalCartonesBulk(' + cont + ')"  value="' + cajaTemp + '"  /></td>';
-                    } else {
+					html += '<td width="20%"><input type="text" id="f-talla" class="form-control talla" value="' + tallaTemp + '" readonly/></td>';
+					if (cajaTemp === 0 || cajaTemp < cartonsTemp) {
+						var resulCajas = cartonsTemp - cajaTemp;
+						html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " onkeyup="obtTotalCartonesBulkHT(' + cont + ')"  value="' + 0 + '"  /></td>';
+					} else {						
                         html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " value="' + cajaTemp+ '"  readonly/></td>';
                     }
                     html += '<td width="20%"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control numeric qtyBox " value="' + cantTemp + '"  readonly/></td>';
-                    html += '<td width="20%"><input type="text" name="l-cartons" id="l-cartons" class="form-control numeric cartones " value="' + cartonsTemp + '"  readonly/></td>';
-                    html += '</tr>';
+					html += '<td width="20%"><input type="text" name="l-cartons" id="l-cartons" class="form-control numeric cartones " value="' + cartonsTemp + '"  readonly/></td>';
+					if (cajaTemp === 0) {
+						html += '<td width="20%"><input type="text" name="l-cartons-falt" id="l-cartons-falt" class="form-control numeric cartonesF " value="' + cartonsTemp + '"  readonly/></td>';
+					} else {
+						var resulTotalCartones = cartonsTemp - cajaTemp;
+						html += '<td width="20%"><input type="text" name="l-cartons-falt" id="l-cartons-falt" class="form-control numeric cartonesF " value="' + parseInt(resulTotalCartones) + '"  readonly/></td>';
+					}
+					html += '</tr>';
                     tallaTemp = item.Talla;
                     if (item.PackingM !== null) {
                         cajaTemp = parseFloat(item.PackingM.CantBox);
@@ -554,18 +563,26 @@ function RegistrarEmpaqueBulkHT(nPO, tEmpaque) {
                     cantTemp = parseFloat(item.Cantidad);
                     cartonsTemp = parseFloat(item.TotalCartones);
                 }
-                if (i === totalTallas) {
+				if (i === totalTallas) {
+					cont = cont + 1;
                     cadenaCantidad += cajaTemp + "*";
-                    html += '<tr>';
+					html += '<tr id="pallet' + cont + '" class="pallet">';
                     html += '<td width="20%"><input type="text" id="f-talla" class="form-control talla" value="' + tallaTemp + '" readonly/></td>';
-                    if (cajaTemp === 0) {
-                        html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " value="' + cajaTemp + '"  /></td>';
+					if (cajaTemp === 0 || cajaTemp < cartonsTemp) {
+						var resulCaja = cartonsTemp - cajaTemp;
+						html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " onkeyup="obtTotalCartonesBulkHT(' + cont + ')" value="' + 0 + '"  /></td>';
                     } else {
-                        html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " value="' + cajaTemp + '"  readonly/></td>';
+						html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " value="' + 0 + '"  readonly/></td>';
                     }
                     html += '<td width="20%"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control numeric qtyBox " value="' + cantTemp + '"  readonly/></td>';
-                    html += '<td width="20%"><input type="text" name="l-cartons" id="l-cartons" class="form-control numeric cartones " value="' + cartonsTemp + '"  readonly/></td>';
-                    html += '</tr>';
+					html += '<td width="20%"><input type="text" name="l-cartons" id="l-cartons" class="form-control numeric cartones " value="' + cartonsTemp + '"  readonly/></td>';
+					if (cajaTemp === 0) {
+						html += '<td width="20%"><input type="text" name="l-cartons-falt" id="l-cartons-falt" class="form-control numeric cartonesF " value="' + cartonsTemp + '"  readonly/></td>';
+					} else {
+						var resultTotalCartones = cartonsTemp - cajaTemp;
+						html += '<td width="20%"><input type="text" name="l-cartons-falt" id="l-cartons-falt" class="form-control numeric cartonesF " value="' + parseInt(resultTotalCartones) + '"  readonly/></td>';
+					}
+					html += '</tr>';
                 }
                 });
             }
@@ -611,7 +628,7 @@ function RegistrarEmpaquePPKHT(nPO, tEmpaque) {
                 ' <th>QtyPieces#</th>' +
                 ' <th>TotalPieces#</th>' +
                 '</tr>' +
-                '</thead><tbody>';
+                '</thead><tbody class="tbodyHTPack">';
             if (listaPackingBox.length === 0) {
                 listaPackingBox = listaPacking;
             } else {
@@ -906,7 +923,7 @@ function TallasEmpaquePPKHT(idEst) {
                 html += '<tr><th>Size</th>' +
                     ' <th>Ratio</th>' +
                     '</tr>' +
-                    '</thead><tbody>';
+                    '</thead><tbody class="tbodyHTPack">';
                 $.each(listaPO, function (key, item) {
                     html += '<tr>';
                     html += '<td width="250"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '" readonly/></td>';

@@ -221,11 +221,6 @@
             $('#tablaClientesFinal').dataTable({
                 responsive: true
             });
-			$('#tablaColores').dataTable({
-				responsive: true        
-	
-			});
-
 
             $('#tablaGenero').dataTable({
                 responsive: true
@@ -300,7 +295,14 @@
                 "ordering": false,
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
 
-            });
+			});
+			$('#tablaColores').dataTable({
+				responsive: true,
+                "ordering": true,
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]	
+			});
+
+
 
             $('#tablaPOPnl').dataTable({
                 responsive: true,
@@ -364,6 +366,18 @@
                 responsive: true,
                 "ordering": false,
                 "searching": false,
+                "paging": false,
+                "scrollCollapse": true,
+                "info": false/*,
+                                        "language": {
+                                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                            }*/
+			});
+
+			 $('#tablaArtePNLInventario').dataTable({
+                responsive: true,
+                "ordering": false,
+                "searching": true,
                 "paging": false,
                 "scrollCollapse": true,
                 "info": false/*,

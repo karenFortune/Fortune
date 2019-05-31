@@ -4,6 +4,15 @@
     ViewBag.Title = "List Colors";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<script>
+	debugger
+    $(window).on('load', function () {
+        setTimeout(function () {
+            $(".loader-page").css({ visibility: "hidden", opacity: "0" })
+        }, 2000);
+
+    });
+</script>
 <style>
     tr.highlighted td {
         background: #b3e0ff;
@@ -37,6 +46,44 @@
      background: #3479bf !important;
      border-radius: 15px;
    }
+
+   
+    .loader-page {
+        position: fixed;
+        z-index: 999;
+        background: rgb(255, 255, 255);
+        border: 0;
+        overflow: auto;
+        top: 0%;
+        left: 0%;
+        height: 200%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all .3s ease;
+        opacity: 0.8;
+    }
+
+        .loader-page::before {
+            content: "";
+            position: absolute;
+            top: 10%;
+            left: 43%;
+            width: 398px;
+            height: 398px;
+            background: url('../../Content/img/load.gif');
+        }
+
+        .loader-page::after {
+            content: "";
+            position: absolute;
+            top: 10%;
+            left: 43%;
+            width: 398px;
+            height: 398px;
+            background: url('../../Content/img/load.gif');
+        }
 </style>
 @{
     if (TempData["colorOK"] != null)
@@ -156,20 +203,20 @@
 			</button>
 		</p>
 		<br />
-
-			<table class="table table-striped" id="tablaColores">
+		<div id="div_tabla_estilos" style="width: 100%; height:650px; overflow:auto; ">
+			<table align="center" class="table table-striped" id="tablaColores">
 				<thead>
 					<tr>
-						<th>
+						<th width="15%">
 							@Html.DisplayNameFor(model => model.IdColor)
 						</th>
-						<th>
+						<th width="15%">
 							@Html.DisplayNameFor(model => model.CodigoColor)
 						</th>
-						<th>
+						<th width="55%">
 							@Html.DisplayNameFor(model => model.DescripcionColor)
 						</th>
-						<th>ACTIONS</th>
+						<th width="15%">ACTIONS</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -195,6 +242,7 @@
 					}
 				</tbody>
 			</table>
+			</div>
 		</div>
 	</div>
 <script>

@@ -24,6 +24,7 @@
 <script src="~/Scripts/general/AgregarTallasPackingPPK.js"></script>
 <script src="~/Scripts/general/agregarPallet.js"></script>
 <script src="~/Scripts/general/actualizarPallet.js"></script>
+<script src="~/Scripts/general/desplazGeneral.js"></script>
 <style>
 
 	tr.highlighted td {
@@ -396,7 +397,6 @@
 						<button type="button" id="btnAssort" class="btn btn-primary">ASSORTMENT</button>
 					</div>
 				}
-
 			}
 			<br />
 			<table id="tabless" class="table table-sm table-striped table-hover ">
@@ -417,7 +417,6 @@
 				<tbody class="tbody"></tbody>
 			</table>
 		</div>
-
 	</div>
 
 	<br />
@@ -535,6 +534,14 @@
 							<br />
 							<br />
 							<div id="listaTallaPHT"></div>
+							<!--	<table class="table" id="tablaTallasBulkHT">
+					<thead><tr><th>Size</th> <th>QTY#</th> <th>CARTONS 50PCS#</th> <th>PARTIAL#</th> <th>TOTALCARTONS#</th></tr></thead>
+					<tbody class="tbodyHTPack"></tbody>
+				</table>
+			<table class="table" id="tablaTallasPalletHT">
+				<thead><tr><th>Size</th> <th>Box#</th> <th>QTY</th><th>TOTALCARTONS#</th></tr></thead>
+				<tbody class="tbodyHTPallet"></tbody>
+			</table>-->
 							<br />
 							<br />
 							<br />
@@ -559,6 +566,13 @@
 							<div class="pies-container" id="containerHTPie">
 								<div id="pieht"></div>
 							</div>
+						}
+						else if ((int)Session["idCargo"] == 0 || Session["idCargo"] == null )
+						{
+							<script type="text/javascript">
+								var url = '@Url.Action("Login", "Login")';
+								window.location.href = url;
+							</script>
 						}
 					</div>
 				</div>
@@ -692,6 +706,14 @@
 							<br />
 							<br />
 							<div id="listaTallaPHT"></div>
+							<!--	<table class="table" id="tablaTallasBulkHT">
+			<thead><tr><th>Size</th> <th>QTY#</th> <th>CARTONS 50PCS#</th> <th>PARTIAL#</th> <th>TOTALCARTONS#</th></tr></thead>
+			<tbody class="tbodyHTPack"></tbody>
+		</table>
+		<table class="table" id="tablaTallasPalletHT">
+			<thead><tr><th>Size</th> <th>Box#</th> <th>QTY</th><th>TOTALCARTONS#</th></tr></thead>
+			<tbody class="tbodyHTPallet"></tbody>
+		</table>-->
 							<br />
 							<br />
 							<br />
@@ -716,6 +738,13 @@
 							<div class="pies-container" id="containerHTPie">
 								<div id="pieht"></div>
 							</div>
+						}
+						else if (Session["idCargo"] == null || (int)Session["idCargo"] == 0)
+						{
+							<script type="text/javascript">
+								var url = '@Url.Action("Login", "Login")';
+								window.location.href = url;
+							</script>
 						}
 					</div>
 				</div>
@@ -759,9 +788,9 @@
 							<div id="listaTalla">
 								<table id="tableQtySize" class="table table-sm table-striped table-hover ">
 									<thead>
-										<tr>											
+										<tr>
 											<th>Size</th>
-											<th>1rst QTY</th>	
+											<th>1rst QTY</th>
 										</tr>
 									</thead>
 									<tbody class="tbodyQtyTall"></tbody>
@@ -793,6 +822,13 @@
 							@if ((int)Session["idCargo"] == 15)
 							{
 								<div id="listaTallaBatch" style=" overflow:auto; height: 200px; display:none;"></div>
+							}
+							else if ((int)Session["idCargo"] == 0 || Session["idCargo"] == null)
+							{
+								<script type="text/javascript">
+								var url = '@Url.Action("Login", "Login")';
+								window.location.href = url;
+								</script>
 							}
 							else
 							{
@@ -915,12 +951,12 @@
 							<div id="tablaAssortBatch" style="width: 100%; height:250px; overflow:auto;">
 								<div id="regAssort"></div>
 								<!-- <div id="lTallasAssort" style=" overflow:auto; display:none; ">
-									<div id="div_titulo_Tallas_assort"></div>
-									<table id="listadoTallasAssort" class="table table-sm table-striped table-hover ">
-										<thead class="encabezado"></thead>
-										<tbody class="tbodyTallasAssort"></tbody>
-									</table>
-								</div>-->
+					<div id="div_titulo_Tallas_assort"></div>
+					<table id="listadoTallasAssort" class="table table-sm table-striped table-hover ">
+						<thead class="encabezado"></thead>
+						<tbody class="tbodyTallasAssort"></tbody>
+					</table>
+				</div>-->
 							</div>
 							<div id="batch" style="overflow:auto; display:none; ">
 								<div id="div_batch_assort"></div>
@@ -998,6 +1034,13 @@
 							<div id="pie"></div>
 						</div>
 					}
+					else if ((int)Session["idCargo"] == 0 || Session["idCargo"] == null)
+					{
+						<script type="text/javascript">
+								var url = '@Url.Action("Login", "Login")';
+								window.location.href = url;
+						</script>
+					}
 				</div>
 			</div>
 			<div class="col-sm-1">
@@ -1026,43 +1069,7 @@
 	</a>
 </div>
 <script>
-	//Desplazamiento
-$('.tbodyQtyTall').keydown(function (e) {
-	var $table = $(this);
-	var $active = $('input:focus,select:focus', $table);
-	var $next = null;
-	var focusableQuery = 'input:visible,select:visible,textarea:visible';
-	var position = parseInt($active.closest('td').index()) + 1;
-	console.log('position :', position);
-	switch (e.keyCode) {
-		case 37: // <Left>
-			$next = $active.parent('td').prev().find(focusableQuery);
-			break;
-		case 38: // <Up>                    
-			$next = $active
-				.closest('tr')
-				.prev()
-				.find('td:nth-child(' + position + ')')
-				.find(focusableQuery)
-				;
 
-			break;
-		case 39: // <Right>
-			$next = $active.closest('td').next().find(focusableQuery);
-			break;
-		case 40: // <Down>
-			$next = $active
-				.closest('tr')
-				.next()
-				.find('td:nth-child(' + position + ')')
-				.find(focusableQuery)
-				;
-			break;
-	}
-	if ($next && $next.length) {
-		$next.focus();
-	}
-});
 	function obtenerListaPacking(IdEstiloInf) {
         var orders = new DevExpress.data.CustomStore({
             loadMode: "raw",

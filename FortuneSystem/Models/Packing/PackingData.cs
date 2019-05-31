@@ -2889,7 +2889,6 @@ namespace FortuneSystem.Models.Packing
         public int ObtenerTotalCartonesFaltantesAssort(int id, int idBlock, int numTotalCart)
         {
             Conexion conex = new Conexion();
-            List<PackingAssortment> listTallas = new List<PackingAssortment>();
             int totalCartonesFaltantes = 0;
             int totalCartones = 0;
             try
@@ -2922,7 +2921,6 @@ namespace FortuneSystem.Models.Packing
         public int ObtenerTotalPiezasFaltantesAssort(int id, int idBlock, int numTotalPiezas)
         {
             Conexion conex = new Conexion();
-            List<PackingAssortment> listTallas = new List<PackingAssortment>();
             int totalPiezasFaltantes = 0;
             int totalPiezas = 0;
             try

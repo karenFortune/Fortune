@@ -210,7 +210,7 @@
 
                                <td>
                                    <a href="#" class="btn edit_driver edicion_driver btnEdit" data-value="@item.IdImgArte " title="List Art"><span class="glyphicon glyphicon-search " aria-hidden="true" style="padding: 0px !important;"></span></a>
-                                   <a href="@Url.Action("FileUpload", "Arte",  new { idArte = item.IdImgArte }) " class="btn edit_driver edicion_driver" Title="Art"> <span class="glyphicon glyphicon-check " aria-hidden="true" style="padding: 0px !important;"></span></a>
+                                   <a href="@Url.Action("FileUpload", "Arte",  new { idArte = item.IdImgArte, estilo = item.Estilo})" class="btn edit_driver edicion_driver" Title="Art"> <span class="glyphicon glyphicon-check " aria-hidden="true" style="padding: 0px !important;"></span></a>
                                    
                                </td>
 

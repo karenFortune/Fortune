@@ -16,10 +16,9 @@ namespace FortuneSystem.Controllers
 {
     public class LoginController : Controller
     {
-
-        CatUsuarioData objUsr = new CatUsuarioData();
-        CatSucursalData objSucursal = new CatSucursalData();
-        CatRolesData objCaRoles = new CatRolesData();
+		readonly CatUsuarioData objUsr = new CatUsuarioData();
+		readonly CatSucursalData objSucursal = new CatSucursalData();
+		readonly CatRolesData objCaRoles = new CatRolesData();
         // GET: Login
         public ActionResult Index()
         {
@@ -51,8 +50,13 @@ namespace FortuneSystem.Controllers
                     Session["nombre"] = usuario.Nombres;
                     int noEmpleado = objUsr.Obtener_Datos_Usuarios(empleado);
                     Session["id_Empleado"] = noEmpleado;
-					Session["idCargo"] = usuario.Cargo;                    
-                    usuario.CatRoles = objCaRoles.ConsultarListaRoles(usuario.Cargo);
+					Session["idCargo"] = usuario.Cargo;
+					int cargo = Convert.ToInt32(Session["idCargo"]);
+					if (cargo == 0)
+					{
+						Session["idCargo"] = 0;
+					}
+					usuario.CatRoles = objCaRoles.ConsultarListaRoles(usuario.Cargo);
                     Session["rolUser"] = usuario.CatRoles.Rol;
                     string pass = objUsr.Obtener_Contraseña_Usuario(empleado);
 					string sucursal = objUsr.Obtener_Sucursal_Usuario(empleado);

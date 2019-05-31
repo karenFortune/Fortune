@@ -497,6 +497,48 @@ function obtTotalCartonesBulk() {
 
 }
 
+function obtTotalCartonesBulkHT() {
+	var error = 0;
+	var numFilas = $("#tablaTallasPalletHT tbody>tr").length;
+	for (var i = 1; i <= numFilas; i++) {
+		var input = $(".piezas");
+		var nombreCajas = "#pallet" + i + " .caja";
+		var nombreCartones = "#pallet" + i + " .cartones";
+		var nombreCartonesF = "#pallet" + i + " .cartonesF";
+		var valorCalidad = $(".calidad").parent("tr").find("td").eq(i).text();
+		var pCalidad = parseInt(valorCalidad);
+
+		var numCajas = $(nombreCajas).val();
+		var numCartonesF = $(nombreCartonesF).val();
+		var numCartones = $(nombreCartones).val();
+		if (parseInt(numCajas) > parseInt(numCartonesF)) {
+			if (parseInt(numCajas) === parseInt(numCartones)) {
+				$(nombreCajas).css('border', '1px solid #cccccc');
+			} else {
+				$(nombreCajas).css('border', '2px solid #e03f3f');
+				error++;
+			}
+			
+			//  var alert = alertify.alert("Message", 'The number of boxes must be less than the total number of cartons. '/* + numCartones +'.'*/).set('label', 'Aceptar');
+			//  alert.set({ transition: 'zoom' });
+			//  alert.set('modal', false);
+			// $("#guardarBulkHT").prop('disabled', true);
+		} else {
+			$(nombreCajas).css('border', '1px solid #cccccc');
+			//$("#guardarBulkHT").prop('disabled', false);
+		}
+
+	}
+
+	if (error !== 0) {
+		$("#guardarBulkHT").prop('disabled', true);
+	} else {
+		$("#guardarBulkHT").prop('disabled', false);
+	}
+
+
+}
+
 function calcular_MisPrint() {
     importe_total = 0;
     var error = 0;

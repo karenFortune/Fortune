@@ -313,7 +313,7 @@ namespace FortuneSystem.Controllers
                 i++; 
             }
 
-            i = i - 1;
+            i -=1;
            for(int v = 0; v < i; v++)
             {
                 tallaItem.Talla = tallas[v];
@@ -371,7 +371,7 @@ namespace FortuneSystem.Controllers
                 i++;
             }
 
-            i = i - 1;
+            i -= 1;
             for (int v = 0; v < i; v++)
             {                
                 string descripcion = descPack[v];            
@@ -412,7 +412,7 @@ namespace FortuneSystem.Controllers
                 i++;
             }
 
-            i = i - 1;
+            i -= 1;
             for (int v = 0; v < i; v++)
             {
                 tallaItem.Talla = tallas[v];
@@ -468,7 +468,7 @@ namespace FortuneSystem.Controllers
                 i++;
             }
 
-            i = i - 1;
+            i -= 1;
             for (int v = 0; v < i; v++)
             {
                 tallaItem.Talla = tallas[v];
@@ -548,7 +548,7 @@ namespace FortuneSystem.Controllers
                 i++;
             }
 
-            i = i - 1;
+            i -=1;
             for (int v = 0; v < i; v++)
             {
                 tallaItem.Talla = tallas[v];
@@ -666,7 +666,7 @@ namespace FortuneSystem.Controllers
                 i++;
             }
 
-            i = i - 1;
+            i -= 1;
             for (int v = 0; v < i; v++)
             {
                 upcTalla.Talla = tallas[v];
@@ -703,7 +703,7 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult Autocomplete_Item_Desc(string keyword, string estilo)
+        public JsonResult Autocomplete_Item_Desc(string keyword)
         {
             POSummary summary = new POSummary();
             List<ItemDescripcion> listaItems = summary.ListaItems;
@@ -784,7 +784,7 @@ namespace FortuneSystem.Controllers
 
 
         [HttpPost]
-        public ActionResult ListarTallasPorGenero(POSummary descItem)
+        public ActionResult ListarTallasPorGenero()
         {
             return View();
         }

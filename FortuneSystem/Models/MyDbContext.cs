@@ -10,21 +10,21 @@ namespace FortuneSystem.Models
 {
     public class MyDbContext : DbContext
     {
-        public MyDbContext() : base("name=Fortune")
+        public MyDbContext() : base("Fortune")
 		{
 
         }
 
-		protected override void OnModelCreating(DbModelBuilder modelBuilder)
+		/*protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
 			throw new UnintentionalCodeFirstException();
-		}
+		}*/
 
-		public virtual DbSet<IMAGEN_ARTE> ImagenArte { get; set; }
-        public virtual DbSet<IMAGEN_ARTE_PNL> ImagenArtePnl { get; set; }
-		public virtual  DbSet<IMAGEN_ARTE_ESTILO> ImagenArteEstilo { get; set; }
-        public virtual DbSet<ARTE> Arte { get; set; }
-		public virtual DbSet<UPC> UPCs { get; set; }
+		public DbSet<IMAGEN_ARTE> ImagenArte { get; set; }
+        public DbSet<IMAGEN_ARTE_PNL> ImagenArtePnl { get; set; }
+		public DbSet<IMAGEN_ARTE_ESTILO> ImagenArteEstilo { get; set; }
+        public DbSet<ARTE> Arte { get; set; }
+		public DbSet<UPC> UPCs { get; set; }
 
 
 	}

@@ -393,60 +393,62 @@
             </div>
         } *@
             <div class="row">
-                <div class="col-sm-6 col-md-6">
+				<div class="col-sm-6 col-md-6">
+					@Html.LabelFor(model => model.Estilo, htmlAttributes: new { @class = "control-label col-md-2" })
+					@Html.EditorFor(model => model.Estilo, new { htmlAttributes = new { @class = "form-control ", @readonly = "readonly" } })
+					<br />
+					@if (Model.extensionArte == null || Model.extensionArte == "")
+					{
+						<div class="col-sm-6 col-md-9">
+							@Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-sm-5 col-md-5" })
+							<div class="file-upload col-sm-5 col-md-9">
+								<div class="file-select">
+									<div class="file-select-button" id="fileName">Browser File</div>
+									<div class="file-select-name" id="noFile">No file chosen...</div>
+									@Html.TextBoxFor(model => model.FileArte, new { type = "file", id = "chooseFile" })
 
-                    @if (Model.extensionArte == null || Model.extensionArte == "")
-                    {
-                        <div class="col-sm-6 col-md-9">
-                            @Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-sm-5 col-md-5" })
-                            <div class="file-upload col-sm-5 col-md-9">
-                                <div class="file-select">
-                                    <div class="file-select-button" id="fileName">Browser File</div>
-                                    <div class="file-select-name" id="noFile">No file chosen...</div>
-                                    @Html.TextBoxFor(model => model.FileArte, new { type = "file", id = "chooseFile" })
+								</div>
 
-                                </div>
+							</div>
+							<img id="imgSalida" width="70" height="70" />
+						</div>
+					}
+					else
+					{
+						<div class="col-sm-6 col-md-9">
+							@Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-sm-5 col-md-5" })
+							<div class="file-upload col-sm-5 col-md-9">
+								<div class="file-select">
+									<div class="file-select-button" id="fileName">Browser File</div>
+									<div class="file-select-name" id="noFile">No file chosen...</div>
+									@Html.TextBoxFor(model => model.FileArte, new { type = "file", id = "chooseFile" })
 
-                            </div>
-                            <img id="imgSalida" width="70" height="70" />
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="col-sm-6 col-md-9">
-                            @Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-sm-5 col-md-5" })
-                            <div class="file-upload col-sm-5 col-md-9">
-                                <div class="file-select">
-                                    <div class="file-select-button" id="fileName">Browser File</div>
-                                    <div class="file-select-name" id="noFile">No file chosen...</div>
-                                    @Html.TextBoxFor(model => model.FileArte, new { type = "file", id = "chooseFile" })
+								</div>
 
-                                </div>
+							</div>
+							<img id="imgSalida" width="70" height="70" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = Model.IdImgArte})" />
+						</div>
+						/*<div class="">
+							@Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-md-4" })
 
-                            </div>
-                            <img id="imgSalida" width="70" height="70" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = Model.IdImgArte})" />
-                        </div>
-                        /*<div class="">
-                            @Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-md-4" })
+							<img id="imgSalida" width="70" height="70" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = Model.IdImgArte})" />
+						</div>*/
 
-                            <img id="imgSalida" width="70" height="70" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = Model.IdImgArte})" />
-                        </div>*/
+					}
 
-                    }
+					<div class="col-sm-5 col-md-12">
+						<br />
+						<div class="col-sm-5 col-md-12">
 
-                    <div class="col-sm-5 col-md-12">
-                        <br />
-                        <div class="col-sm-5 col-md-12">
+							@Html.LabelFor(model => model.StatusArte, htmlAttributes: new { @class = "control-label " })
+							@Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.APPROVED, new { @class = "form-radio", @id = "EstatusApro", Checked = "checked" }) APPROVED
+							@Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.INHOUSE, new { @class = "form-radio", @id = "EstatusInhouse" }) IN HOUSE
+							@Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.REVIEWED, new { @class = "form-radio", @id = "EstatusRev" }) REVIEWED
+							@Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.PENDING, new { @class = "form-radio", @id = "EstatusPend" }) PENDING
 
-                            @Html.LabelFor(model => model.StatusArte, htmlAttributes: new { @class = "control-label " })
-                            @Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.APPROVED, new { @class = "form-radio", @id = "EstatusApro", Checked = "checked" }) APPROVED
-                            @Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.INHOUSE, new { @class = "form-radio", @id = "EstatusInhouse" }) IN HOUSE
-                            @Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.REVIEWED, new { @class = "form-radio", @id = "EstatusRev" }) REVIEWED
-                            @Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.PENDING, new { @class = "form-radio", @id = "EstatusPend" }) PENDING
-
-                        </div>
-                    </div>
-                </div>
+						</div>
+					</div>
+				</div>
                 <div class="col-sm-7 offset-sm-3 col-md-6 offset-md-0" >
                     <label class="control-label">TECHNICAL SPECIALTIES</label> <br />
                     @foreach (var item in (SelectList)ViewBag.listEspecialidad)

@@ -12,17 +12,15 @@ namespace FortuneSystem.Controllers
 {
     public class PNLController : Controller
     {
-        PedidosData objPedido = new PedidosData();
-        CatClienteData objCliente = new CatClienteData();
-        CatClienteFinalData objClienteFinal = new CatClienteFinalData();
-        CatTallaItemData objTalla = new CatTallaItemData();
-        PnlData objPnl = new PnlData();
-        PrintShopData objPrint = new PrintShopData();
+		readonly PedidosData objPedido = new PedidosData();
+		readonly CatClienteData objCliente = new CatClienteData();
+		readonly CatClienteFinalData objClienteFinal = new CatClienteFinalData();
+		readonly CatTallaItemData objTalla = new CatTallaItemData();
+		readonly PnlData objPnl = new PnlData();
         // GET: PNL
         public ActionResult Index()
-        {
-            List<OrdenesCompra> listaPedidos = new List<OrdenesCompra>();
-            listaPedidos = objPedido.ListaOrdenCompra().ToList();
+        {             
+			List<OrdenesCompra> listaPedidos = objPedido.ListaOrdenCompra().ToList();
             return View(listaPedidos);
         }
 
@@ -33,8 +31,12 @@ namespace FortuneSystem.Controllers
             {
                 return View();
             }
-
-            OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
+			int cargo = Convert.ToInt32(Session["idCargo"]);
+			if (cargo == 0)
+			{
+				Session["idCargo"] = 0;
+			}
+			OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
             pedido.CatCliente = objCliente.ConsultarListaClientes(pedido.Cliente);
             pedido.CatClienteFinal = objClienteFinal.ConsultarListaClientesFinal(pedido.ClienteFinal);
             pedido.IdPedido = Convert.ToInt32(id);
@@ -68,7 +70,7 @@ namespace FortuneSystem.Controllers
                 i++;
             }
 
-            i = i - 2;
+            i -= 2;
             for (int v = 0; v < i; v++)
             {
                 List<string> tallas = ListTalla[v].Split('*').ToList();
@@ -127,7 +129,7 @@ namespace FortuneSystem.Controllers
                 i++;
             }
 
-            i = i - 2;
+            i -= 2;
             for (int v = 0; v < i; v++)
             {
                 List<string> tallas = ListTalla[v].Split('*').ToList();

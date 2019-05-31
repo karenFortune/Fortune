@@ -11,16 +11,15 @@ namespace FortuneSystem.Controllers
 {
     public class PrintShopController : Controller
     {
-        PedidosData objPedido = new PedidosData();
-        CatClienteData objCliente = new CatClienteData();
-        CatClienteFinalData objClienteFinal = new CatClienteFinalData();
-        CatTallaItemData objTalla = new CatTallaItemData();
-        PrintShopData objPrint = new PrintShopData();
+		readonly PedidosData objPedido = new PedidosData();
+		readonly CatClienteData objCliente = new CatClienteData();
+		readonly CatClienteFinalData objClienteFinal = new CatClienteFinalData();
+		readonly CatTallaItemData objTalla = new CatTallaItemData();
+		readonly PrintShopData objPrint = new PrintShopData();
         // GET: PrintShop
         public ActionResult Index()
         {
-            List<OrdenesCompra> listaPedidos = new List<OrdenesCompra>();
-            listaPedidos = objPedido.ListaOrdenCompra().ToList();
+			List<OrdenesCompra>  listaPedidos = objPedido.ListaOrdenCompra().ToList();
             return View(listaPedidos);
         }
 
@@ -31,8 +30,13 @@ namespace FortuneSystem.Controllers
             {
                 return View();
             }
+			int cargo = Convert.ToInt32(Session["idCargo"]);
+			if (cargo == 0)
+			{
+				Session["idCargo"] = 0;
+			}
 
-            OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
+			OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
             pedido.CatCliente = objCliente.ConsultarListaClientes(pedido.Cliente);
             pedido.CatClienteFinal = objClienteFinal.ConsultarListaClientesFinal(pedido.ClienteFinal);
             pedido.IdPedido = Convert.ToInt32(id);
@@ -66,7 +70,7 @@ namespace FortuneSystem.Controllers
                 i++;
             }
 
-            i = i - 2;
+            i -= 2;
             for (int v = 0; v < i; v++)
             {
                 List<string> tallas = ListTalla[v].Split('*').ToList();
@@ -126,7 +130,7 @@ namespace FortuneSystem.Controllers
                 i++;
             }
 
-            i = i - 2;
+            i -= 2;
             for (int v = 0; v < i; v++)
             {
                 List<string> tallas = ListTalla[v].Split('*').ToList();
@@ -136,7 +140,6 @@ namespace FortuneSystem.Controllers
                 string defecto;
                 string repair;
                 int c = 0;
-
 
                 foreach (var item in tallas)
                 {
@@ -187,8 +190,7 @@ namespace FortuneSystem.Controllers
         [HttpPost]
         public JsonResult Lista_Tallas_Batch(int? id)
         {
-            List<PrintShopC> listaTallas = objPrint.ListaTallasBatchId(id).ToList();
-    
+            List<PrintShopC> listaTallas = objPrint.ListaTallasBatchId(id).ToList();    
             var result = Json(new { listaTalla = listaTallas });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -197,7 +199,6 @@ namespace FortuneSystem.Controllers
         public JsonResult Lista_Tallas_Por_Estilo(int? id)
         {
             List<PrintShopC> listaTallasEstilo = objPrint.ObtenerTallas(id).ToList();
-
             var result = Json(new { listaTalla = listaTallasEstilo });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -206,7 +207,6 @@ namespace FortuneSystem.Controllers
         public JsonResult Lista_Total_Tallas_Batch(int id)
         {
             List<int> listaTallas = objPrint.ListaTotalTallasBatchEstilo(id).ToList();
-
             var result = Json(new { listaTallaBatch = listaTallas });
             return Json(result, JsonRequestBehavior.AllowGet);
         }

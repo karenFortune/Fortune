@@ -368,8 +368,6 @@ C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csproj
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csproj.CopyComplete
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.dll
 C:\Users\karen\Source\Repos\Fortune\FortuneSystem\obj\Debug\FortuneSystem.pdb
-C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csprojAssemblyReference.cache
-C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csproj.CoreCompileInputs.cache
 C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\bin\ApplicationInsights.config
 C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\bin\FortuneSystem.dll.config
 C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\bin\FortuneSystem.dll
@@ -735,6 +733,8 @@ C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\bin\zxing.xml
 C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\bin\zxing.presentation.pdb
 C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\bin\zxing.presentation.xml
 C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csprojAssemblyReference.cache
+C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csproj.CoreCompileInputs.cache
 C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\obj\Debug\FortuneSystem.csproj.CopyComplete
 C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\obj\Debug\FortuneSystem.dll
 C:\Users\karen\Documents\FortuneResp\Fortune\FortuneSystem\obj\Debug\FortuneSystem.pdb

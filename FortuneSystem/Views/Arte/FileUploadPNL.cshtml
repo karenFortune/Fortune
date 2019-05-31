@@ -340,132 +340,133 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
+<div class="form-horizontal">
 
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.IdEstilo)
-        @Html.HiddenFor(model => model.IdImgArtePNL)
-        @Html.HiddenFor(model => model.IdSummary)
-        @Html.HiddenFor(model => model.DescripcionEstilo)
-
-
-        <!-- Modal -->
-        <div class="modal fade" id="ImageModal" tabindex="-1" role="dialog" aria-labelledby="ImageModal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="myModalLabel">ART</h4>
-                    </div>
-                    <div class="modal-body">
-                        <img class="enlargeImageModalSource center" style="width: 50%;">
-                    </div> 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btnClose">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid" style="padding-left:3em; padding-right:3em;">
-            <div class="row">
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Tienda, htmlAttributes: new { @class = "control-label col-md-2" })
-                    @Html.EditorFor(model => model.Tienda, new { htmlAttributes = new { @class = "form-control ", @readonly = "readonly" } })
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Estilo, htmlAttributes: new { @class = "control-label col-md-2" })
-                    @Html.EditorFor(model => model.Estilo, new { htmlAttributes = new { @class = "form-control ", @readonly = "readonly" } })
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group">
-                    <div class="col-sm-1">
-                    </div>
-
-                    @if (Model.ExtensionPNL == null || Model.ExtensionPNL == "")
-                    {
-                        <div class="col-sm-5">
-                            @Html.LabelFor(model => model.imgPNL, htmlAttributes: new { @class = "control-label col-md-4" })
-                            <div class="file-upload col-md-9">
-                                <div class="file-select">
-                                    <div class="file-select-button" id="fileName">Browser File</div>
-                                    <div class="file-select-name" id="noFile">No file chosen...</div>
-                                    @Html.TextBoxFor(model => model.FilePNL, new { type = "file", id = "chooseFile" })
-
-                                </div>
-
-                            </div>
-                            <img id="imgSalida" width="90" height="90" />
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="col-sm-5">
-                            @Html.LabelFor(model => model.imgPNL, htmlAttributes: new { @class = "control-label col-md-4" })
-
-                            <img id="imgSalida" width="200" height="200" src="@Url.Action("ConvertirImagenArtePNL", "Arte", new {extensionPnl = Model.ExtensionPNL})" />
-                        </div>
+	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+	@Html.HiddenFor(model => model.IdEstilo)
+	@Html.HiddenFor(model => model.IdImgArtePNL)
+	@Html.HiddenFor(model => model.IdSummary)
+	@Html.HiddenFor(model => model.DescripcionEstilo)
 
 
-                    }
-                    <div class="col-md-10">
-                        <br />
-                        <div class="col-md-10">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            @Html.LabelFor(model => model.StatusPNL, htmlAttributes: new { @class = "control-label " })
-                            @Html.RadioButtonFor(model => model.EstadosPNL, EstatusImgPNL.APPROVED, new { @class = "form-radio-pnl", Checked = "checked" }) APPROVED
-                            @Html.RadioButtonFor(model => model.EstadosPNL, EstatusImgPNL.INHOUSE, new { @class = "form-radio-pnl" }) IN HOUSE
-                            @Html.RadioButtonFor(model => model.EstadosPNL, EstatusImgPNL.REVIEWED, new { @class = "form-radio-pnl" }) REVIEWED
-                            @Html.RadioButtonFor(model => model.EstadosPNL, EstatusImgPNL.PENDING, new { @class = "form-radio-pnl" }) PENDING
+
+	<!-- Modal -->
+	<div class="modal fade" id="ImageModal" tabindex="-1" role="dialog" aria-labelledby="ImageModal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">ART</h4>
+				</div>
+				<div class="modal-body">
+					<img class="enlargeImageModalSource center" style="width: 50%;">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary btnClose">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid" style="padding-left:3em; padding-right:3em;">
+		<div class="row">
+			<div class="form-group">
+				@Html.LabelFor(model => model.Tienda, htmlAttributes: new { @class = "control-label col-md-2" })
+				@Html.EditorFor(model => model.Tienda, new { htmlAttributes = new { @class = "form-control ", @readonly = "readonly" } })
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(model => model.Estilo, htmlAttributes: new { @class = "control-label col-md-2" })
+				@Html.EditorFor(model => model.Estilo, new { htmlAttributes = new { @class = "form-control ", @readonly = "readonly" } })
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group">
+				<div class="col-sm-1">
+				</div>
+
+				@if (Model.ExtensionPNL == null || Model.ExtensionPNL == "")
+				{
+					<div class="col-sm-5">
+						@Html.LabelFor(model => model.imgPNL, htmlAttributes: new { @class = "control-label col-md-4" })
+						<div class="file-upload col-md-9">
+							<div class="file-select">
+								<div class="file-select-button" id="fileName">Browser File</div>
+								<div class="file-select-name" id="noFile">No file chosen...</div>
+								@Html.TextBoxFor(model => model.FilePNL, new { type = "file", id = "chooseFile" })
+
+							</div>
+
+						</div>
+						<img id="imgSalida" width="90" height="90" />
+					</div>
+				}
+				else
+				{
+					<div class="col-sm-5">
+						@Html.LabelFor(model => model.imgPNL, htmlAttributes: new { @class = "control-label col-md-4" })
+
+						<img id="imgSalida" width="200" height="200" src="@Url.Action("ConvertirImagenArtePNL", "Arte", new {extensionPnl = Model.ExtensionPNL})" />
+					</div>
 
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <hr />
-            @if (Model.ResultadoK.Count != 0 || Model.ResultadoW.Count != 0)
-            {
-
-                <div class="form-group">
-                    <div class="container-fluid">
-                        <h2 style="text-align:center">UPC</h2>
-                        <div id="listaTalla"></div>
-                        <div id="botonUPC" style="visibility:hidden;">
-                            <button type="button" id="nuevoUPC" class="btn btn-success btn-md pull-right btn-sm">Save UPC</button>
-                        </div>
-                        <br />
-                        <br />
-                    </div>
-
-                </div>
-
-            }
-            else
-            {
-                <div class="form-group">
-                    <div class="container-fluid">
-                        <h2 style="text-align:center">SIZE DETAIL</h2>
-                        <div id="detalleTallas"></div>
-                        <br />
-                        <br />
-                    </div>
-
-                </div>
-            }
-            <hr />
-            @if (Model.ExtensionPNL == null || Model.ExtensionPNL == "")
-            {
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10" style=" margin-left: 40%;">
-                        <input type="submit" value="Save" id="btnRegister" class="btn btn-success" />
-                    </div>
-                </div>
-            }
+				}
+				<div class="col-md-10">
+					<br />
+					<div class="col-md-10">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						@Html.LabelFor(model => model.StatusPNL, htmlAttributes: new { @class = "control-label " })
+						@Html.RadioButtonFor(model => model.EstadosPNL, EstatusImgPNL.APPROVED, new { @class = "form-radio-pnl", Checked = "checked" }) APPROVED
+						@Html.RadioButtonFor(model => model.EstadosPNL, EstatusImgPNL.INHOUSE, new { @class = "form-radio-pnl" }) IN HOUSE
+						@Html.RadioButtonFor(model => model.EstadosPNL, EstatusImgPNL.REVIEWED, new { @class = "form-radio-pnl" }) REVIEWED
+						@Html.RadioButtonFor(model => model.EstadosPNL, EstatusImgPNL.PENDING, new { @class = "form-radio-pnl" }) PENDING
 
 
-        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr />
+		@if (Model.ResultadoK.Count != 0 || Model.ResultadoW.Count != 0)
+		{
 
-    </div>
+			<div class="form-group">
+				<div class="container-fluid">
+					<h2 style="text-align:center">UPC</h2>
+					<div id="listaTalla"></div>
+					<div id="botonUPC" style="visibility:hidden;">
+						<button type="button" id="nuevoUPC" class="btn btn-success btn-md pull-right btn-sm">Save UPC</button>
+					</div>
+					<br />
+					<br />
+				</div>
+
+			</div>
+
+		}
+		else
+		{
+			<div class="form-group">
+				<div class="container-fluid">
+					<h2 style="text-align:center">SIZE DETAIL</h2>
+					<div id="detalleTallas"></div>
+					<br />
+					<br />
+				</div>
+
+			</div>
+		}
+		<hr />
+		@if (Model.ExtensionPNL == null || Model.ExtensionPNL == "")
+		{
+			<div class="form-group">
+				<div class="col-md-offset-2 col-md-10" style=" margin-left: 40%;">
+					<input type="submit" value="Save" id="btnRegister" class="btn btn-success" />
+				</div>
+			</div>
+		}
+
+
+	</div>
+
+</div>
 }
 
 

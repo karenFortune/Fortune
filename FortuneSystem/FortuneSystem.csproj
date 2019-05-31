@@ -5751,6 +5751,7 @@
     <Content Include="Scripts\general\dataGeneralWIP.js" />
     <Content Include="Scripts\general\dataSourceWIP.js" />
     <Content Include="Scripts\general\dataWIP.js" />
+    <Content Include="Scripts\general\desplazGeneral.js" />
     <Content Include="Scripts\general\obtenerListadoPacking.js" />
     <Content Include="Scripts\general\obtenerListadoPackingAssort.js" />
     <Content Include="Scripts\general\obtenerListadoPackingHT.js" />
