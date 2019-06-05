@@ -293,6 +293,7 @@ function ActualizarPiezasPackingBulk(index) {
 
 
 function obtTotalCartones(index) {
+	
     var error = 0;
     var valorCalidad = $(".calidad").parent("tr").find("td").eq(index).text();
     var input = $(".totalPiezas");
@@ -307,8 +308,14 @@ function obtTotalCartones(index) {
     var tCajas = Math.floor(tot);
     var mult = tCajas * 50;
     var result = numCajas - mult;
-    var descripcion = tCajas + "ctnx50" + "1x" + result;
-    var numCartones = tCajas + 1;
+	var descripcion = tCajas + "ctnx50" + "1x" + result;
+	var numCartones = 0;
+	if (numCajas !== "0") {
+		numCartones = tCajas + 1;
+	} else {
+		numCartones = tCajas;
+	}
+    
     $(nombreT).val(tCajas);
     $(nombrePart).val(result);
     $(tcartones).val(numCartones);
@@ -397,7 +404,7 @@ function obtTotalPiezas(numBoxPPK) {
 
 function obtTotalPiezasRatioAssort() {
     var error = 0;
-    var numFilas = $("#tablaTallasAssort tbody>tr").length;
+    var numFilas = $("#tablaTallasAssortReg tbody>tr").length;
     for (var i = 0; i <= numFilas; i++) {
         var nombreT = "#pallet" + i + " .ratPieces";
         var nombreC = "#pallet" + i + " .tcart";

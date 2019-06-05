@@ -113,7 +113,8 @@ function obtenerListaTallas(EstiloId) {
 			var listaPO = jsonData.Data.lista;
 			var listaQty = jsonData.Data.listaT;
             var listaPBulk = jsonData.Data.listaPTBulk;
-            var listaEPPK = jsonData.Data.listaEmpPPK;
+			var listaEPPK = jsonData.Data.listaEmpPPK;
+			var listaEmpBulk = jsonData.Data.listaEmpBulk;
             var listaPPPK = jsonData.Data.listaPTPPK;
             var listaTCajas = jsonData.Data.listaTotalCajasPack;
             //var listaTCajas = jsonData.Data.listaCajasT;
@@ -162,7 +163,7 @@ function obtenerListaTallas(EstiloId) {
                 var cantidades_array = cadena_cantidades.split('*');
                 html += '<td>' + cantidades + '</td>';
 
-            var cantidadesEmpBulk = 0;
+           /* var cantidadesEmpBulk = 0;
             html += '</tr><tr><td width="30%">Bulk - #Pieces</td>';
             var listaTBatchBulk = 0;
             $.each(listaTCajas, function (key, item) {
@@ -200,14 +201,34 @@ function obtenerListaTallas(EstiloId) {
                 }                  
                 cantidades_PBulk += "*" + item;
             });
-            var cantidades_array_pbulk = cantidades_PBulk.split('*');
+            var cantidades_array_pbulk = cantidades_PBulk.split('*');*/
            
             var total = 0;            
-            var cantidadesEmpPPK = 0;
-            var listaTallasPPK = listaEPPK.lenght;
-            var totalTallas = 0;
-            
+			var cantidadesEmpPPK = 0;
+			var cantidadesEmpBulkT = 0;
+			var listaTallasPPK = listaEPPK.lenght;
+			var listaTallasBulk = listaEmpBulk.lenght;
+			var totalTallas = 0;
 			var cont = 0;
+			$.each(listaEmpBulk, function (key, item) {
+				cont = cont + 1;
+				html += '</tr><tr><td width="30%">BULK #PCS- PO#' + item.NumberPO + '</td>';
+
+				$.each(item.ListaEmpaque, function (key, i) {
+					html += '<td>' + i.Cantidad + '</td>';
+					cantidadesEmpBulkT += i.Cantidad;
+				});
+				//html += '<td>' + cantidadesEmpPPK + '</td>';
+
+				html += '</tr><tr id="empaque" class="empaque"><td width="30%">Packed</td>';
+				$.each(item.ListaEmpaque, function (key, i) {
+
+					html += '<td class="qtyPPK">' + i.TotalBulk + '</td>';
+
+				});
+				
+			});
+			
 		
             $.each(listaEPPK, function (key, item) {
                 cont = cont + 1;
@@ -225,8 +246,10 @@ function obtenerListaTallas(EstiloId) {
 					html += '<td class="qtyPPK">' + i.TotalRatio + '</td>';
 					
                 });
-                html += '</tr>';
-            });
+				html += '</tr>';
+			});
+
+		
 
             html += '<tr><td width="30%">+/-</td>';
             var totales = 0;
@@ -371,7 +394,7 @@ function obtenerListaTallas(EstiloId) {
 					if (listaPBulk.length !== 0) {
 						$("#btnNext").prop("disabled", false);
 					} else {
-						$("#btnNext").prop("disabled", true);
+						$("#btnNext").prop("disabled", true);						
 					}
 					$("#consultaTallaHT").css('height', '1800px');
 					TallasEmpaqueBulkHT(EstiloId);					
@@ -400,6 +423,8 @@ function obtenerListaTallas(EstiloId) {
 					$("#div_titulo_Bulk").css("display", "none");
 					$("#opciones").css("display", "none");		
 					$("#panelNoEstilosHT").css('display', 'none');
+					$("#tablaTallasBulkHT").hide();
+					$("#tablaTallasPPKHT").hide();
 					obtener_bacth_estilo(estiloId);
 				} else {
 					$("#grupoBotones").hide();
@@ -426,7 +451,8 @@ function obtenerListaTallas(EstiloId) {
 }
 
 function TallasEmpaqueBulkHT(idEst) {
-    var actionData = "{'idEst':'" + idEst + "'}";
+	var actionData = "{'idEst':'" + idEst + "'}";
+	$("#tablaTallasPPKHT").hide();
     $.ajax({
         url: "/Packing/Lista_Tallas_Empaque_HT_Registrar_Por_Estilo/",
         type: 'POST',
@@ -437,7 +463,8 @@ function TallasEmpaqueBulkHT(idEst) {
             var listaT = jsonData.Data.listaTalla;
             var listaPO = jsonData.Data.lista;
             var listaPacking = jsonData.Data.listaPackingS;
-            var html = '';
+			var html = '';
+			var htmlB = '';
             $("#btnAddP").show();           
             $('#btnNuevoPPK').hide();
                 $("#btnNuevo").prop("disabled", true);               
@@ -452,14 +479,14 @@ function TallasEmpaqueBulkHT(idEst) {
                 $("#div_titulo_Register").css("display", "none");
                 $("#opcionesRegistro").css("display", "none");                          
             
-                html += '<table class="table" id="tablaTallasBulkHT"><thead>';
+             /*   html += '<table class="table" id="tablaTallasBulkHT"><thead>';
                 html += '<tr><th>Size</th>' +
                     ' <th>QTY#</th>' +
                     ' <th>CARTONS 50PCS#</th>' +
                     ' <th>PARTIAL#</th>' +
                     ' <th>TOTALCARTONS#</th>' +
                     '</tr>' +
-                '</thead><tbody>';
+                '</thead><tbody class="packBulkReg">';*/
             var cont = 0;
             $.each(listaPO, function (key, item) {
                     cont = cont + 1;
@@ -472,10 +499,11 @@ function TallasEmpaqueBulkHT(idEst) {
                    // html += '<td width="250"><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
                     html += '</tr>';
                 });
-                html += '</tbody> </table>';    
-                html += '<button type="button" id="nuevoEmpaqueBulkHT" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save</button>';               
-                $('#listaTallaPHT').html(html);
-            
+			//html += '</tbody> </table>'; 
+			$('.packBulkReg').html(html);
+                htmlB += '<button type="button" id="nuevoEmpaqueBulkHT" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save</button>';               
+                $('#listaTallaPHT').html(htmlB);
+		
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -484,10 +512,14 @@ function TallasEmpaqueBulkHT(idEst) {
     });
 }
 var cadenaCantidad = ""; 
+var numTotalCartones;
 function RegistrarEmpaqueBulkHT(nPO, tEmpaque) {
     if (nPO === "" || nPO === null) {
         nPO = 0;
-    }
+	}
+	$("#tablaTallasBulkHT").hide();
+	$("#tablaTallasPPKHT").hide();
+	
     var actionData = "{'estiloId':'" + estiloId + "','nPO':'" + nPO + "','tEmpaque':'" + tEmpaque + "'}";
     $.ajax({
         url: "/Packing/Lista_Tallas_Empaque_HT_Por_Estilo/",
@@ -504,7 +536,8 @@ function RegistrarEmpaqueBulkHT(nPO, tEmpaque) {
 
             html += '<table class="table" id="tablaTallasPalletHT"><thead>';
             html += '<tr><th>Size</th>' +
-                ' <th>Box#</th>' +
+				' <th>Box#</th>' +
+				' <th>PIECES#</th>' +
                 ' <th>QTY</th>' +
 				' <th>TOTALCARTONS#</th>' +
 				' <th>CARTONSFALTANTES#</th>' +
@@ -528,6 +561,8 @@ function RegistrarEmpaqueBulkHT(nPO, tEmpaque) {
                 var i = 0;
 				var cont = 0;
 				var valorTempCaja = 0;
+				var totalPiezas = 0;
+				numTotalCartones = cartonsTemp;
             $.each(listaPackingBox, function (key, item) {
                     i++;
                 if (tallaTemp === item.Talla) {
@@ -537,16 +572,23 @@ function RegistrarEmpaqueBulkHT(nPO, tEmpaque) {
                     } 
                    
                 } else {
-                    cadenaCantidad += cajaTemp + "*";
+					cadenaCantidad += cajaTemp + "*";
                     cont = cont + 1;
                     html += '<tr id="pallet' + cont + '" class="pallet">';
 					html += '<td width="20%"><input type="text" id="f-talla" class="form-control talla" value="' + tallaTemp + '" readonly/></td>';
-					if (cajaTemp === 0 || cajaTemp < cartonsTemp) {
+					if (cajaTemp < cartonsTemp) {
 						var resulCajas = cartonsTemp - cajaTemp;
 						html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " onkeyup="obtTotalCartonesBulkHT(' + cont + ')"  value="' + 0 + '"  /></td>';
 					} else {						
                         html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " value="' + cajaTemp+ '"  readonly/></td>';
-                    }
+					}
+					if (cajaTemp === cartonsTemp) {
+						totalPiezas = cantTemp;
+						html += '<td width="20%"><input type="text" name="l-cantidadPcs" id="l-cantidadPcs" class="form-control numeric qtyPcs " value="' + totalPiezas + '"  readonly/></td>';
+					} else {
+						html += '<td width="20%"><input type="text" name="l-cantidadPcs" id="l-cantidadPcs" class="form-control numeric qtyPcs " value="' + 0 + '"  /></td>';
+					}
+					
                     html += '<td width="20%"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control numeric qtyBox " value="' + cantTemp + '"  readonly/></td>';
 					html += '<td width="20%"><input type="text" name="l-cartons" id="l-cartons" class="form-control numeric cartones " value="' + cartonsTemp + '"  readonly/></td>';
 					if (cajaTemp === 0) {
@@ -568,12 +610,18 @@ function RegistrarEmpaqueBulkHT(nPO, tEmpaque) {
                     cadenaCantidad += cajaTemp + "*";
 					html += '<tr id="pallet' + cont + '" class="pallet">';
                     html += '<td width="20%"><input type="text" id="f-talla" class="form-control talla" value="' + tallaTemp + '" readonly/></td>';
-					if (cajaTemp === 0 || cajaTemp < cartonsTemp) {
+					if (cajaTemp < cartonsTemp) {
 						var resulCaja = cartonsTemp - cajaTemp;
 						html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " onkeyup="obtTotalCartonesBulkHT(' + cont + ')" value="' + 0 + '"  /></td>';
                     } else {
-						html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " value="' + 0 + '"  readonly/></td>';
-                    }
+						html += '<td width="20%" class="bCajas"><input type="text" name="l-cajas" id="l-cajas" class="form-control numeric caja " value="' + cajaTemp + '"  readonly/></td>';
+					}
+					if (cajaTemp === cartonsTemp) {
+						totalPiezas = cantTemp;
+						html += '<td width="20%"><input type="text" name="l-cantidadPcs" id="l-cantidadPcs" class="form-control numeric qtyPcs " value="' + totalPiezas + '"  readonly/></td>';
+					} else {
+						html += '<td width="20%"><input type="text" name="l-cantidadPcs" id="l-cantidadPcs" class="form-control numeric qtyPcs " value="' + 0 + '"  /></td>';
+					}
                     html += '<td width="20%"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control numeric qtyBox " value="' + cantTemp + '"  readonly/></td>';
 					html += '<td width="20%"><input type="text" name="l-cartons" id="l-cartons" class="form-control numeric cartones " value="' + cartonsTemp + '"  readonly/></td>';
 					if (cajaTemp === 0) {
@@ -603,6 +651,7 @@ $(document).on("keyup", "input.cantCajas", function () {
 });
 var cadenaCantidadPPK = "";
 function RegistrarEmpaquePPKHT(nPO, tEmpaque) {
+	$("#tablaTallasBulkHT").hide();
     if (nPO === "" || nPO === null) {
         nPO = 0;
     } 
@@ -889,6 +938,8 @@ $(document).on("click", "#btnNewP", function () {
 });
 
 function TallasEmpaquePPKHT(idEst) {
+	$("#tablaTallasBulkHT").hide();
+	$("#tablaTallasPPKHT").show();
     var actionData = "{'idEst':'" + idEst + "'}";
     $.ajax({
         url: "/Packing/Lista_Tallas_Empaque_HT_Registrar_Por_Estilo/",
@@ -900,7 +951,8 @@ function TallasEmpaquePPKHT(idEst) {
             var listaT = jsonData.Data.listaTalla;
             var listaPO = jsonData.Data.lista;
             var listaPacking = jsonData.Data.listaPackingS;
-            var html = '';
+			var html = '';
+			var htmlB = '';
                 $("#btnAddP").show();
                 $("#btnNuevoPPK").show();
                 $("#btnNuevo").hide();
@@ -919,11 +971,11 @@ function TallasEmpaquePPKHT(idEst) {
                 $("#div_titulo_Bulk").html("<h3>REGISTRATION OF TYPE OF PACKAGING - PPK</h3>");
                 $("#div_titulo_Bulk").css("display", "inline"); 
 
-                html += '<table class="table" id="tablaTallasPPKHT"><thead>';
+            /*    html += '<table class="table" id="tablaTallasPPKHT"><thead>';tablaTallasPPKHT
                 html += '<tr><th>Size</th>' +
                     ' <th>Ratio</th>' +
                     '</tr>' +
-                    '</thead><tbody class="tbodyHTPack">';
+                    '</thead><tbody class="tbodyHTPack">';*/
                 $.each(listaPO, function (key, item) {
                     html += '<tr>';
                     html += '<td width="250"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '" readonly/></td>';
@@ -931,9 +983,10 @@ function TallasEmpaquePPKHT(idEst) {
                   //  html += '<td width="250"><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
                     html += '</tr>';
                 });
-                html += '</tbody> </table>';
-                html += '<button type="button" id="nuevoEmpaquePPKHT" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>Save</button>';
-                $('#listaTallaPHT').html(html);
+			//html += '</tbody> </table>';
+			$('.packPPKReg').html(html);
+                htmlB += '<button type="button" id="nuevoEmpaquePPKHT" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>Save</button>';
+                $('#listaTallaPHT').html(htmlB);
         },
         error: function (errormessage) {
             alert(errormessage.responseText);
@@ -1074,9 +1127,10 @@ $(document).on('change', '#numeroPOHT', function () {
     var npo = $("#numeroPOHT").val();
     if (npo === "") {
         npo = 0;
-    }
+	}
+
     var tEmpaque = $("#TipoEmp option:selected").val();
-    if (tEmpaque === "1") {
+	if (tEmpaque === "1") {		
         RegistrarEmpaqueBulkHT(npo, tEmpaque);
     } else if (tEmpaque === "2") {         
         RegistrarEmpaquePPKHT(npo, tEmpaque);
@@ -1121,7 +1175,7 @@ function obtenerPalletBulkHT() {
         $(this).find("input").each(function () {
             $(this).closest('td').find("input").each(function () {
                 if (c === 1) {
-                    if (cantidades[x] === "0") {
+					if (cantidades[x] === "0" || cantidades[x] < numTotalCartones) {
                         cadena[c] += this.value + "*";
                     } else {
                         cadena[c] += 0 + "*";
@@ -1203,7 +1257,8 @@ function enviarListaTallaPalletHT(cadena, error) {
         var alert = alertify.alert("Message", 'All fields are required.').set('label', 'Aceptar');
         alert.set({ transition: 'zoom' });
         alert.set('modal', false);
-    } else {
+	} else {
+		$("#guardarBulkHT").prop("disabled", true);
         $.ajax({
             url: "/Packing/Obtener_Lista_Tallas_Packing_HT_Pallet",
             datatType: 'json',

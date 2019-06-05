@@ -5,7 +5,7 @@
         '<td width="250"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control numeric numCantTall"  /></td>' +
         '<td width="250"><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
         '</tr>';
-    $('#tablaTallasPPK').append(tallasdiv);
+	$('#tablaTallasPPKRatio').append(tallasdiv);
 });
 
 $(document).on("click", ".classAdd", function () {
@@ -15,7 +15,7 @@ $(document).on("click", ".classAdd", function () {
         '<td width="250"><input type="text" name="l-cantidad" id="l-cantidad" class="form-control numeric numCantTall"  /></td>' +
         '<td width="250"><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
         '</tr>';
-    $('#tablaTallasBulk').append(tallasdiv);
+	$('#tablaTallasBulkPcs').append(tallasdiv);
 });
 
 $(document).on("click", ".deleteTalla", function () {

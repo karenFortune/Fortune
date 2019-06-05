@@ -603,8 +603,51 @@ namespace FortuneSystem.Models.Packing
             return listTallas;
         }
 
-        //Muestra de Packing Type Size por estilo
-        public List<PackingTypeSize> ObtenerCajasPackingPorEstilo(int? id, int idBatch)
+
+		//Muestra la lista de tallas de Batch por estilo
+		public IEnumerable<PackingTypeSize> ObtenerListaPackingBulkPONumber(int? id)
+		{
+			Conexion conn = new Conexion();
+			List<PackingTypeSize> listTallas = new List<PackingTypeSize>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "select DISTINCT(number_po) from packing_type_size where ID_SUMMARY= '" + id + "' and type_packing = 1";
+				leer = comando.ExecuteReader();
+				while (leer.Read())
+				{
+					PackingTypeSize tallas = new PackingTypeSize()
+					{
+
+						NumberPO = Convert.ToInt32(leer["number_po"])
+					};
+
+					tallas.ListaEmpaque = ListaTallasNumeroPOBulk(tallas.NumberPO, id);
+					foreach (var item in tallas.ListaEmpaque)
+					{
+						tallas.NumberPO = item.NumberPO;
+						tallas.Talla = item.Talla;
+						tallas.IdTalla = item.IdTalla;
+						tallas.Cantidad = item.Cantidad;
+						tallas.TotalBulk = item.TotalBulk;
+
+					}
+					listTallas.Add(tallas);
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+			}
+
+			return listTallas;
+		}
+
+		//Muestra de Packing Type Size por estilo
+		public List<PackingTypeSize> ObtenerCajasPackingPorEstilo(int? id, int idBatch)
         {
             Conexion conn = new Conexion();
             List<PackingTypeSize> listTallas = new List<PackingTypeSize>();
@@ -963,7 +1006,7 @@ namespace FortuneSystem.Models.Packing
 					    CantidadP = Convert.ToInt32(leer["QTY"])
 
 					};
-					int suma = tallas.TotalPiezas + tallas.CantidadP;
+					int suma = tallas.TotalPiezas /*+ tallas.CantidadP*/;
 					PackingM result = listTallas.Find(x => x.IdTalla == tallas.IdTalla);
 					if (result == null)
 					{
@@ -976,7 +1019,8 @@ namespace FortuneSystem.Models.Packing
 					{
 						if (result.IdTalla == tallas.IdTalla)
 						{
-							result.SumaTotalBatch += suma;
+							result.SumaTotalBatch += suma;					
+							
 						}
 					}
 					
@@ -1357,7 +1401,7 @@ namespace FortuneSystem.Models.Packing
                 SqlCommand com = new SqlCommand();
                 SqlDataReader leerF = null;
                 com.Connection = conex.AbrirConexion();
-                com.CommandText = "SELECT P.CANT_BOX, PZ.QTY  FROM PACKING P, PACKING_TYPE_SIZE PZ WHERE P.ID_SUMMARY='" + idEstilo + "' " +
+                com.CommandText = "SELECT P.CANT_BOX, PZ.QTY, P.TOTAL_PIECES  FROM PACKING P, PACKING_TYPE_SIZE PZ WHERE P.ID_SUMMARY='" + idEstilo + "' " +
                                   "AND P.ID_TALLA='" + idTalla + "' AND PZ.ID_PACKING_TYPE_SIZE=P.ID_PACKING_TYPE_SIZE ";
                 leerF = com.ExecuteReader();
                 while (leerF.Read())
@@ -1365,8 +1409,9 @@ namespace FortuneSystem.Models.Packing
                     int cajas= Convert.ToInt32(leerF["CANT_BOX"]);
                     if (cajas != 0)
                     {
-                        suma += Convert.ToInt32(leerF["QTY"]);
-                    }                  
+						// suma += Convert.ToInt32(leerF["QTY"]);
+						suma += Convert.ToInt32(leerF["TOTAL_PIECES"]);
+					}                  
 
                 }
                 leerF.Close();
@@ -2008,8 +2053,51 @@ namespace FortuneSystem.Models.Packing
 
             return listTallas;
         }
-        //Muestra la lista de piezas por tallas de estilo
-        public List<PackingTypeSize> ListaTotalPiezasTallasAssortPorEstilo(int? idEstilo)
+
+		//Muestra la lista de tallas por Numero PO
+		public List<PackingTypeSize> ListaTallasNumeroPOBulk(int? numeroPO, int? idEstilo)
+		{
+			Conexion conex = new Conexion();
+			List<PackingTypeSize> listTallas = new List<PackingTypeSize>();
+			try
+			{
+				SqlCommand c = new SqlCommand();
+				SqlDataReader leerF = null;
+				c.Connection = conex.AbrirConexion();
+				c.CommandText = "select id_packing_type_size, id_talla, s.talla, qty from packing_type_size " +
+								"INNER JOIN CAT_ITEM_SIZE S ON S.ID = ID_TALLA  " +
+								"WHERE ID_SUMMARY='" + idEstilo + "' AND number_po='" + numeroPO + "' and type_packing=1 " +
+								"ORDER by cast(S.ORDEN AS int) ASC ";
+				leerF = c.ExecuteReader();
+
+				while (leerF.Read())
+				{
+					PackingTypeSize tallas = new PackingTypeSize()
+					{
+						IdPackingTypeSize = Convert.ToInt32(leerF["id_packing_type_size"]),
+						IdTalla = Convert.ToInt32(leerF["ID_TALLA"]),
+						Talla = leerF["TALLA"].ToString(),
+						Cantidad = Convert.ToInt32(leerF["QTY"]),
+						NumberPO = Convert.ToInt32(numeroPO)
+					};
+
+					tallas.TotalBulk = SumaTotalPiezasPPKTalla(idEstilo, tallas.IdTalla, numeroPO, 1);
+
+					listTallas.Add(tallas);
+				}
+				leerF.Close();
+			}
+			catch (Exception)
+			{
+				conex.CerrarConexion();
+				conex.Dispose();
+			}
+
+			return listTallas;
+		}
+
+		//Muestra la lista de piezas por tallas de estilo
+		public List<PackingTypeSize> ListaTotalPiezasTallasAssortPorEstilo(int? idEstilo)
         {
             Conexion conex = new Conexion();
             List<PackingTypeSize> listTotalPiezas = new List<PackingTypeSize>();

@@ -46,13 +46,14 @@ $(document).on("click", "#btnAssort", function () {
                         $("#loading").css('display', 'inline');
                         $("#packBPPK").hide();
                         $("#packAssort").show();
-                        $('#agregarNuevoPack').show();
+						$('#agregarNuevoPack').show();
+						$("#tablaTallasAssortReg").hide();
                         $("#div_titulo_Registro").css('display', 'inline');
                         $("#opcionesAssort").css('display', 'none');
                         $("#opcionesPAssort").css('display', 'inline');
                         $("#regAssort").css('display', 'none');
                         $("#consultaTalla").css('height', '1040px');
-                        $("#consultaTalla").css('width', '121%');
+                        $("#consultaTalla").css('width', '115%');
                         $("#consultaTalla").css("visibility", "visible");
                         $("#nuevoPalletAssort").hide();
                         $("#opcionesRegPallet").css('display', 'none');
@@ -121,7 +122,8 @@ function ConfirmEmpaqueAssort() {
         $('#Packing_PackingTypeSize_PackingName').hide();
         $('label[for="Packing_PackingTypeSize_AssortName"]').hide();
         $('#Packing_PackingTypeSize_AssortName').hide();
-        $("#div_titulo_Assort").hide();
+		$("#div_titulo_Assort").hide();
+		$("#tablaTallasAssortReg").hide();
         $('label[for="Packing_PackingTypeSize_Cantidad"]').hide();
         $("#Packing_PackingTypeSize_Cantidad").hide();
         $('label[for="Packing_PackingTypeSize_Cartones"]').hide();
@@ -175,7 +177,8 @@ function ConfirmNewAssort() {
                 $("#regAssort").css('display', 'none');
                 $("#opcionesRegPallet").css('display', 'none');
                 $("#div_titulo_Register_pallet").css('display', 'none'); 
-                $("#nuevoPalletAssort").hide(); 
+				$("#nuevoPalletAssort").hide(); 
+				$("#tablaTallasAssortReg").show(); 
                 $('label[for="Packing_PackingTypeSize_Cantidad"]').show();
                 $("#Packing_PackingTypeSize_Cantidad").show();
                 $("#Packing_PackingTypeSize_Cantidad").val(0);
@@ -184,7 +187,8 @@ function ConfirmNewAssort() {
                 $("#Packing_PackingTypeSize_Cartones").val(0);
                 $('label[for="Packing_PackingTypeSize_TotalUnits"]').show();
                 $("#Packing_PackingTypeSize_TotalUnits").show();
-                $("#Packing_PackingTypeSize_TotalUnits").val(0);
+				$("#Packing_PackingTypeSize_TotalUnits").val(0);
+
                 limpiarRegisAssort();
             },
             error: function (errormessage) {
@@ -225,7 +229,7 @@ function ActualizarSelectPackingName() {
 
 
 function limpiarFormaAssort() {
-    $('#tablaTallasAssort tbody>tr').each(function () {
+    $('#tablaTallasAssortReg tbody>tr').each(function () {
         $(this).find("input.rat").each(function () {
             $(this).closest('td').find("input.rat").each(function () {
                 var valor = $(this).val(0);
@@ -243,7 +247,7 @@ function limpiarFormaAssort() {
 }
 
 function limpiarRegisAssort() {
-    $('#tablaTallasAssort tbody>tr').each(function () {
+    $('#tablaTallasAssortReg tbody>tr').each(function () {
         $(this).find("input.rat").each(function () {
             $(this).closest('td').find("input.rat").each(function () {
                 var valor = $(this).val(0);
@@ -277,7 +281,8 @@ $(function () {
 
     $('#selectPackingName').change(function () {
         $("#Packing_PackingAssort_CantCartons").css('border', '1px solid #cccccc');
-        $('#Packing_PackingAssort_Turnos').css('border', '1px solid #cccccc');
+		$('#Packing_PackingAssort_Turnos').css('border', '1px solid #cccccc');
+		$("#tablaTallasAssortReg").hide();
         var selectedText = $(this).find("option:selected").text();
         var selectedValue = $(this).val();
         var html = '';
@@ -368,7 +373,8 @@ var totalPiezasFaltantes = 0;
 var totalCartonesFaltantes = 0;
 function obtenerListaTallasAssort(namePack) {
    
-    var actionData = "{'packingName':'" + namePack + "'}";
+	var actionData = "{'packingName':'" + namePack + "'}";
+	
     $.ajax({
         url: "/Packing/Lista_Estilos_Empaque_Assort/",
         type: 'POST',
@@ -639,14 +645,14 @@ function obtenerTallas(IdSummary) {
             listaPsc = jsonData.Data.listaPackingS;
             listCantTalla = jsonData.Data.listCantTalla;
             var html = '';
-            
-            html += '<table class="table" id="tablaTallasAssort"><thead>';
+			var htmlB = '';
+          /*  html += '<table class="table" id="tablaTallasAssort"><thead>';
             html += '<tr><th>Size</th>' +
                 ' <th>Ratio</th>' +
                 ' <th>Pieces</th>' +
                 ' <th></th>' +
                 '</tr>' +
-                '</thead><tbody>';
+                '</thead><tbody>';*/
             var cont = 0;
             $.each(listaPO, function (key, item) {
               
@@ -658,9 +664,10 @@ function obtenerTallas(IdSummary) {
                 html += '</tr>';
                 cont = cont + 1;
             });
-            html += '</tbody> </table>';
-            html += '<button type="button" id="nuevoEmpaqueAssort" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> ASSORTMENT</button>';
-            $('#regAssort').html(html);
+         //   html += '</tbody> </table>';
+			$('.tbodyRegAssortment').html(html);
+            htmlB += '<button type="button" id="nuevoEmpaqueAssort" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> ASSORTMENT</button>';
+            $('#regAssort').html(htmlB);
            // $('#tallasModal').modal('show'); 
         },
         error: function (errormessage) {
@@ -676,9 +683,9 @@ $(document).on("click", "#nuevoEmpaqueAssort", function () {
     var error = 0;
     var r = 0; var c = 0; var i = 0; var cadena = new Array(3);
     cadena[0] = ''; cadena[1] = ''; cadena[2] = '';
-    var nFilas = $("#tablaTallasAssort tbody>tr").length;
-    var nColumnas = $("#tablaTallasAssort tr:last td").length;
-    $('#tablaTallasAssort tbody>tr').each(function () {
+    var nFilas = $("#tablaTallasAssortReg tbody>tr").length;
+    var nColumnas = $("#tablaTallasAssortReg tr:last td").length;
+    $('#tablaTallasAssortReg tbody>tr').each(function () {
         r = 0;
         c = 0;
         $(this).find("input").each(function () {
@@ -691,7 +698,7 @@ $(document).on("click", "#nuevoEmpaqueAssort", function () {
     });
     var cadena_cantidades_psc = "";
     var cantidades_array_psc = "";
-    $('#tablaTallasAssort tbody>tr').each(function () {
+    $('#tablaTallasAssortReg tbody>tr').each(function () {
         $(this).find(".ratPieces").each(function () {
             $(this).closest('td').find(".ratPieces").each(function () {
                 cadena_cantidades_psc += this.value + "*";
@@ -718,7 +725,7 @@ $(document).on("click", "#nuevoEmpaqueAssort", function () {
         }
         i++;
     });
-    $('#tablaTallasAssort').find('td').each(function (i, el) {
+    $('#tablaTallasAssortReg').find('td').each(function (i, el) {
         var valor = $(el).children().val();
         if ($(el).children().val() === '' || $(el).children().val() === '0') {
             error++;

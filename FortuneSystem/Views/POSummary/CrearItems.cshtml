@@ -196,8 +196,8 @@
                     $("#loading").css('display', 'none');
                     var id = $(this).data("value");
                     $('#agregarImgModal').modal('show');
-                    $("#ContenedorModal").load("/Cliente/Detalles/" + id, function () {
-                    });
+                   /* $("#ContenedorModal").load("/Cliente/Detalles/" + id, function () {
+                    });*/
                 } else {
 
                 }
@@ -470,9 +470,17 @@
                     confirm.set('onok', function () {
                         $("#crearTallas").hide();
                        // $("#crearTipoPack").hide();
-                        $('#nuevoItem').prop("disabled", false);
-                        limpiarFormItems();
-                        alertify.success('Confirmation Accepted');
+						$('#nuevoItem').prop("disabled", false);
+						$("#drop-container .preview").remove();
+						limpiarFormItems();
+						
+				
+						$(".drop-image").hide();
+						$(".preview").hide();
+						//$('img').attr('src', ''); // Clear the src	
+						//$("#photoholder").append($(this).children("img").remove());
+						//preview
+			                        alertify.success('Confirmation Accepted');
                     });
 
                     confirm.set('oncancel', function () {
@@ -660,11 +668,13 @@
 						<div class="form-group">
 							<div class="col-sm-1">
 							</div>
+							@*<button id="EliminarImg">Eliminar</button>
+							<button id="SaveImg">Save</button>*@
 							<div class="col-sm-5">
 								<div id="drop-container">
-									<div class="drop-area-text">Drag and Drop Images Here</div>
+									<div class="drop-area-text">Drag and Drop Image Here</div>
 								</div>
-								<img src="" class="drop-image" />
+								<img src="" class="drop-image" id="imgArteAdd" />
 							</div>
 						</div>
 					</div>
@@ -961,7 +971,17 @@
 			uploadFormData(formImage);
 		}
 
+		//       $('#EliminarImg').click(function () {
+		//		   $('#drop-container').val();
+		//});
+
+		//$('#SaveImg').click(function () {
+		//		   $('#drop-container').val();
+		//		});
+
 		function uploadFormData(formData) {
+			$(".drop-image").show();
+			$(".preview").show();
 			$.ajax({
 				url: "/Arte/UploadFiles",
 				type: "POST",
@@ -969,7 +989,7 @@
 				contentType: false,
 				cache: false,
 				processData: false,
-				success: function (response) {
+				success: function (response) {	
 					
 					var imagePreview = $(".drop-image").clone();
 					var path = '/Content/imagenesEstilos/' + response;

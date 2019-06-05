@@ -495,9 +495,9 @@ namespace FortuneSystem.Controllers
             {
                 int idEstilo = objDesc.ObtenerIdEstilo(nombreEstilo);
                 var arte = db.ImagenArte.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
-			   var arteEstilo = db.ImagenArteEstilo.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
-                if (arte != null && arteEstilo != null)
-                {
+			    var arteEstilo = db.ImagenArteEstilo.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
+                /*if (arte != null && arteEstilo != null)
+                {*/
                     if (arte.extensionArte != null && arte.extensionArte != "")
                     {
                         switch (arte.extensionArte.ToLower())
@@ -527,11 +527,13 @@ namespace FortuneSystem.Controllers
                         return File("~/Content/img/noImagen.png", "image/png");
                     }
                 
-                }
+               /* }
                 else
                 {
                     return File("~/Content/img/noImagen.png", "image/png");
-                }
+                }*/
+
+
             
             }
 

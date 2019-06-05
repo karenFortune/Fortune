@@ -446,6 +446,7 @@ namespace FortuneSystem.Controllers
             tallaItem.IdBatch = numBatch + 1;  
             // List<string> idPack = ListTalla[0].Split('*').ToList();
             List<string> tallas = ListTalla[0].Split('*').ToList();
+			
             int i = 0;
             foreach (var item in tallas)
             {
@@ -459,9 +460,10 @@ namespace FortuneSystem.Controllers
             {
 
 				List<string> cajas = ListTalla[1].Split('*').ToList();
-               // piezas = ListTalla[3].Split('*').ToList();
-                //totales = ListTalla[4].Split('*').ToList();
-                for (int v = 0; v < i; v++)
+				List<string> piezas = ListTalla[2].Split('*').ToList();
+				// piezas = ListTalla[3].Split('*').ToList();
+				//totales = ListTalla[4].Split('*').ToList();
+				for (int v = 0; v < i; v++)
                 {
                     talla = tallas[v];
                     tallaItem.IdTalla = objTalla.ObtenerIdTalla(talla);
@@ -474,12 +476,21 @@ namespace FortuneSystem.Controllers
                         cantBox = "0";
                     }
                     tallaItem.CantBox = Int32.Parse(cantBox);
-                    /*if (caja > 0)
+
+					string cantPiezas = piezas[v];
+					if (cantPiezas == "")
+					{
+						cantPiezas = "0";
+					}
+					tallaItem.TotalPiezas = Int32.Parse(cantPiezas);
+					/*if (caja > 0)
                     {
                         tallaItem.CantBox = 0;
                     }*/
+
+					objPacking.AgregarTallasPacking(tallaItem);
+					
                     
-                    objPacking.AgregarTallasPacking(tallaItem);
 
 
                 }
@@ -1068,7 +1079,9 @@ namespace FortuneSystem.Controllers
             //List<PackingSize> listaTallasPacking = objPacking.ObtenerListaPackingSizePorEstilo(id).ToList();
             //List<PackingTypeSize> listaTallasEmpaquePPK = objPacking.ObtenerListaPackingPPKPorEstilo(id).ToList();
             List<PackingTypeSize> listaTallasEmpaquePPK = objPacking.ObtenerListaPackingPPK(id).ToList();
-            List<int> listaTallasCBatch = new List<int>();
+			List<PackingTypeSize> listaTallasEmpaqueBulk = objPacking.ObtenerListaPackingBulkPONumber(id).ToList();
+
+			List<int> listaTallasCBatch = new List<int>();
             if (listaPiezasPackingBulk.Count != 0)
             {
                 listaTallasCBatch = objPacking.ListaTotalCajasTallasBatchBulkHTEstilo(id).ToList();
@@ -1090,7 +1103,8 @@ namespace FortuneSystem.Controllers
                 listaPTBulk = listaPiezasPackingBulk,
                 listaPTPPK = listaPiezasPackingPPK,
                 listaEmpPPK = listaTallasEmpaquePPK,
-                listaTotalCajasPack = listaTallasCBatch,
+				listaEmpBulk = listaTallasEmpaqueBulk,
+				listaTotalCajasPack = listaTallasCBatch,
 				cargoUser = cargo
             });
             return Json(result, JsonRequestBehavior.AllowGet);

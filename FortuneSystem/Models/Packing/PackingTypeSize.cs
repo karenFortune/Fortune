@@ -33,7 +33,8 @@ namespace FortuneSystem.Models.Packing
         public int Cartones { get; set; }
         public int PartialNumber { get; set; }
         public int TotalRatio { get; set; }
-        [Display(Name = "TOTAL PIECES")]
+		public int TotalBulk { get; set; }
+		[Display(Name = "TOTAL PIECES")]
         public int TotalPieces { get; set; }
         [Display(Name = "TOTAL UNITS")]
         public int TotalUnits { get; set; }
@@ -71,7 +72,9 @@ namespace FortuneSystem.Models.Packing
 		RETAIL = 4,
 		DIRECT = 5,
 		RETAIL_GAP = 6,
-		RETAIL_ECHO = 7
+		RETAIL_ECHO = 7,
+		CANADA_STORE = 8,
+		BACKSTOCK = 9
         //ASSORTMENT = 3
     }
 }
