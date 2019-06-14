@@ -158,8 +158,7 @@ function obtenerListaTallas(EstiloId) {
 										html += '<td width="250"><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
 										html += '</tr>';
 										cont = cont + 1;
-									}
-									
+									}									
 								});
 							} else {
 								html += '<tr id="pallet' + cont + '" class="pallet">';
@@ -168,8 +167,7 @@ function obtenerListaTallas(EstiloId) {
 								html += '<td width="250"><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
 								html += '</tr>';
 								cont = cont + 1;
-							}
-							
+							}							
 						});
                        // html += '</tbody > ';
                         ocultarOpciones();
@@ -1052,7 +1050,7 @@ function obtenerImagenPNL(nombreEstilo) {
 }
 
 function obtenerImagenArte(nombreEstilo) {
-    $('#imagenArte').attr('src', '/Arte/ConvertirImagenArteEstilo?nombreEstilo=' + nombreEstilo);
+	$('#imagenArte').attr('src', '/Arte/BuscarImagenArte?nombreEstilo=' + nombreEstilo);
 }
 
 function ConfirmRev(a) {

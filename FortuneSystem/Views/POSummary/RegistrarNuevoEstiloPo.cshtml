@@ -274,7 +274,8 @@ $('.tbodyTallas').keydown(function(e){
                 },
             }).done(function(data) {
 
-                    });
+					});
+			  
                 alertify.set('notifier', 'position', 'top-right');
                 alertify.notify('The style was registered correctly.', 'success', 10, null);
             }
@@ -552,13 +553,13 @@ $('.tbodyTallas').keydown(function(e){
         }
 	}, true);
 
-		function sumar(index) {
+		function sumar(indicador) {
 		$(".numCantTall").each(
 			function (index, value) {
 				var resp;
 				document.addEventListener("blur", function (event) {
 					debugger
-					var valor = "l-cantidad" + index;
+					var valor = "l-cantidad" + indicador;
 					var val = document.getElementById(valor).value;
 					if (val !== "") {
 						resp = eval(val);
@@ -569,13 +570,13 @@ $('.tbodyTallas').keydown(function(e){
 		);
 	}
 
-			function sumarEjemplo(index) {
+			function sumarEjemplo(indicador) {
 		$(".numEjmTall").each(
 			function (index, value) {
 				var resp;
 				document.addEventListener("blur", function (event) {
 					debugger
-					var valor = "s-ejemplo" + index;
+					var valor = "s-ejemplo" + indicador;
 					var val = document.getElementById(valor).value;
 					if (val !== "") {
 						resp = eval(val);
@@ -603,6 +604,47 @@ $('.tbodyTallas').keydown(function(e){
 	.classTipoPack {
 		color: white !important;
 		background: #709ec5 !important;
+	}
+
+	body .editar {
+		width: 120% !important;
+		margin-left: -20% !important;
+	}
+
+
+
+	#drop-container {
+		background: #ffffff;
+		min-height: 200px;
+		padding: 10px;
+		border: #07c6f1 2px dashed;
+		max-width: 600px;
+	}
+
+	.drop-area-text {
+		text-align: center;
+		color: #e0dfdf;
+		font-size: 1.5em;
+		padding-bottom: 20px;
+	}
+
+	.drop-image {
+		display: none;
+	}
+
+	.preview {
+		margin: 20px;
+		width: 150px;
+		height: 150px;
+		display: inline-block;
+	}
+
+	@@media screen and (max-width: 500px) {
+		.preview {
+			margin: 15px;
+			width: 100px;
+			height: 100px;
+		}
 	}
 </style>
 
@@ -674,47 +716,40 @@ $('.tbodyTallas').keydown(function(e){
 
 		<div class="container-fluid">
 			<div class="form-row">
-
 				<div class="form-group col-sm-4">
 					@Html.LabelFor(model => model.CantidadT, htmlAttributes: new { @class = "control-label" })
 					@Html.EditorFor(model => model.CantidadT, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
 					@Html.ValidationMessageFor(model => model.CantidadT, "", new { @class = "text-danger" })
 				</div>
-
-				<div class="form-group col-sm-5">
+				<div class="form-group col-sm-4">
 					@Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label" })
 					@Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control nuevo_item" } })
 					@Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
-
 				</div>
-
 				<div class="form-group col-sm-4">
 					@Html.LabelFor(model => model.CatEspecialidades.Especialidad, htmlAttributes: new { @class = "control-label " }) <br />
 					@Html.DropDownList("listEspecialidad", (SelectList)ViewBag.listEspecialidad, string.Empty, new { @class = "form-control nuevo_item", @id = "selectEspecialidad", @name = "state", @style = "width: 60%;" })
 					@Html.ValidationMessageFor(model => model.IdEspecialidad, "", new { @class = "text-danger" })
-
-				</div>
-				<div class="form-group col-sm-4 estilo">
+				</div>			
+			</div>
+		</div>
+		<div class="container-fluid">
+			<div class="form-row">
+				<div class="form-group col-sm-4 ">
 					@Html.LabelFor(model => model.IdGenero, htmlAttributes: new { @class = "control-label " }) <br />
 					@Html.DropDownList("listGenero", (SelectList)ViewBag.listGenero, string.Empty, new { @class = "form-control nuevo_item", @id = "selectGenero", @name = "state", @style = "width: 80%;" })
 					@Html.ValidationMessageFor(model => model.IdGenero, "", new { @class = "text-danger" })
-
 				</div>
 				<div class="form-group col-sm-4">
 					@Html.LabelFor(model => model.IdTela, htmlAttributes: new { @class = "control-label " }) <br />
 					@Html.DropDownList("listTela", (SelectList)ViewBag.listTela, string.Empty, new { @class = "form-control nuevo_item", @id = "selectTela", @name = "state", @style = "width: 80%;" })
 					@Html.ValidationMessageFor(model => model.IdTela, "", new { @class = "text-danger" })
 				</div>
-			</div>
-		</div>
-		<div class="container-fluid">
-			<div class="form-row">			
 				<div class="form-group col-sm-4">
 					@Html.LabelFor(model => model.TipoCamiseta, htmlAttributes: new { @class = "control-label " }) <br />
 					@Html.DropDownList("listTipoCamiseta", (SelectList)ViewBag.listTipoCamiseta, string.Empty, new { @class = "form-control nuevo_item", @id = "selectTipoCamiseta", @name = "state", @style = "width: 80%;" })
 					@Html.ValidationMessageFor(model => model.TipoCamiseta, "", new { @class = "text-danger" })
 				</div>
-
 			</div>
 		</div>
 		<div class="container-fluid">
@@ -783,6 +818,7 @@ $('.tbodyTallas').keydown(function(e){
     <br />
 
 </div>
+
 
 }
 

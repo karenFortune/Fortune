@@ -24,7 +24,6 @@ namespace FortuneSystem
             this.ARTE = new HashSet<ARTE>();
         }
 
-
 		[Display(Name = "ARTE#")]
 		public int IdImgArte { get; set; }
 		public Nullable<int> IdEstilo { get; set; }
@@ -55,9 +54,9 @@ namespace FortuneSystem
 		public string extensionArte { get; set; }
 		public string extensionPNL { get; set; }
 		public Nullable<System.DateTime> fecha { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ARTE> ARTE { get; set; }
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+		public virtual ICollection<ARTE> ARTE { get; set; }
 		public virtual IMAGEN_ARTE_PNL IMAGEN_ARTE_PNL { get; set; }
 		public string StatusArteInf { get; set; }
 		//Tecnicas de especialidades
@@ -65,6 +64,7 @@ namespace FortuneSystem
 		public List<CatEspecialidades> ListaTecnicas { get; set; }
 		//public DateTime Fecha { get; set; }
 		public string FechaArte { get; set; }
+		public string Color { get; set; }
 	}
 	public enum EstatusArte
 	{
@@ -73,7 +73,6 @@ namespace FortuneSystem
 		PENDING = 3,
 		INHOUSE = 4
 	}
-
 	public enum EstatusPNL
 	{
 		APPROVED = 1,

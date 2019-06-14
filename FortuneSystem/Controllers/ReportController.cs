@@ -22,12 +22,16 @@ namespace FortuneSystem.Controllers
 		public ActionResult Imprimir_Reporte_PO()
 		{
 			int id = Convert.ToInt32(Session["idPed"]);
+			string po = Convert.ToString(Session["nombrePO"]);
+			string filename = "Reporte_" + po+".pdf";
 			return new Rotativa.ViewAsPdf("Imprimir_Reporte_PO", de.ListadoInfEstilo(id))
-			{				
+			{
 				PageOrientation = Rotativa.Options.Orientation.Portrait,
 				PageSize = Rotativa.Options.Size.Letter,
-				PageMargins = new Rotativa.Options.Margins(5, 5, 5, 5),
-				CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
+				PageMargins = new Rotativa.Options.Margins(4, 4, 5, 5),
+				//FileName = filename
+				//Change the name and constants confirm form client     
+				//CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
 			};
 
 		}

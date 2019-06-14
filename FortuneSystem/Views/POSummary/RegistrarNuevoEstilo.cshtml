@@ -445,7 +445,9 @@
                     confirm.set('onok', function () {
                         $("#crearTallas").hide();
                         $('#nuevoItem').prop("disabled", false);
-                        limpiarFormItems();
+						limpiarFormItems();				
+						$(".drop-image").hide();
+						$(".preview").hide();
                         alertify.success('You have confirmed');
 						$("#loading").css('display', 'none');
 						$('#nuevaTalla').prop("disabled", false);

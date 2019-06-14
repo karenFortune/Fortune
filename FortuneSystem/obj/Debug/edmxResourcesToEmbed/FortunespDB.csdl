@@ -61,9 +61,9 @@
     <Property Name="IdImgArtePNL" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="IdEstilo" Type="Int32" />
     <Property Name="StatusPNL" Type="Int32" />
-    <Property Name="ExtensionPNL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-    <Property Name="IdSummary" Type="Int32" />
+    <Property Name="extensionPNL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="fecha" Type="DateTime" Precision="0" />
+    <Property Name="IdSummary" Type="Int32" />
   </EntityType>
   <EntityType Name="IMAGEN_ARTE_ESTILO">
     <Key>
@@ -74,6 +74,7 @@
     <Property Name="StatusArt" Type="Int32" />
     <Property Name="extensionArt" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="fecha" Type="DateTime" Precision="0" />
+    <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="IdSummary" Type="Int32" />
   </EntityType>
 </Schema>

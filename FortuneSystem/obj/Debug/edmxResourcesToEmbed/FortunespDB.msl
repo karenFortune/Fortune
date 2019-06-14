@@ -36,9 +36,9 @@
     <EntitySetMapping Name="IMAGEN_ARTE_PNL">
       <EntityTypeMapping TypeName="FortuneTestModel.IMAGEN_ARTE_PNL">
         <MappingFragment StoreEntitySet="IMAGEN_ARTE_PNL">
-          <ScalarProperty Name="fecha" ColumnName="fecha" />
           <ScalarProperty Name="IdSummary" ColumnName="IdSummary" />
-          <ScalarProperty Name="ExtensionPNL" ColumnName="extensionPNL" />
+          <ScalarProperty Name="fecha" ColumnName="fecha" />
+          <ScalarProperty Name="extensionPNL" ColumnName="extensionPNL" />
           <ScalarProperty Name="StatusPNL" ColumnName="StatusPNL" />
           <ScalarProperty Name="IdEstilo" ColumnName="IdEstilo" />
           <ScalarProperty Name="IdImgArtePNL" ColumnName="IdImgArtePNL" />
@@ -49,6 +49,7 @@
       <EntityTypeMapping TypeName="FortuneTestModel.IMAGEN_ARTE_ESTILO">
         <MappingFragment StoreEntitySet="IMAGEN_ARTE_ESTILO">
           <ScalarProperty Name="IdSummary" ColumnName="IdSummary" />
+          <ScalarProperty Name="Color" ColumnName="Color" />
           <ScalarProperty Name="fecha" ColumnName="fecha" />
           <ScalarProperty Name="extensionArt" ColumnName="extensionArt" />
           <ScalarProperty Name="StatusArt" ColumnName="StatusArt" />

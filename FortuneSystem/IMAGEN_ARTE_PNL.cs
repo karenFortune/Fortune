@@ -23,7 +23,7 @@ namespace FortuneSystem
 		public Nullable<int> IdEstilo { get; set; }
 		[Display(Name = "STATE PNL")]
 		public Nullable<int> StatusPNL { get; set; }
-		public string ExtensionPNL { get; set; }
+		public string extensionPNL { get; set; }
 		public Nullable<int> IdSummary { get; set; }
 		[Display(Name = "PNL IMAGE")]
 		public byte[] imgPNL { get; set; }
@@ -43,7 +43,7 @@ namespace FortuneSystem
 		//public DateTime Fecha { get; set; }
 		public string FechaArtePnl { get; set; }
 		public Nullable<System.DateTime> fecha { get; set; }
-    }
+	}
 	public enum EstatusImgPNL
 	{
 		APPROVED = 1,

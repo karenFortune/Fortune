@@ -274,7 +274,7 @@
 										<a href="@Url.Action("HistorialPedidos", "Pedidos", new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Record PO"> <span class="glyphicon glyphicon-share " aria-hidden="true" style="padding: 0px !important;"></span></a>
 									}
 
-									@Html.ActionLink(" ", null, new { id = item.IdPedido }, new { @class = "btn edit_driver edicion_driver fa fa-file-pdf-o fa-lg", @Title = "Report", onclick = "imprimir_reporte_po('" + item.IdPedido + "')" })
+									@Html.ActionLink(" ", null, new { id = item.IdPedido }, new { @class = "btn edit_driver edicion_driver fa fa-file-pdf-o fa-lg", @Title = "Report", onclick = "imprimir_reporte_po("+item.IdPedido + ",\""+item.PO+"\")" }) //' + item.IdPedido + '' +item.PO + '
 
 								}
 								else if ((int)Session["idCargo"] == 15)
@@ -334,19 +334,21 @@
 	function imprimir_reporte_po(id,po) {
 		$.ajax({
 			url: "/Pedidos/Imprimir_Reporte_PO/",
-			data: "{'id':'" + id + "'}",
+			data: "{'id':'" + id + "','po':'" + po + "'}",
 			dataType: 'json',
 			contentType: 'application/json',
 			type: 'post',
 			success: function () {
-				imprimir_reporte();
+				imprimir_reporte(po);
 			}
 		});
 	}
-	function imprimir_reporte() {
+	function imprimir_reporte(po) {
+		debugger
+		var nombre= "Reporte_" + po+".pdf";
 		var h = screen.height - 100;
 		var w = screen.width - 30;
-		window.open('/Report/Imprimir_Reporte_PO', '_blank', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');
+		window.open('/Report/Imprimir_Reporte_PO', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');
 		$("#loading").css('display', 'none');
 	}
 

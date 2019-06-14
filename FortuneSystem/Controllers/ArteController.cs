@@ -52,7 +52,12 @@ namespace FortuneSystem.Controllers
             return View();
         }
 
-        public ActionResult FileUpload(int idArte, string estilo)
+		public ActionResult CreateArteEstilo()
+		{
+			return View();
+		}
+
+		public ActionResult FileUpload(int idArte, string estilo)
         {          
             IMAGEN_ARTE IArte = db.ImagenArte.Find(idArte);
             ARTE art = db.Arte.Where(x => x.IdImgArte == idArte).FirstOrDefault();
@@ -156,7 +161,7 @@ namespace FortuneSystem.Controllers
          public ActionResult FileUploadPNL(IMAGEN_ARTE_PNL artePNL)
         {
 		
-			if (artePNL.ExtensionPNL == null)
+			if (artePNL.extensionPNL == null)
             {
 				//filePNL = artePNL.FilePNL;
                 if (artePNL.FilePNL != null)
@@ -166,11 +171,11 @@ namespace FortuneSystem.Controllers
                    if(System.IO.File.Exists(path))
                     {
                         //System.IO.File.Delete(path);
-                        artePNL.ExtensionPNL = ext;                       
+                        artePNL.extensionPNL = ext;                       
                     }
                     else
                     {
-                        artePNL.ExtensionPNL = ext;
+                        artePNL.extensionPNL = ext;
 						artePNL.FilePNL.SaveAs(path);
                     }
                     
@@ -342,7 +347,7 @@ namespace FortuneSystem.Controllers
 
 						arte.StatusArt = 3;
 						arte.fecha = DateTime.Today;
-						arte.IdSummary = Convert.ToInt32(Session["IdItems"]);
+						//arte.IdSummary = Convert.ToInt32(Session["IdItems"]);
 						string nomEstilo = Convert.ToString(Session["nombreEstilo"]);
 						arte.IdEstilo = objDesc.ObtenerIdEstilo(nomEstilo);
 						objArte.AgregarArteEstilo(arte);
@@ -360,9 +365,131 @@ namespace FortuneSystem.Controllers
                 return Json("No files selected.");
             }
         }
+		public ActionResult SaveDropzoneJsUploadedFiles()
+		{			
+			foreach (string fileName in Request.Files)
+			{
 
-        // GET: Arte
-        public ActionResult ListaImgArte(int id)
+				IMAGEN_ARTE_ESTILO arte = new IMAGEN_ARTE_ESTILO();
+				HttpPostedFileBase file = Request.Files[fileName];
+				HttpFileCollectionBase files = Request.Files;
+				string fname = "";
+				for (int i = 0; i < files.Count; i++)
+				{
+
+					file = files[i];
+
+
+					if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER" || Request.Browser.Browser.ToUpper() == "FF")
+					{
+						string[] testfiles = file.FileName.Split(new char[] { '\\' });
+						fname = testfiles[testfiles.Length - 1];
+					}
+					else
+					{
+						fname = file.FileName;
+					}
+					string ext = Path.GetFileName(file.FileName);
+					fname = Path.Combine(Server.MapPath("~/Content/imagenesArte"), fname);
+					/*string extension = file.FileName;
+					int tam_var = extension.Length;
+					string nomEstilo = extension.Substring(0, tam_var - 4);
+					int idEstilo = objDesc.ObtenerIdEstilo(nomEstilo);
+					var arteImg = db.ImagenArte.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();*/
+					if (!System.IO.File.Exists(fname))
+					{
+						file.SaveAs(fname);
+					}
+
+					//You can Save the file content here
+				}
+					
+			}
+
+			return Json(new { Message = string.Empty });
+
+		}
+
+		[HttpPost]
+		public ActionResult UploadFilesArtEstilo(int idSummary, int idEstilo, string color, string status)
+		{
+			if (Request.Files.Count > 0)
+			{
+				try
+				{
+					
+					IMAGEN_ARTE_ESTILO arte = new IMAGEN_ARTE_ESTILO();
+					HttpFileCollectionBase files = Request.Files;
+					HttpPostedFileBase file = Request.Files[0];
+					string fname = "";
+					for (int i = 0; i < files.Count; i++)
+					{
+
+						file = files[i];
+
+
+						if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER" || Request.Browser.Browser.ToUpper() == "FF")
+						{
+							string[] testfiles = file.FileName.Split(new char[] { '\\' });
+							fname = testfiles[testfiles.Length - 1];
+						}
+						else
+						{
+							fname = file.FileName;
+						}
+						string ext = Path.GetFileName(file.FileName);
+						fname = Path.Combine(Server.MapPath("~/Content/imagenesArte"), fname);
+						if (!System.IO.File.Exists(fname))
+						{
+							file.SaveAs(fname); 
+						}					
+						var arteEstilo = db.ImagenArteEstilo.Where(x => x.IdEstilo == idEstilo && x.Color == color).FirstOrDefault();
+						if(arteEstilo == null)
+						{
+							if (status == "APPROVED")
+							{
+								arte.StatusArt = 1;
+							}
+							else if (status == "REVIEWED")
+							{
+								arte.StatusArt = 2;
+							}
+							else if (status == "PENDING")
+							{
+								arte.StatusArt = 3;
+							}
+							else if (status == "INHOUSE")
+							{
+								arte.StatusArt = 4;
+							}
+							//arte.StatusArt = 3;
+							arte.fecha = DateTime.Today;
+							arte.extensionArt = ext;
+							arte.IdSummary = idSummary;
+							arte.Color = color;
+							//arte.IdSummary = Convert.ToInt32(Session["IdItems"]);
+							string nomEstilo = Convert.ToString(Session["nombreEstilo"]);
+							arte.IdEstilo = idEstilo;//objDesc.ObtenerIdEstilo(nomEstilo);
+							objArte.AgregarArteEstilo(arte);
+						}
+						
+					}
+
+					return Json(file.FileName);
+				}
+				catch (Exception ex)
+				{
+					return Json(new { Message = string.Empty });
+				}
+			}
+			else
+			{
+				return Json(new { Message = string.Empty });
+			}
+		}
+
+		// GET: Arte
+		public ActionResult ListaImgArte(int id)
         {
 			List<IMAGEN_ARTE> listaArtes = objArte.ListaArtes(id).ToList();
             return PartialView(listaArtes);
@@ -381,16 +508,7 @@ namespace FortuneSystem.Controllers
             {
                 if (arte.extensionArte != null && arte.extensionArte != "" )
                 {
-
-                    switch (arte.extensionArte.ToLower())
-                    {
-                        case "gif":
-                            return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Image.Gif);
-                        case "jpeg":
-                            return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Image.Jpeg); 
-                        default:
-                            return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Application.Octet);
-                    }
+					return RutaImagenArte(arte);              
                 
                 }
                 else
@@ -407,53 +525,121 @@ namespace FortuneSystem.Controllers
         }
 
 
-        public ActionResult ConvertirImagenArte(string extensionArte)
+		public ActionResult BuscarConvertirImagenArte(int arteCodigo, string estilo, string color, int idSummary, int idEstilo)
+		{
+			//IMAGEN_ARTE_ESTILO arteEstilo = new IMAGEN_ARTE_ESTILO();
+			string descripcion = estilo.TrimEnd() + "_" + color.TrimEnd();
+			var arte = db.ImagenArte.Where(x => x.IdImgArte == arteCodigo).FirstOrDefault();
+			//var arteEstilo = db.ImagenArteEstilo.Where(x => x.IdSummary == idSummary).FirstOrDefault();
+			var arteEstilo = db.ImagenArteEstilo.Where(x => x.IdEstilo == idEstilo && x.Color == color).FirstOrDefault();
+			if (arte != null)
+			{
+				int tam_var = arte.extensionArte.Length;
+				string nomEstilo = arte.extensionArte.Substring(0, tam_var - 4);
+				if (nomEstilo == descripcion && arte.extensionArte != null && arte.extensionArte != "")
+				{					
+					return RutaImagenArte(arte);
+				}
+				else
+				{
+					if(arteEstilo != null)
+					{
+						int tam_var2 = arteEstilo.extensionArt.Length;
+						string nomEstiloArt = arteEstilo.extensionArt.Substring(0, tam_var2 - 4);
+						if (nomEstiloArt == descripcion && arteEstilo.extensionArt != null)
+						{
+							return RutaImagenArteEstilo(arteEstilo);
+						}
+						else
+						{
+							return RutaImagenArte(arte);
+						}
+					}
+					else
+					{
+						return RutaImagenArte(arte);				
+					}
+				}
+			}
+			else
+			{
+				return File("~/Content/img/noImagen.png", "image/png");
+			}
+		}
+		public ActionResult ConvertirImagenArte(string extensionArte)
+		{
+			IMAGEN_ARTE arte = new IMAGEN_ARTE() { extensionArte = extensionArte };
+
+			if (arte.extensionArte != null && arte.extensionArte != "")
+			{
+				return RutaImagenArte(arte);
+
+			}
+			else
+			{
+				return File("~/Content/img/noImagen.png", "image/png");
+			}
+
+		}
+
+		public ActionResult ConvertirImagenListaArteEstilo (string extensionArte, string color, string estilo)
         {
             IMAGEN_ARTE arte = new IMAGEN_ARTE() {extensionArte = extensionArte};
-           
-             if (arte.extensionArte != null && arte.extensionArte != "")
-            {
-                switch (arte.extensionArte.ToLower())
-                    {
-                        case "gif":
-                            return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Image.Gif);
-                        case "jpeg":
-                            return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Image.Jpeg); 
-                        default:
-                            return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Application.Octet);
-                    }
-               
-            }
-            else
-            {
-                return File("~/Content/img/noImagen.png", "image/png");
-            }
+			IMAGEN_ARTE_ESTILO arteEstilo = new IMAGEN_ARTE_ESTILO();
+			string descripcion = estilo.TrimEnd() + "_" + color.TrimEnd();
+			if (arte != null && arte.extensionArte != "" && arte.extensionArte != null)
+			{
+				int tam_var = arte.extensionArte.Length;
+				string nombreEstiloArt = arte.extensionArte.Substring(0, tam_var - 4);
+				if (descripcion == nombreEstiloArt && arte.extensionArte != null && arte.extensionArte != "")
+				{
+					return RutaImagenArte(arte);
+				}
+				else
+				{
+					BuscarRutaImagenEstilo(descripcion, arteEstilo);
+					if (/*arteEstilo != null &&*/ arteEstilo.extensionArt != "" && arteEstilo.extensionArt != null)
+					{
+						int tam_var2 = arteEstilo.extensionArt.Length;
+						string nomEsdesctiloArt = arteEstilo.extensionArt.Substring(0, tam_var2 - 4);
+						if (descripcion == nomEsdesctiloArt && arteEstilo.extensionArt != null)
+						{
+							return RutaImagenArteEstilo(arteEstilo);
+						}
+						else
+						{
+							return RutaImagenArte(arte);
 
-        }
+						}
+					}
+					else
+					{
+
+						return RutaImagenArte(arte);
+					}
+				}
+			}
+			else
+			{
+				BuscarRutaImagenEstilo(descripcion, arteEstilo);
+				return ObtenerImagenArteEstilo(descripcion, arteEstilo, arte);
+			}
+
+		}
 
 
         public ActionResult ConvertirImagenArtePNL(string extensionPnl)
         {
-            IMAGEN_ARTE_PNL arte = new IMAGEN_ARTE_PNL() { ExtensionPNL = extensionPnl };
+            IMAGEN_ARTE_PNL arte = new IMAGEN_ARTE_PNL() { extensionPNL = extensionPnl };
          
-                if (arte.ExtensionPNL != null && arte.ExtensionPNL != "")
+                if (arte.extensionPNL != null && arte.extensionPNL != "")
                 {
-                    switch (arte.ExtensionPNL.ToLower())
-                    {
-                        case "gif":
-                            return new FilePathResult("~/Content/imagenesPNL/" + arte.ExtensionPNL, System.Net.Mime.MediaTypeNames.Image.Gif);
-                        case "jpeg":
-                            return new FilePathResult("~/Content/imagenesPNL/" + arte.ExtensionPNL, System.Net.Mime.MediaTypeNames.Image.Jpeg);
-                        default:
-                            return new FilePathResult("~/Content/imagenesPNL/" + arte.ExtensionPNL, System.Net.Mime.MediaTypeNames.Application.Octet);
-                    }
-                
+					return RutaImagenPNL(arte);                                    
                 }
                 else
                 {
                     return File("~/Content/img/noImagen.png", "image/png");
-                }
-           
+                }    
            
         }
 
@@ -462,17 +648,18 @@ namespace FortuneSystem.Controllers
             var arte = db.ImagenArtePnl.Where(x => x.IdImgArtePNL == pnlCodigo).FirstOrDefault();
             if (arte != null)
             {                              
-                if (arte.ExtensionPNL != null && arte.ExtensionPNL != "" )
+                if (arte.extensionPNL != null && arte.extensionPNL != "" )
                 {
-                    switch (arte.ExtensionPNL.ToLower())
+					return RutaImagenPNL(arte);
+                   /* switch (arte.extensionPNL.ToLower())
                     {
                         case "gif":
-                            return new FilePathResult("~/Content/imagenesPNL/" + arte.ExtensionPNL, System.Net.Mime.MediaTypeNames.Image.Gif);
+                            return new FilePathResult("~/Content/imagenesPNL/" + arte.extensionPNL, System.Net.Mime.MediaTypeNames.Image.Gif);
                         case "jpeg":
-                            return new FilePathResult("~/Content/imagenesPNL/" + arte.ExtensionPNL, System.Net.Mime.MediaTypeNames.Image.Jpeg);
+                            return new FilePathResult("~/Content/imagenesPNL/" + arte.extensionPNL, System.Net.Mime.MediaTypeNames.Image.Jpeg);
                         default:
-                            return new FilePathResult("~/Content/imagenesPNL/" + arte.ExtensionPNL, System.Net.Mime.MediaTypeNames.Application.Octet);
-                    }                   
+                            return new FilePathResult("~/Content/imagenesPNL/" + arte.extensionPNL, System.Net.Mime.MediaTypeNames.Application.Octet);
+                    }  */                 
                 }
                 else
                 {
@@ -491,73 +678,131 @@ namespace FortuneSystem.Controllers
             return View();
         }
 
-            public ActionResult ConvertirImagenArteEstilo(string nombreEstilo)
+
+		public ActionResult BuscarImagenArte(string nombreEstilo)
+		{
+			int idEstilo = objDesc.ObtenerIdEstilo(nombreEstilo);
+			var arte = db.ImagenArte.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
+			if (arte != null)
+			{
+				if (arte.extensionArte != null && arte.extensionArte != "")
+				{
+					return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Application.Octet);
+				}
+				else
+				{
+					return File("~/Content/img/noImagen.png", "image/png");
+				}
+
+			}
+			else
+			{
+				return File("~/Content/img/noImagen.png", "image/png");
+			}
+
+		}
+
+		public ActionResult ConvertirImagenArteEstilo(string nombreEstilo, string color)
             {
-                int idEstilo = objDesc.ObtenerIdEstilo(nombreEstilo);
+			string descripcion = nombreEstilo.TrimEnd() + "_" + color.TrimEnd();
+			IMAGEN_ARTE_ESTILO arteEstilo = new IMAGEN_ARTE_ESTILO();
+			int idEstilo = objDesc.ObtenerIdEstilo(nombreEstilo);
                 var arte = db.ImagenArte.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
-			    var arteEstilo = db.ImagenArteEstilo.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
-                /*if (arte != null && arteEstilo != null)
-                {*/
-                    if (arte.extensionArte != null && arte.extensionArte != "")
-                    {
-                        switch (arte.extensionArte.ToLower())
-                        {
-                            case "gif":
-                                return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Image.Gif);
-                            case "jpeg":
-                                return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Image.Jpeg);
-                            default:
-                                return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Application.Octet);
-                        }
-                   
-                    }else if(arteEstilo.extensionArt != null && arteEstilo.extensionArt != "")
+			   //var arteEstilo = db.ImagenArteEstilo.Where(x => x.IdEstilo == idEstilo && x.Color == color).FirstOrDefault();
+			/* if (arte != null || arteEstilo != null)
+			 {*/
+			if (arte != null && arte.extensionArte != "")
+			{
+				int tam_var = arte.extensionArte.Length;
+				string nombreEstiloArt = arte.extensionArte.Substring(0, tam_var - 4);
+				if (descripcion == nombreEstiloArt && arte.extensionArte != null && arte.extensionArte != "")	
+				{
+					return RutaImagenArte(arte);					
+				}
+				else
+				{
+					BuscarRutaImagenEstilo(descripcion, arteEstilo);
+					if (/*arteEstilo != null &&*/ arteEstilo.extensionArt != "" && arteEstilo.extensionArt != null)
 					{
-						switch (arteEstilo.extensionArt.ToLower())
+						int tam_var2 = arteEstilo.extensionArt.Length;
+						string nomEsdesctiloArt = arteEstilo.extensionArt.Substring(0, tam_var2 - 4);
+						if (descripcion == nomEsdesctiloArt && arteEstilo.extensionArt != null)
 						{
-							case "gif":
-								return new FilePathResult("~/Content/imagenesEstilos/" + arteEstilo.extensionArt, System.Net.Mime.MediaTypeNames.Image.Gif);
-							case "jpeg":
-								return new FilePathResult("~/Content/imagenesEstilos/" + arteEstilo.extensionArt, System.Net.Mime.MediaTypeNames.Image.Jpeg);
-							default:
-								return new FilePathResult("~/Content/imagenesEstilos/" + arteEstilo.extensionArt, System.Net.Mime.MediaTypeNames.Application.Octet);
+							return RutaImagenArteEstilo(arteEstilo);
+						}
+						else
+						{
+							return RutaImagenArte(arte);
+
 						}
 					}
-                    else
-                    {
-                        return File("~/Content/img/noImagen.png", "image/png");
-                    }
-                
-               /* }
-                else
-                {
-                    return File("~/Content/img/noImagen.png", "image/png");
-                }*/
+					else
+					{
+						
+						return RutaImagenArte(arte);
+					}
+				}
+			}
+			else
+			{
+				BuscarRutaImagenEstilo(descripcion, arteEstilo);
+				return ObtenerImagenArteEstilo(descripcion, arteEstilo, arte);
+			}
+		}
 
+		private void BuscarRutaImagenEstilo(string descripcion, IMAGEN_ARTE_ESTILO arteEstilo)
+		{
+			int i = 0;
+			string sourceDirectory = Server.MapPath("/") + "/Content/imagenesArte/";
+			var files = Directory.EnumerateFiles(Server.MapPath("/") + "/Content/imagenesArte/", descripcion + ".*");
+			//string extension;
+			foreach (string currentFile in files)
+			{
+				if (i == 0)
+				{
+					string fileName = currentFile.Substring(sourceDirectory.Length);
+					//arteEstilo.extensionArt = fileName;
+					arteEstilo.extensionArt = fileName;
+					i++;
 
-            
-            }
+				}
 
-        public ActionResult ConvertirImagenPNLEstilo(string nombreEstilo)
+			}
+		}
+
+		private ActionResult ObtenerImagenArteEstilo(string descripcion, IMAGEN_ARTE_ESTILO arteEstilo, IMAGEN_ARTE arte)
+		{
+			if (/*arteEstilo != null*/ arteEstilo.extensionArt != "" && arteEstilo.extensionArt != null)
+			{
+				int tam_var2 = arteEstilo.extensionArt.Length;
+				string nomEsdesctiloArt = arteEstilo.extensionArt.Substring(0, tam_var2 - 4);
+				if (descripcion == nomEsdesctiloArt && arteEstilo.extensionArt != null)
+				{
+					return RutaImagenArteEstilo(arteEstilo);
+				}
+				else
+				{
+					return RutaImagenArte(arte);
+
+				}
+			}
+			else
+			{
+				return File("~/Content/img/noImagen.png", "image/png");
+			}
+		}
+
+		public ActionResult ConvertirImagenPNLEstilo(string nombreEstilo)
         {
-			
-
 			int idEstilo= objDesc.ObtenerIdEstilo(nombreEstilo);
             var arte = db.ImagenArtePnl.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
             if(arte != null)
             {
-                if (arte.ExtensionPNL != null && arte.ExtensionPNL != "")
-                {
-                    switch (arte.ExtensionPNL.ToLower())
-                    {
-                        case "gif":
-                            return new FilePathResult("~/Content/imagenesPNL/" + arte.ExtensionPNL, System.Net.Mime.MediaTypeNames.Image.Gif);
-                        case "jpeg":
-                            return new FilePathResult("~/Content/imagenesPNL/" + arte.ExtensionPNL, System.Net.Mime.MediaTypeNames.Image.Jpeg);
-                        default:
-                            return new FilePathResult("~/Content/imagenesPNL/" + arte.ExtensionPNL, System.Net.Mime.MediaTypeNames.Application.Octet);
-                    }                   
-                }
-                else
+                if (arte.extensionPNL != null && arte.extensionPNL != "")
+				{
+					return RutaImagenPNL(arte);
+				}
+				else
                 {
                     return File("~/Content/img/noImagen.png", "image/png");
                 }
@@ -569,13 +814,15 @@ namespace FortuneSystem.Controllers
            
         }
 
-        public ActionResult Create(int? id, int idArte)
+		public ActionResult Create(int? id, int idArte, string estilo, string color)
         {
             IMAGEN_ARTE IArte = db.ImagenArte.Find(idArte);
 
            ARTE art = db.Arte.Where(x => x.IdImgArte == idArte).FirstOrDefault();
             Session["id"]= id;   
             int Summary = Convert.ToInt32(Session["id"]);
+			IArte.Estilo = estilo.TrimEnd();
+			IArte.Color = color.TrimEnd();
             art.IdEstilo = Summary;
             IArte.CATARTE = art;
             IArte.Tienda = objArte.ObtenerclienteEstilo(id, idArte);
@@ -612,7 +859,7 @@ namespace FortuneSystem.Controllers
         {
             IMAGEN_ARTE_PNL IArte = db.ImagenArtePnl.Find(idArte);
 
-           IArte.ExtensionPNL= objArte.BuscarExtensionPNLPorId(IArte.IdImgArtePNL);
+           IArte.extensionPNL= objArte.BuscarExtensionPNLPorId(IArte.IdImgArtePNL);
 
             return View(IArte);
         }
@@ -813,7 +1060,7 @@ namespace FortuneSystem.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditarArtePNL([Bind] IMAGEN_ARTE_PNL artePNL, HttpPostedFileBase filePNL)
         {
-            if (artePNL.ExtensionPNL == null)
+            if (artePNL.extensionPNL == null)
             {
 				filePNL = artePNL.FilePNL;
                 if (filePNL != null)
@@ -823,11 +1070,11 @@ namespace FortuneSystem.Controllers
                     if (System.IO.File.Exists(path))
                     {
                         //System.IO.File.Delete(path);
-                        artePNL.ExtensionPNL = ext;
+                        artePNL.extensionPNL = ext;
                     }
                     else
                     {
-                        artePNL.ExtensionPNL = ext;
+                        artePNL.extensionPNL = ext;
                         filePNL.SaveAs(path);
                     }
 
@@ -966,8 +1213,47 @@ namespace FortuneSystem.Controllers
             return View();
         }
 
+		public static ActionResult RutaImagenArte(IMAGEN_ARTE arte)
+		{
+			switch (arte.extensionArte.ToLower())
+			{
+				case "gif":
+					return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Image.Gif);
+				case "jpeg":
+					return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Image.Jpeg);
+				default:
+					return new FilePathResult("~/Content/imagenesArte/" + arte.extensionArte, System.Net.Mime.MediaTypeNames.Application.Octet);
+			}
+		}
 
 
-    }
+		private static ActionResult RutaImagenArteEstilo(IMAGEN_ARTE_ESTILO arteEstilo)
+		{
+			switch (arteEstilo.extensionArt.ToLower())
+			{
+				case "gif":
+					return new FilePathResult("~/Content/imagenesArte/" + arteEstilo.extensionArt, System.Net.Mime.MediaTypeNames.Image.Gif);
+				case "jpeg":
+					return new FilePathResult("~/Content/imagenesArte/" + arteEstilo.extensionArt, System.Net.Mime.MediaTypeNames.Image.Jpeg);
+				default:
+					return new FilePathResult("~/Content/imagenesArte/" + arteEstilo.extensionArt, System.Net.Mime.MediaTypeNames.Application.Octet);
+			}
+		}
+
+		private static ActionResult RutaImagenPNL(IMAGEN_ARTE_PNL arte)
+		{
+			switch (arte.extensionPNL.ToLower())
+			{
+				case "gif":
+					return new FilePathResult("~/Content/imagenesPNL/" + arte.extensionPNL, System.Net.Mime.MediaTypeNames.Image.Gif);
+				case "jpeg":
+					return new FilePathResult("~/Content/imagenesPNL/" + arte.extensionPNL, System.Net.Mime.MediaTypeNames.Image.Jpeg);
+				default:
+					return new FilePathResult("~/Content/imagenesPNL/" + arte.extensionPNL, System.Net.Mime.MediaTypeNames.Application.Octet);
+			}
+		}
+
+
+	}
     
 }

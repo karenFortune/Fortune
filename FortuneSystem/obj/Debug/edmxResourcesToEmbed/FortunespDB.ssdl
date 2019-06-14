@@ -29,6 +29,7 @@
     <Property Name="StatusArt" Type="int" />
     <Property Name="extensionArt" Type="varchar" MaxLength="100" />
     <Property Name="fecha" Type="date" />
+    <Property Name="Color" Type="varchar" MaxLength="50" />
     <Property Name="IdSummary" Type="int" />
   </EntityType>
   <EntityType Name="IMAGEN_ARTE_PNL">

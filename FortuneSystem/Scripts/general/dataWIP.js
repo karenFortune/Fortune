@@ -320,23 +320,27 @@ function GridWIP(orders, output, comments) {
                 }
                 if (options.gridCell.rowType === 'data') {
                     if (options.gridCell.column.dataField === 'ImagenArte.StatusArteInf') {
-                        if (options.gridCell.data.ImagenArte.StatusArteInf === 'IN HOUSE') {
-                            options.font.bold = true;
-                            options.backgroundColor = '#44c174';
-                            options.font.color = '#000000';
-                        } else if (options.gridCell.data.ImagenArte.StatusArteInf === 'REVIEWED') {
-                            options.font.bold = true;
-                            options.backgroundColor = '#66c2ff';
-                            options.font.color = '#000000';
-                        } else if (options.gridCell.data.ImagenArte.StatusArteInf === 'PENDING') {
-                            options.font.bold = true;
-                            options.backgroundColor = '#ec5f5f';
-                            options.font.color = '#000000';
-                        } else if (options.gridCell.data.ImagenArte.StatusArteInf === 'APPROVED') {
-                            options.font.bold = true;
+						if (options.gridCell.data.ImagenArte.StatusArteInf === 'IN HOUSE') {
+							options.font.bold = true;
+							options.backgroundColor = '#44c174';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArte.StatusArteInf === 'REVIEWED') {
+							options.font.bold = true;
+							options.backgroundColor = '#66c2ff';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArte.StatusArteInf === 'PENDING') {
+							options.font.bold = true;
+							options.backgroundColor = '#ec5f5f';
+							options.font.color = '#000000';
+						} else if (options.gridCell.data.ImagenArte.StatusArteInf === 'APPROVED') {
+							options.font.bold = true;
 							options.backgroundColor = '#ec8a47';
-                            options.font.color = '#000000';
-                        }
+							options.font.color = '#000000';
+						} else {
+							options.font.bold = true;
+							options.backgroundColor = '#ec5f5f';
+							options.font.color = '#000000';
+						}
 					}
 					if (options.gridCell.column.dataField === 'ImagenArtePnl.StatusArtePnlInf') {
 						if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'IN HOUSE') {
@@ -354,6 +358,10 @@ function GridWIP(orders, output, comments) {
 						} else if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'APPROVED') {
 							options.font.bold = true;
 							options.backgroundColor = '#ec8a47';
+							options.font.color = '#000000';
+						} else {
+							options.font.bold = true;
+							options.backgroundColor = '#ec5f5f';
 							options.font.color = '#000000';
 						}
 					}
@@ -476,7 +484,7 @@ function GridWIP(orders, output, comments) {
 		},
         searchPanel: {
             visible: true,
-            width: 240,
+            width: 200,
             placeholder: "Search..."
         },
         filterRow: {
@@ -1215,6 +1223,10 @@ function GridShipping(ordersShipped, output, commentsShipped) {
 							options.font.bold = true;
 							options.backgroundColor = '#ec8a47';
 							options.font.color = '#000000';
+						} else {
+							options.font.bold = true;
+							options.backgroundColor = '#ec5f5f';
+							options.font.color = '#000000';
 						}
 					}
 					if (options.gridCell.column.dataField === 'ImagenArtePnl.StatusArtePnlInf') {
@@ -1233,6 +1245,10 @@ function GridShipping(ordersShipped, output, commentsShipped) {
 						} else if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'APPROVED') {
 							options.font.bold = true;
 							options.backgroundColor = '#ec8a47';
+							options.font.color = '#000000';
+						} else {
+							options.font.bold = true;
+							options.backgroundColor = '#ec5f5f';
 							options.font.color = '#000000';
 						}
 					}
@@ -2035,6 +2051,10 @@ function GridCancelled(ordersCancelled, output, commentsCancel) {
 							options.font.bold = true;
 							options.backgroundColor = '#ec8a47';
 							options.font.color = '#000000';
+						} else {
+							options.font.bold = true;
+							options.backgroundColor = '#ec5f5f';
+							options.font.color = '#000000';
 						}
 					}
 					if (options.gridCell.column.dataField === 'ImagenArtePnl.StatusArtePnlInf') {
@@ -2053,6 +2073,10 @@ function GridCancelled(ordersCancelled, output, commentsCancel) {
 						} else if (options.gridCell.data.ImagenArtePnl.StatusArtePnlInf === 'APPROVED') {
 							options.font.bold = true;
 							options.backgroundColor = '#ec8a47';
+							options.font.color = '#000000';
+						} else {
+							options.font.bold = true;
+							options.backgroundColor = '#ec5f5f';
 							options.font.color = '#000000';
 						}
 					}

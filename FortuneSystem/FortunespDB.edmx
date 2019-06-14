@@ -34,6 +34,7 @@
           <Property Name="StatusArt" Type="int" />
           <Property Name="extensionArt" Type="varchar" MaxLength="100" />
           <Property Name="fecha" Type="date" />
+          <Property Name="Color" Type="varchar" MaxLength="50" />
           <Property Name="IdSummary" Type="int" />
         </EntityType>
         <EntityType Name="IMAGEN_ARTE_PNL">
@@ -144,9 +145,9 @@
           <Property Name="IdImgArtePNL" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdEstilo" Type="Int32" />
           <Property Name="StatusPNL" Type="Int32" />
-          <Property Name="ExtensionPNL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IdSummary" Type="Int32" />
+          <Property Name="extensionPNL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="fecha" Type="DateTime" Precision="0" />
+          <Property Name="IdSummary" Type="Int32" />
         </EntityType>
         <EntityType Name="IMAGEN_ARTE_ESTILO">
           <Key>
@@ -157,6 +158,7 @@
           <Property Name="StatusArt" Type="Int32" />
           <Property Name="extensionArt" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="fecha" Type="DateTime" Precision="0" />
+          <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IdSummary" Type="Int32" />
         </EntityType>
       </Schema>
@@ -200,9 +202,9 @@
           <EntitySetMapping Name="IMAGEN_ARTE_PNL">
             <EntityTypeMapping TypeName="FortuneTestModel.IMAGEN_ARTE_PNL">
               <MappingFragment StoreEntitySet="IMAGEN_ARTE_PNL">
-                <ScalarProperty Name="fecha" ColumnName="fecha" />
                 <ScalarProperty Name="IdSummary" ColumnName="IdSummary" />
-                <ScalarProperty Name="ExtensionPNL" ColumnName="extensionPNL" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="extensionPNL" ColumnName="extensionPNL" />
                 <ScalarProperty Name="StatusPNL" ColumnName="StatusPNL" />
                 <ScalarProperty Name="IdEstilo" ColumnName="IdEstilo" />
                 <ScalarProperty Name="IdImgArtePNL" ColumnName="IdImgArtePNL" />
@@ -213,6 +215,7 @@
             <EntityTypeMapping TypeName="FortuneTestModel.IMAGEN_ARTE_ESTILO">
               <MappingFragment StoreEntitySet="IMAGEN_ARTE_ESTILO">
                 <ScalarProperty Name="IdSummary" ColumnName="IdSummary" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
                 <ScalarProperty Name="fecha" ColumnName="fecha" />
                 <ScalarProperty Name="extensionArt" ColumnName="extensionArt" />
                 <ScalarProperty Name="StatusArt" ColumnName="StatusArt" />

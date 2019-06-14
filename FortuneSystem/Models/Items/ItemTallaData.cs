@@ -385,9 +385,9 @@ namespace FortuneSystem.Models.Item
                         Extras = Convert.ToInt32(leer["EXTRAS"]),
                         Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
                         Estilo = leer["ITEM_STYLE"].ToString(),
-                        DescripcionEstilo = leer["DESCRIPTION"].ToString()
-
-                    };
+                        DescripcionEstilo = leer["DESCRIPTION"].ToString(),
+						Color = leer["CODIGO_COLOR"].ToString()
+					};
                     calidad = Convert.ToInt32(leer["CANTIDAD"]) + Convert.ToInt32(leer["EXTRAS"]) + Convert.ToInt32(leer["EJEMPLOS"]);
 
                     tallas.Cantidad = calidad;

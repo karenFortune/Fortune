@@ -75,12 +75,13 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult Imprimir_Reporte_PO(int id)
+        public JsonResult Imprimir_Reporte_PO(int id, string po)
         {
             //pedido        
             Session["idPed"] = id;
+			Session["nombrePO"] = po;
 
-            return Json("0", JsonRequestBehavior.AllowGet);
+			return Json("0", JsonRequestBehavior.AllowGet);
         }
 
         /*  [ChildActionOnly]
@@ -419,15 +420,18 @@ namespace FortuneSystem.Controllers
             }
             List<int> listaTallasTBatch = objPrint.ListaTotalTallasBatchEstilo(id).ToList();
             string estilo = "";
+			string color = "";
             foreach (var item in listaTallas)
             {
                 estilo = item.Estilo;
+				color = item.Color;
 
             }
             var result = Json(new
             {
                 listaTalla = listaTallas,
                 estilos = estilo,
+				colores = color,
                 listTallaStaging = listaTallasStaging,
                 listDatosStaging = listaDatosStaging,
                 listaTallasTotalPnlBatch = listaTallasTPnlBatch,

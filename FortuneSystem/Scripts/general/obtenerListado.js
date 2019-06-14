@@ -676,7 +676,7 @@ function obtenerImagenPNL(nombreEstilo) {
 }
 
 function obtenerImagenArte(nombreEstilo) {
-    $('#imagenArte').attr('src', '/Arte/ConvertirImagenArteEstilo?nombreEstilo=' + nombreEstilo);
+	$('#imagenArte').attr('src', '/Arte/BuscarImagenArte?nombreEstilo=' + nombreEstilo);
 }
 
 function ConfirmRev(a) {

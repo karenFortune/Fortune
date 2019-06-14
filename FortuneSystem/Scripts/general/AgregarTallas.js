@@ -33,6 +33,26 @@
 		$('#tablaMPO').append(MPOdiv);
 	});
 
+	$(document).on("click", ".classAddArt", function () {
+		var rowCount = $('.data-Art').length + 1;
+		var artdiv = '<tr class="data-Art">' +
+			'<td class="mover" width="5%"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>' +
+			'<td class="datoArt" width="20%"><div class="col-sm-5">' +
+			'<div id="drop-container">' +
+			'<div class="drop-area-text">Drag and Drop Image Here</div>' +
+			'</div><img src="" class="drop-image" id="imgArteAdd" /></div></td>' +
+			'<td class="datoArt" width="20%"><input class="form-control nuevo_item color"  id="CodigoColor" name="CodigoColor" style="text-transform:uppercase" type="text"  autocomplete="off" /></td>' +
+			'<td><button type="button" id="btnDelete" class="artDelete btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
+			'</tr>';
+		$('#tablaArtColor').append(artdiv);
+	});
+	
+		
+			
+		
+		
+	
+
     $(document).on("click", ".deleteTalla", function () {
         $(this).closest("tr").remove();
 	});
@@ -42,6 +62,10 @@
 	});
 
 	$(document).on("click", ".mpoDelete", function () {
+		$(this).closest("tr").remove();
+	});
+
+	$(document).on("click", ".artDelete", function () {
 		$(this).closest("tr").remove();
 	});
 

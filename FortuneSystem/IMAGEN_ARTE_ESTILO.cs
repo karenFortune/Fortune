@@ -19,6 +19,16 @@ namespace FortuneSystem
         public Nullable<int> StatusArt { get; set; }
         public string extensionArt { get; set; }
         public Nullable<System.DateTime> fecha { get; set; }
+        public string Color { get; set; }
         public Nullable<int> IdSummary { get; set; }
-    }
+		public EstatusArteEst EstadosArteEst { get; set; }
+	}
+
+	public enum EstatusArteEst
+	{
+		APPROVED = 1,
+		REVIEWED = 2,
+		PENDING = 3,
+		INHOUSE = 4
+	}
 }

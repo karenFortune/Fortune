@@ -18,9 +18,20 @@
     <Property Name="StatusPNL" Type="int" />
     <Property Name="extensionArte" Type="varchar" MaxLength="100" />
     <Property Name="extensionPNL" Type="varchar" MaxLength="100" />
+    <Property Name="fecha" Type="date" />
   </EntityType>
-  <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'FortuneTest.dbo.IMAGEN_ARTE_PNL' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+  <EntityType Name="IMAGEN_ARTE_ESTILO">
+    <Key>
+      <PropertyRef Name="IdImgArteEstilo" />
+    </Key>
+    <Property Name="IdImgArteEstilo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdEstilo" Type="int" />
+    <Property Name="StatusArt" Type="int" />
+    <Property Name="extensionArt" Type="varchar" MaxLength="100" />
+    <Property Name="fecha" Type="date" />
+    <Property Name="Color" Type="varchar" MaxLength="50" />
+    <Property Name="IdSummary" Type="int" />
+  </EntityType>
   <EntityType Name="IMAGEN_ARTE_PNL">
     <Key>
       <PropertyRef Name="IdImgArtePNL" />
@@ -29,6 +40,7 @@ advertencia 6002: La tabla o vista 'FortuneTest.dbo.IMAGEN_ARTE_PNL' no tiene de
     <Property Name="IdEstilo" Type="int" />
     <Property Name="StatusPNL" Type="int" />
     <Property Name="extensionPNL" Type="varchar" MaxLength="100" />
+    <Property Name="fecha" Type="date" />
     <Property Name="IdSummary" Type="int" />
   </EntityType>
   <EntityType Name="UPC">
@@ -55,8 +67,9 @@ advertencia 6002: La tabla o vista 'FortuneTest.dbo.IMAGEN_ARTE_PNL' no tiene de
   <EntityContainer Name="FortuneTestModelStoreContainer">
     <EntitySet Name="ARTE" EntityType="Self.ARTE" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="IMAGEN_ARTE" EntityType="Self.IMAGEN_ARTE" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="IMAGEN_ARTE_ESTILO" EntityType="Self.IMAGEN_ARTE_ESTILO" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="IMAGEN_ARTE_PNL" EntityType="Self.IMAGEN_ARTE_PNL" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UPC" EntityType="Self.UPC" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="IMAGEN_ARTE_PNL" EntityType="Self.IMAGEN_ARTE_PNL" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="FK__ARTE__IdImgArte__467D75B8" Association="Self.FK__ARTE__IdImgArte__467D75B8">
       <End Role="IMAGEN_ARTE" EntitySet="IMAGEN_ARTE" />
       <End Role="ARTE" EntitySet="ARTE" />

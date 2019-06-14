@@ -136,7 +136,12 @@ namespace FortuneSystem.Controllers.Catalogos
             return RedirectToAction("Index");
         }
 
+		public ActionResult Lista_Colores()
+		{
+			List<CatColores> listaColores = objColores.ListaColores().ToList();				
+			return Json(listaColores, JsonRequestBehavior.AllowGet);
+		}
 
 
-    }
+	}
 }

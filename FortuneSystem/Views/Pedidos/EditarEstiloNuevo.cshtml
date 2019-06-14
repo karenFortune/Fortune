@@ -624,7 +624,7 @@ $('.tbodyTallas').keydown(function(e){
                     var ID = $("#PedidosId").val();
                     $("#editarEstiloModal").modal("hide");   //Revisar por que se muestran tantos mensajes de notificacion
                     buscar_estilos(ID);
-                    alertify.notify('The sizes were updated correctly.', 'success', 5, null);
+                    alertify.notify('The style were updated correctly.', 'success', 5, null);
                     setTimeout(function () { $("#loading").css('display', 'none'); }, 3000);
                    // setTimeout("redireccionarPagina()", 900);
                 }/*,
@@ -676,8 +676,8 @@ $('.tbodyTallas').keydown(function(e){
                 },
             }).done(function(data) {
                     });
-                alertify.set('notifier', 'position', 'top-right');
-                alertify.notify('The style was registered correctly.', 'success', 5, null);
+               // alertify.set('notifier', 'position', 'top-right');
+               // alertify.notify('The style was registered correctly.', 'success', 5, null);
             }
 
         }
@@ -724,13 +724,13 @@ $('.tbodyTallas').keydown(function(e){
         }
 	}, true);
 
-		function sumar(index) {
+		function sumar(indicador) {
 		$(".numCantTall").each(
 			function (index, value) {
 				var resp;
 				document.addEventListener("blur", function (event) {
 					debugger
-					var valor = "l-cantidad" + index;
+					var valor = "l-cantidad" + indicador;
 					var val = document.getElementById(valor).value;
 					if (val !== "") {
 						resp = eval(val);
@@ -741,13 +741,13 @@ $('.tbodyTallas').keydown(function(e){
 		);
 	}
 
-	function sumarEjemplo(index) {
+	function sumarEjemplo(indicador) {
 		$(".numEjmTall").each(
 			function (index, value) {
 				var resp;
 				document.addEventListener("blur", function (event) {
 					debugger
-					var valor = "s-ejemplo" + index;
+					var valor = "s-ejemplo" + indicador;
 					var val = document.getElementById(valor).value;
 					if (val !== "") {
 						resp = eval(val);

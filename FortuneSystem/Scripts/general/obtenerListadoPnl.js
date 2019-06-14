@@ -265,7 +265,8 @@ function obtener_tallas_item(IdEstilo) {
         dataType: "json",
         success: function (jsonData) {
             var html = '';
-            var estilos = jsonData.Data.estilos;
+			var estilos = jsonData.Data.estilos;
+			var color = jsonData.Data.colores;
             var EstiloDescription;
 			var lista_estilo_Desc = jsonData.Data.listaTalla;
 			var lista_Qty_Tallas = jsonData.Data.listTallaCant;
@@ -523,7 +524,7 @@ function obtener_tallas_item(IdEstilo) {
             $("#div_datos_staging").css("visibility", "visible");
             $("#arte").css("visibility", "visible");
             obtenerImagenPNL(estilos);
-            obtenerImagenArte(estilos);
+			obtenerImagenArte(estilos, color);
             obtener_bacth_estilo_PNL(IdEstilo);
             if (sumaTotal !== 0) {
                 obtenerTallas_Pnl(IdEstilo);
@@ -687,8 +688,12 @@ function obtenerImagenPNL(nombreEstilo) {
     $('#imagenPNL').attr('src', '/Arte/ConvertirImagenPNLEstilo?nombreEstilo=' + nombreEstilo);
 }
 
-function obtenerImagenArte(nombreEstilo) {
-    $('#imagenArte').attr('src', '/Arte/ConvertirImagenArteEstilo?nombreEstilo=' + nombreEstilo);
+function obtenerImagenArte(nombreEstilo, color) {
+
+	//$('#imagenArte').attr('src', '/Arte/ConvertirImagenListaArteEstilo?estilo=' + nombreEstilo + '&color=' + color);
+	//$('#imagenArte').attr('src', '/Arte/ConvertirImagenArteEstilo?nombreEstilo=' + nombreEstilo + '&color=' + color);
+	$('#imagenArte').attr('src', '/Arte/BuscarImagenArte?nombreEstilo=' + nombreEstilo);
+	
 }
 
 function ConfirmRev(a) {

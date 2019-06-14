@@ -191,16 +191,16 @@
 
                     });
 
-                var arteImg = '@Session["IdArte"]';
+              @*  var arteImg = '@Session["IdArte"]';
                 if (arteImg === "") {
                     $("#loading").css('display', 'none');
                     var id = $(this).data("value");
                     $('#agregarImgModal').modal('show');
-                   /* $("#ContenedorModal").load("/Cliente/Detalles/" + id, function () {
-                    });*/
+
                 } else {
 
-                }
+                }*@
+			
                 alertify.set('notifier', 'position', 'top-right');
                 alertify.notify('The Style was registered correctly.', 'success', 10, null);
 
@@ -547,30 +547,32 @@
 	}, true);
 
 
-	function sumar(index) {
+	function sumar(indicador) {
+		
 		$(".numCantTall").each(
 			function (index, value) {
 				var resp;
 				document.addEventListener("blur", function (event) {
 					debugger
-					var valor = "l-cantidad" + index;
+					var valor = "l-cantidad" + indicador;
+					//var val = $(valor).val();
 					var val = document.getElementById(valor).value;
 					if (val !== "") {
 						resp = eval(val);
-						document.getElementById(valor).value = resp;
+						//document.getElementById(valor).value = resp;
+						document.getElementById(valor).value  = resp;
 					}
 				}, true);
 			}
 		);
 	}
 
-		function sumarEjemplo(index) {
+		function sumarEjemplo(indicador) {
 		$(".numEjmTall").each(
 			function (index, value) {
 				var resp;
 				document.addEventListener("blur", function (event) {
-					debugger
-					var valor = "s-ejemplo" + index;
+					var valor = "s-ejemplo" + indicador;
 					var val = document.getElementById(valor).value;
 					if (val !== "") {
 						resp = eval(val);
@@ -587,6 +589,10 @@
 
     $(document).ready(function () {
         $('.tbodyPack').sortable();
+	});
+
+	  $(document).ready(function () {
+        $('.tbodyArt').sortable();
 	});
 
 	Dropzone.options.dropzoneForm =

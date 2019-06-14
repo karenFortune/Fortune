@@ -20,6 +20,7 @@
     <NavigationProperty Name="ARTE" Relationship="Self.FK__ARTE__IdImgArte__467D75B8" FromRole="IMAGEN_ARTE" ToRole="ARTE" />
     <Property Name="extensionArte" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="extensionPNL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="fecha" Type="DateTime" Precision="0" />
   </EntityType>
   <EntityType Name="UPC">
     <Key>
@@ -51,6 +52,7 @@
       <End Role="ARTE" EntitySet="ARTEs" />
     </AssociationSet>
     <EntitySet Name="IMAGEN_ARTE_PNL" EntityType="FortuneTestModel.IMAGEN_ARTE_PNL" />
+    <EntitySet Name="IMAGEN_ARTE_ESTILO" EntityType="FortuneTestModel.IMAGEN_ARTE_ESTILO" />
   </EntityContainer>
   <EntityType Name="IMAGEN_ARTE_PNL">
     <Key>
@@ -59,7 +61,20 @@
     <Property Name="IdImgArtePNL" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="IdEstilo" Type="Int32" />
     <Property Name="StatusPNL" Type="Int32" />
-    <Property Name="ExtensionPNL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="extensionPNL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="fecha" Type="DateTime" Precision="0" />
+    <Property Name="IdSummary" Type="Int32" />
+  </EntityType>
+  <EntityType Name="IMAGEN_ARTE_ESTILO">
+    <Key>
+      <PropertyRef Name="IdImgArteEstilo" />
+    </Key>
+    <Property Name="IdImgArteEstilo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IdEstilo" Type="Int32" />
+    <Property Name="StatusArt" Type="Int32" />
+    <Property Name="extensionArt" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="fecha" Type="DateTime" Precision="0" />
+    <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="IdSummary" Type="Int32" />
   </EntityType>
 </Schema>

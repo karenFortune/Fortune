@@ -21,11 +21,12 @@ namespace FortuneSystem.Models.Arte
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leerFilas = null;               
                 comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "select IA.IdImgArte, IA.IdEstilo,IA.StatusArte,A.IdSummary, C.NAME_FINAL, IA.StatusPNL, ID.ITEM_STYLE, IA.extensionArte, IA.extensionPNL,P.PO from IMAGEN_ARTE IA " +
+                comando.CommandText = "select IA.IdImgArte, IA.IdEstilo,IA.StatusArte,A.IdSummary, C.NAME_FINAL, IA.StatusPNL, ID.ITEM_STYLE, IA.extensionArte, IA.extensionPNL,P.PO, CO.CODIGO_COLOR from IMAGEN_ARTE IA " +
                     "INNER JOIN ITEM_DESCRIPTION ID ON ID.ITEM_ID = IA.IdEstilo " +
                     "INNER JOIN ARTE A ON A.IdImgArte=IA.IdImgArte " +
                     "INNER JOIN PO_SUMMARY PS ON PS.ID_PO_SUMMARY=A.IdSummary " +
                     "INNER JOIN PEDIDO P ON P.ID_PEDIDO=PS.ID_PEDIDOS " +
+					"INNER JOIN CAT_COLORES CO ON PS.ID_COLOR=CO.ID_COLOR " +
                     "INNER JOIN CAT_CUSTOMER_PO C ON P.CUSTOMER_FINAL=C.CUSTOMER_FINAL WHERE IA.IdImgArte='" + id + "'";
                 leerFilas = comando.ExecuteReader();
 
@@ -42,7 +43,9 @@ namespace FortuneSystem.Models.Arte
                         Tienda = leerFilas["NAME_FINAL"].ToString(),
                         extensionArte = leerFilas["extensionArte"].ToString(),
                         extensionPNL = leerFilas["extensionPNL"].ToString(),
-                        PO = leerFilas["PO"].ToString()
+                        PO = leerFilas["PO"].ToString(),
+						Color = leerFilas["CODIGO_COLOR"].ToString().TrimEnd()
+						
 
                     };
                     ARTE catArte = new ARTE()
@@ -50,8 +53,25 @@ namespace FortuneSystem.Models.Arte
                         IdSummary = Convert.ToInt32(leerFilas["IdSummary"])
                     };
 
-                    //Obtener el idEstado Arte 
-                    if (arte.StatusArte == 1)
+					List<IMAGEN_ARTE_ESTILO> listaArte = ListaArtesEstilos(arte.IdEstilo, arte.Color).ToList();
+					if(listaArte.Count != 0)
+					{
+						foreach (var item in listaArte)
+						{
+							/*if(arte.Color == item.Color)
+							{*/
+								arte.extensionArte = item.extensionArt;
+								arte.StatusArte = item.StatusArt;
+							//}
+							
+
+
+						}
+					}
+					
+
+					//Obtener el idEstado Arte 
+					if (arte.StatusArte == 1)
                     {
                         arte.EstadosArte = EstatusArte.APPROVED;
                     }
@@ -100,8 +120,68 @@ namespace FortuneSystem.Models.Arte
             return listArte;
         }
 
-        //Muestra la lista de ARTES PNL
-        public IEnumerable<IMAGEN_ARTE_PNL> ListaArtesPNL (int id)
+		//Muestra la lista de ARTE IMAGEN ESTILO 
+		public IEnumerable<IMAGEN_ARTE_ESTILO> ListaArtesEstilos(int? idEstilo, string color)
+		{
+			Conexion conn = new Conexion();
+			List<IMAGEN_ARTE_ESTILO> listArte = new List<IMAGEN_ARTE_ESTILO>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leerFilas = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "SELECT IdEstilo, StatusArt, extensionArt, Color, IdSummary FROM IMAGEN_ARTE_ESTILO WHERE IdEstilo='" + idEstilo + "' and Color='" + color + "'";
+				leerFilas = comando.ExecuteReader();
+
+				while (leerFilas.Read())
+				{
+
+					IMAGEN_ARTE_ESTILO arte = new IMAGEN_ARTE_ESTILO()
+					{
+					
+						IdEstilo = Convert.ToInt32(leerFilas["IdEstilo"]),
+						StatusArt = Convert.ToInt32(leerFilas["StatusArt"]),
+						extensionArt = leerFilas["extensionArt"].ToString(),
+						Color = leerFilas["Color"].ToString(),
+						IdSummary = Convert.ToInt32(leerFilas["IdSummary"])
+					};					
+
+					//Obtener el idEstado Arte 
+					if (arte.StatusArt == 1)
+					{
+						arte.EstadosArteEst = EstatusArteEst.APPROVED;
+					}
+					else if (arte.StatusArt == 2)
+					{
+						arte.EstadosArteEst = EstatusArteEst.REVIEWED;
+					}
+					else if (arte.StatusArt == 3)
+					{
+						arte.EstadosArteEst = EstatusArteEst.PENDING;
+					}
+					else if (arte.StatusArt == 4)
+					{
+						arte.EstadosArteEst = EstatusArteEst.INHOUSE;
+					}
+				
+
+					
+					listArte.Add(arte);
+
+				}
+				leerFilas.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+
+			return listArte;
+		}
+
+		//Muestra la lista de ARTES PNL
+		public IEnumerable<IMAGEN_ARTE_PNL> ListaArtesPNL (int id)
         {
             Conexion conn = new Conexion();
             List<IMAGEN_ARTE_PNL> listArte = new List<IMAGEN_ARTE_PNL>();
@@ -128,7 +208,7 @@ namespace FortuneSystem.Models.Arte
                         IdSummary = Convert.ToInt32(leerFilas["IdSummary"]),
                         Estilo = leerFilas["ITEM_STYLE"].ToString(),
                         Tienda = leerFilas["NAME_FINAL"].ToString(),
-                        ExtensionPNL = leerFilas["extensionPNL"].ToString(),
+                        extensionPNL = leerFilas["extensionPNL"].ToString(),
                         PO = leerFilas["PO"].ToString()
 
                     }; 
@@ -354,8 +434,8 @@ namespace FortuneSystem.Models.Arte
 			try
 			{
 				comando.Connection = conn.AbrirConexion();
-				comando.CommandText = "INSERT INTO  IMAGEN_ARTE_ESTILO (IdEstilo,StatusArt,extensionArt,fecha,IdSummary) " +
-					" VALUES('" + arte.IdEstilo + "','" + arte.StatusArt + "','" + arte.extensionArt + "','" + arte.fecha + "','" + arte.IdSummary + "')";
+				comando.CommandText = "INSERT INTO  IMAGEN_ARTE_ESTILO (IdEstilo,StatusArt,extensionArt,fecha,Color,IdSummary) " +
+					" VALUES('" + arte.IdEstilo + "','" + arte.StatusArt + "','" + arte.extensionArt + "','" + arte.fecha + "','" + arte.Color + "','" + arte.IdSummary + "')";
 				comando.ExecuteNonQuery();
 			}
 			finally
@@ -376,7 +456,7 @@ namespace FortuneSystem.Models.Arte
             {
 				comando.Connection = conn.AbrirConexion();
 				comando.CommandText = "INSERT INTO  IMAGEN_ARTE_PNL (IdEstilo,StatusPNL,extensionPNL,fecha,IdSummary) " +
-                    " VALUES('" + arte.IdEstilo + "','" + arte.StatusPNL + "','" + arte.ExtensionPNL + "','" + arte.fecha + "','" + arte.IdSummary + "')";
+                    " VALUES('" + arte.IdEstilo + "','" + arte.StatusPNL + "','" + arte.extensionPNL + "','" + arte.fecha + "','" + arte.IdSummary + "')";
                 comando.ExecuteNonQuery();
             }
             finally
@@ -574,7 +654,7 @@ namespace FortuneSystem.Models.Arte
                     arte.IdImgArtePNL = Convert.ToInt32(leerF["IdImgArtePNL"]);
                     arte.IdEstilo = Convert.ToInt32(leerF["IdEstilo"]);
                     arte.StatusPNL = Convert.ToInt32(leerF["StatusPNL"]);
-                    arte.ExtensionPNL = leerF["extensionPNL"].ToString();
+                    arte.extensionPNL = leerF["extensionPNL"].ToString();
 
 
 					if (!Convert.IsDBNull(leerF["fecha"]))
@@ -704,7 +784,7 @@ namespace FortuneSystem.Models.Arte
             try
             {
                 cmd.Connection = conex.AbrirConexion();
-                cmd.CommandText = "UPDATE IMAGEN_ARTE_PNL SET extensionPNL ='"+imagenPNL.ExtensionPNL+"' WHERE IdImgArtePNL='" + imagenPNL.IdImgArtePNL + "'";
+                cmd.CommandText = "UPDATE IMAGEN_ARTE_PNL SET extensionPNL ='"+imagenPNL.extensionPNL+"' WHERE IdImgArtePNL='" + imagenPNL.IdImgArtePNL + "'";
                 cmd.CommandType = CommandType.Text;
                 reader = cmd.ExecuteReader();
                 conex.CerrarConexion();

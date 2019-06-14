@@ -1,4 +1,5 @@
-﻿using FortuneSystem.Models.Arte;
+﻿using FortuneSystem.Models;
+using FortuneSystem.Models.Arte;
 using FortuneSystem.Models.Catalogos;
 using FortuneSystem.Models.Item;
 using FortuneSystem.Models.Items;
@@ -28,9 +29,10 @@ namespace FortuneSystem.Controllers
 		readonly ArteData objArte = new ArteData();
 		readonly CatEspecialidadesData objEspecialidad = new CatEspecialidadesData();
 		readonly CatTypeFormPackData objFormaPacking = new CatTypeFormPackData();
-    
+		private readonly MyDbContext db = new MyDbContext();
 
-        public int IdPedido;
+
+		public int IdPedido;
         // GET: POSummary
         public ActionResult Index()
         {
@@ -152,6 +154,7 @@ namespace FortuneSystem.Controllers
 		public void RegistrarArte(string EstiloItem)
         {
             IMAGEN_ARTE arte = new IMAGEN_ARTE();
+			IMAGEN_ARTE_ESTILO arteEstilo = new IMAGEN_ARTE_ESTILO();
             int idEstilo = objItemsDes.ObtenerIdEstilo(EstiloItem);
             int busquedaId = objArte.BuscarIdEstiloArteImagen(idEstilo);
             int IdItems = Convert.ToInt32(Session["IdItems"]);
@@ -172,6 +175,34 @@ namespace FortuneSystem.Controllers
                 objArte.AgregarArte(arte.IdImgArte, IdItems);
             }
             Session["IdArte"]=arte.extensionArte;
+			/*var arteEstiloBuscar = db.ImagenArteEstilo.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
+			if (arteEstiloBuscar == null)
+			{
+				if (arte.extensionArte == "")
+				{
+					int i = 0;
+					string sourceDirectory = Server.MapPath("/") + "/Content/imagenesEstilos/";
+					var files = Directory.EnumerateFiles(Server.MapPath("/") + "/Content/imagenesEstilos/", EstiloItem + ".*");
+					foreach (string currentFile in files)
+					{
+						if (i == 0)
+						{
+							string fileName = currentFile.Substring(sourceDirectory.Length);
+							arteEstilo.extensionArt = fileName;
+							i++;
+
+						}
+						
+					}
+
+					arteEstilo.StatusArt = 3;
+					arteEstilo.fecha = DateTime.Today;
+					arteEstilo.IdEstilo = idEstilo;
+					objArte.AgregarArteEstilo(arteEstilo);
+
+				}
+			}*/
+			
         }
 
         public void RegistrarArtePnl(string EstiloItem, int idSummary)
@@ -193,7 +224,7 @@ namespace FortuneSystem.Controllers
                 arte = objArte.BuscarEstiloArtePnlImagen(idSummary);
                 // objArte.AgregarArte(arte.IdImgArtePnl, IdItems);
             }
-            Session["IdArtePnl"] = arte.ExtensionPNL;
+            Session["IdArtePnl"] = arte.extensionPNL;
         }
         //Agregar imagenes de arte al registrar los estilos de una orden
         public void RegistrarArteNuevo(string EstiloItem)
