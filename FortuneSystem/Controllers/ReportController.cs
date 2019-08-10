@@ -24,14 +24,21 @@ namespace FortuneSystem.Controllers
 			int id = Convert.ToInt32(Session["idPed"]);
 			string po = Convert.ToString(Session["nombrePO"]);
 			string filename = "Reporte_" + po+".pdf";
+			Dictionary<string, string> cookieCollection = new Dictionary<string, string>();
+			foreach (var key in Request.Cookies.AllKeys)
+			{
+				cookieCollection.Add(key, Request.Cookies.Get(key).Value);
+			}
 			return new Rotativa.ViewAsPdf("Imprimir_Reporte_PO", de.ListadoInfEstilo(id))
 			{
 				PageOrientation = Rotativa.Options.Orientation.Portrait,
+				Cookies = cookieCollection,
 				PageSize = Rotativa.Options.Size.Letter,
 				PageMargins = new Rotativa.Options.Margins(4, 4, 5, 5),
-				//FileName = filename
+				FileName = filename,
 				//Change the name and constants confirm form client     
 				//CustomSwitches = "--page-offset 0 --footer-right [page]/[toPage] --footer-font-size 9 ",
+				FormsAuthenticationCookieName = System.Web.Security.FormsAuthentication.FormsCookieName
 			};
 
 		}

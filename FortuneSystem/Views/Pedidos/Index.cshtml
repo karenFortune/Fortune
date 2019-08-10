@@ -5,7 +5,7 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+	<a id="link_PO" href="@Url.Action("Imprimir_Reporte_PO", "Report")" style="visibility:hidden;">PO</a>
 <style>
 	tr.highlighted td {
 		background: #b3e0ff;
@@ -60,7 +60,7 @@
 		width: auto !important;
 	}
 
-	input[type=text], #selectFechas {
+	 #selectFechas {
 		width: 60%;
 		padding: 5px 20px;
 		margin: 8px 0;
@@ -68,6 +68,16 @@
 		border: 1px solid #ccc;
 		border-radius: 2px;
 		box-sizing: border-box;
+	}
+
+		.desMill{
+		width: 80%;
+    padding: 5px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    box-sizing: border-box;
 	}
 
 	.edit_driver {
@@ -141,7 +151,7 @@
 		}
 
 
-/**/</script>
+</script>
 
 }
 
@@ -274,8 +284,13 @@
 										<a href="@Url.Action("HistorialPedidos", "Pedidos", new { id = item.IdPedido }) " class="btn edit_driver edicion_driver" Title="Record PO"> <span class="glyphicon glyphicon-share " aria-hidden="true" style="padding: 0px !important;"></span></a>
 									}
 
-									@Html.ActionLink(" ", null, new { id = item.IdPedido }, new { @class = "btn edit_driver edicion_driver fa fa-file-pdf-o fa-lg", @Title = "Report", onclick = "imprimir_reporte_po("+item.IdPedido + ",\""+item.PO+"\")" }) //' + item.IdPedido + '' +item.PO + '
+									@Html.ActionLink(" ", null, new { id = item.IdPedido }, new { @class = "btn edit_driver edicion_driver fa fa-file-pdf-o fa-lg", @Title = "Report", onclick = "imprimir_reporte_po(" + item.IdPedido + ",\"" + item.PO + "\")" }) //' + item.IdPedido + '' +item.PO + '
 
+								}
+								else if ((int)Session["idCargo"] == 20)
+								{
+									@Html.ActionLink(" ", null, new { id = item.IdPedido }, new { @class = "btn edit_driver edicion_driver fa fa-file-pdf-o fa-lg", @Title = "Report", onclick = "imprimir_reporte_po(" + item.IdPedido + ",\"" + item.PO + "\")" })//' + item.IdPedido + '' +item.PO + '
+									
 								}
 								else if ((int)Session["idCargo"] == 15)
 								{
@@ -345,11 +360,14 @@
 	}
 	function imprimir_reporte(po) {
 		debugger
-		var nombre= "Reporte_" + po+".pdf";
+		var boton = document.getElementById('link_PO');
+        boton.click();
+		$("#loading").css('display', 'none');
+		/*var nombre= "Reporte_" + po+".pdf";
 		var h = screen.height - 100;
 		var w = screen.width - 30;
 		window.open('/Report/Imprimir_Reporte_PO', 'toolbar=0,location=0,menubar=0,width=' + w + ',height=' + h + ', fullscreen=yes');
-		$("#loading").css('display', 'none');
+		$("#loading").css('display', 'none');*/
 	}
 
  

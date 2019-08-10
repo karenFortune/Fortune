@@ -13,6 +13,107 @@ function obtenerCantidades(listaPsc) {
     });
 }
 
+function focusingPPK(valor) {
+	var nombreCant = "#pallet" + valor + " .qtyRat";
+	if ($(nombreCant).val() === "0") {
+		$(nombreCant).val('');
+	}
+}
+
+function focusingBulk(valor) {
+	var nombreC = "#pallet" + valor + " .qty";
+	if ($(nombreC).val() === "0") {
+		$(nombreC).val('');
+	}
+}
+
+function focusingPalletBulk(valor) {
+	var nombreCaja = "#pallet" + valor + " .caja";
+	if ($(nombreCaja).val() === "0") {
+		$(nombreCaja).val('');
+	}
+}
+
+function focusingPalletBulkPcs(valor) {
+	var nombreR = "#pallet" + valor + " .qtyPcs";
+	if ($(nombreR).val() === "0") {
+		$(nombreR).val('');
+	}
+}
+
+function focusingPalletPPK(valor) {
+	var nombreR = "#pallet" + valor + " .qtyPcs";
+	if ($(nombreR).val() === "0") {
+		$(nombreR).val('');
+	}
+}
+
+function focusingPackB(valor) {
+	var nombrePB = "#pallet" + valor + " .numeric";
+	if ($(nombrePB).val() === "0") {
+		$(nombrePB).val('');
+	}
+}
+
+function focusingPackP(valor) {
+	var nombrePP = "#pallet" + valor + " .cantRatioP";
+	if ($(nombrePP).val() === "0" || $(nombrePP).val() === 0) {
+		$(nombrePP).val('');
+	}
+}
+
+function focusingPackEditP(valor) {
+	var nombrePP = "#pallet" + valor + " .cantRatioP";
+	if ($(nombrePP).val() === "0" || $(nombrePP).val() === 0) {
+		$(nombrePP).val('');
+	}
+}
+
+function focusingPackVariosP(valor) {
+	var nombreVPPK = "#pallet" + valor + " .qtyVPPKs";
+	if ($(nombreVPPK).val() === "0" || $(nombreVPPK).val() === 0) {
+		$(nombreVPPK).val('');
+	}
+}
+
+function focusingPackVariosBulks(valor) {
+	var nombreVBulks = "#pallet" + valor + " .qtyVBulks";
+	if ($(nombreVBulks).val() === "0" || $(nombreVBulks).val() === 0) {
+		$(nombreVBulks).val('');
+	}
+}
+
+function focusingPackVariosEditP(valor) {
+	var nombreVPPK = "#pallet" + valor + " .qtyVPPKs";
+	if ($(nombreVPPK).val() === "0" || $(nombreVPPK).val() === 0) {
+		$(nombreVPPK).val('');
+	}
+}
+
+function focusingPackVariosEditBulks(valor) {
+	var nombreVBulks = "#pallet" + valor + " .qtyVBulks";
+	if ($(nombreVBulks).val() === "0" || $(nombreVBulks).val() === 0) {
+		$(nombreVBulks).val('');
+	}
+}
+
+function focusingAssort(valor) {
+	var nombreAsort = "#pallet" + valor + " .rat";
+	if ($(nombreAsort).val() === "0" || $(nombreAsort).val() === 0) {
+		$(nombreAsort).val('');
+	}
+}
+
+function focusingPalletBulk2(valor) {
+	var nombreP = "#l-cantidadBox" + valor;
+	if ($(nombreP).val() === "0" || $(nombreP).val() === 0) {
+		$(nombreP).val('');
+	}
+}
+
+
+
+
 function sumarAssort() {
     var total = 0;
     //valor = parseInt(valor);
@@ -151,7 +252,7 @@ function obtTotalMat(index) {
                 $(nombreT).val(faltanteQty);
 
                 $(nombrePartial).val(faltanteQty);
-                nCajas = parseInt(valorCajas) + parseInt(numCajas);
+                nCajas = /*parseInt(valorCajas) + */parseInt(numCajas);
                 resta = parseInt(numTotalCajas) - nCajas;
                 $(nombreTF).val(resta);
             } else {
@@ -227,7 +328,9 @@ function obtTotalMat(index) {
         alert.set('modal', false);
         $(nombreC).css('border', '2px solid #e03f3f');
         $("#nuevoPallet").prop('disabled', true);
-    }
+	}
+
+
     
     
     
@@ -283,8 +386,9 @@ function ActualizarPiezasPackingBulk(index) {
     } else {
         $(nombrePartial).css('border', '1px solid #cccccc');
         $("#nuevoPallet").prop('disabled', false);
-        numTPiezas = $(nombrePartial).val();
-        resultado = parseInt(cantCajas) + parseInt(numTPiezas);
+		numTPiezas = $(nombrePartial).val();
+		resultado =parseInt(numTPiezas);
+       // resultado = parseInt(cantCajas) + parseInt(numTPiezas);
         $(nombreT).val(resultado); 
       
               
@@ -310,7 +414,7 @@ function obtTotalCartones(index) {
     var result = numCajas - mult;
 	var descripcion = tCajas + "ctnx50" + "1x" + result;
 	var numCartones = 0;
-	if (numCajas !== "0") {
+	if (numCajas !== "0" && result !== 0) {
 		numCartones = tCajas + 1;
 	} else {
 		numCartones = tCajas;
@@ -329,6 +433,7 @@ function obtTotalCartones(index) {
     }
 
 }
+
 
 function obtTotalPiezas(numBoxPPK) {
     var error = 0;
@@ -398,6 +503,76 @@ function obtTotalPiezas(numBoxPPK) {
     if (resta !== 0) {
         $("#Packing_TotalCartonesFaltPPK").val(resta);
     }
+
+
+}
+
+
+function obtTotalPiezasPPKS(numBoxPPKS) {
+
+	var error = 0;
+	var namePack = $("#selectPackingNameVariosPPKS option:selected").val();
+	var numFilas = $("#tablaTallasPallet tbody>tr").length;
+	var nombreCant = ".qtyPPKs" + namePack;
+	var valorRatio = $(".numRatio").parent("tr").find("td").eq(1).text();
+	var restar;
+	if ($(".cantBoxPPKS ").val() === "") {
+		$(".cantBoxPPKS ").val(0);
+	}
+	var box = $(".cantBoxPPKS ").val();
+	var numTotalBox = parseInt(box) + parseInt(numBoxPPKS);
+	var cantidadCartones = $("#Packing_TotalCartonsPPKS").val();
+	if (parseInt(numTotalBox) === 0) {
+		$("#Packing_TotalCartonesFaltPPKS").val(cantidadCartones);
+	} else {
+		restar = parseInt(cantidadCartones) - parseInt(numTotalBox);
+		$("#Packing_TotalCartonesFaltPPKS").val(restar);
+	}
+	for (var i = 1; i <= numFilas; i++) {
+		var input = $(".totalPiezas");
+		var nombreT = "#pallet" + i + " .totalPiezas";
+		var nombreC = "#pallet" + i + " .cantBoxPPKS";
+		var nombreP = "#pallet" + i + " .cant";
+		var valorQty = $(nombreCant).parent("tr").find("td").eq(i).text();
+		var pQty = parseInt(valorQty);
+        /*$('#tablaTallasPallet tr').each(function () {
+            var valor = "td" + " #pallet" + i;
+            var customerId = $(input).find(nombreT).eq(i).html();
+            var kksj = $(nombreP).val();
+        });*/
+
+		/* var nombreC = $(".cantBox").val();"#pallet" + i + " .cantBox";*/
+
+		var numCajas = $(".cantBoxPPKS").val(); //$(nombreC).val();
+		var numPiezas = $(nombreP).val();
+		var tot = numCajas * numPiezas;
+		
+		$(nombreT).val(tot);
+		if (tot > pQty) {
+			$(nombreT).css('border', '2px solid #e03f3f');
+			error++;
+			$("#nuevoPalletPPK").prop('disabled', true);
+		} else {
+			$(nombreT).css('border', '1px solid #cccccc');
+			$("#nuevoPalletPPK").prop('disabled', false);
+		}
+
+		if (parseInt(numCajas) > restar && parseInt(numCajas) > parseInt(cantidadCartones)) {
+			$(".cantBoxPPKS ").css('border', '2px solid #e03f3f');
+			error++;
+			$("#nuevoPalletPPK").prop('disabled', true);
+		} else {
+			$(".cantBoxPPKS ").css('border', '1px solid #cccccc');
+			$("#nuevoPalletPPK").prop('disabled', false);
+		}
+
+	}
+	//var numMBoxPPK = $("#Packing_TotalCartonesFaltPPKS").val();
+	//var resta = parseInt(numMBoxPPK) - parseInt(numBoxPPK);
+	/*var resta = parseInt(numMBoxPPK) - parseInt(numCajas);
+	if (resta !== 0) {
+		$("#Packing_TotalCartonesFaltPPKS").val(resta);
+	}*/
 
 
 }
@@ -558,7 +733,7 @@ function calcular_MisPrint() {
             var numMisPrint = parseInt(Misprint);
             var valores;
             importe_total = importe_total + eval($(this).val());
-            if (numMisPrint > numPO) {
+            /*if (numMisPrint > numPO) {
                 input.css('border', '2px solid #e03f3f');
                 var alert = alertify.alert("Message", 'The value of MisPrint is greater than the missing PO.').set('label', 'Aceptar');
                 alert.set({ transition: 'zoom' });
@@ -566,7 +741,7 @@ function calcular_MisPrint() {
                 error++;
             } else {
                 input.css('border', '1px solid #cccccc');
-            }
+            }*/
         }
     );
 
@@ -599,7 +774,7 @@ function calcular_Defect() {
             var valores;
             importe_total = importe_total + eval($(this).val());
 
-            if (numDefect > numPO ) {
+           /* if (numDefect > numPO ) {
                 input.css('border', '2px solid #e03f3f');
                 var alert = alertify.alert("Message", 'The value of Defect is greater than the missing PO.').set('label', 'Aceptar');
                 alert.set({
@@ -609,7 +784,7 @@ function calcular_Defect() {
                 error++;
             } else {
                 input.css('border', '1px solid #cccccc');
-            }
+            }*/
         }
     );
     $("#totalD").val(importe_total);
@@ -634,7 +809,7 @@ function calcular_Repair() {
             var valores;
             importe_total = importe_total + eval($(this).val());
 
-            if (numRepair > numPO) {
+           /* if (numRepair > numPO) {
                 input.css('border', '2px solid #e03f3f');
                 var alert = alertify.alert("Message", 'The value of Repair is greater than the missing PO.').set('label', 'Aceptar');
                 alert.set({
@@ -644,7 +819,7 @@ function calcular_Repair() {
                 error++;
             } else {
                 input.css('border', '1px solid #cccccc');
-            }
+            }*/
         }
     );
     $("#totalR").val(importe_total);
@@ -816,4 +991,62 @@ function calcular_Restantes() {
 
         }
     );
+}
+
+function CalcularCantidadesPrimeraCalidadExtas(cont) {
+
+	var resp;
+	document.addEventListener("blur", function (event) {
+		var valor = "e-extras" + cont;
+		var val = document.getElementById(valor).value;
+		if (val !== "") {
+			resp = eval(val);
+			document.getElementById(valor).value = resp;
+		}
+	}, true);
+	var qty = $("#l-cantidad" + cont).val();
+	var cantidadNum = qty === "" ? "0" : qty;
+	var qtyEjem = $("#s-ejemplo" + cont).val();
+	var cantidadEjemNum = qtyEjem === "" ? "0" : qtyEjem;
+	var qtyExtras = $("#e-extras" + cont).val();
+	var cantidadExtrasNum = qtyExtras === "" ? "0" : qtyExtras;
+	var qtyPC = $("#s-qtyPC" + cont).val();
+	var cantidadPrimerCalidad = qtyPC === "" ? "0" : qtyPC;
+	var total = 0;
+	var indicador = $("#Bandera").val();
+	if (parseInt(cantidadExtrasNum) >= 1) {
+		if (parseInt(cantidadNum) === "" || parseInt(cantidadNum) === 0 || parseInt(cantidadNum) === "0") {
+			$("#Bandera").val(2);
+			total = parseInt(cantidadPrimerCalidad) + parseInt(cantidadEjemNum) + parseInt(cantidadExtrasNum);
+			$("#l-cantidad" + cont).val(total);
+		}
+		if (parseInt(cantidadPrimerCalidad) === "" || parseInt(cantidadPrimerCalidad) === 0 || parseInt(cantidadPrimerCalidad) === "0") {
+			$("#Bandera").val(3);
+			total = parseInt(cantidadNum) - parseInt(cantidadEjemNum) - parseInt(cantidadExtrasNum);
+			$("#s-qtyPC" + cont).val(total);
+		}
+
+		if ((parseInt(cantidadNum) !== "" || parseInt(cantidadNum) !== 0 || parseInt(cantidadNum) !== "0") && indicador === "2") {
+			$("#Bandera").val(2);
+			total = parseInt(cantidadPrimerCalidad) + parseInt(cantidadEjemNum) + parseInt(cantidadExtrasNum);
+			$("#l-cantidad" + cont).val(total);
+		}
+		if ((parseInt(cantidadPrimerCalidad) !== "" || parseInt(cantidadPrimerCalidad) !== 0 || parseInt(cantidadPrimerCalidad) !== "0") && indicador === "3") {
+			$("#Bandera").val(3);
+			total = parseInt(cantidadNum) - parseInt(cantidadEjemNum) - parseInt(cantidadExtrasNum);
+			$("#s-qtyPC" + cont).val(total);
+		}
+	} else {
+		if ((parseInt(cantidadNum) !== "" || parseInt(cantidadNum) !== 0 || parseInt(cantidadNum) !== "0") && indicador === "2") {
+			$("#Bandera").val(2);
+			total = parseInt(cantidadPrimerCalidad) + parseInt(cantidadEjemNum) + parseInt(cantidadExtrasNum);
+			$("#l-cantidad" + cont).val(total);
+		}
+		if ((parseInt(cantidadPrimerCalidad) !== "" || parseInt(cantidadPrimerCalidad) !== 0 || parseInt(cantidadPrimerCalidad) !== "0") && indicador === "3") {
+			$("#Bandera").val(3);
+			total = parseInt(cantidadNum) - parseInt(cantidadEjemNum) - parseInt(cantidadExtrasNum);
+			$("#s-qtyPC" + cont).val(total);
+		}
+	}
+	obtenerTotalesEdicionEstilo();
 }

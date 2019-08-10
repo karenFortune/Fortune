@@ -173,7 +173,10 @@
 
     function obtenerListaTallas() {
                 $("#loading").css('display', 'inline');
-                $.ajax('@Url.Action("Lista_Tallas_Estilo", "Arte")', {
+	    var id = $("#IdEstilo").val();
+		var link = '@Url.Action("Lista_Tallas_Estilo", "Arte", new { id = "valor"})';
+            link = link.replace("valor", id);
+                $.ajax(link, {
                     method: 'GET',
                     dataType: "json",
                     success: function (jsonData) {
@@ -223,7 +226,10 @@
 
     function obtenerDetalleListaTallas() {
                 $("#loading").css('display', 'inline');
-                $.ajax('@Url.Action("Lista_Tallas_Estilo", "Arte")', {
+	    var id = $("#IdEstilo").val();
+		var link = '@Url.Action("Lista_Tallas_Estilo", "Arte", new { id = "valor"})';
+            link = link.replace("valor", id);
+                $.ajax(link, {
                     method: 'GET',
                     dataType: "json",
                     success: function (jsonData) {
@@ -305,7 +311,9 @@
 
         $('#btnModif').on('click', function () {
             var status = $('input:radio[name=EstadosArte]:checked').val();
-            var idArte = $('#IdImgArte').val();
+			var idArte = $('#IdImgArte').val();
+			var combos = $('#combos').val();
+			var comentarios = $('#comentarios').val();
             var idEspecialidad = $('input:radio[name=CatEspecialidades\\.IdEspecialidad]:checked').val();
             if (window.FormData !== undefined) {
 
@@ -318,7 +326,9 @@
                 }
                 fileData.append('idArte', idArte);
                 fileData.append('status', status);
-                fileData.append('idEspecialidad', idEspecialidad);
+				fileData.append('idEspecialidad', idEspecialidad);
+				fileData.append('combos', combos);
+				fileData.append('comentarios', comentarios);
                 
                 $.ajax({
                     url: '/Arte/ActualizarImagenArt',
@@ -628,74 +638,84 @@
 					</div>
 				</div>
 			} *@
-			<div class="row">
-				<div class="col-sm-6 col-md-6">
-					@Html.LabelFor(model => model.Estilo, htmlAttributes: new { @class = "control-label col-md-2" })
-					@Html.EditorFor(model => model.Estilo, new { htmlAttributes = new { @class = "form-control ", @readonly = "readonly" } })
-					<br />
-					@if (Model.extensionArte == null || Model.extensionArte == "")
-					{
-						<div class="col-sm-6 col-md-9">
-							@Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-sm-5 col-md-5" })
-							<div class="file-upload col-sm-5 col-md-9">
-								<div class="file-select">
-									<div class="file-select-button" id="fileName">Browser File</div>
-									<div class="file-select-name" id="noFile">No file chosen...</div>
-									@Html.TextBoxFor(model => model.FileArte, new { type = "file", id = "chooseFile" })
-
-								</div>
+		<div class="row">
+			<div class="col-sm-6 col-md-6">
+				@Html.LabelFor(model => model.Estilo, htmlAttributes: new { @class = "control-label col-md-2", @id="labelTitulo"})
+				@Html.EditorFor(model => model.Estilo, new { htmlAttributes = new { @class = "form-control ", @readonly = "readonly" } })
+				@Html.LabelFor(model => model.DescripcionEstilo, htmlAttributes: new { @class = "control-label col-md-2", @id="labelTitulo" })
+				@Html.EditorFor(model => model.DescripcionEstilo, new { htmlAttributes = new { @class = "form-control ", @readonly = "readonly" } })
+				<br />
+				@if (Model.extensionArte == null || Model.extensionArte == "")
+				{
+					<div class="col-sm-6 col-md-9">
+						@Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-sm-5 col-md-5" })
+						<div class="file-upload col-sm-5 col-md-9">
+							<div class="file-select">
+								<div class="file-select-button" id="fileName">Browser File</div>
+								<div class="file-select-name" id="noFile">No file chosen...</div>
+								@Html.TextBoxFor(model => model.FileArte, new { type = "file", id = "chooseFile" })
 
 							</div>
-							<img id="imgSalida" width="70" height="70" />
-						</div>
-					}
-					else
-					{
-						<div class="col-sm-6 col-md-9">
-							@Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-sm-5 col-md-5" })
-							<div class="file-upload col-sm-5 col-md-9">
-								<div class="file-select">
-									<div class="file-select-button" id="fileName">Browser File</div>
-									<div class="file-select-name" id="noFile">No file chosen...</div>
-									@Html.TextBoxFor(model => model.FileArte, new { type = "file", id = "chooseFile" })
-
-								</div>
-							</div>
-							<img id="imgSalida" width="70" height="70" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = Model.IdImgArte})" />
-						</div>
-						/*<div class="">
-							@Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-md-4" })
-
-							<img id="imgSalida" width="70" height="70" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = Model.IdImgArte})" />
-						</div>*/
-
-					}
-
-					<div class="col-sm-5 col-md-12">
-						<br />
-						<div class="col-sm-5 col-md-12">
-
-							@Html.LabelFor(model => model.StatusArte, htmlAttributes: new { @class = "control-label " })
-							@Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.APPROVED, new { @class = "form-radio", @id = "EstatusApro", Checked = "checked" }) APPROVED
-							@Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.INHOUSE, new { @class = "form-radio", @id = "EstatusInhouse" }) IN HOUSE
-							@Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.REVIEWED, new { @class = "form-radio", @id = "EstatusRev" }) REVIEWED
-							@Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.PENDING, new { @class = "form-radio", @id = "EstatusPend" }) PENDING
 
 						</div>
+						<img id="imgSalida" width="70" height="70" />
 					</div>
+				}
+				else
+				{
+					<div class="col-sm-6 col-md-9">
+						@Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-sm-5 col-md-5" })
+						<div class="file-upload col-sm-5 col-md-9">
+							<div class="file-select">
+								<div class="file-select-button" id="fileName">Browser File</div>
+								<div class="file-select-name" id="noFile">No file chosen...</div>
+								@Html.TextBoxFor(model => model.FileArte, new { type = "file", id = "chooseFile" })
+
+							</div>
+						</div>
+						<img id="imgSalida" width="70" height="70" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = Model.IdImgArte})" />
+					</div>
+					/*<div class="">
+						@Html.LabelFor(model => model.imgArte, htmlAttributes: new { @class = "control-label col-md-4" })
+
+						<img id="imgSalida" width="70" height="70" src="@Url.Action("ConvertirImagen", "Arte", new {arteCodigo = Model.IdImgArte})" />
+					</div>*/
+
+				}
+
+			<div class="col-sm-5 col-md-12">
+				<br />
+				<div class="col-sm-5 col-md-12">
+					@Html.LabelFor(model => model.StatusArte, htmlAttributes: new { @class = "control-label " })
+					@Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.APPROVED, new { @class = "form-radio", @id = "EstatusApro", Checked = "checked" }) APPROVED
+					@Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.INHOUSE, new { @class = "form-radio", @id = "EstatusInhouse" }) IN HOUSE
+					@Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.REVIEWED, new { @class = "form-radio", @id = "EstatusRev" }) REVIEWED
+					@Html.RadioButtonFor(model => model.EstadosArte, EstatusArte.PENDING, new { @class = "form-radio", @id = "EstatusPend" }) PENDING
 				</div>
-				<div class="col-sm-7 offset-sm-3 col-md-6 offset-md-0">
-					<label class="control-label">TECHNICAL SPECIALTIES</label> <br />
-					@foreach (var item in (SelectList)ViewBag.listEspecialidad)
-					{
-
-						@Html.RadioButtonFor(model => model.CatEspecialidades.IdEspecialidad, item.Value, new { @class = "form-radio-tecnica" })
-						<label class="control-label" id="labelTecnica">@item.Text&nbsp;&nbsp;&nbsp; </label>
-
-					}
-
+				<div class="col-sm-5 col-md-12">
+					<br />
+					@Html.LabelFor(model => model.comentarios, htmlAttributes: new { @class = "control-label" })<br />
+					@Html.TextAreaFor(model => model.comentarios, new { rows = 2, @style = "margin: 0px; width: 804px; height: 86px; text-transform:uppercase;", htmlAttributes = new { @class = "form-control" } })
 				</div>
 			</div>
+			</div>
+			<div class="col-sm-7 offset-sm-3 col-md-6 offset-md-0">
+				<label class="control-label">TECHNICAL SPECIALTIES</label> <br />
+				@foreach (var item in (SelectList)ViewBag.listEspecialidad)
+				{
+					@Html.RadioButtonFor(model => model.CatEspecialidades.IdEspecialidad, item.Value, new { @class = "form-radio-tecnica" })
+					<label class="control-label" id="labelTecnica">@item.Text&nbsp;&nbsp;&nbsp; </label>
+				}
+				<div class="col-sm-5 col-md-12">
+					<br />
+					@Html.LabelFor(model => model.combos, htmlAttributes: new { @class = "control-label" })<br />
+					@Html.TextAreaFor(model => model.combos, new { rows = 2, @style = "margin: 0px; width: 804px; height: 86px; text-transform:uppercase;", htmlAttributes = new { @class = "form-control" } })
+				</div>
+				
+
+			</div>
+
+		</div>
 			<hr />
 			@if (Model.extensionArte == null || Model.extensionArte == "")
 			{
@@ -714,7 +734,7 @@
 				</div>
 			}
 		</div>
-		<div class="panel panel-primary" id="panelArte">
+	<!--<div class="panel panel-primary" id="panelArte">
 			<div class="panel-heading">
 				<h2>Art Color </h2>
 			</div>
@@ -729,7 +749,7 @@
 					<img src="" class="drop-image" id="imgArteAdd" />
 				</div>
 				<br />
-				<br />
+				<br />-->
 				<!--<div class="text-center margin-bottom col-sm-12">
 		<button type="button" class="btn btn-success" id="nuevo_usuario" data-toggle="modal">
 			<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> SAVE
@@ -755,9 +775,9 @@
 		</button>
 	</div>
 	<br />
-	<br />-->
+	<br />
 			</div>
-				</div>
+				</div>-->
 
 				<div>
 					@Html.ActionLink("Back to List", "Index")

@@ -203,8 +203,36 @@ namespace FortuneSystem.Models.Items
             return Estilo;
         }
 
+		//Obtener el nombre de un estilo por id
+		public int ObtenerIdEstiloPorsummary(int? idEstilo)
+		{
+			int numEstilo = 0;
+			Conexion conex = new Conexion();
+			try
+			{
+				SqlCommand coman = new SqlCommand();
+				SqlDataReader leerF = null;
+				coman.Connection = conex.AbrirConexion();
+				coman.CommandText = "SELECT ITEM_ID FROM PO_SUMMARY " +
+									 "WHERE ID_PO_SUMMARY='" + idEstilo + "' ";
+				leerF = coman.ExecuteReader();
+				while (leerF.Read())
+				{
+					numEstilo += Convert.ToInt32(leerF["ITEM_ID"]);
+				}
+				leerF.Close();
+			}
+			finally
+			{
+				conex.CerrarConexion();
+				conex.Dispose();
+			}
 
-        public string Verificar_Item_CD(string cadena)
+			return numEstilo;
+		}
+
+
+		public string Verificar_Item_CD(string cadena)
         {
             Conexion conn = new Conexion();
             string texto = null;
@@ -228,5 +256,31 @@ namespace FortuneSystem.Models.Items
             
             return texto;
         }
-    }
+
+		public string ObtenerNombreEstiloId(string estilo)
+		{
+			string estiloDes = "";
+			Conexion conex = new Conexion();
+			try
+			{
+				SqlCommand coman = new SqlCommand();
+				SqlDataReader leerF = null;
+				coman.Connection = conex.AbrirConexion();
+				coman.CommandText = "SELECT I.DESCRIPTION FROM ITEM_DESCRIPTION I " +
+						"where I.ITEM_STYLE='" + estilo + "'";
+				leerF = coman.ExecuteReader();
+				while (leerF.Read())
+				{
+					estiloDes += leerF["DESCRIPTION"].ToString();
+				}
+				leerF.Close();
+			}
+			finally
+			{
+				conex.CerrarConexion();
+				conex.Dispose();
+			}
+			return estiloDes;
+		}
+	}
 }

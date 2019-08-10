@@ -1,20 +1,20 @@
 ﻿@model FortuneSystem.Models.POSummary.POSummary
 @section scripts{
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="~/Content/alertifyjs/css/alertify.min.css" />
-    <link rel="stylesheet" href="~/Content/alertifyjs/css/themes/default.min.css" />
-    <link href="~/Content/select2-4.0.5/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="~/Content/alertifyjs/alertify.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-    <script src="~/Scripts/general/obtenerListaTallasPorGenero.js"></script>
-    <script type="text/javascript" src="~/Content/TableDnD-master/js/jquery.tablednd.js" ></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="~/Content/alertifyjs/css/alertify.min.css" />
+	<link rel="stylesheet" href="~/Content/alertifyjs/css/themes/default.min.css" />
+	<link href="~/Content/select2-4.0.5/dist/css/select2.min.css" rel="stylesheet" />
+	<script src="~/Content/alertifyjs/alertify.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+	<script src="~/Scripts/general/obtenerListaTallasPorGenero.js"></script>	
+	<script type="text/javascript" src="~/Content/TableDnD-master/js/jquery.tablednd.js"></script>
 
-    <link href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")" rel="stylesheet" />
-    @Scripts.Render("~/Content/jquery-ui-1.12.1.custom/jquery-3.3.1.min.js")
+	<link href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")" rel="stylesheet" />
+	@Scripts.Render("~/Content/jquery-ui-1.12.1.custom/jquery-3.3.1.min.js")
 
-    <script src="~/Scripts/bootstrap.js"></script>
+	<script src="~/Scripts/bootstrap.js"></script>
 }
 <script type="text/javascript">
 
@@ -39,31 +39,57 @@
 
 		$(document).on("click", ".pDelete", function () {
 			$(this).closest("tr").remove();
+
 	});
 	debugger
 	var cont;
-	var contadorGeneral;
-    $(document).ready(function () {
+	var contadorGeneral=0;
+	$(document).ready(function () {
+		 var Cliente = $("#NumCliente").val();
+    if (Cliente == "2") {
+        $("#POFantasy").prop("disabled", false);
+    } else {
+        $("#POFantasy").prop("disabled", true);
+        $("#POFantasy").val("N/A");
+		}
+
+        var tipoS = $("#TipoImpSleeve").val();
+		var tipoS2 = $("#TipoImpSleeve2").val();
+		var tipoB = $("#TipoImpBack").val();
+		if (tipoS == "True") {
+			$("input:checkbox[name=tipoSleeve]").attr('checked',true);
+		}
+		if (tipoS2 ==  "True") {
+			$("input:checkbox[name=tipoSleeve2]").attr('checked',true);
+		}
+		if (tipoB ==  "True") {
+			$("input:checkbox[name=tipoBack]").attr('checked',true);
+        }
+
 		buscar_Packing();
         $(document).on("click", ".classAdd", function () {
-			var rowCount = $('.data-Talla').length + 1;
-			var contador = cont;
+            var rowCount = $('.data-Talla').length + 1;
+            debugger
+            var contador = cont;
+
 			if (contador != 0) {
-				contador = cont
-			} else {
+                contador = cont + 1;
+            } else {
+
 				contador = contadorGeneral + 1;
 			}
-			
-            var tallasdiv = '<tr class="data-Talla">' +  
 
+            var tallasdiv = '<tr class="data-Talla">' +
                 '<td class="mover"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>' +
-                '<td class="datoTalla"><input type="text"  name="f-talla" id="f-talla" class="form-control talla" autocomplete="off" /></td>' +
-                '<td class="datoTalla"><input type="text" id="l-cantidad'+contador+'" name="l-cantidad" class="form-control l-name01 numCantTall" onblur="sumar(' + contador + ')"  /></td>' +
-                '<td class="datoTalla"><input type="text" id="e-extras"  name="e-extras" class="form-control e-name01 numExtTall" value="' + 0 + '"/></td>' +
-                '<td class="datoTalla"><input type="text" id="s-ejemplo'+contador+'" name="s-ejemplo" class="form-control s-name01 numEjmTall" onblur="sumarEjemplo(' + contador + ')" value="' + 0 + '"/></td>' +              
-                '<td><button type="button" id="btnDelete" class="delTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
-				'</tr>';			
-			//contadorGeneral = contadorGeneral + 1;
+                '<td class="datoTalla"><input type="text"  name="f-talla" id="f-talla'+contador+'" class="form-control talla" autocomplete="off" onchange="SepararCadenaInputsTallas('+contador+'); " /></td>' +
+                '<td class="datoTalla"><input type="text" id="l-cantidad'+contador+'" name="l-cantidad" class="form-control l-name01 numCantTall" onchange="SepararCadenaInputsCantidad('+contador+');" onblur="sumar(' + contador + ')"  /></td>' +
+				'<td class="datoTalla"><input type="text" name="s-qtyPC" id="s-qtyPC'+contador+'" class="form-control s-name01 numQtyPCTall" onfocus="focusingCalidadAdd('+contador+')" onchange="SepararCadenaInputsCantidadPC('+contador+');" onblur="ObtenerSumaQtyPC(' + contador + ')"  value="' + 0 + '" /></td>' +
+				'<td class="datoTalla"><input type="text" id="e-extras' + contador + '"  name="e-extras" class="form-control e-name01 numExtTall" onfocus="focusingExtrasAdd2(' + contador + ')" onChange="CalcularCantidadesPrimeraCalidad(' + contador + ');" value="' + 0 + '"/></td>' +
+                '<td class="datoTalla"><input type="text" id="s-ejemplo'+contador+'" name="s-ejemplo" class="form-control s-name01 numEjmTall" onfocus="focusingAdd2('+contador+')" onblur="CalcularCantidadesPrimeraCalidadEje(' + contador + ');" value="' + 0 + '"/></td>' +
+				'<td><button type="button" id="btnDelete" class="delTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>' +
+				'</tr>';
+            contadorGeneral++;
+            cont = contador;
             $('#tablaTallas').append(tallasdiv);
         });
 
@@ -71,11 +97,15 @@
             var $row = $(this).closest("tr");
             var $text = $row.find(".talla").val();
             eliminarTallas($text);
-            $(this).closest("tr").remove();
+			$(this).closest("tr").remove();
+			 cont = cont - 1;
+			obtenerTotalesEdicionEstilo();
         });
 
 		$(document).on("click", ".delTalla", function () {
 			$(this).closest("tr").remove();
+			cont = cont - 1;
+			obtenerTotalesEdicionEstilo();
 		});
 
 
@@ -105,7 +135,7 @@
             }
 		});
 
-		        $('#selectFormPack').select2({       
+		        $('#selectFormPack').select2({
             dropdownParent: $("#editarEstiloModal"),
             language: {
                 noResults: function () {
@@ -167,12 +197,16 @@
                 var estilo = ui.item.value;
                 var nuevoEstilo = estilo.trim();
                 var numero = validarEstilo(nuevoEstilo);
-                var item = $("#ItemDescripcion_Descripcion").val(ui.item.descripcion);
-                if (item !== "") {
-                    $('#nuevoEstilo').attr('disabled', true);
-                } else {
-                    $('#nuevoEstilo').attr('disabled', false);
-                }
+          		var item = $("#ItemDescripcion_Descripcion").val(ui.item.descripcion);
+				$("#nuevoEstilo").removeClass("btn btn-danger");
+				$("#nuevoEstilo").addClass("btn btn-success");
+				if (item !== "") {
+					$('#nuevoEstilo').attr('disabled', true);
+					$("#modificarEstilo").prop("disabled", false);
+				} else {
+					$('#nuevoEstilo').attr('disabled', false);
+					$("#modificarEstilo").prop("disabled", false);
+				}
             },
             minLength: 1,
             response: function (event, ui) {
@@ -180,7 +214,12 @@
 
                     var alert = alertify.alert("Message", 'No style results found.').set('label', 'Aceptar');
                     alert.set({ transition: 'zoom' });
-                    alert.set('modal', false);
+					alert.set('modal', false);
+					$("#nuevoEstilo").prop("disabled", false);
+					$("#nuevoEstilo").removeClass("btn btn-success");
+				    $("#nuevoEstilo").addClass("btn btn-danger");
+					var itemDes = $("#ItemDescripcion_Descripcion").val('');
+					$("#nuevoItem").prop("disabled", true);
                 }
             }
         });
@@ -210,19 +249,31 @@
             },
             select: function (event, ui) {
                 var color = $("#CatColores_DescripcionColor").val(ui.item.color);
-                $("#IdColor").val(ui.item.id);
-                if (color !== "") {
-                    $('#nuevoColor').attr('disabled', true);
-                } else {
-                    $('#nuevoColor').attr('disabled', false);
-                }
+			$("#IdColor").val(ui.item.id);
+			$("#nuevoColor").removeClass("btn btn-danger");
+			$("#nuevoColor").addClass("btn btn-success");
+            if (color !== "") {
+				$('#nuevoColor').attr('disabled', true);
+				$("#modificarEstilo").prop("disabled", false);
+            } else {
+				$('#nuevoColor').attr('disabled', false);
+				$("#modificarEstilo").prop("disabled", false);
+            }
             },
             minLength: 1,
             response: function (event, ui) {
                 if (!ui.content.length) {
                     var alert = alertify.alert("Message", 'No color results found.').set('label', 'Aceptar');
                     alert.set({ transition: 'zoom' });
-                    alert.set('modal', false);
+					alert.set('modal', false);
+					$("#nuevoColor").prop("disabled", false);
+					var colorDes = $("#CatColores_DescripcionColor").val('');
+					$("#nuevoColor").removeClass("btn btn-success");
+					$("#nuevoColor").addClass("btn btn-danger");
+					$("#nuevoItem").prop("disabled", true);
+
+
+
                 }
             }
         });
@@ -250,7 +301,9 @@
             data: { CodigoColor: colorEstilo, DescColor: colorDesc },
             method: 'post'
         }).done(function (data) {        });
-                $("#nuevoColor").prop("disabled", true);
+               $("#nuevoColor").prop("disabled", true);
+		    $("#nuevoColor").removeClass("btn btn-danger");
+			$("#nuevoColor").addClass("btn btn-success");
         alertify.set('notifier', 'position', 'top-right');
             alertify.notify('The color was registered correctly.', 'success', 5, null);
         });
@@ -264,18 +317,56 @@
         }).done(function (data) {
         });
             $("#nuevoEstilo").prop("disabled", true);
+			$("#nuevoEstilo").removeClass("btn btn-danger");
+			$("#nuevoEstilo").addClass("btn btn-success");
             alertify.set('notifier', 'position', 'top-right');
             alertify.notify('The style was registered correctly.', 'success', 5, null);
     });
 
-        $("#ItemDescripcion_ItemEstilo,#CatColores_CodigoColor,#f-talla").on('input', function () {
+     /*   $("#ItemDescripcion_ItemEstilo,#CatColores_CodigoColor,#f-talla").on('input', function () {
             var val = this.value;
             this.value = val.replace(/[^A-Z\u00f1\u00d1\u0020\s\^0-9]/g, '');
-        });
+        });*/
         $("#Cantidad").on('input', function () {
             var val = this.value;
             this.value = val.replace(/^[0-9]\./g, '');
         });
+
+        		//Genero de tallas
+		@*$(function () {
+					debugger
+			$('#selectGenero').change(function () {
+				debugger
+                var text = $(this).find('option:selected').text();
+                $.ajax('@Url.Action("List", "POSummary")', {
+                data: { Genero: text},
+                    method: 'GET',
+                    success: function (result) {
+						var html = '';
+						var cont = 1;
+                        $.each(result, function (key, item) {
+                            html += '<tr>';
+                            html += '<td class="mover"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>';
+                            html += '<td class="datoTalla"><input type="text" id="f-talla" class="form-control talla" value="' + item.CatTallaItem.Talla + '"/></td>';
+                            html += '<td class="datoTalla"><input type="text" name="l-cantidad" id="l-cantidad'+cont+'" class="form-control l-name01 numCantTall" onblur="sumar(' + cont + ')" /></td>';
+							html += '<td class="datoTalla"><input type="text" name="s-qtyPC" id="s-qtyPC'+cont+'" class="form-control s-name01 numQtyPCTall"  onfocus="focusingCalidad(' + cont + ')" onblur="ObtenerSumaQtyPC(' + cont + ')"  value="' + 0 + '" /></td>';
+							html += '<td class="datoTalla"><input type="text" name="e-extras" id="e-extras'+cont+'" class="form-control e-name01 numExtTall"  onfocus="focusingExtras(' + cont + ')"  onChange="CalcularCantidadesPrimeraCalidad(' + cont + ');" value="' + 0 + '"/></td>';
+							html += '<td class="datoTalla"><input type="text" name="s-ejemplo" id="s-ejemplo' + cont + '" class="form-control s-name01 numEjmTall" onfocus="focusing(' + cont + ')" onblur="CalcularCantidadesPrimeraCalidadEje(' + cont + ');" value="' + 0 + '" /></td>';
+							html += '<td><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
+							html += '</tr>';
+							cont++;
+                        });
+                        $('.tbodyTallas').html(html);
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                    },
+            }).done(function(data) {
+
+            });
+            });
+        });*@
+
 
         $("#crearTallas").hide();
 
@@ -313,7 +404,7 @@
        /* $(function () {
         });
         var exists = false;*/
-        buscar_estilos_Edicion();      
+        buscar_estilos_Edicion();
 
 
 	});
@@ -376,11 +467,11 @@
             dataType: "json",
             success: function (jsonData) {
                 var listaT = jsonData.Data.listPack;
-				var html = '';    
+				var html = '';
 				//var cont = 1;
-                $.each(listaT, function (key, item) {          
-                    
-                    html += '<tr>';					
+                $.each(listaT, function (key, item) {
+
+                    html += '<tr>';
 					html += '<td class="mover" style="width:2em;"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>';
 					html += '<td class="datoPack" style="width:1px; display:none;"><input type="text"  name="id-pack" id="id-pack" class="form-control idPack pack" value="' + item.IdPackStyle + '"/ readonly></td>';
                     html += '<td class="datoPack" width="20%"><input type="text"  style="text-transform:uppercase" name="f-pack" id="f-pack" class="form-control pack" style="width: 80%;" value="' + item.DescripcionPack + '"/></td>';
@@ -389,14 +480,14 @@
 					html += '</tr>';
 					//contador = item.IdMillPO;
 				});
-				
+
                $('.tbodyPack').html(html);
 
                 $(window).scrollTop(tempScrollTop);
             },
             error: function (errormessage) { alert(errormessage.responseText); }
         });
-	}	
+	}
 
 
     function buscar_estilos_Edicion() {
@@ -409,66 +500,350 @@
             dataType: "json",
             success: function (jsonData) {
                 var listaT = jsonData.Data.listaTalla;
-				var html = '';  
+				var html = '';
 				cont = 0;
-                $.each(listaT, function (key, item) {          
-               
+                $.each(listaT, function (key, item) {
                     html += '<tr class="rowE">';
                     html += '<td class="mover"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>';
-                    html += '<td class="datoTalla"><input type="text" id="f-talla" class="form-control talla" autocomplete="off" value="' + item.Talla + '"/></td>';
-                    html += '<td class="datoTalla"><input type="text" name="l-cantidad" id="l-cantidad'+cont+'" class="form-control l-name01 move numCantTall" value="' + item.Cantidad + '"  onblur="sumar(' + cont + ')"/></td>';
-                    html += '<td class="datoTalla"><input type="text" name="e-extras" id="e-extras" class="form-control e-name01 move numExtTall " value="' + item.Extras + '"/></td>';
-                    html += '<td class="datoTalla"><input type="text" name="s-ejemplo" id="s-ejemplo'+cont+'" class="form-control move s-name01 numEjmTall"  onblur="sumarEjemplo(' + cont + ')" value="' + item.Ejemplos + '"/></td>';
-                    html += '<td class="datoTalla"><button type="button" id="btnDelete"  class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
+                    html += '<td class="datoTalla"><input type="text" id="f-talla'+cont+'" class="form-control talla" autocomplete="off" onchange="SepararCadenaInputsTallas('+cont+');" value="' + item.Talla + '"/></td>';
+					html += '<td class="datoTalla"><input type="text" name="l-cantidad" id="l-cantidad' + cont + '" class="form-control l-name01 move numCantTall" onchange="SepararCadenaInputsCantidad('+cont+');" value="' + item.Cantidad + '" onblur="sumar(' + cont + ')"/></td>';
+					html += '<td class="datoTalla"><input type="text" name="s-qtyPC" id="s-qtyPC'+cont+'" class="form-control s-name01 numQtyPCTall" onfocus="focusingCalidad(' + cont + ')"  onchange="SepararCadenaInputsCantidadPC('+cont+');" onblur="ObtenerSumaQtyPC(' + cont + ')"  value="' + item.CantidadPCalidad + '" /></td>';
+					html += '<td class="datoTalla"><input type="text" name="e-extras" id="e-extras'+cont+'" class="form-control e-name01 move numExtTall " onChange="CalcularCantidadesPrimeraCalidad(' + cont + ');" value="' + item.Extras + '"/></td>';
+                    html += '<td class="datoTalla"><input type="text" name="s-ejemplo" id="s-ejemplo'+cont+'" class="form-control move s-name01 numEjmTall"  onfocus="focusing('+cont+')" onChange="CalcularCantidadesPrimeraCalidadEje(' + cont + ');"  value="' + item.Ejemplos + '"/></td>';
+					html += '<td class="datoTalla"><button type="button" id="btnDelete"  class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
 					html += '</tr>';
 					cont++;
-                });
-                $('.tbodyTallas').html(html);
+				});
+		// onblur="sumarEjemplo(' + cont + ')"
+                    html += '<tr>';
+                    html += '<td class="mover"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></td>';
+                    html += '<td>TOTALS</td>';
+                    html += '<td><input type="text" name="l-Totalcantidad" id="l-Totalcantidad" class="form-control l-name01 move Totalcantidad" value="' +0+ '"  onblur="sumar(' + cont + ')" readonly/></td>';
+					html += '<td><input type="text" name="s-TotalqtyPC" id="s-TotalqtyPC" class="form-control s-name01 TotalqtyPC" onfocus="focusingCalidad(' + cont + ')" onblur="ObtenerSumaQtyPC(' + cont + ')"  value="' + 0 + '" readonly/></td>';
+					html += '<td><input type="text" name="e-Totalextras" id="e-Totalextras" class="form-control e-name01 move Totalextras " value="' + 0 + '" readonly/></td>';
+                    html += '<td><input type="text" name="s-Totalejemplo" id="s-Totalejemplo" class="form-control move s-name01 Totalejemplo" onfocus="focusing('+cont+')" onblur="sumarEjemplo(' + cont + ')" value="' + 0 + '" readonly/></td>';
+					html += '</tr>';
 
+				$('.tbodyTallas').html(html);
+				cont = cont - 1;
+				obtenerTotalesEdicionEstilo();
                 $(window).scrollTop(tempScrollTop);
             },
             error: function (errormessage) { alert(errormessage.responseText); }
         });
+    }
+
+	function obtenerTotalesEdicionEstilo() {
+		var totalQTY = 0;
+		var valorTQ;
+		var totalPQTY = 0;
+		var valorPTQ;
+		var totalExtra = 0;
+		var valorExQ;
+		var totalEjemplo = 0;
+		var valorEjemploQ;
+	var numFilas = $("#tablaTallas tbody>tr").length;
+	for (var i = 0; i <= numFilas-1; i++) {
+		var nombreQ = "#l-cantidad" + i;
+		var valorQ = $(nombreQ).val();
+		if (valorQ === undefined || valorQ === "") {
+			valorQ = "0";
+			totalQTY += parseInt(valorQ);
+		} else {
+			totalQTY += parseInt(valorQ);
+		}
+		valorTQ = "#l-Totalcantidad";
+
+		var nombrePQ = "#s-qtyPC" + i;
+		var valorPQ = $(nombrePQ).val();
+		if (valorPQ === undefined) {
+			valorPQ = "0";
+			totalPQTY += parseInt(valorPQ);
+		} else {
+			totalPQTY += parseInt(valorPQ);
+		}
+		valorPTQ = "#s-TotalqtyPC";
+
+	    var nombreEQ = "#e-extras" + i;
+		var valorEQ = $(nombreEQ).val();
+		if (valorEQ === undefined) {
+			valorEQ = "0";
+			totalExtra += parseInt(valorEQ);
+		} else {
+			totalExtra += parseInt(valorEQ);
+		}
+		valorExQ = "#e-Totalextras";
+
+		var nombreEjemploQ = "#s-ejemplo" + i;
+		var valorEjemQ = $(nombreEjemploQ).val();
+		if (valorEjemQ === undefined) {
+			valorEjemQ = "0";
+			totalEjemplo += parseInt(valorEjemQ);
+		} else {
+			totalEjemplo += parseInt(valorEjemQ);
+		}
+		valorEjemploQ = "#s-Totalejemplo";
+
+
+		}
+		$(valorTQ).val(parseInt(totalQTY));
+		$(valorPTQ).val(parseInt(totalPQTY));
+		$(valorExQ).val(parseInt(totalExtra));
+		$(valorEjemploQ).val(parseInt(totalEjemplo));
+}
+
+	function focusing(valor) {
+		if ($("#s-ejemplo" + valor).val() == 0) {
+			$("#s-ejemplo" + valor).val('');
+		} else {
+			$("#s-ejemplo" + valor).focus(function () {
+				this.select();
+			});
+		}
 	}
 
+	function focusingExtras(valor) {
+		if ($("#e-extras" + valor).val() == "0" || $("#e-extras" + valor).val() == 0) {
+			$("#e-extras" + valor).val('');
+		} else {
+			$("#e-extras" + valor).focus(function () {
+				this.select();
+			});
+		}
+	}
+
+	function focusingExtrasAdd2(valor) {
+		if ($("#e-extras" + valor).val() == "0" || $("#e-extras" + valor).val() == 0) {
+			$("#e-extras" + valor).val('');
+		} else {
+			$("#e-extras" + valor).focus(function () {
+				this.select();
+			});
+		}
+	}
+
+	function focusingAdd2(valor) {
+		if ($("#s-ejemplo" + valor).val() == 0) {
+			$("#s-ejemplo" + valor).val('');
+		} else {
+			$("#s-ejemplo" + valor).focus(function () {
+				this.select();
+			});
+		}
+	}
+
+	function focusingCalidad(valor) {
+			debugger
+		if ($("#s-qtyPC" + valor).val() == "0" || $("#s-qtyPC" + valor).val() == 0) {
+			$("#s-qtyPC" + valor).val('');
+		} else {
+			$("#s-qtyPC" + valor).focus(function () {
+				this.select();
+			});
+		}
+	}
+
+	function focusingCalidadAdd(valor) {
+		if ($("#s-qtyPC" + valor).val() == "0" || $("#s-qtyPC" + valor).val() == 0) {
+			$("#s-qtyPC" + valor).val('');
+		} else {
+			$("#s-qtyPC" + valor).focus(function () {
+				this.select();
+			});
+		}
+	}
+
+	function CalcularCantidadesPrimeraCalidad(cont) {
+		var resp;
+		document.addEventListener("blur", function (event) {
+        var valor = "e-extras" + cont;
+        var val = document.getElementById(valor).value;
+        if (val !== "") {
+            resp = eval(val);
+            document.getElementById(valor).value = resp;
+			}
+		  }, true);
+		var qty = $("#l-cantidad" + cont).val();
+		var cantidadNum = qty === "" ? "0" : qty;
+		var qtyEjem = $("#s-ejemplo" + cont).val();
+		var cantidadEjemNum = qtyEjem === "" ? "0" : qtyEjem;
+		var qtyExtras = $("#e-extras" + cont).val();
+		var cantidadExtrasNum = qtyExtras === "" ? "0" : qtyExtras;
+		var qtyPC = $("#s-qtyPC" + cont).val();
+		var cantidadPrimerCalidad = qtyPC === "" ? "0" : qtyPC;
+		var total = 0;
+		var indicador = $("#Bandera").val();
+		if (parseInt(cantidadExtrasNum) >= 1) {
+			if (parseInt(cantidadNum) === "" || parseInt(cantidadNum) === 0 || parseInt(cantidadNum) === "0") {
+				$("#Bandera").val(2);
+				total = parseInt(cantidadPrimerCalidad) + parseInt(cantidadEjemNum) + parseInt(cantidadExtrasNum);
+				$("#l-cantidad" + cont).val(total);
+			}
+			if (parseInt(cantidadPrimerCalidad) === "" || parseInt(cantidadPrimerCalidad) === 0 || parseInt(cantidadPrimerCalidad) === "0") {
+				$("#Bandera").val(3);
+				total = parseInt(cantidadNum) - parseInt(cantidadEjemNum) - parseInt(cantidadExtrasNum);
+				$("#s-qtyPC" + cont).val(total);
+			}
+
+			if ((parseInt(cantidadNum) !== "" || parseInt(cantidadNum) !== 0 || parseInt(cantidadNum) !== "0") && indicador === "2") {
+				$("#Bandera").val(2);
+				total = parseInt(cantidadPrimerCalidad) + parseInt(cantidadEjemNum) + parseInt(cantidadExtrasNum);
+				$("#l-cantidad" + cont).val(total);
+			}
+			if ((parseInt(cantidadPrimerCalidad) !== "" || parseInt(cantidadPrimerCalidad) !== 0 || parseInt(cantidadPrimerCalidad) !== "0") && indicador === "3") {
+				$("#Bandera").val(3);
+				total = parseInt(cantidadNum) - parseInt(cantidadEjemNum) - parseInt(cantidadExtrasNum);
+				$("#s-qtyPC" + cont).val(total);
+			}
+		}else {
+			if ((parseInt(cantidadNum) !== "" || parseInt(cantidadNum) !== 0 || parseInt(cantidadNum) !== "0") && indicador === "2") {
+				$("#Bandera").val(2);
+				total = parseInt(cantidadPrimerCalidad) + parseInt(cantidadEjemNum) + parseInt(cantidadExtrasNum);
+				$("#l-cantidad" + cont).val(total);
+			}
+			if ((parseInt(cantidadPrimerCalidad) !== "" || parseInt(cantidadPrimerCalidad) != 0 || parseInt(cantidadPrimerCalidad) !== "0") && indicador === "3") {
+				$("#Bandera").val(3);
+				total = parseInt(cantidadNum) - parseInt(cantidadEjemNum) - parseInt(cantidadExtrasNum);
+				$("#s-qtyPC" + cont).val(total);
+			}
+		}
+			obtenerTotalesEdicionEstilo();
+	}
+
+	function SepararCadenaInputsCantidad(cont) {
+	var numFilas = $("#tablaTallas tbody>tr").length;
+		var cadena = $("#l-cantidad" + cont).val();
+		var nombres = cadena.split(" ");
+			for (var i = 0; i <= numFilas - 1; i++) {			
+				var dato =nombres[i];
+				 $("#l-cantidad" + i).val(dato);
+			}
+		obtenerTotalesEdicionEstilo();
+	}
+
+		function SepararCadenaInputsCantidadPC(cont) {
+	var numFilas = $("#tablaTallas tbody>tr").length;
+		var cadena = $("#s-qtyPC" + cont).val();
+		var nombres = cadena.split(" ");
+			for (var i = 0; i <= numFilas - 1; i++) {			
+				var dato =nombres[i];
+				 $("#s-qtyPC" + i).val(dato);
+			}
+		obtenerTotalesEdicionEstilo();
+	}
+
+	function SepararCadenaInputsTallas(cont) {
+	var numFilas = $("#tablaTallas tbody>tr").length;
+		var cadena = $("#f-talla" + cont).val();
+		var nombres = cadena.split(" ");
+			for (var i = 0; i <= numFilas - 1; i++) {			
+				var dato =nombres[i];
+				 $("#f-talla" + i).val(dato);
+			}
+
+	}
+
+	function CalcularCantidadesPrimeraCalidadEje(cont) {
+		 var resp;
+		document.addEventListener("blur", function (event) {
+        var valor = "s-ejemplo" + cont;
+        var val = document.getElementById(valor).value;
+        if (val !== "") {
+            resp = eval(val);
+            document.getElementById(valor).value = resp;
+			}
+		  }, true);
+		var qty = $("#l-cantidad" + cont).val();
+		var cantidadNum = qty === "" ? "0" : qty;
+		var qtyEjem = $("#s-ejemplo" + cont).val();
+		var cantidadEjemNum = qtyEjem === "" ? "0" : qtyEjem;
+		var qtyExtras = $("#e-extras" + cont).val();
+		var cantidadExtrasNum = qtyExtras === "" ? "0" : qtyExtras;
+		var qtyPC = $("#s-qtyPC" + cont).val();
+		var cantidadPrimerCalidad = qtyPC === "" ? "0" : qtyPC;
+		var total = 0;
+		var indicador = $("#Bandera").val();
+		if (parseInt(cantidadEjemNum) >= 1) {
+			if (parseInt(cantidadNum) === "" || parseInt(cantidadNum) === 0 || parseInt(cantidadNum) === "0") {
+				$("#Bandera").val(2);
+				total = parseInt(cantidadPrimerCalidad) + parseInt(cantidadEjemNum) + parseInt(cantidadExtrasNum);
+				$("#l-cantidad" + cont).val(total);
+			}
+			if (parseInt(cantidadPrimerCalidad) === "" || parseInt(cantidadPrimerCalidad) === 0 || parseInt(cantidadPrimerCalidad) === "0") {
+				$("#Bandera").val(3);
+				total = parseInt(cantidadNum) - parseInt(cantidadEjemNum) - parseInt(cantidadExtrasNum);
+				$("#s-qtyPC" + cont).val(total);
+			}
+
+			if ((parseInt(cantidadNum) !== "" || parseInt(cantidadNum) !== 0 || parseInt(cantidadNum) !== "0") && indicador === "2") {
+				$("#Bandera").val(2);
+				total = parseInt(cantidadPrimerCalidad) + parseInt(cantidadEjemNum) + parseInt(cantidadExtrasNum);
+				$("#l-cantidad" + cont).val(total);
+			}
+			if ((parseInt(cantidadPrimerCalidad) !== "" || parseInt(cantidadPrimerCalidad) != 0 || parseInt(cantidadPrimerCalidad) !== "0") && indicador === "3") {
+				$("#Bandera").val(3);
+				total = parseInt(cantidadNum) - parseInt(cantidadEjemNum) - parseInt(cantidadExtrasNum);
+				$("#s-qtyPC" + cont).val(total);
+			}
+
+		} else {
+			if ((parseInt(cantidadNum) !== "" || parseInt(cantidadNum) !== 0 || parseInt(cantidadNum) !== "0") && indicador === "2") {
+				$("#Bandera").val(2);
+				total = parseInt(cantidadPrimerCalidad) + parseInt(cantidadEjemNum) + parseInt(cantidadExtrasNum);
+				$("#l-cantidad" + cont).val(total);
+			}
+			if ((parseInt(cantidadPrimerCalidad) !== "" || parseInt(cantidadPrimerCalidad) != 0 || parseInt(cantidadPrimerCalidad) !== "0") && indicador === "3") {
+				$("#Bandera").val(3);
+				total = parseInt(cantidadNum) - parseInt(cantidadEjemNum) - parseInt(cantidadExtrasNum);
+				$("#s-qtyPC" + cont).val(total);
+			}
+		}
+		obtenerTotalesEdicionEstilo();
+	}
+
+	 $(function(){
+        $(document).on('click','input[type=text]',function(){ this.select(); });
+    });
 //Desplazamiento
-$('.tbodyTallas').keydown(function(e){
+	$('.tbodyTallas').keydown(function (e) {
+	debugger
     var $table = $(this);
     var $active = $('input:focus,select:focus',$table);
     var $next = null;
-    var focusableQuery = 'input:visible,select:visible,textarea:visible';
+		var focusableQuery = 'input:visible,select:visible,textarea:visible';
     var position = parseInt( $active.closest('td').index()) + 1;
-    console.log('position :',position);
     switch(e.keyCode){
         case 37: // <Left>
-            $next = $active.parent('td').prev().find(focusableQuery);   
+            $next = $active.parent('td').prev().find(focusableQuery);
             break;
-        case 38: // <Up>                    
+        case 38: // <Up>
             $next = $active
                 .closest('tr')
-                .prev()                
+                .prev()
                 .find('td:nth-child(' + position + ')')
-                .find(focusableQuery)
-            ;
-            
+                .find(focusableQuery);
+
             break;
         case 39: // <Right>
-            $next = $active.closest('td').next().find(focusableQuery);            
+            $next = $active.closest('td').next().find(focusableQuery);
             break;
         case 40: // <Down>
             $next = $active
                 .closest('tr')
-                .next()                
+                .next()
                 .find('td:nth-child(' + position + ')')
-                .find(focusableQuery)
-            ;
+                .find(focusableQuery);
             break;
-    }       
-    if($next && $next.length)
-    {        
-        $next.focus();
     }
-});
+    if($next && $next.length)
+    {
+		$next.select();
+	}
+
+
+	});
+
+
 
 
     function eliminarTallas(talla) {
@@ -515,7 +890,7 @@ $('.tbodyTallas').keydown(function(e){
         } else {
             numero = 1;
             buscarTipoCamiseta(tipoProd);
-            buscarGenero(genero);
+           // buscarGenero(genero);
             return numero;
         }
     }
@@ -527,8 +902,8 @@ $('.tbodyTallas').keydown(function(e){
     }
     $(document).on("click", "#modificarEstilo", function () {
         debugger
-        var r = 0; var c = 0; var i = 0; var cadena = new Array(4);
-        cadena[0] = ''; cadena[1] = ''; cadena[2] = ''; cadena[3] = '';
+        var r = 0; var c = 0; var i = 0; var cadena = new Array(5);
+        cadena[0] = ''; cadena[1] = ''; cadena[2] = ''; cadena[3] = ''; cadena[4] = '';
         var nFilas = $("#tablaTallas tbody>tr").length;
         var nColumnas = $("#tablaTallas tr:last td").length;
         $('#tablaTallas tbody>tr').each(function () {
@@ -542,9 +917,9 @@ $('.tbodyTallas').keydown(function(e){
                 r++;
             });
         });
-        var error = 0;  
-        $('#tablaTallas ').find('td.datoTalla').each(function (i, el) {
-            var valor = $(el).children().val();    
+        var error = 0;
+        $('#tablaTallas').find('td.datoTalla').each(function (i, el) {
+            var valor = $(el).children().val();
             if (valor == '' ) {
                 error++;
                 $(el).children().css('border', '2px solid #e03f3f');
@@ -553,7 +928,7 @@ $('.tbodyTallas').keydown(function(e){
             }
 		});
 
-			var lista = []; 
+			var lista = [];
             lista = obtenerListPack();
 			var datos = JSON.stringify(lista);
             var obj = datos;
@@ -656,7 +1031,6 @@ $('.tbodyTallas').keydown(function(e){
                 alert.set({ transition: 'zoom' });
                 alert.set('modal', false);
 			} else {
-				debugger
                 $("#nuevoItem").prop("disabled", true);
                 $("#crearTallas").show();
                 var EstiloItem = $("#ItemDescripcion_ItemEstilo").val();
@@ -667,9 +1041,29 @@ $('.tbodyTallas').keydown(function(e){
                 var IdTela = $("#selectTela option:selected").val();
                 var TipoCamiseta = $("#selectTipoCamiseta option:selected").val();
 				var Especialidad = $("#selectEspecialidad option:selected").val();
-				var TipoFormaPack = $("#selectFormPack option:selected").val();
+                var TipoFormaPack = $("#selectFormPack option:selected").val();
+                var TipoSleeve = $('input:checkbox[name=tipoSleeve]:checked').val();
+				var TipoSleeve2 = $('input:checkbox[name=tipoSleeve2]:checked').val();
+				var TipoBack = $('input:checkbox[name=tipoBack]:checked').val();
+				var TipoFront = $('input:checkbox[name=tipoFront]:checked').val();
+				var POFantasy = $("#POFantasy").val();
+				var TipoImpresion = "";
+
+				if (TipoFront != "" && TipoFront != undefined) {
+					TipoImpresion = TipoFront + ",";
+				}
+				if (TipoSleeve2 != "" && TipoSleeve2 != undefined) {
+					TipoImpresion += TipoSleeve2 + ",";
+				}
+				if (TipoBack != "" && TipoBack != undefined) {
+					TipoImpresion += TipoBack + ",";
+				}
+				if (TipoSleeve != "" && TipoSleeve != undefined) {
+					TipoImpresion += TipoSleeve + ",";
+                }
+
 				$.ajax('@Url.Action("Actualizar_Edicion_Estilo", "POSummary")', {
-					data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela, IdEspecialidad: Especialidad, IdEstilo: IDEstilo, PedidoId: IDPEDIDO, IdTipoFormPack: TipoFormaPack },
+					data: { EstiloItem: EstiloItem, IdColor: IdColor, Cantidad: Cantidad, Precio: Precio, IdGenero: IdGenero, TipoCamiseta: TipoCamiseta, IdTela: IdTela, IdEspecialidad: Especialidad, IdEstilo: IDEstilo, PedidoId: IDPEDIDO, IdTipoFormPack: TipoFormaPack, TipoImpresion: TipoImpresion, POFantasy: POFantasy },
                 method: 'get',
                 async: true,
                 success: function (data) {
@@ -680,19 +1074,20 @@ $('.tbodyTallas').keydown(function(e){
                // alertify.notify('The style was registered correctly.', 'success', 5, null);
             }
 
-        }
+	}
 
     function limpiarFormItems() {
         $('#ItemDescripcion_ItemEstilo').val('');
         $('#ItemDescripcion_Descripcion').val('');
         $('#CatColores_CodigoColor').val('');
         $('#CatColores_DescripcionColor').val('');
-        $('#CantidadT').val(0);       
+        $('#CantidadT').val(0);
         $("#nuevoColor").prop("disabled", false);
         $("#nuevoEstilo").prop("disabled", false);
         limpiarInptCant();
         limpiarInptExt();
-        limpiarInptEjm();
+		limpiarInptEjm();
+		limpiarInptPC();
     }
     function limpiarInptCant() {
         $(".numCantTall").each(function () {
@@ -712,8 +1107,14 @@ $('.tbodyTallas').keydown(function(e){
         });
     }
     $(document).ready(function () {
-        $('.tbodyTallas').sortable();
+		$('.tbodyTallas').sortable();
 	});
+
+	function limpiarInptPC() {
+        $(".numQtyPCTall").each(function () {
+            $(this).val('0');
+        });
+    }
 	    //Sumar cantidades
     var rep;
     document.addEventListener("blur", function (event) {
@@ -724,71 +1125,160 @@ $('.tbodyTallas').keydown(function(e){
         }
 	}, true);
 
-		function sumar(indicador) {
-		$(".numCantTall").each(
-			function (index, value) {
-				var resp;
-				document.addEventListener("blur", function (event) {
-					debugger
-					var valor = "l-cantidad" + indicador;
-					var val = document.getElementById(valor).value;
-					if (val !== "") {
-						resp = eval(val);
-						document.getElementById(valor).value = resp;
-					}
-				}, true);
+    function sumar(indicador) {
+        var resp;
+		document.addEventListener("blur", function (event) {
+        var valor = "l-cantidad" + indicador;
+        var val = document.getElementById(valor).value;
+        if (val !== "") {
+            resp = eval(val);
+            document.getElementById(valor).value = resp;
 			}
-		);
+		}, true);
+		obtenerTotalesEdicionEstilo();
+    }
+
+    function sumarEjemplo(indicador) {
+        var resp;
+	document.addEventListener("blur", function (event) {
+        var valor = "s-ejemplo" + indicador;
+        var val = document.getElementById(valor).value;
+        if (val !== "") {
+            resp = eval(val);
+            document.getElementById(valor).value = resp;
+			}
+		}, true);
+		obtenerTotalesEdicionEstilo();
 	}
 
-	function sumarEjemplo(indicador) {
-		$(".numEjmTall").each(
-			function (index, value) {
-				var resp;
-				document.addEventListener("blur", function (event) {
-					debugger
-					var valor = "s-ejemplo" + indicador;
-					var val = document.getElementById(valor).value;
-					if (val !== "") {
-						resp = eval(val);
-						document.getElementById(valor).value = resp;
-					}
-				}, true);
+	function ObtenerSumaEjemplo(indicadorEjemplo) {
+		  var resp;
+		document.addEventListener("blur", function (event) {
+        var valor = "s-ejemplo" + indicadorEjemplo;
+        var val = document.getElementById(valor).value;
+        if (val !== "") {
+            resp = eval(val);
+            document.getElementById(valor).value = resp;
 			}
-		);
+		}, true);
+		obtenerTotalesEdicionEstilo();
 	}
+
+	  function ObtenerSumaQtyPC(indicadorCalidad) {
+        var resp;
+		document.addEventListener("blur", function (event) {
+        var valor = "s-qtyPC" + indicadorCalidad;
+        var val = document.getElementById(valor).value;
+        if (val !== "") {
+            resp = eval(val);
+            document.getElementById(valor).value = resp;
+			}
+		  }, true);
+		  obtenerTotalesEdicionEstilo();
+    }
 
 </script>
 <style>
-    .ui-autocomplete {
-        position: absolute;
-        z-index: 2150000000 !important;
-        border: 2px solid #ccc;
-        padding: 5px 0;
-        border-radius: 2px;
-        cursor: default;
-        height: 200px;
-        overflow-y: scroll;
-        overflow-x: hidden;
-    }
+	.ui-autocomplete {
+		position: absolute;
+		z-index: 2150000000 !important;
+		border: 2px solid #ccc;
+		padding: 5px 0;
+		border-radius: 2px;
+		cursor: default;
+		height: 200px;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
 
 	.classTipoPack {
 		color: white !important;
 		background: #709ec5 !important;
 	}
 
+	.containerTipo {
+		display: inline-block;
+		position: relative;
+		padding-left: 35px;
+		margin-bottom: 12px;
+		cursor: pointer;
+		font-size: 15px;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
 
+
+		/* Hide the browser's default checkbox */
+		.containerTipo input {
+			position: absolute;
+			opacity: 0;
+			cursor: pointer;
+			height: 0;
+			width: 0;
+		}
+
+	/* Create a custom checkbox */
+	.checkmark {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 25px;
+		width: 25px;
+		background-color: #eee;
+	}
+
+	/* On mouse-over, add a grey background color */
+	.containerTipo:hover input ~ .checkmark {
+		background-color: #ccc;
+	}
+
+	/* When the checkbox is checked, add a blue background */
+	.containerTipo input:checked ~ .checkmark {
+		background-color: #2196F3;
+	}
+
+	/* Create the checkmark/indicator (hidden when not checked) */
+	.checkmark:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+
+	/* Show the checkmark when checked */
+	.containerTipo input:checked ~ .checkmark:after {
+		display: block;
+	}
+
+	/* Style the checkmark/indicator */
+	.containerTipo .checkmark:after {
+		left: 9px;
+		top: 5px;
+		width: 5px;
+		height: 10px;
+		border: solid white;
+		border-width: 0 3px 3px 0;
+		-webkit-transform: rotate(45deg);
+		-ms-transform: rotate(45deg);
+		transform: rotate(45deg);
+	}
 </style>
 
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
+	@Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.IdItems)
-        @Html.HiddenFor(model => model.IdColor)
-        @Html.HiddenFor(model => model.PedidosId)
+	<div class="form-horizontal">
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+		@Html.HiddenFor(model => model.IdItems)
+		@Html.HiddenFor(model => model.IdColor)
+		@Html.HiddenFor(model => model.PedidosId)
+		@Html.HiddenFor(model => model.TipoImpBack)
+		@Html.HiddenFor(model => model.TipoImpSleeve)
+		@Html.HiddenFor(model => model.TipoImpSleeve2)
+		@Html.HiddenFor(model => model.Bandera)
+		@Html.HiddenFor(model => model.NumCliente)
 
 		<div class="panel panel-primary">
 			<div class="panel-heading">
@@ -816,6 +1306,18 @@ $('.tbodyTallas').keydown(function(e){
 						<button type="button" class="btn btn-success" id="nuevoEstilo" data-toggle="modal">
 							<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Style
 						</button>
+					</div>
+					<div class="form-group col-md-4">
+						<br />
+						<label class="containerTipo">Front<input type="checkbox" name="tipoFront" id="tipoFront" value="Front" checked="checked"><span class="checkmark"></span></label>
+						<label class="containerTipo">Sleeve1<input type="checkbox" name="tipoSleeve" id="tipoSleeve" value="Sleeve"><span class="checkmark"></span></label>
+						<label class="containerTipo">Sleeve2<input type="checkbox" name="tipoSleeve2" id="tipoSleeve2" value="Sleeve2"><span class="checkmark"></span></label>
+						<label class="containerTipo">Back<input type="checkbox" name="tipoBack" id="tipoBack" value="Back"><span class="checkmark"></span></label>
+					</div>
+					<div class="form-group col-md-4">
+						@Html.LabelFor(model => model.POFantasy, htmlAttributes: new { @class = "control-label" })
+						@Html.EditorFor(model => model.POFantasy, new { htmlAttributes = new { @class = "form-control nuevo_item", @style = "text-transform:uppercase" } })
+						@Html.ValidationMessageFor(model => model.POFantasy, "", new { @class = "text-danger" })
 					</div>
 				</div>
 			</div>
@@ -862,7 +1364,7 @@ $('.tbodyTallas').keydown(function(e){
 						@Html.ValidationMessageFor(model => model.IdEspecialidad, "", new { @class = "text-danger" })
 
 					</div>
-					
+
 				</div>
 			</div>
 			<div class="container-fluid">
@@ -904,47 +1406,49 @@ $('.tbodyTallas').keydown(function(e){
 							</div>
 						</div>
 					</div>
-					<br />	
+					<br />
 				</div>
 			</div>
 		</div>
-    </div>
-    @*style="visibility:hidden;"*@
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4>Edit Size</h4>
-        </div>
-        <div class="container-fluid">
-            <br />
-            <button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">+ New Size</button>
-            <table class="table" id="tablaTallas">
-                <thead>
-                    <tr>
-                        <th class="index"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"/></th>
-                        <th>Size</th>
-                        <th>Quantity</th>
-                        <th>Extra</th>
-                        <th>Examples</th>
-                    </tr>
-                </thead>
-                <tbody class="tbodyTallas"></tbody>
-            </table>
-            
-            @*<button type="button" id="nuevaTalla" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Modificar Tallas</button>*@
-            <br />
-            <br />
-        </div>
-    </div>
-    <div class="form-group">
-        <br />
-        <br />
-        <div class="text-center margin-bottom col-sm-12">
-            <button type="button" id="modificarEstilo" class="btn btn-success" data-toggle="modal">
-                <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Modify Style
-            </button>
-        </div>
-        <br />
-        <br />
-    </div>
+	</div>
+	@*style="visibility:hidden;"*@
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h4>Edit Size</h4>
+		</div>
+		<div class="container-fluid">
+			<br />
+			<button type="button" id="btnAdd" class="btn btn-xs btn-primary classAdd">+ New Size</button>
+			<table class="table" id="tablaTallas">
+				<thead>
+					<tr>
+						<th class="index"><span class="glyphicon glyphicon-fullscreen" aria-hidden="true" /></th>
+						<th>Size</th>
+						<th>Quantity</th>
+						<th>1rst Quantity</th>
+						<th>Extra</th>
+						<th>Examples</th>
+					</tr>
+				</thead>
+				<tbody class="tbodyTallas"></tbody>
+			</table>
+
+			@*<button type="button" id="nuevaTalla" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Modificar Tallas</button>*@
+			<br />
+			<br />
+		</div>
+	</div>
+	<div class="form-group">
+		<br />
+		<br />
+		<div class="text-center margin-bottom col-sm-12">
+			<button type="button" id="modificarEstilo" class="btn btn-success" data-toggle="modal">
+				<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Modify Style
+			</button>
+		</div>
+		<br />
+		<br />
+	</div>
 }
 
+<script type="text/javascript" src="~/Scripts/general/selectAllOnClick.js"></script>

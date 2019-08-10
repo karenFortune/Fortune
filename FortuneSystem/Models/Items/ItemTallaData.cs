@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using FortuneSystem.Models.Staging;
 using FortuneSystem.Models.Items;
+using FortuneSystem.Controllers;
 
 namespace FortuneSystem.Models.Item
 {
@@ -22,8 +23,8 @@ namespace FortuneSystem.Models.Item
 				SqlCommand comando = new SqlCommand
 				{
 					Connection = conn.AbrirConexion(),
-					CommandText = "INSERT INTO  ITEM_SIZE (TALLA_ITEM,CANTIDAD,EXTRAS,EJEMPLOS,ID_SUMMARY) " +
-					" VALUES((SELECT ID FROM CAT_ITEM_SIZE WHERE TALLA ='" + tallas.Talla + "'),'" + tallas.Cantidad + "','" + tallas.Extras + "','" + tallas.Ejemplos + "','" + tallas.IdSummary + "')"
+					CommandText = "INSERT INTO  ITEM_SIZE (TALLA_ITEM,CANTIDAD,EXTRAS,EJEMPLOS,ID_SUMMARY,[1RST_CALIDAD]) " +
+					" VALUES((SELECT ID FROM CAT_ITEM_SIZE WHERE TALLA ='" + tallas.Talla + "'),'" + tallas.Cantidad + "','" + tallas.Extras + "','" + tallas.Ejemplos + "','" + tallas.IdSummary + "','" + tallas.CantidadPCalidad + "')"
 				};
 				comando.ExecuteNonQuery();
             }
@@ -84,8 +85,8 @@ namespace FortuneSystem.Models.Item
 				SqlCommand comando = new SqlCommand
 				{
 					Connection = conn.AbrirConexion(),
-					CommandText = "INSERT INTO  UPC (IdTalla,IdSummary,UPC) " +
-					" VALUES((SELECT ID FROM CAT_ITEM_SIZE WHERE TALLA ='" + tallas.Talla + "'),'" + tallas.IdSummary + "','" + tallas.UPC1 + "')"
+					CommandText = "INSERT INTO  UPC (IdTalla,IdSummary,IdEstilo,UPC) " +
+					" VALUES((SELECT ID FROM CAT_ITEM_SIZE WHERE TALLA ='" + tallas.Talla + "'),'" + tallas.IdSummary + "','" + tallas.IdEstilo + "','" + tallas.UPC1 + "')"
 				};
 				comando.ExecuteNonQuery();
             }
@@ -124,9 +125,23 @@ namespace FortuneSystem.Models.Item
                         DescripcionEstilo = leer["DESCRIPTION"].ToString()
 
                     };
-                    calidad = Convert.ToInt32(leer["CANTIDAD"]) + Convert.ToInt32(leer["EXTRAS"]);
+                  //  calidad = Convert.ToInt32(leer["CANTIDAD"]) + Convert.ToInt32(leer["EXTRAS"]);
 
-                    tallas.Cantidad = calidad;
+					if (!Convert.IsDBNull(leer["1RST_CALIDAD"]))
+					{
+						tallas.CantidadPCalidad = Convert.ToInt32(leer["1RST_CALIDAD"]);
+					}
+
+					if (tallas.CantidadPCalidad != 0)
+					{
+						calidad = tallas.Cantidad - tallas.Ejemplos;
+					}
+					else
+					{
+						calidad = tallas.Cantidad + tallas.Extras;
+					}
+
+					tallas.Cantidad = calidad;
                     listTallas.Add(tallas);
                 }
                 leer.Close();
@@ -168,7 +183,20 @@ namespace FortuneSystem.Models.Item
 						DescripcionEstilo = leer["DESCRIPTION"].ToString()
 
 					};
-					calidad = Convert.ToInt32(leer["CANTIDAD"]);
+					if (!Convert.IsDBNull(leer["1RST_CALIDAD"]))
+					{
+						tallas.CantidadPCalidad = Convert.ToInt32(leer["1RST_CALIDAD"]);
+					}
+
+					if (tallas.CantidadPCalidad != 0)
+					{
+						calidad = tallas.CantidadPCalidad;
+					}
+					else
+					{
+						calidad = tallas.Cantidad;
+					}
+					//calidad = Convert.ToInt32(leer["CANTIDAD"]);
 
 					tallas.Cantidad = calidad;
 					listTallas.Add(tallas);
@@ -210,9 +238,23 @@ namespace FortuneSystem.Models.Item
 						Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
 						Estilo = leer["ITEM_STYLE"].ToString(),
 						DescripcionEstilo = leer["DESCRIPTION"].ToString()
-
 					};
-					calidad = Convert.ToInt32(leer["CANTIDAD"]);
+
+					if (!Convert.IsDBNull(leer["1RST_CALIDAD"]))
+					{
+						tallas.CantidadPCalidad = Convert.ToInt32(leer["1RST_CALIDAD"]);
+					}
+
+					if (tallas.CantidadPCalidad != 0)
+					{
+						calidad = tallas.CantidadPCalidad;
+					}
+					else
+					{
+						calidad = tallas.Cantidad;
+					}
+
+					//calidad = Convert.ToInt32(leer["CANTIDAD"]);
 
 					tallas.Cantidad = calidad;
 					listTallas.Add(tallas);
@@ -242,23 +284,36 @@ namespace FortuneSystem.Models.Item
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@Id", id);
                 leer = comando.ExecuteReader();
-                int calidad = 0;
+                int calidad = 0;				
                 while (leer.Read())
                 {
-                    ItemTalla tallas = new ItemTalla()
-                    {
-                        Talla = leer["TALLA"].ToString(),
-                        IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]),
-                        Cantidad = Convert.ToInt32(leer["CANTIDAD"]),
-                        Extras = Convert.ToInt32(leer["EXTRAS"]),
-                        Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
-                        Estilo = leer["ITEM_STYLE"].ToString(),
-                        DescripcionEstilo = leer["DESCRIPTION"].ToString()
+					ItemTalla tallas = new ItemTalla()
+					{
+						Talla = leer["TALLA"].ToString(),
+						IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]),
+						Cantidad = Convert.ToInt32(leer["CANTIDAD"]),
+						Extras = Convert.ToInt32(leer["EXTRAS"]),
+						Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
+						Estilo = leer["ITEM_STYLE"].ToString(),
+						DescripcionEstilo = leer["DESCRIPTION"].ToString()
 
-                    };
-                    calidad = Convert.ToInt32(leer["CANTIDAD"]);
+					};
+					if (!Convert.IsDBNull(leer["1RST_CALIDAD"]))
+					{
+						tallas.CantidadPCalidad = Convert.ToInt32(leer["1RST_CALIDAD"]);
+					}
 
-                    tallas.Cantidad = calidad;
+					if (tallas.CantidadPCalidad != 0)
+					{
+						calidad = tallas.CantidadPCalidad;
+					}
+					else
+					{
+						calidad = tallas.Cantidad;
+					}
+
+					//calidad = Convert.ToInt32(leer["CANTIDAD"]);				
+					tallas.Cantidad = calidad;
                     listTallas.Add(tallas);
                 }
                 leer.Close();
@@ -272,8 +327,300 @@ namespace FortuneSystem.Models.Item
             return listTallas;
         }
 
-        //Muestra la lista de tallas por estilo
-        public IEnumerable<ItemTalla> ListaTallasPorEstiloPrint(int? id)
+		//Muestra la lista de tallas por estilo
+		public IEnumerable<ItemTalla> ListadoTallasDetallesPorEstilos(int? id)
+		{
+			Conexion conn = new Conexion();
+			List<ItemTalla> listTallas = new List<ItemTalla>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "Lista_Tallas_Por_Estilo";
+				comando.CommandType = CommandType.StoredProcedure;
+				comando.Parameters.AddWithValue("@Id", id);
+				leer = comando.ExecuteReader();				
+				while (leer.Read())
+				{
+					ItemTalla tallas = new ItemTalla()
+					{
+						Talla = leer["TALLA"].ToString(),
+						IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]),
+						Cantidad = Convert.ToInt32(leer["CANTIDAD"]),
+						Extras = Convert.ToInt32(leer["EXTRAS"]),
+						Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
+						Estilo = leer["ITEM_STYLE"].ToString(),
+						DescripcionEstilo = leer["DESCRIPTION"].ToString()
+
+					};
+					if (!Convert.IsDBNull(leer["1RST_CALIDAD"]))
+					{
+						tallas.CantidadPCalidad = Convert.ToInt32(leer["1RST_CALIDAD"]);
+					}
+					/*	if (tallas.CantidadPCalidad != 0)
+						{
+							calidad = tallas.CantidadPCalidad;
+						}
+						else
+						{
+							calidad = tallas.Cantidad;
+						}*/
+
+					//calidad = Convert.ToInt32(leer["CANTIDAD"]);				
+					//tallas.Cantidad = calidad;
+					listTallas.Add(tallas);
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+
+			return listTallas;
+		}
+
+		//Muestra la lista de tallas por estilo
+		public IEnumerable<ItemTalla> ListadoTallasDetallesPorEstilosImagen(int? id, string nombEstilo, string color)
+		{
+			Conexion conn = new Conexion();
+			ArteController arteCont = new ArteController();
+			IMAGEN_ARTE_ESTILO arteEstilo = new IMAGEN_ARTE_ESTILO();
+			MyDbContext db = new MyDbContext();
+			List<ItemTalla> listTallas = new List<ItemTalla>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "Lista_Tallas_Por_Estilo";
+				comando.CommandType = CommandType.StoredProcedure;
+				comando.Parameters.AddWithValue("@Id", id);
+				leer = comando.ExecuteReader();
+				int calidad = 0;
+				while (leer.Read())
+				{
+					ItemTalla tallas = new ItemTalla()
+					{
+						Talla = leer["TALLA"].ToString(),
+						IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]),
+						Cantidad = Convert.ToInt32(leer["CANTIDAD"]),
+						Extras = Convert.ToInt32(leer["EXTRAS"]),
+						Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
+						Estilo = leer["ITEM_STYLE"].ToString(),
+						DescripcionEstilo = leer["DESCRIPTION"].ToString()
+
+					};
+					if (!Convert.IsDBNull(leer["1RST_CALIDAD"]))
+					{
+						tallas.CantidadPCalidad = Convert.ToInt32(leer["1RST_CALIDAD"]);
+					}
+					string descripcion = nombEstilo.TrimEnd() + "_" + color.TrimEnd();				
+					var arte = db.ImagenArte.Where(x => x.IdEstilo == id).FirstOrDefault();
+					ObtenerExtensionArte(arteCont, arteEstilo, tallas, descripcion, arte);
+					/*	if (tallas.CantidadPCalidad != 0)
+						{
+							calidad = tallas.CantidadPCalidad;
+						}
+						else
+						{
+							calidad = tallas.Cantidad;
+						}*/
+
+					//calidad = Convert.ToInt32(leer["CANTIDAD"]);				
+					//tallas.Cantidad = calidad;
+					listTallas.Add(tallas);
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+
+			return listTallas;
+		}
+
+		public static void ObtenerExtensionArte(ArteController arteCont, IMAGEN_ARTE_ESTILO arteEstilo, ItemTalla ItemSummary, string descripcion, IMAGEN_ARTE arte)
+		{
+			if (arte != null && arte.extensionArte != "")
+			{
+				int tam_var = arte.extensionArte.Length;
+				string nombreEstiloArt = arte.extensionArte.Substring(0, tam_var - 4);
+				if (descripcion == nombreEstiloArt && arte.extensionArte != null && arte.extensionArte != "")
+				{
+					ItemSummary.NombreArte = arte.extensionArte;
+				}
+				else
+				{
+					arteCont.BuscarRutaImagenEstilo(descripcion, arteEstilo);
+					if (arteEstilo != null && arteEstilo.extensionArt != null)
+					{
+						int tam_var2 = arteEstilo.extensionArt.Length;
+						string nomEsdesctiloArt = arteEstilo.extensionArt.Substring(0, tam_var2 - 4);
+						if (descripcion == nomEsdesctiloArt && arteEstilo.extensionArt != null)
+						{
+							ItemSummary.NombreArte = arteEstilo.extensionArt;
+						}
+						else
+						{
+							ItemSummary.NombreArte = arte.extensionArte;
+						}
+					}
+					else
+					{
+						ItemSummary.NombreArte = arte.extensionArte;
+					}
+				}
+			}
+			else
+			{
+				arteCont.BuscarRutaImagenEstilo(descripcion, arteEstilo);
+				if (arteEstilo != null && arteEstilo.extensionArt != null)
+				{
+					int tam_var2 = arteEstilo.extensionArt.Length;
+					string nomEsdesctiloArt = arteEstilo.extensionArt.Substring(0, tam_var2 - 4);
+					if (descripcion == nomEsdesctiloArt && arteEstilo.extensionArt != null)
+					{
+						ItemSummary.NombreArte = arteEstilo.extensionArt;
+					}
+				}
+				else
+				{
+					ItemSummary.NombreArte = arte.extensionArte;
+				}
+			}
+		}
+
+		//Obtener la cantidad de piezas de un estilo
+		public int ObtenerTotalTallas(int? id)
+		{
+			Conexion conn = new Conexion();
+			int calidad = 0;
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "Lista_Tallas_Por_Estilo";
+				comando.CommandType = CommandType.StoredProcedure;
+				comando.Parameters.AddWithValue("@Id", id);
+				leer = comando.ExecuteReader();
+				
+				while (leer.Read())
+				{
+					ItemTalla tallas = new ItemTalla()
+					{
+						Talla = leer["TALLA"].ToString(),
+						IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]),
+						Cantidad = Convert.ToInt32(leer["CANTIDAD"]),
+						Extras = Convert.ToInt32(leer["EXTRAS"]),
+						Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
+						Estilo = leer["ITEM_STYLE"].ToString(),
+						DescripcionEstilo = leer["DESCRIPTION"].ToString()		
+
+					};
+
+					if (!Convert.IsDBNull(leer["1RST_CALIDAD"]))
+					{
+						tallas.CantidadPCalidad = Convert.ToInt32(leer["1RST_CALIDAD"]);
+					}
+
+					if (tallas.CantidadPCalidad != 0)
+					{
+						calidad += tallas.CantidadPCalidad + tallas.Extras + tallas.Ejemplos;
+					}
+					else
+					{
+						calidad += tallas.Cantidad;
+					}
+					
+					
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+			return calidad;
+
+		}
+
+		//Obtener la cantidad de piezas de primera calidad de un estilo
+		public int ObtenerTotalTallasPrimeraCalidad(int? id, int cantidadPcs)
+		{
+			Conexion conn = new Conexion();
+			int calidad = 0;
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "Lista_Tallas_Por_Estilo";
+				comando.CommandType = CommandType.StoredProcedure;
+				comando.Parameters.AddWithValue("@Id", id);
+				leer = comando.ExecuteReader();
+				int total = 0;
+				int totalExt = 0;
+				int totalEje = 0;
+				while (leer.Read())
+				{
+					ItemTalla tallas = new ItemTalla()
+					{
+						Talla = leer["TALLA"].ToString(),
+						IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]),
+						Cantidad = Convert.ToInt32(leer["CANTIDAD"]),
+						Extras = Convert.ToInt32(leer["EXTRAS"]),
+						Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
+						Estilo = leer["ITEM_STYLE"].ToString(),
+						DescripcionEstilo = leer["DESCRIPTION"].ToString()
+
+					};
+
+					if (!Convert.IsDBNull(leer["1RST_CALIDAD"]))
+					{
+						tallas.CantidadPCalidad = Convert.ToInt32(leer["1RST_CALIDAD"]);
+					}
+
+					if (tallas.CantidadPCalidad != 0)
+					{
+						total += tallas.CantidadPCalidad + tallas.Extras + tallas.Ejemplos;
+					}
+					else
+					{					
+						total += tallas.Cantidad;
+						totalExt += tallas.Extras;
+						totalEje += tallas.Ejemplos;						
+					}
+					
+
+				}
+				if (total != cantidadPcs)
+				{
+					calidad = total + totalExt + totalEje;
+				}
+				else
+				{
+					calidad = total;
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+			return calidad;
+
+		}
+
+		//Muestra la lista de tallas por estilo
+		public IEnumerable<ItemTalla> ListaTallasPorEstiloPrint(int? id)
         {
             Conexion conn = new Conexion();
             List<ItemTalla> listTallas = new List<ItemTalla>();
@@ -286,7 +633,7 @@ namespace FortuneSystem.Models.Item
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@Id", id);
                 leer = comando.ExecuteReader();
-                int calidad = 0;
+                int calidad = 0;			
                 while (leer.Read())
                 {
                     ItemTalla tallas = new ItemTalla()
@@ -299,8 +646,21 @@ namespace FortuneSystem.Models.Item
                         Estilo = leer["ITEM_STYLE"].ToString(),
                         DescripcionEstilo = leer["DESCRIPTION"].ToString()
 
-                    };
-                    calidad = Convert.ToInt32(leer["CANTIDAD"]) + Convert.ToInt32(leer["EXTRAS"]) + Convert.ToInt32(leer["EJEMPLOS"]);
+					};
+					if (!Convert.IsDBNull(leer["1RST_CALIDAD"]))
+					{
+						tallas.CantidadPCalidad = Convert.ToInt32(leer["1RST_CALIDAD"]);
+					}
+
+					if (tallas.CantidadPCalidad != 0)
+					{
+						calidad = tallas.Cantidad;
+					}
+					else
+					{
+						calidad = tallas.Cantidad + tallas.Extras + tallas.Ejemplos;
+					}
+					
 
                     tallas.Cantidad = calidad;
                     listTallas.Add(tallas);
@@ -316,8 +676,81 @@ namespace FortuneSystem.Models.Item
             return listTallas;
         }
 
-        //Muestra la lista de tallas por estilo
-        public IEnumerable<ItemTalla> ListaTallasPorEstiloRecibo(int? id)
+		//Muestra la lista de tallas por estilo
+		public IEnumerable<ItemTalla> ListaTallasPorEstiloPrintS(int? id, int numQtyPrint)
+		{
+			Conexion conn = new Conexion();
+			List<ItemTalla> listTallas = new List<ItemTalla>();
+			ItemTalla tallas = new ItemTalla();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "Lista_Tallas_Por_Estilo";
+				comando.CommandType = CommandType.StoredProcedure;
+				comando.Parameters.AddWithValue("@Id", id);
+				leer = comando.ExecuteReader();
+				int calidad = 0;
+				int total = 0;
+				int totalExt = 0;
+				int totalEje = 0;
+				while (leer.Read())
+				{
+					
+					tallas.Talla = leer["TALLA"].ToString();
+					tallas.IdTalla = Convert.ToInt32(leer["TALLA_ITEM"]);
+					tallas.Cantidad = Convert.ToInt32(leer["CANTIDAD"]);
+					tallas.Extras = Convert.ToInt32(leer["EXTRAS"]);
+					tallas.Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]);
+					tallas.Estilo = leer["ITEM_STYLE"].ToString();
+					tallas.DescripcionEstilo = leer["DESCRIPTION"].ToString();
+
+					
+					if (!Convert.IsDBNull(leer["1RST_CALIDAD"]))
+					{
+						tallas.CantidadPCalidad = Convert.ToInt32(leer["1RST_CALIDAD"]);
+					}
+
+					if (tallas.CantidadPCalidad != 0)
+					{
+						total = tallas.Cantidad;
+					}
+					else
+					{
+						total = tallas.Cantidad + tallas.Extras + tallas.Ejemplos;
+					}
+
+				
+
+					if (total != numQtyPrint)
+					{
+						calidad = total + totalExt + totalEje;
+					}
+					else
+					{
+						calidad = total;
+					}
+
+					tallas.Cantidad = calidad;
+					listTallas.Add(tallas);
+				}
+
+
+
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+
+			return listTallas;
+		}
+
+		//Muestra la lista de tallas por estilo
+		public IEnumerable<ItemTalla> ListaTallasPorEstiloRecibo(int? id)
         {
             Conexion conn = new Conexion();
             List<ItemTalla> listTallas = new List<ItemTalla>();
@@ -388,10 +821,22 @@ namespace FortuneSystem.Models.Item
                         DescripcionEstilo = leer["DESCRIPTION"].ToString(),
 						Color = leer["CODIGO_COLOR"].ToString()
 					};
-                    calidad = Convert.ToInt32(leer["CANTIDAD"]) + Convert.ToInt32(leer["EXTRAS"]) + Convert.ToInt32(leer["EJEMPLOS"]);
+					if (!Convert.IsDBNull(leer["1RST_CALIDAD"]))
+					{
+						tallas.CantidadPCalidad = Convert.ToInt32(leer["1RST_CALIDAD"]);
+					}
 
-                    tallas.Cantidad = calidad;
-                    listTallas.Add(tallas);
+					if (tallas.CantidadPCalidad != 0)
+					{
+						calidad = tallas.Cantidad;
+					}
+					else
+					{
+						calidad = tallas.Cantidad + tallas.Extras + tallas.Ejemplos;
+					}
+
+					tallas.Cantidad = calidad;
+					listTallas.Add(tallas);
                 }
                 leer.Close();
             }
@@ -471,10 +916,16 @@ namespace FortuneSystem.Models.Item
                         Cantidad = Convert.ToInt32(leer["CANTIDAD"]),
                         Extras = Convert.ToInt32(leer["EXTRAS"]),
                         Ejemplos = Convert.ToInt32(leer["EJEMPLOS"]),
-                        Estilo = leer["ITEM_STYLE"].ToString()
+						Estilo = leer["ITEM_STYLE"].ToString()
 
                     };
-                    calidad = Convert.ToInt32(leer["CANTIDAD"]);
+
+					if (!Convert.IsDBNull(leer["1RST_CALIDAD"]))
+					{
+						tallas.CantidadPCalidad = Convert.ToInt32(leer["1RST_CALIDAD"]);
+					}
+
+					calidad = Convert.ToInt32(leer["CANTIDAD"]);
 
                     tallas.Cantidad = calidad;
                     listTallas.Add(tallas);
@@ -761,8 +1212,9 @@ namespace FortuneSystem.Models.Item
                 com.Parameters.AddWithValue("@Extras", tallas.Extras);
                 com.Parameters.AddWithValue("@Ejemplos", tallas.Ejemplos);
                 com.Parameters.AddWithValue("@IdSummary", tallas.IdSummary);
+				com.Parameters.AddWithValue("@Calidad", tallas.CantidadPCalidad);
 
-                com.ExecuteNonQuery();
+				com.ExecuteNonQuery();
             }
             finally
             {

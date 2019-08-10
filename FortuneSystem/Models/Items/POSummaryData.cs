@@ -1,4 +1,5 @@
-﻿using FortuneSystem.Models.Catalogos;
+﻿using FortuneSystem.Controllers;
+using FortuneSystem.Models.Catalogos;
 using FortuneSystem.Models.Item;
 using FortuneSystem.Models.Items;
 using FortuneSystem.Models.Packing;
@@ -15,17 +16,20 @@ namespace FortuneSystem.Models.POSummary
 {
     public class DescripcionItemData
     {
-        readonly PackingData objPacking = new PackingData();
+		readonly PackingData objPacking = new PackingData();
 		readonly PedidosData objPedido = new PedidosData();
-		readonly ItemTallaData objTallas = new ItemTallaData();
+		//readonly ItemTallaData objTallas = new ItemTallaData();
 		readonly CatUsuarioData objUsr = new CatUsuarioData();
 		readonly CatTypeFormPackData objFormaPacking = new CatTypeFormPackData();
+
 
 		//Muestra la lista de PO Summary Por PO
 		public IEnumerable<POSummary> ListaItemsPorPO(int? id)
           {
                 Conexion conn = new Conexion();
-            List<POSummary> listSummary = new List<POSummary>();
+			ItemTallaData objTallas = new ItemTallaData();
+			List<POSummary> listSummary = new List<POSummary>();
+
             try
             {
                 SqlCommand comando = new SqlCommand();
@@ -35,7 +39,6 @@ namespace FortuneSystem.Models.POSummary
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@Id", id);
                 leer = comando.ExecuteReader();
-
                 while (leer.Read())
                 {
                     POSummary ItemSummary = new POSummary();
@@ -57,11 +60,45 @@ namespace FortuneSystem.Models.POSummary
                     ItemSummary.CatColores = colores;
                     ItemSummary.ItemDescripcion = Desc;
                     ItemSummary.IdEstilo= Convert.ToInt32(leer["ITEM_ID"]);
+					ItemSummary.NumCliente = Convert.ToInt32(leer["CUSTOMER"]);
+					
+
+					if (!Convert.IsDBNull(leer["PO_FANTASY"]))
+					{
+						ItemSummary.POFantasy = leer["PO_FANTASY"].ToString();
+					}
 
 					if (!Convert.IsDBNull(leer["ID_FORM_PACK"]))
 					{
 						ItemSummary.IdTipoFormPack = Convert.ToInt32(leer["ID_FORM_PACK"]);
 					}
+
+					if (!Convert.IsDBNull(leer["TYPE_IMP"]))
+					{
+						ItemSummary.TipoImpresion = leer["TYPE_IMP"].ToString();
+					}
+					List<string> separadas =  new List<string>();
+					/*if(separadas.Count != 0)
+					{*/
+						separadas = ItemSummary.TipoImpresion.Split(',').ToList();
+
+					for (int i = separadas.Count - 1; i >= 0; i--)
+					{
+						if (separadas[i].StartsWith(""))
+							separadas.Remove(separadas[i]);
+					}
+
+					//	int i = 0;
+					/*foreach (string item in separadas)
+					{
+						separadas.Remove("");
+					}*/
+					ItemSummary.ListaTipoImpresion = separadas;
+						//int x = i - 1;
+
+					//}
+
+
 					ItemSummary.IdTipoFormPack = (ItemSummary.IdTipoFormPack == 0 ? 1 : ItemSummary.IdTipoFormPack);
 					ItemSummary.CatTipoFormPack = objFormaPacking.ConsultarListatipoFormPack(ItemSummary.IdTipoFormPack);
 
@@ -77,9 +114,14 @@ namespace FortuneSystem.Models.POSummary
                     {
                         ItemSummary.NombreUsuario = "-";
                     }
-                    
-                    //ItemSummary.NombreEstilo = leer["DESCRIPTION"].ToString();
-                    listSummary.Add(ItemSummary);
+
+					ItemSummary.HistorialPacking = objPacking.ObtenerNumeroPacking(ItemSummary.IdItems);
+					//ItemSummary.Cantidad = objTallas.ObtenerTotalTallas(ItemSummary.IdItems);
+					//total = objTallas.ObtenerTotalTallas(ItemSummary.IdItems);
+					//ItemSummary.NombreEstilo = leer["DESCRIPTION"].ToString();
+					//total = objTallas.ObtenerTotalTallas(ItemSummary.IdItems);
+					ItemSummary.CantidadGeneral = objTallas.ObtenerTotalTallasPrimeraCalidad(ItemSummary.IdItems, ItemSummary.Cantidad);
+					listSummary.Add(ItemSummary);
 
                 }
                 leer.Close();
@@ -92,63 +134,128 @@ namespace FortuneSystem.Models.POSummary
               return listSummary;
           }
 
-        public IEnumerable<POSummary> ListadoInfEstilo(int? id)
-        {
-            Conexion conn = new Conexion();
-            List<POSummary> listSummary = new List<POSummary>();
-            try
-            {
-                SqlCommand comando = new SqlCommand();
-                SqlDataReader leer = null;
-                comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "Listar_Item_Por_Pedido";//Info_Estilo
-                comando.CommandType = CommandType.StoredProcedure;
-                comando.Parameters.AddWithValue("@Id", id);
-                leer = comando.ExecuteReader();
+		public IEnumerable<POSummary> ListadoInfEstilo(int? id)
+		{
+			ArteController arteCont = new ArteController();
+			ItemTallaData objTallas = new ItemTallaData();
+			PedidosData objPedido = new PedidosData();
+			ItemDescripcionData objDesc = new ItemDescripcionData();
+			MyDbContext db = new MyDbContext();
+			Conexion conn = new Conexion();
+			List<POSummary> listSummary = new List<POSummary>();
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+				comando.CommandText = "Listar_Item_Por_Pedido";//Info_Estilo
+				comando.CommandType = CommandType.StoredProcedure;
+				comando.Parameters.AddWithValue("@Id", id);
+				leer = comando.ExecuteReader();
 
-                while (leer.Read())
-                {
-                    POSummary ItemSummary = new POSummary();
-                    ItemDescripcion Desc = new ItemDescripcion();
-                    CatColores colores = new CatColores();
-                    CatEspecialidades Especialidad = new CatEspecialidades();
+				while (leer.Read())
+				{
+
+					IMAGEN_ARTE_ESTILO arteEstilo = new IMAGEN_ARTE_ESTILO();
+
+					POSummary ItemSummary = new POSummary();
+					ItemDescripcion Desc = new ItemDescripcion();
+					CatColores colores = new CatColores();
+					CatEspecialidades Especialidad = new CatEspecialidades();
 					CatTela Tela = new CatTela
 					{
 						Tela = leer["FABRIC"].ToString()
 					};
 					Desc.Descripcion = leer["DESCRIPCION_ITEM"].ToString();
-                    colores.CodigoColor = leer["CODIGO_COLOR"].ToString();
-                    colores.DescripcionColor = leer["DESCRIPCION"].ToString();
-                    Especialidad.Especialidad = leer["SPECIALTIES"].ToString();
-                    ItemSummary.EstiloItem = leer["ITEM_STYLE"].ToString();
-                    ItemSummary.Cantidad = Convert.ToInt32(leer["QTY"]);
-                    ItemSummary.Price = leer["PRICE"].ToString();
-                    ItemSummary.Total = leer["TOTAL"].ToString();
-                    ItemSummary.IdItems = Convert.ToInt32(leer["ID_PO_SUMMARY"]);
-                    ItemSummary.CatColores = colores;
-                    ItemSummary.ItemDescripcion = Desc;
-                    ItemSummary.CatEspecialidades = Especialidad;
+					colores.CodigoColor = leer["CODIGO_COLOR"].ToString();
+					colores.DescripcionColor = leer["DESCRIPCION"].ToString();
+					Especialidad.Especialidad = leer["SPECIALTIES"].ToString();
+					ItemSummary.EstiloItem = leer["ITEM_STYLE"].ToString();
+					ItemSummary.Cantidad = Convert.ToInt32(leer["QTY"]);
+					ItemSummary.Price = leer["PRICE"].ToString();
+					ItemSummary.Total = leer["TOTAL"].ToString();
+					ItemSummary.IdItems = Convert.ToInt32(leer["ID_PO_SUMMARY"]);
+					ItemSummary.CatColores = colores;
+					ItemSummary.ItemDescripcion = Desc;
+					ItemSummary.CatEspecialidades = Especialidad;
 					ItemSummary.CatTela = Tela;
-                    ItemSummary.PedidosId = Convert.ToInt32(leer["ID_PEDIDOS"]);
+					ItemSummary.PedidosId = Convert.ToInt32(leer["ID_PEDIDOS"]);
 					OrdenesCompra listaPO = objPedido.ConsultarListaPO(ItemSummary.PedidosId);
-					List<ItemTalla> listaTallas = objTallas.ListadoTallasPorEstilo(ItemSummary.IdItems).ToList();
-                    ItemSummary.Pedidos = listaPO;
-                    ItemSummary.ListarTallasPorEstilo = listaTallas;         
-                    listSummary.Add(ItemSummary);
+					//List<ItemTalla> listaTallas = objTallas.ListadoTallasPorEstilo(ItemSummary.IdItems).ToList();
+					List<ItemTalla> listaTallas = objTallas.ListadoTallasDetallesPorEstilos(ItemSummary.IdItems).ToList();
+					
+					string descripcion = ItemSummary.EstiloItem.TrimEnd() + "_" + colores.CodigoColor.TrimEnd();
+					int idEstilo = objDesc.ObtenerIdEstilo(ItemSummary.EstiloItem);
+					var arte = db.ImagenArte.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
+					ObtenerExtensionArte(arteCont, arteEstilo, ItemSummary, descripcion, arte);
+					ItemSummary.Pedidos = listaPO;
+					ItemSummary.ListarTallasPorEstilo = listaTallas;
+					listSummary.Add(ItemSummary);
 
-                }
-                leer.Close();
-            }
-            finally
-            {
-                conn.CerrarConexion();
-                conn.Dispose();
-            }
-            return listSummary;
-        }
+				}
+				leer.Close();
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+			return listSummary;
+		}
 
-        //Muestra la lista estilos de Por PO
-        public IEnumerable<POSummary> ListaEstilosPorPO(int? id)
+		public static void ObtenerExtensionArte(ArteController arteCont, IMAGEN_ARTE_ESTILO arteEstilo, POSummary ItemSummary, string descripcion, IMAGEN_ARTE arte)
+		{
+			if (arte != null && arte.extensionArte != "")
+			{
+				int tam_var = arte.extensionArte.Length;
+				string nombreEstiloArt = arte.extensionArte.Substring(0, tam_var - 4);
+				if (descripcion == nombreEstiloArt && arte.extensionArte != null && arte.extensionArte != "")
+				{
+					ItemSummary.nombreArte = arte.extensionArte;
+				}
+				else
+				{
+					arteCont.BuscarRutaImagenEstilo(descripcion, arteEstilo);
+					if (arteEstilo != null && arteEstilo.extensionArt != null)
+					{
+						int tam_var2 = arteEstilo.extensionArt.Length;
+						string nomEsdesctiloArt = arteEstilo.extensionArt.Substring(0, tam_var2 - 4);
+						if (descripcion == nomEsdesctiloArt && arteEstilo.extensionArt != null)
+						{
+							ItemSummary.nombreArte = arteEstilo.extensionArt;
+						}
+						else
+						{
+							ItemSummary.nombreArte = arte.extensionArte;
+						}
+					}
+					else
+					{
+						ItemSummary.nombreArte = arte.extensionArte;
+					}
+				}
+			}
+			else
+			{
+				arteCont.BuscarRutaImagenEstilo(descripcion, arteEstilo);
+				if (arteEstilo != null && arteEstilo.extensionArt != null)
+				{
+					int tam_var2 = arteEstilo.extensionArt.Length;
+					string nomEsdesctiloArt = arteEstilo.extensionArt.Substring(0, tam_var2 - 4);
+					if (descripcion == nomEsdesctiloArt && arteEstilo.extensionArt != null)
+					{
+						ItemSummary.nombreArte = arteEstilo.extensionArt;
+					}
+				}
+				else
+				{
+					ItemSummary.nombreArte = arte.extensionArte;
+				}
+			}
+		}
+
+		//Muestra la lista estilos de Por PO
+		public IEnumerable<POSummary> ListaEstilosPorPO(int? id)
         {
             Conexion conn = new Conexion();
             List<POSummary> listSummary = new List<POSummary>();
@@ -230,15 +337,21 @@ namespace FortuneSystem.Models.POSummary
 					estilos.PedidosId = Convert.ToInt32(leerF["ID_PEDIDOS"]);
                     estilos.Precio = Convert.ToDouble(leerF["PRICE"]);
                     estilos.IdEspecialidad = Convert.ToInt32(leerF["ID_SPECIALTIES"]);
+					estilos.TipoImpresion = leerF["TYPE_IMP"].ToString();
 
 					if (!Convert.IsDBNull(leerF["ID_FORM_PACK"]))
 					{
 						estilos.IdTipoFormPack = Convert.ToInt32(leerF["ID_FORM_PACK"]);
 					}
-					
+
+					if (!Convert.IsDBNull(leerF["PO_FANTASY"]))
+					{
+						estilos.POFantasy =leerF["PO_FANTASY"].ToString();
+					}
 
 
-                }
+
+				}
                 leerF.Close();
             }
             finally
@@ -277,6 +390,8 @@ namespace FortuneSystem.Models.POSummary
                 comando.Parameters.AddWithValue("@IdEstado", items.IdEstado);
 				comando.Parameters.AddWithValue("@IdSucursal", items.IdSucursal);
 				comando.Parameters.AddWithValue("@IdFormPack", items.IdTipoFormPack);
+				comando.Parameters.AddWithValue("@TipoImpresion", items.TipoImpresion);
+				comando.Parameters.AddWithValue("@POFant", items.POFantasy);
 
                 comando.ExecuteNonQuery();
             }
@@ -456,8 +571,10 @@ namespace FortuneSystem.Models.POSummary
                 comando.Parameters.AddWithValue("@TipoCamiseta", items.IdCamiseta);
                 comando.Parameters.AddWithValue("@IdEspecialidad", items.IdEspecialidad);
 				comando.Parameters.AddWithValue("@IdTipoForm", items.IdTipoFormPack);
+				comando.Parameters.AddWithValue("@TipoImpresion", items.TipoImpresion);
+				comando.Parameters.AddWithValue("@POFant", items.POFantasy);
 
-                comando.ExecuteNonQuery();
+				comando.ExecuteNonQuery();
             }
             finally
             {

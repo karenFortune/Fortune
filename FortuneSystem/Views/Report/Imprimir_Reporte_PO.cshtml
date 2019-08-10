@@ -3,148 +3,144 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="~/Scripts/jquery-3.3.1.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/bootstrap.js"></script>
-    <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-    <style>
-        body {
-            font-family: sans-serif;
-        }
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="@Server.MapPath("~/Content/bootstrap-theme.css")" rel="stylesheet" />
+	<link href="@Server.MapPath("~/Content/bootstrap.min.css")" rel="stylesheet" />
+	<style>
+		body {
+			font-family: sans-serif;
+		}
 
-        .under_line {
-            border-bottom: 1px solid black;
-            text-align: center;
-            padding-left: 1em;
-            padding-right: 1em;
-        }
+		.under_line {
+			border-bottom: 1px solid black;
+			text-align: center;
+			padding-left: 1em;
+			padding-right: 1em;
+		}
 
-        .texto_t {
-            color: black;
-            font-weight: bold;
-            text-align: center;
-			 font-size: 12px;
-        }
+		.texto_t {
+			color: black;
+			font-weight: bold;
+			text-align: center;
+			font-size: 12px;
+		}
 
-        .texto_cabecera_derecha {
-            font-weight: bold;
-            text-align: right;
-        }
+		.texto_cabecera_derecha {
+			font-weight: bold;
+			text-align: right;
+		}
 
-        .texto {
-            font-size: 10px;
-        }
+		.texto {
+			font-size: 10px;
+		}
 
-        .table_tallas {
-            border-collapse: collapse;
-            font-size: 9px;
-        }
+		.table_tallas {
+			border-collapse: collapse;
+			font-size: 9px;
+		}
 
-            .table_tallas td {
-                border: 1px solid black;
-                text-align: center;
-            }
+			.table_tallas td {
+				border: 1px solid black;
+				text-align: center;
+			}
 
-        .texto_izquiera {
-            text-align: left !important;
-        }
-        table.table-bordered {
-            border: 1px solid #D3D3D3;
-            margin-top: 20px;
-        }
+		.texto_izquiera {
+			text-align: left !important;
+		}
 
-            table.table-bordered > thead > tr > th {
-                border: 0px solid #D3D3D3;	
-            }   
+		table.table-bordered {
+			border: 1px solid #D3D3D3;
+			margin-top: 20px;
+		}
 
-        table.table-bordered > tbody > tr > td {
-            border: 1px solid #0c0c0c;
-        }
+			table.table-bordered > thead > tr > th {
+				border: 0px solid #D3D3D3;
+			}
 
-        table.table-bordered > tbody > tr > th {
-            border: 1px solid #0c0c0c;
-        } 
+			table.table-bordered > tbody > tr > td {
+				border: 1px solid #0c0c0c;
+			}
 
-		        #tablaRepEstilo {
-            border: 1px solid #D3D3D3;
-            
-        }
+			table.table-bordered > tbody > tr > th {
+				border: 1px solid #0c0c0c;
+			}
 
-            #tablaRepEstilo > thead > tr > th {
-                border: 0px solid  #D3D3D3;	
-            }   
+		#tablaRepEstilo {
+			border: 1px solid #D3D3D3;
+		}
 
-        #tablaRepEstilo > tbody > tr > td {
-            border: 1px solid #0c0c0c;
-			width: 140px;
-        }
+			#tablaRepEstilo > thead > tr > th {
+				border: 0px solid #D3D3D3;
+			}
 
-        #tablaRepEstilo > tbody > tr > th {
-            border: 1px solid #0c0c0c;
-			width: 140px;
-        } 
-		
+			#tablaRepEstilo > tbody > tr > td {
+				border: 1px solid #0c0c0c;
+				width: 140px;
+			}
+
+			#tablaRepEstilo > tbody > tr > th {
+				border: 1px solid #0c0c0c;
+				width: 140px;
+			}
+
 		#tablaDatEstilo {
-            border: 1px solid #D3D3D3;
-            
-        }
+			border: 1px solid #D3D3D3;
+		}
 
-            #tablaDatEstilo > thead > tr > th {
-                border: 0px solid #D3D3D3;	
-            }   
+			#tablaDatEstilo > thead > tr > th {
+				border: 0px solid #D3D3D3;
+			}
 
-        #tablaDatEstilo > tbody > tr > td {
-            border: 1px solid #0c0c0c;
-			width: 160px;
-        }
+			#tablaDatEstilo > tbody > tr > td {
+				border: 1px solid #0c0c0c;
+				width: 160px;
+			}
 
-        #tablaDatEstilo > tbody > tr > th {
-            border: 1px solid #0c0c0c;
-			width: 160px;
-        }
+			#tablaDatEstilo > tbody > tr > th {
+				border: 1px solid #0c0c0c;
+				width: 160px;
+			}
 
-        #tablaSize > tbody > tr > th {
-            border: 1px solid #0c0c0c;
-            width: 80px;
+		#tablaSize > tbody > tr > th {
+			border: 1px solid #0c0c0c;
+			width: 80px;
 			height: 30px;
-        }
+		}
 
-        #tablaSize > tbody > tr > td {
-            border: 1px solid #0c0c0c;
-            width: 80px;
+		#tablaSize > tbody > tr > td {
+			border: 1px solid #0c0c0c;
+			width: 80px;
 			height: 30px;
-        }
-        .cabecera_inventario {
-            color: black;
-            background: #D3D3D3;
-            text-align: center;
-			 font-size: 13px;
-        }
+		}
+
+		.cabecera_inventario {
+			color: black;
+			background: #D3D3D3;
+			text-align: center;
+			font-size: 13px;
+		}
 
 		.cabecera_size {
-            color: black;
-            background: #D3D3D3;
-            text-align: center;
-			 font-size: 15px;
-        }
+			color: black;
+			background: #D3D3D3;
+			text-align: center;
+			font-size: 15px;
+		}
 
-        .encabezado {
-            text-align: center;
-        }
+		.encabezado {
+			text-align: center;
+		}
 
-        .esp {
-            color: darkred;
+		.esp {
+			color: darkred;
 			font-size: 20px;
 			text-align: center;
-        }
-    </style>
+		}
+	</style>
 </head>
 <body>
 	@{ //VARIABLES
-		int cantQty = 0, cantExtra = 0, totalPcs = 0, numCTN = 0;
+		int cantQty = 0, cantExtra = 0, totalPcs = 0, numCTN = 0, totalQty=0, extrasQty=0;
 
 	}
 
@@ -152,7 +148,8 @@
 	{
 		cantQty = 0;
 		cantExtra = 0;
-
+		totalQty = 0;
+		extrasQty=0;
 	<div class="row" style="margin-top:40px;">
 		
 		<div class="col-md-1" style=" float:left; width: 800px; height: 40px; border: 0px solid #0c0c0c;">
@@ -161,7 +158,7 @@
 				@foreach (var item_Tallas in item.ListarTallasPorEstilo)
 				{
 
-					totalPcs =item.Cantidad;
+					totalPcs = item.Cantidad;
 				}
 
 				<p style=" height: 20px; font-size:28px; text-align: center; font-family:'Times New Roman', Times, serif; font-weight:bold;text-shadow: 0px 1px 2px #777;">&nbsp;&nbsp;@totalPcs.ToString("###,###,##0") </p>
@@ -211,6 +208,8 @@
 						</td>
 						<td class="texto_t">
 							@Html.DisplayFor(modelItem => item.Cantidad)
+							@{totalQty = @item.Cantidad;
+							}
 						</td>
 					</tr>
 				</tbody>
@@ -268,9 +267,20 @@
 							{
 								<th class="texto_t">@item_Tallas.Cantidad </th>
 								cantQty += @item_Tallas.Cantidad;
+								extrasQty +=@item_Tallas.Extras;
 							}
 
-							<td class="texto_t">@cantQty</td>
+
+							@if (cantQty == totalQty)
+							{
+								
+								<td class="texto_t">@cantQty</td>
+							}
+							else
+							{
+								cantQty = cantQty + extrasQty;
+								<td class="texto_t">@cantQty</td>
+							}
 						</tr>
 						<tr>
 							<th class="cabecera_size" style="text-align:right; width:100px;">EXTRAS/DAÑADAS:</th>
@@ -309,7 +319,8 @@
 				</table>
 			</div>
 			<div>
-				<img src="@Url.Action("ConvertirImagenArteEstilo", "Arte", new {nombreEstilo= item.EstiloItem, color=item.CatColores.CodigoColor})" style="width:130px;height:150px; float:left;" />
+				@*<img src="@Url.Action("ConvertirImagenArteEstilo", "Arte", new {nombreEstilo= item.EstiloItem, color=item.CatColores.CodigoColor})" style="width:130px;height:150px; float:left;" /> *@
+				<img src="@Server.MapPath("~/Content/imagenesArte/"+@item.nombreArte)" alt=" " style="width:130px;height:150px; float:left;" />
 			</div>
 		</div>
 	</div>

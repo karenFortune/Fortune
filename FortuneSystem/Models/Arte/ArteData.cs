@@ -255,7 +255,7 @@ namespace FortuneSystem.Models.Arte
                 SqlCommand comando = new SqlCommand();
                 SqlDataReader leerFilas = null;                
                 comando.Connection = conn.AbrirConexion();
-                comando.CommandText = "select IA.IdImgArte, IA.IdEstilo,IA.StatusArte, IA.StatusPNL, ID.ITEM_STYLE, ID.DESCRIPTION, IA.extensionArte, IA.extensionPNL from IMAGEN_ARTE IA " +
+                comando.CommandText = "select IA.IdImgArte, IA.IdEstilo,IA.StatusArte, IA.StatusPNL, ID.ITEM_STYLE, ID.DESCRIPTION, IA.extensionArte, IA.extensionPNL, IA.combos, IA.comentarios from IMAGEN_ARTE IA " +
                     "INNER JOIN ITEM_DESCRIPTION ID ON ID.ITEM_ID = IA.IdEstilo";
                 leerFilas = comando.ExecuteReader();
 
@@ -271,8 +271,10 @@ namespace FortuneSystem.Models.Arte
                         Estilo = leerFilas["ITEM_STYLE"].ToString(),
                         extensionArte = leerFilas["extensionArte"].ToString(),
                         extensionPNL = leerFilas["extensionPNL"].ToString(),
-                        DescripcionEstilo = leerFilas["DESCRIPTION"].ToString()
-                    };
+                        DescripcionEstilo = leerFilas["DESCRIPTION"].ToString(),
+						combos = leerFilas["combos"].ToString().TrimEnd(' '),
+						comentarios = leerFilas["comentarios"].ToString().TrimEnd(' ')
+					};
                     string arteEstilo = arte.Estilo.TrimEnd(' ');
                     string descEstilo= arte.DescripcionEstilo.TrimEnd(' ');
                     arte.Estilo = arteEstilo;
@@ -826,7 +828,7 @@ namespace FortuneSystem.Models.Arte
             try
             {
                 cmd.Connection = conex.AbrirConexion();
-                cmd.CommandText = "UPDATE IMAGEN_ARTE SET extensionArte ='" + imagenArte.extensionArte + "' , StatusArte ='" + imagenArte.StatusArte + "', Fecha ='" + imagenArte.fecha + "' WHERE IdImgArte='" + imagenArte.IdImgArte + "'";
+                cmd.CommandText = "UPDATE IMAGEN_ARTE SET extensionArte ='" + imagenArte.extensionArte + "' , StatusArte ='" + imagenArte.StatusArte + "', Fecha ='" + imagenArte.fecha + "', combos ='" + imagenArte.combos + "', comentarios ='" + imagenArte.comentarios + "', idUsuario ='" + imagenArte.idUsuario + "' WHERE IdImgArte='" + imagenArte.IdImgArte + "'";
                 cmd.CommandType = CommandType.Text;
                 reader = cmd.ExecuteReader();
                 conex.CerrarConexion();

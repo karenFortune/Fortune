@@ -1,4 +1,6 @@
-﻿using FortuneSystem.Models.Catalogos;
+﻿
+using FortuneSystem.App_Start;
+using FortuneSystem.Models.Catalogos;
 using FortuneSystem.Models.Pedidos;
 using FortuneSystem.Models.PrintShop;
 using System;
@@ -9,15 +11,17 @@ using System.Web.Mvc;
 
 namespace FortuneSystem.Controllers
 {
-    public class PrintShopController : Controller
+	
+	public class PrintShopController : Controller
     {
 		readonly PedidosData objPedido = new PedidosData();
 		readonly CatClienteData objCliente = new CatClienteData();
 		readonly CatClienteFinalData objClienteFinal = new CatClienteFinalData();
 		readonly CatTallaItemData objTalla = new CatTallaItemData();
 		readonly PrintShopData objPrint = new PrintShopData();
-        // GET: PrintShop
-        public ActionResult Index()
+		// GET: PrintShop
+	
+		public ActionResult Index()
         {
 			List<OrdenesCompra>  listaPedidos = objPedido.ListaOrdenCompra().ToList();
             return View(listaPedidos);
@@ -210,5 +214,13 @@ namespace FortuneSystem.Controllers
             var result = Json(new { listaTallaBatch = listaTallas });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-    }
+
+		[HttpPost]
+		public ActionResult EliminarBatch(int idBatch, int idEstilo)
+		{
+			objPrint.EliminarInfoBatch(idBatch, idEstilo);
+			TempData["eliminarBatch"] = "The Pallet was delete correctly.";
+			return Json("0", JsonRequestBehavior.AllowGet);
+		}
+	}
 }

@@ -468,7 +468,9 @@ function GridWIP(orders, output, comments) {
         showBorders: true,
         showColumnLines: true,
         showRowLines: true,
-        rowAlternationEnabled: true,
+		rowAlternationEnabled: true,
+		columnRenderingMode: "virtual",
+		rowRenderingMode: "virtual", 
         /*scrolling: {
             columnRenderingMode: "virtual"
         },*/

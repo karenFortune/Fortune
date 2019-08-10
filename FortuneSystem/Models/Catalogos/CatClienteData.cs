@@ -171,9 +171,34 @@ namespace FortuneSystem.Models.Catalogos
                 conn.Dispose();
             }
         }
+		//Obtener numero cliente por pedido
+		public int ObtenerNumeroCliente(int idPedido)
+		{
+			int cliente = 0;
+			Conexion conex = new Conexion();
+			try
+			{
+				SqlCommand coman = new SqlCommand();
+				SqlDataReader leerF = null;
+				coman.Connection = conex.AbrirConexion();
+				coman.CommandText = "SELECT CUSTOMER FROM PEDIDO where ID_PEDIDO='" + idPedido +  "' ";
+				leerF = coman.ExecuteReader();
+				while (leerF.Read())
+				{
+					cliente = Convert.ToInt32(leerF["CUSTOMER"]);
+				}
+				leerF.Close();
+			}
+			finally
+			{
+				conex.CerrarConexion();
+				conex.Dispose();
+			}
+			return cliente;
+		}
 
 
-    }
+	}
 }
 
 

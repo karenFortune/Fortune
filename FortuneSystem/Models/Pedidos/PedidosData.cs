@@ -71,12 +71,14 @@ namespace FortuneSystem.Models.Pedidos
                     };
 
                     pedidos.Historial = objRevision.ObtenerPedidoRevisiones(pedidos.IdPedido);
-
-                    pedidos.CatStatus = status;
+					pedidos.CatStatus = status;
                     pedidos.CatClienteFinal = clienteFinal;
 
+					pedidos.EstatusPack = ObtenerEstilos(pedidos.IdPedido);
+					pedidos.EstatusPackAssort = ObtenerEstilosAssort(pedidos.IdPedido);
 
-                    listPedidos.Add(pedidos);
+
+					listPedidos.Add(pedidos);
                 }
                 leer.Close();
             }
@@ -89,8 +91,142 @@ namespace FortuneSystem.Models.Pedidos
             return listPedidos;
         }
 
-        //Muestra la lista de PO para WIP
-        public IEnumerable<OrdenesCompra> ListaOrdenCompraWIP(int estadoTab)
+		public string ObtenerEstilos(int IdPedido)
+		{
+
+			Conexion conn = new Conexion();
+			string dato = "";
+			int valor = 0;
+			int numEstilos = 0;
+			int contador = 0;
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+
+				List<ItemDescripcion> listaEstilos = new List<ItemDescripcion>();
+				listaEstilos = ListaEstilos(IdPedido).ToList();
+				//string valores = "";
+				numEstilos = listaEstilos.Count;
+				for (int v = 0; v < listaEstilos.Count; v++)
+				{
+
+					int val = listaEstilos[v].IdSummary;
+					string query = Convert.ToString(val);
+					if (query == "")
+					{
+						query = "0";
+					}
+
+					comando.CommandText = "select DISTINCT(R.ID_SUMMARY) AS numPack from PACKING_TYPE_SIZE R " +
+						"WHERE R.ID_SUMMARY in(" + query + ") ";
+					comando.CommandType = CommandType.Text;
+					leer = comando.ExecuteReader();
+
+					while (leer.Read())
+					{
+
+						int numero = Convert.ToInt32(leer["numPack"]);
+
+						if (numero != 0)
+						{
+							contador++;
+
+						}
+						valor = contador;
+
+
+					}
+					leer.Close();
+				}
+
+				if (valor == numEstilos)
+				{
+					dato = "X";
+				}
+				else
+				{
+					dato = "-";
+				}
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+			return dato;
+		}
+		//Saber si existe instrucción de empaque del tipo Assort
+		public string ObtenerEstilosAssort(int IdPedido)
+		{
+
+			Conexion conn = new Conexion();
+			string dato = "";
+			int valor = 0;
+			int numEstilos = 0;
+			int contador = 0;
+			try
+			{
+				SqlCommand comando = new SqlCommand();
+				SqlDataReader leer = null;
+				comando.Connection = conn.AbrirConexion();
+
+				List<ItemDescripcion> listaEstilos = new List<ItemDescripcion>();
+				listaEstilos = ListaEstilos(IdPedido).ToList();
+				//string valores = "";
+				numEstilos = listaEstilos.Count;
+				for (int v = 0; v < listaEstilos.Count; v++)
+				{
+
+					int val = listaEstilos[v].IdSummary;
+					string query = Convert.ToString(val);
+					if (query == "")
+					{
+						query = "0";
+					}
+
+					comando.CommandText = "select DISTINCT(R.ID_SUMMARY) AS numPack from PACKING_TYPE_SIZE R " +
+						"WHERE R.ID_SUMMARY in(" + query + ") AND TYPE_PACKING=3";
+					comando.CommandType = CommandType.Text;
+					leer = comando.ExecuteReader();
+
+					while (leer.Read())
+					{
+
+						int numero = Convert.ToInt32(leer["numPack"]);
+
+						if (numero != 0)
+						{
+							contador++;
+
+						}
+						valor = contador;
+
+
+					}
+					leer.Close();
+				}
+
+				if (valor != 0)
+				{
+					dato = "X";
+				}
+				else
+				{
+					dato = "-";
+				}
+			}
+			finally
+			{
+				conn.CerrarConexion();
+				conn.Dispose();
+			}
+			return dato;
+		}
+
+		//Muestra la lista de PO para WIP
+		public IEnumerable<OrdenesCompra> ListaOrdenCompraWIP(int estadoTab)
         {
             Conexion conn = new Conexion();
             List<OrdenesCompra> listPedidos = new List<OrdenesCompra>();
@@ -502,6 +638,45 @@ namespace FortuneSystem.Models.Pedidos
             return listShipped;
         }
 
+		//Lista pedidos
+		public IEnumerable<ItemDescripcion> ListaEstilos(int? id)
+        {
+            int pedido = Convert.ToInt32(id);
+            Conexion conn = new Conexion();
+            List<ItemDescripcion> listEstilos = new List<ItemDescripcion>();
+            try
+            {
+                SqlCommand comando = new SqlCommand();
+                SqlDataReader leer = null;
+                comando.Connection = conn.AbrirConexion();
+                // comando.CommandText = "Listar_Pedidos";
+                comando.CommandText = "select  PS.ID_PO_SUMMARY from po_summary PS " +
+                    "where  PS.id_pedidos= '" + pedido + "'";
+                comando.CommandType = CommandType.Text;
+                leer = comando.ExecuteReader();
+
+                while (leer.Read())
+                {
+
+                    ItemDescripcion estilos = new ItemDescripcion()
+                    {                       
+                     
+                        IdSummary = Convert.ToInt32(leer["ID_PO_SUMMARY"])
+					};
+
+                    listEstilos.Add(estilos);
+                }
+                leer.Close();
+            }
+            finally
+            {
+                conn.CerrarConexion();
+                conn.Dispose();
+            }
+            return listEstilos;
+        }
+
+
         //Muestra la lista de estilos por IdPedido
         public IEnumerable<ItemDescripcion> ListaEstilosPorIdPedido(int? id)
         {
@@ -514,7 +689,7 @@ namespace FortuneSystem.Models.Pedidos
                 SqlDataReader leer = null;
                 comando.Connection = conn.AbrirConexion();
                 // comando.CommandText = "Listar_Pedidos";
-                comando.CommandText = "select  ITD.ITEM_ID, ITD.ITEM_STYLE, PS.ID_PO_SUMMARY from po_summary PS " +
+                comando.CommandText = "select  ITD.ITEM_ID, ITD.ITEM_STYLE, ITD.DESCRIPTION, PS.ID_PO_SUMMARY from po_summary PS " +
                     "INNER JOIN item_description ITD ON PS.ITEM_ID = ITD.ITEM_ID " +
                     "where  PS.id_pedidos= '" + pedido + "'";
                 comando.CommandType = CommandType.Text;
@@ -528,8 +703,9 @@ namespace FortuneSystem.Models.Pedidos
 
                         ItemEstilo = leer["ITEM_STYLE"].ToString(),
                         ItemId = Convert.ToInt32(leer["ITEM_ID"]),
-                        IdSummary = Convert.ToInt32(leer["ID_PO_SUMMARY"])
-                    };
+                        IdSummary = Convert.ToInt32(leer["ID_PO_SUMMARY"]), 
+						Descripcion = leer["DESCRIPTION"].ToString()
+					};
 
 
 
@@ -772,7 +948,7 @@ namespace FortuneSystem.Models.Pedidos
                     {
                         dt = dt.AddDays(-1);
                     }
-                    if (dt.DayOfWeek == DayOfWeek.Saturday) { dt = dt.AddDays(-1); }
+                    if (dt.DayOfWeek == DayOfWeek.Saturday) { dt = dt.AddDays(-2); }
                     if (dt.DayOfWeek == DayOfWeek.Sunday) { dt = dt.AddDays(-2); }
                     pedidos.FechaFinalOrden = dt;
                 }
@@ -1300,8 +1476,64 @@ namespace FortuneSystem.Models.Pedidos
 
         }
 
-        //Obtener Total de price tickets trims por IdSummary
-        public InfoPriceTickets ObtenerTotalPriceTicketsTrims(int? idSummary)
+		//Obtener informacion de pedido
+
+		//Obtener Total de trims por IdSummary
+		public OrdenesCompra ObtenerPedido(int? idPedido)
+		{
+			Conexion conexion = new Conexion();
+			OrdenesCompra pedidos = new OrdenesCompra();
+			try
+			{
+				SqlCommand com = new SqlCommand();
+				SqlDataReader leerF = null;
+
+				com.Connection = conexion.AbrirConexion();
+				com.CommandText = "SELECT * FROM PEDIDO WHERE ID_PEDIDO= '" + idPedido + "' ";
+				com.CommandType = CommandType.Text;
+
+				leerF = com.ExecuteReader();
+				while (leerF.Read())
+				{
+					pedidos.IdPedido = Convert.ToInt32(leerF["ID_PEDIDO"]);
+					pedidos.PO = leerF["PO"].ToString();
+					pedidos.VPO = leerF["VPO"].ToString();
+					pedidos.Cliente = Convert.ToInt32(leerF["CUSTOMER"]);
+					pedidos.ClienteFinal = Convert.ToInt32(leerF["CUSTOMER_FINAL"]);
+					pedidos.FechaCancel = Convert.ToDateTime(leerF["DATE_CANCEL"]);
+					pedidos.FechaOrden = Convert.ToDateTime(leerF["DATE_ORDER"]);
+					pedidos.TotalUnidades = Convert.ToInt32(leerF["TOTAL_UNITS"]);
+					pedidos.IdStatus = Convert.ToInt32(leerF["ID_STATUS"]);
+					pedidos.Usuario = Convert.ToInt32(leerF["ID_USUARIO"]);
+					if (!Convert.IsDBNull(leerF["ID_TYPE_ORDER"]))
+					{
+						pedidos.IdTipoOrden = Convert.ToInt32(leerF["ID_TYPE_ORDER"]);
+					}
+
+					DateTime fecha = pedidos.FechaCancel;
+					DateTime dt = fecha;
+					for (int k = 0; k < 2; k++)
+					{
+						dt = dt.AddDays(-1);
+					}
+					if (dt.DayOfWeek == DayOfWeek.Saturday) { dt = dt.AddDays(-1); }
+					if (dt.DayOfWeek == DayOfWeek.Sunday) { dt = dt.AddDays(-2); }
+					pedidos.FechaFinalOrden = dt;
+				}
+				leerF.Close();
+			}
+			finally
+			{
+				conexion.CerrarConexion();
+				conexion.Dispose();
+			}
+
+			return pedidos;
+
+		}
+
+		//Obtener Total de price tickets trims por IdSummary
+		public InfoPriceTickets ObtenerTotalPriceTicketsTrims(int? idSummary)
         {
             Conexion conexion = new Conexion();
             InfoPriceTickets trims = new InfoPriceTickets();

@@ -18,6 +18,7 @@ namespace FortuneSystem
         public Nullable<int> IdTalla { get; set; }
         public Nullable<int> IdSummary { get; set; }
         public Nullable<long> UPC1 { get; set; }
+        public Nullable<int> IdEstilo { get; set; }
 		public string Talla { get; set; }
 	}
 }

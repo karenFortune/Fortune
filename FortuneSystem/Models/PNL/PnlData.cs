@@ -918,9 +918,31 @@ namespace FortuneSystem.Models.PNL
             return idPnl;
         }
 
+		//Permite eliminar la informacion de un batch 
+		public void EliminarInfoBatch(int? idBatch, int? idEstilo)
+		{
+			Conexion conex = new Conexion();
+			SqlDataReader reader;
+			try
+			{
+				SqlCommand comando = new SqlCommand
+				{
+					Connection = conex.AbrirConexion(),
+					CommandText = "DELETE from PNL where ID_BATCH='" + idBatch + "' AND ID_SUMMARY='" + idEstilo + "'",
+					CommandType = CommandType.Text
+				};
+				reader = comando.ExecuteReader();
+				conex.CerrarConexion();
+			}
+			finally
+			{
+				conex.CerrarConexion();
+				conex.Dispose();
+			}
+		}
 
 
-    }
+	}
 
 
 

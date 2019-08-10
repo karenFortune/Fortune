@@ -111,11 +111,11 @@
 		cursor: zoom-in;
 	}
 
-		#pie {
-    height: 500px;
-}
+	#pie {
+		height: 500px;
+	}
 
-	.letrero{
+	.letrero {
 		font-family: impact, sans-serif;
 		font-size: 3em;
 		text-align: center;
@@ -123,6 +123,15 @@
 		word-spacing: -14.6pt;
 		color: #2f77b5;
 	}
+
+	.edit_driver {
+	}
+
+		.edit_driver:hover {
+			color: white !important;
+			background: #3479bf !important;
+			border-radius: 15px;
+		}
 </style>
 <script>
 	$(function () {
@@ -136,6 +145,16 @@
 		});
 	});
 </script>
+@{
+	if (TempData["eliminarBatch"] != null)
+	{
+		<script type="text/javascript">
+            alertify.set('notifier', 'position', 'top-right');
+            alertify.notify(@Html.Raw(Json.Encode(TempData["eliminarBatch"])), 'success', 5, null);
+
+		</script>
+	}
+}
 </div>
 <div class="modal fade" id="enlargeImageModal" tabindex="-1" role="dialog" aria-labelledby="enlargeImageModal" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document">
@@ -153,7 +172,7 @@
 		</div>
 	</div>
 </div>
-<div class="container-fluid" style="padding-left:12em; padding-right:10em;">
+<div class="container-fluid" style="padding-left:6em; padding-right:8em;">
 	<div class="letrero">PNL</div>
 	<div class="panel panel-primary" id="consultaPO">
 		<div class="panel-heading">
@@ -185,10 +204,18 @@
 			@Html.HiddenFor(model => model.InfoSummary.IdItems)
 		</div>
 		<div id="div_tabla_estilos" style="width: 100%; height:250px; overflow:auto; ">
+			<br />
+			<div class="form-group">
+				<input type="text" class="form-control pull-right" style="width:20%" id="search" placeholder="Type to search table...">
+			</div>
 			<table id="tabless" class="table table-sm table-striped table-hover ">
 				<thead>
 					<tr>
 						<th style="border-top-left-radius:0px !important;">#</th>
+						@if (Model.CatCliente.Customer == 2)
+						{
+							<th>PO FANTASY#</th>
+						}
 						<th>ITEM</th>
 						<th>ITEM DESCRIPTION</th>
 						<th>COLOR CODE</th>
@@ -333,47 +360,59 @@
 
 </div>
 <script>
+	$(document).ready(function () {
+		$("#search").keyup(function () {
+			_this = this;
+			// Show only matching TR, hide rest of them
+			$.each($("#tabless tbody tr"), function () {
+				if ($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1)
+					$(this).hide();
+				else
+					$(this).show();
+			});
+		});
+	});
 	$('#tabless tr').click(function (e) {
 		$('#tabless tr').removeClass('highlighted');
 		$(this).addClass('highlighted');
 	});
 
-			//Desplazamiento
-		$('.tbodyprint').keydown(function (e) {
-			var $table = $(this);
-			var $active = $('input:focus,select:focus', $table);
-			var $next = null;
-			var focusableQuery = 'input:visible,select:visible,textarea:visible';
-			var position = parseInt($active.closest('td').index()) + 1;
-			console.log('position :', position);
-			switch (e.keyCode) {
-				case 37: // <Left>
-					$next = $active.parent('td').prev().find(focusableQuery);
-					break;
-				case 38: // <Up>
-					$next = $active
-						.closest('tr')
-						.prev()
-						.find('td:nth-child(' + position + ')')
-						.find(focusableQuery)
-						;
-					break;
-				case 39: // <Right>
-					$next = $active.closest('td').next().find(focusableQuery);
-					break;
-				case 40: // <Down>
-					$next = $active
-						.closest('tr')
-						.next()
-						.find('td:nth-child(' + position + ')')
-						.find(focusableQuery)
-						;
-					break;
-			}
-			if ($next && $next.length) {
-				$next.focus();
-			}
-		});
+	//Desplazamiento
+	$('.tbodyprint').keydown(function (e) {
+		var $table = $(this);
+		var $active = $('input:focus,select:focus', $table);
+		var $next = null;
+		var focusableQuery = 'input:visible,select:visible,textarea:visible';
+		var position = parseInt($active.closest('td').index()) + 1;
+		console.log('position :', position);
+		switch (e.keyCode) {
+			case 37: // <Left>
+				$next = $active.parent('td').prev().find(focusableQuery);
+				break;
+			case 38: // <Up>
+				$next = $active
+					.closest('tr')
+					.prev()
+					.find('td:nth-child(' + position + ')')
+					.find(focusableQuery)
+					;
+				break;
+			case 39: // <Right>
+				$next = $active.closest('td').next().find(focusableQuery);
+				break;
+			case 40: // <Down>
+				$next = $active
+					.closest('tr')
+					.next()
+					.find('td:nth-child(' + position + ')')
+					.find(focusableQuery)
+					;
+				break;
+		}
+		if ($next && $next.length) {
+			$next.focus();
+		}
+	});
 
 	function obtenerListaPnl(IdEstiloInf) {
 		var orders = new DevExpress.data.CustomStore({

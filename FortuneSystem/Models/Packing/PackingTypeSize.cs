@@ -22,7 +22,13 @@ namespace FortuneSystem.Models.Packing
         public string Ratios { get; set; }
         [Display(Name = "TYPE OF PACKAGING ")]
         public TipoEmpaque TipoEmpaque { get; set; }
-        [Display(Name = "PACKAGING FORM")]
+		[Display(Name = "TYPE OF PACKAGING ")]
+		public TipoEmpaque TipoEmpaqueBP { get; set; }
+		[Display(Name = "TYPE OF PACKAGING ")]
+		public TipoEmpaquePPKs TipoEmpaquePPK { get; set; }
+		[Display(Name = "TYPE OF PACKAGING ")]
+		public TipoEmpaqueBulks TipoEmpaqueBulk { get; set; }		
+		[Display(Name = "PACKAGING FORM")]
         public FormaEmpaque FormaEmpaque { get; set; }
         public int IdFormaEmpaque { get; set; }
         [Display(Name = "PO#")]
@@ -44,28 +50,72 @@ namespace FortuneSystem.Models.Packing
         public List<PackingTypeSize> ListaEmpaque { get; set; }
         [Display(Name = "PACKING NAME")]
         public string PackingName { get; set; }
-        [Display(Name = "ASSORT NAME")]
+		[Display(Name = "NAME PACKING")]
+		public string PackingNameBulk { get; set; }
+		[Display(Name = "ASSORT NAME")]
         public string AssortName { get; set; }
         [Display(Name = "PACKING")]
         public string PackingRegistrado { get; set; }
-        public int IdBlockPack { get; set; }
+		[Display(Name = "PACKING")]
+		public string PackingRegistradoPPK { get; set; }
+		[Display(Name = "PACKING")]
+		public string PackingRegistradoVariosPPK { get; set; }
+		[Display(Name = "PACKING")]
+		public string PackingRegistradoVariosBULKS { get; set; }
+		public int IdBlockPack { get; set; }
         public virtual ItemDescripcion ItemDescripcion { get; set; }
         public int NumRegistros { get; set; }
         public int TotalPiezas { get; set; }
+		public int SumaTotal { get; set; }
+		[Display(Name = "TOTAL UNITS")]
+		public int TotalUnitsPPKHT { get; set; }
+		[Display(Name = "TOTAL UNITS")]
+		public int TotalUnitsPPKActHT { get; set; }
+		[Display(Name = "NO. PIECES")]
+		public int NumberPKK { get; set; }
+		[Display(Name = "NAME PACKING")]
+		public string NombrePacking { get; set; }
+		[Display(Name = "NO. PIECES")]
+		public int NumberPPKs { get; set; }
+		[Display(Name = "NO. PIECES")]
+		public int NumberAddPPKs { get; set; }
+		[Display(Name = "NAME PACKING")]
+		public string NombrePackingPPKs { get; set; }
+		[Display(Name = "NAME PACKING")]
+		public string NombrePackingAddPPKs { get; set; }
+		[Display(Name = "NAME PACKING")]
+		public string NombrePackingAddBulks { get; set; }
+		[Display(Name = "NAME PACKING")]
+		public string NombrePackingBulks { get; set; }
+		public List<PackingTypeSize> ListaPackingName { get; set; }
+		public int TotalCajas { get; set; }
 
 
 
 
-    }
+
+	}
 
     public enum TipoEmpaque
     {
         BULK = 1,
-        PPK = 2
+        PPK = 2,
+		PPKS = 4,
+		BULKS = 5
         //ASSORTMENT = 3
     }
 
-    public enum FormaEmpaque
+	public enum TipoEmpaquePPKs
+	{		
+		PPKS = 4
+	}
+
+	public enum TipoEmpaqueBulks
+	{
+		BULKS = 5
+	}
+
+	public enum FormaEmpaque
     {
         STORE = 1,
         ECOM = 2,

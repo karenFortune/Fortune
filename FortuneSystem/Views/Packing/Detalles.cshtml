@@ -31,6 +31,10 @@
 		background: #b3e0ff;
 	}
 
+			tr.histPack td {
+		background: #e4c8e9;
+	}
+
 	.centerImg {
 		display: block;
 		margin-left: auto;
@@ -114,7 +118,7 @@
 	}
 
 	#modificarPack {
-		margin-left: 800px;
+		margin-left: 100px;
 		margin-top: 1px;
 		width: 180px;
 		height: 40px;
@@ -123,7 +127,17 @@
 		font-weight: 600;
 	}
 
-	#nuevoPallet {
+		#editarPack {
+		margin-left: 100px;
+		margin-top: 1px;
+		width: 180px;
+		height: 40px;
+		border: none;
+		font-size: 20px;
+		font-weight: 600;
+	}
+
+	#nuevoPallet, #nuevoPalletPPK {
 		margin-left: 700px;
 		margin-top: 1px;
 		width: 120px;
@@ -301,6 +315,9 @@
 			$('.enlargeImageModalSource').attr('src', $(this).attr('src'));
 			$('#enlargeImageModal').modal('show');
 		});
+		/*$('#editarPack').on('click', function () {
+			$('#packingModal').modal('show');
+		});*/
 	});
 </script>
 </div>
@@ -313,6 +330,32 @@
 			</div>
 			<div class="modal-body">
 				<img class="enlargeImageModalSource center" style="width: 80%;">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="packingModal" tabindex="-1" role="dialog" aria-labelledby="packingModal" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 class="modal-title" id="exampleModalLabel">Edit Packing</h2>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+			</div>
+			<div class="modal-body">
+				<table>
+					<thead>
+						<tr>
+							<th style="border-top-left-radius:0px !important;">#</th>
+							<th>SIZE</th>
+							<th>QUANTITY</th>							
+							@*<th>ACTIONS</th> *@
+						</tr>
+					</thead>
+					<tbody class="tbodyPackingEditar"></tbody>
+				</table>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -348,7 +391,6 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h2 class="modal-title" id="exampleModalLabel">PACKING QUANTITIES</h2>
-
 			</div>
 			<div class="modal-footer">
 
@@ -363,7 +405,7 @@
 			<h2>Reference Order: @Html.DisplayFor(model => model.PO, new { @class = "control-label col-md-6" })  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      Purchase Order: @Html.DisplayFor(model => model.VPO, new { @class = "control-label col-md-6" })</h2>
 		</div>
 		@Html.HiddenFor(model => model.IdPedido)
-
+		@Html.HiddenFor(model => model.EstatusPackAssort)
 	</div>
 
 	<div class="container-fluid">
@@ -398,16 +440,24 @@
 					</div>
 				}
 			}
-			<br />
+			<br />	
+			<div class="form-group">
+				<input type="text" class="form-control pull-right" style="width:20%" id="search" placeholder="Type to search table...">
+			</div>
 			<table id="tabless" class="table table-sm table-striped table-hover ">
 				<thead>
 					<tr>
 						<th style="border-top-left-radius:0px !important;">#</th>
+						@if (Model.CatCliente.Customer == 2)
+						{
+							<th>PO FANTASY#</th>
+						}
 						<th>ITEM</th>
 						<th>ITEM DESCRIPTION</th>
 						<th>COLOR CODE</th>
 						<th>COLOR DESCRIPTION</th>
 						<th>FORM PACK</th>
+						<th>INSTR.</th>
 						<th>QTY</th>
 						<th>PRICE</th>
 						<th>TOTAL</th>
@@ -526,7 +576,7 @@
 								<div class="col-sm-4">
 									<br />
 									@Html.LabelFor(model => model.Packing.PackingTypeSize.TotalUnits, htmlAttributes: new { @class = "control-label ", id = "numTotalUnitLabel" })
-									@Html.EditorFor(model => model.Packing.PackingTypeSize.TotalUnits, new { htmlAttributes = new { @class = "form-control", id = "numTotalUnit" ,  @readonly = "readonly" } })
+									@Html.EditorFor(model => model.Packing.PackingTypeSize.TotalUnits, new { htmlAttributes = new { @class = "form-control", id = "numTotalUnit", @readonly = "readonly" } })
 									@Html.ValidationMessageFor(model => model.Packing.PackingTypeSize.TotalUnits, "", new { @class = "text-danger" })
 								</div>
 							</div>
@@ -546,6 +596,11 @@
 			<thead><tr><th>Size</th> <th>Box#</th> <th>QTY</th><th>TOTALCARTONS#</th></tr></thead>
 			<tbody class="packBulkReg"></tbody>
 		</table>*@
+							<!--TABLA DE REGISTRO DE PALLET BULK -->
+							<table class="table" id="tablaTallasPalletHT">
+								<thead><tr><th>Size</th> <th>Box#</th> <th>PIECES#</th> <th>QTY</th> <th>PARTIAL#</th><th>TOTALCARTONS#</th><th>CARTONSFALTANTES#</th></tr></thead>
+								<tbody class="tbodyHTPack"></tbody>
+							</table>
 
 							<div id="listaTallaPHT"></div>
 							<br />
@@ -793,9 +848,17 @@
 						<div class="container-fluid" style=" overflow:auto;">
 							<br />
 							<div id="div_Desc_Estilo" style="background-color:lightblue; text-align:center"></div>
-							<div id="titulo_Tipo_Empaque" style="display:none; text-align:center"></div>
-
-							<button type="button" class="btn btn-success btn-md pull-right " id="modificarPack" onclick="event.preventDefault(); ConfirmCambioPack(this);"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Change Pack</button>
+							<div id="titulo_Tipo_Empaque" style="display:none; text-align:center"></div> <br />
+						     <div id="botonesPackingcente" style="display:inline; text-align:center">
+							@if ((int)Session["idCargo"] == 10 || (int)Session["idCargo"] == 1)
+							{
+								 <button type="button" class="btn btn-success btn-md pull-right " id="modificarPack" onclick="event.preventDefault(); ConfirmCambioPack(this);"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Change Pack</button>
+							    <button type="button" class="btn btn-success btn-md pull-right " id="editarPack" onclick="event.preventDefault(); ConfirmEditarPack(this);"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Edit Pack</button>
+							}
+							 
+							</div>																							 
+							
+							<div></div>
 							<div></div>
 							<div id="div_estilo"></div>
 							<button type="button" id="btnAdd" class="btn btn-xs btn-primary classAddQ">+ Add Size</button>
@@ -811,10 +874,12 @@
 									<tbody class="tbodyQtyTall"></tbody>
 								</table>
 							</div>
-							<table id="tablePacking" class="table table-sm table-striped table-hover ">
-								<thead class="encabezado"></thead>
-								<tbody class="tbodyP"></tbody>
-							</table>
+							<div style="width: 100%; height:400px; overflow:auto;" id="tablaPackingcont">
+								<table id="tablePacking" class="table table-sm table-striped table-hover" >
+									<thead class="encabezado"></thead>
+									<tbody class="tbodyP"></tbody>
+								</table>
+							</div>
 							<button type="button" id="nuevaTalla" class="btn btn-success btn-md pull-right btn-sm">Save Sizes</button>
 							<br />
 						</div>
@@ -906,8 +971,44 @@
 									</div>
 								</div>
 							</div>
+							<!--TABLA DE REGISTRO PALLET BULK -->
+							<table class="table" id="tablaTallasPalletBulk">
+								<thead>	<tr><th style="visibility:hidden;"> </th><th>Size</th><th>Box#</th><th>CantxBox#</th><th>PartialBox#</th><th>TotalPieces#</th><th>TotalBox#</th><th>BoxFaltante#</th></tr></thead>
+								<tbody class="tbodyPalletBulk"></tbody>
+							</table>
+							<div id="opcionesPackVArios" style="display:none;">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-xs-5 col-md-5" style="width: 200px;">
+											@Html.LabelFor(model => model.Packing.PackingTypeSize.PackingRegistradoPPK, htmlAttributes: new { @class = "control-label " }) <br />
+											@Html.DropDownList("listPacksName", (IEnumerable<System.Web.Mvc.SelectListItem>)ViewData["listPacksName"], "Select Packing Name", new { @class = "form-control", @id = "selectPackingNameVariosPPKS", @name = "state", @style = "width: 100% !important;" })
+											@Html.ValidationMessageFor(model => model.Packing.PackingTypeSize.PackingRegistradoPPK, "", new { @class = "text-danger" })
+										</div>
+										<div class="col-xs-4 col-md-4" style="width: 150px;">
+											@Html.LabelFor(model => model.Packing.TurnosPPK, htmlAttributes: new { @class = "control-label " })
+											@Html.EnumDropDownListFor(model => model.Packing.TurnosPPK, "Select Shift", new { @class = "form-control" })
+											@Html.ValidationMessageFor(model => model.Packing.TurnosPPK, "", new { @class = "text-danger" })
+										</div>
+										<div class="col-xs-4 col-md-4" style="width: 150px;">
+											@Html.LabelFor(model => model.Packing.CantBoxPPK, htmlAttributes: new { @class = "control-label " })
+											@Html.EditorFor(model => model.Packing.CantBoxPPK, new { htmlAttributes = new { @class = "form-control numeric cantBoxPPKS", @style = "width:130px" } })
+											@Html.ValidationMessageFor(model => model.Packing.CantBoxPPK, "", new { @class = "text-danger" })
+										</div>
+										<div class="col-xs-4 col-md-4" style="width: 200px;">
+											@Html.LabelFor(model => model.Packing.TotalCartonsPPKS, htmlAttributes: new { @class = "control-label lTotCartPPK " })
+											@Html.EditorFor(model => model.Packing.TotalCartonsPPKS, new { htmlAttributes = new { @class = "form-control numeric cantTotCart", @style = "width:150px", @readonly = "readonly" } })
+											@Html.ValidationMessageFor(model => model.Packing.TotalCartonsPPKS, "", new { @class = "text-danger" })
+										</div>
+										<div class="col-xs-4 col-md-4" style="width: 300px;">
+											@Html.LabelFor(model => model.Packing.TotalCartonesFaltPPKS, htmlAttributes: new { @class = "control-label lTotCartPPK " })
+											@Html.EditorFor(model => model.Packing.TotalCartonesFaltPPKS, new { htmlAttributes = new { @class = "form-control numeric cantTotFaltCart", @style = "width:150px", @readonly = "readonly" } })
+											@Html.ValidationMessageFor(model => model.Packing.TotalCartonesFaltPPKS, "", new { @class = "text-danger" })
+										</div>
+									</div>
+								</div>
+							</div>
 							<br />
-							<div id="listaTallaPacking"></div>
+							<div id="listaTallaPacking" style="width: 100%; height:250px; overflow:auto;"></div>
 							<button type="button" id="nuevoPallet" class="btn btn-success btn-md pull-right btn-sm"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save</button>
 							<button type="button" class="btn btn-success btn-md pull-right btn-sm" id="modificarBatch" onclick="event.preventDefault(); ConfirmRev(this);"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Modify</button>
 						</div>
@@ -1099,6 +1200,21 @@
 </div>
 <script type="text/javascript" src="~/Scripts/general/desplazGeneral.js"></script>
 <script>	
+	$(document).ready(function () {
+		$("#search").keyup(function () {
+			_this = this;
+			// Show only matching TR, hide rest of them
+			$.each($("#tabless tbody tr"), function () {
+				if ($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1)
+					$(this).hide();
+				else
+					$(this).show();
+			});
+		});
+
+	});
+
+
 
 	function obtenerListaPacking(IdEstiloInf) {
         var orders = new DevExpress.data.CustomStore({

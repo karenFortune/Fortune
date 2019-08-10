@@ -166,6 +166,8 @@ namespace FortuneSystem.Models.Pedidos
 		public List<Periodo> ListaPeriodos { get; set; }
 		[Display(Name = "SEARCH YEAR:")]
 		public int IdPeriodo { get; set; }
+		public string EstatusPack { get; set; }
+		public string EstatusPackAssort { get; set; }
 
 	}
 
@@ -182,8 +184,7 @@ namespace FortuneSystem.Models.Pedidos
         public virtual CatGenero CatGenero { get; set; }
         public List<InfoSummary> ListSummary { get; set; }
         public string FechaUCC { get; set; }
-		public int IdSucursal { get; set; }
-		
+		public int IdSucursal { get; set; }	
 
     }
 

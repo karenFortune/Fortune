@@ -23,7 +23,6 @@ namespace FortuneSystem
         {
             this.ARTE = new HashSet<ARTE>();
         }
-
 		[Display(Name = "ARTE#")]
 		public int IdImgArte { get; set; }
 		public Nullable<int> IdEstilo { get; set; }
@@ -50,7 +49,6 @@ namespace FortuneSystem
 		public MatchCollection ResultadoW { get; set; }
 		public virtual ARTE CATARTE { get; set; }
 		public string PO { get; set; }
-
 		public string extensionArte { get; set; }
 		public string extensionPNL { get; set; }
 		public Nullable<System.DateTime> fecha { get; set; }
@@ -65,6 +63,11 @@ namespace FortuneSystem
 		//public DateTime Fecha { get; set; }
 		public string FechaArte { get; set; }
 		public string Color { get; set; }
+		[Display(Name = "COMBOS ART")]
+		public string combos { get; set; }
+		[Display(Name = "COMENTS")]
+		public string comentarios { get; set; }
+		public Nullable<int> idUsuario { get; set; }
 	}
 	public enum EstatusArte
 	{

@@ -19,6 +19,9 @@
     <Property Name="extensionArte" Type="varchar" MaxLength="100" />
     <Property Name="extensionPNL" Type="varchar" MaxLength="100" />
     <Property Name="fecha" Type="date" />
+    <Property Name="combos" Type="varchar" MaxLength="300" />
+    <Property Name="comentarios" Type="varchar" MaxLength="300" />
+    <Property Name="idUsuario" Type="int" />
   </EntityType>
   <EntityType Name="IMAGEN_ARTE_ESTILO">
     <Key>
@@ -50,6 +53,7 @@
     <Property Name="IdUPC" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="IdTalla" Type="int" />
     <Property Name="IdSummary" Type="int" />
+    <Property Name="IdEstilo" Type="int" />
     <Property Name="UPC" Type="bigint" />
   </EntityType>
   <Association Name="FK__ARTE__IdImgArte__467D75B8">

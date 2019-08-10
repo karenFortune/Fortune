@@ -1,9 +1,9 @@
 ﻿function obtenerPalletBulk() {
     var r = 0; var c = 0; var i = 0; var cadena = new Array(6);
     cadena[0] = ''; cadena[1] = ''; cadena[2] = ''; cadena[3] = ''; cadena[4] = ''; cadena[5] = '';
-    var nFilas = $("#tablaTallasPallet tbody>tr").length;
-    var nColumnas = $("#tablaTallasPallet tr:last td").length;
-    $('#tablaTallasPallet tbody>tr').each(function () {
+	var nFilas = $("#tablaTallasPalletBulk tbody>tr").length;
+	var nColumnas = $("#tablaTallasPalletBulk tr:last td").length;
+	$('#tablaTallasPalletBulk tbody>tr').each(function () {
         r = 0;
         c = 0;
         $(this).find("input").each(function () {
@@ -15,7 +15,7 @@
         });
     });
    error = 0;
-    $('#tablaTallasPallet').find('td.cBox').each(function (i, el) {
+	$('#tablaTallasPalletBulk').find('td.cBox').each(function (i, el) {
         var valor = $(el).children().val();
         if ($(el).children().val() === '') {
             error++;
@@ -26,7 +26,7 @@
         }
     });
     
-    $('#tablaTallasPallet').find('td.tFalB').each(function (i, el) {
+	$('#tablaTallasPalletBulk').find('td.tFalB').each(function (i, el) {
         var valor = $(el).children().val();
         var faltBox = parseInt(valor);
         var c = i + 1;
@@ -108,4 +108,64 @@ function obtenerPalletPPK() {
         $('#Packing_CantBox').css('border', '');
     }
     enviarListaTallaPallet(cadena, error);
+}
+
+function obtenerPalletPPKS() {
+	var r = 0; var c = 0; var i = 0; var cadena = new Array(4);
+	cadena[0] = ''; cadena[1] = ''; cadena[2] = ''; cadena[3] = ''; 
+	var nFilas = $("#tablaTallasPallet tbody>tr").length;
+	var nColumnas = $("#tablaTallasPallet tr:last td").length;
+	$('#tablaTallasPallet tbody>tr').each(function () {
+		r = 0;
+		c = 0;
+		$(this).find("input").each(function () {
+			$(this).closest('td').find("input").each(function () {
+				cadena[c] += this.value + "*";
+				c++;
+			});
+			r++;
+		});
+	});
+	var error = 0;
+	/*$('#tablaTallasPallet').find('td.cBox').each(function (i, el) {
+		var valor = $(el).children().val();
+		if ($(el).children().val() === '' || $(el).children().val() === '0') {
+			error++;
+			$(el).children().css('border', '2px solid #e03f3f');
+
+		} else {
+			$(el).children().css('border', '1px solid #cccccc');
+		}
+	});*/
+
+	var tipoTurno = $("#Packing_TurnosPPK option:selected").val();
+	if (tipoTurno === "0") {
+		error++;
+		$('#Packing_TurnosPPK').css('border', '2px solid #e03f3f');
+	}
+	else {
+		$('#Packing_TurnosPPK').css('border', '');
+	}
+
+
+	var numCaja = $("#Packing_CantBoxPPK").val();
+	if (numCaja === "0" || numCaja === "") {
+		error++;
+		$('#Packing_CantBoxPPK').css('border', '2px solid #e03f3f');
+	}
+	else {
+		$('#Packing_CantBoxPPK').css('border', '');
+	}
+
+	var namePack = $("#selectPackingNameVariosPPKS option:selected").val();
+	if (namePack === "0") {
+		error++;
+		$('#selectPackingNameVariosPPKS').css('border', '2px solid #e03f3f');
+	}
+	else {
+		$('#selectPackingNameVariosPPKS').css('border', '');
+	}
+
+
+	enviarListaTallaPalletPPKS(cadena, error);
 }

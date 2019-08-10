@@ -20,10 +20,7 @@ namespace FortuneSystem.Controllers
 		readonly CatSucursalData objSucursal = new CatSucursalData();
 		readonly CatRolesData objCaRoles = new CatRolesData();
         // GET: Login
-        public ActionResult Index()
-        {
-            return View();
-        }
+        
 
         public ActionResult Login()
         {
@@ -55,6 +52,9 @@ namespace FortuneSystem.Controllers
 					if (cargo == 0)
 					{
 						Session["idCargo"] = 0;
+						actionName = "Login";
+						nameController = "Login";
+						TempData["loginError"] = "The session has expired, access the system again.";
 					}
 					usuario.CatRoles = objCaRoles.ConsultarListaRoles(usuario.Cargo);
                     Session["rolUser"] = usuario.CatRoles.Rol;
@@ -117,8 +117,20 @@ namespace FortuneSystem.Controllers
                             actionName = "Index";
                             nameController = "customerService";
 
-                        }
-                        else if (usuario.Cargo == 0)
+						}
+						else if (usuario.Cargo == 10)
+						{
+							actionName = "Index";
+							nameController = "Trims";
+
+						}
+						else if (usuario.Cargo == 20)
+						{
+							actionName = "Index";
+							nameController = "Pedidos";
+
+						}
+						else if (usuario.Cargo == 0)
                         {
                             actionName = "Login";
                             nameController = "Login";

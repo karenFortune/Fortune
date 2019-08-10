@@ -25,6 +25,7 @@ namespace FortuneSystem
                 defaults: new { controller = "Login", action = "Login", id = UrlParameter.Optional }
             );
 
-        }
+			
+		}
     }
 }

@@ -90,8 +90,9 @@ namespace FortuneSystem.Models.Revisiones
             }           
             return rev;
         }
+		
 
-        public int ObtenerNoPedidoRevisiones(int? id)
+		public int ObtenerNoPedidoRevisiones(int? id)
         {
             int rev = 0;
             Conexion conex = new Conexion();

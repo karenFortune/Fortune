@@ -1,4 +1,4 @@
-﻿var idPedido;
+﻿ var idPedido;
 $(document).ready(function () {
     var ID = $("#IdPedido").val();
     idPedido = ID;
@@ -42,7 +42,7 @@ $(document).on("click", "#btnAssort", function () {
             $("#arte").css('display', 'none');
            // if (tPiezasPack <= tPiezasEstilos) {                
                 if (num !== 0) {
-                    if (cargo === 1 || cargo === 9) {
+                    if (cargo === 1 || cargo === 10) {
                         $("#loading").css('display', 'inline');
                         $("#packBPPK").hide();
                         $("#packAssort").show();
@@ -76,14 +76,15 @@ $(document).on("click", "#btnAssort", function () {
                     }
 
                 } else {
-                    if (cargo === 1 || cargo === 9) {
+					if (cargo === 1  || cargo === 10) {
                         cargarPanelAssort();
                     } else {
                         $("#loading").css('display', 'inline');
                         $("#packBPPK").hide();
                         $("#packAssort").show();
                         $('#agregarNuevoPack').hide();
-                        $("#nuevoPalletAssort").hide();
+						$("#nuevoPalletAssort").hide();
+						$("#tablaTallasAssortReg").hide();						
 						$("#panelNoEstilos").css('display', 'inline');
 						$("#containerPie").hide();
                         $("#imgPanel").css('cursor', 'none');
@@ -658,7 +659,7 @@ function obtenerTallas(IdSummary) {
               
                 html += '<tr id="pallet' + cont + '" class="pallet">';
                 html += '<td width="250"><input type="text" id="f-talla" class="form-control talla" value="' + item.Talla + '" readonly/></td>';
-                html += '<td width="250"><input type="text" name="l-ratio" id="l-ratio" class="form-control numeric rat" value="' + 0 + '"  /></td>';
+				html += '<td width="250"><input type="text" name="l-ratio" id="l-ratio" class="form-control numeric rat" onfocus="focusing()" value="' + 0 + '"  /></td>';
                 html += '<td width="250"><input type="text" name="l-piecesAssort" id="l-piecesAssort'+cont+'" class="form-control numeric ratPieces" value="' + 0 + '"  readonly/></td>';
                 html += '<td width="250"><button type="button" id="btnDelete" class="deleteTalla btn btn btn-danger btn-xs" value="4">Delete</button></td>';
                 html += '</tr>';
@@ -676,6 +677,13 @@ function obtenerTallas(IdSummary) {
     }).done(function (data) {
     });
      
+}
+
+function focusing() {
+	if ($("#l-ratio").val() === "0") {
+		$("#l-ratio").val('');
+	}
+
 }
 
 //Registrar tallas ASSORT
@@ -727,7 +735,7 @@ $(document).on("click", "#nuevoEmpaqueAssort", function () {
     });
     $('#tablaTallasAssortReg').find('td').each(function (i, el) {
         var valor = $(el).children().val();
-        if ($(el).children().val() === '' || $(el).children().val() === '0') {
+        if ($(el).children().val() === '' /*|| $(el).children().val() === '0'*/) {
             error++;
             $(el).children().css('border', '2px solid #e03f3f');
 

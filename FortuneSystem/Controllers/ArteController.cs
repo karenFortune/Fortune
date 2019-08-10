@@ -1,4 +1,5 @@
-﻿using FortuneSystem.Models;
+﻿
+using FortuneSystem.Models;
 using FortuneSystem.Models.Arte;
 using FortuneSystem.Models.Catalogos;
 using FortuneSystem.Models.Item;
@@ -23,7 +24,8 @@ using System.Web.Mvc;
 
 namespace FortuneSystem.Controllers
 {
-    public class ArteController : Controller
+	
+	public class ArteController : Controller
     {
 		readonly ArteData objArte = new ArteData();
 		readonly CatTallaItemData objItem = new CatTallaItemData();
@@ -57,7 +59,7 @@ namespace FortuneSystem.Controllers
 			return View();
 		}
 
-		public ActionResult FileUpload(int idArte, string estilo)
+		public ActionResult FileUpload(int idArte, string estilo, string descripcion)
         {          
             IMAGEN_ARTE IArte = db.ImagenArte.Find(idArte);
             ARTE art = db.Arte.Where(x => x.IdImgArte == idArte).FirstOrDefault();
@@ -71,13 +73,14 @@ namespace FortuneSystem.Controllers
 			
 			if (catEspecialidad.IdEspecialidad == 0)
             {
-                catEspecialidad.IdEspecialidad = 12;
+                catEspecialidad.IdEspecialidad = 13;
             }
             IArte.ListaTecnicas = objEspecialidad.ListaEspecialidades().ToList();
             ViewBag.listEspecialidad = new SelectList(IArte.ListaTecnicas, "IdEspecialidad", "Especialidad", catEspecialidad.IdEspecialidad);
             IArte.CATARTE = art;
             IArte.CatEspecialidades = catEspecialidad;
 			IArte.Estilo = estilo;
+			IArte.DescripcionEstilo = descripcion;
             ObtenerEstados(IArte.StatusArte, IArte);
             
             return View(IArte);
@@ -109,8 +112,12 @@ namespace FortuneSystem.Controllers
             }
 
             ObtenerEstadosPorId(imagen_arte);
-
-            if (ModelState.IsValid)
+			imagen_arte.ListaTecnicas = objEspecialidad.ListaEspecialidades().ToList();
+			CatEspecialidades catEspecialidad = new CatEspecialidades();
+			ViewBag.listEspecialidad = new SelectList(imagen_arte.ListaTecnicas, "IdEspecialidad", "Especialidad", catEspecialidad.IdEspecialidad);
+			imagen_arte.fecha = DateTime.Today;
+			imagen_arte.idUsuario = Convert.ToInt32(Session["id_Empleado"]);
+			if (ModelState.IsValid)
             {
                 db.Entry(imagen_arte).State = EntityState.Modified;
                 db.SaveChanges();
@@ -146,7 +153,7 @@ namespace FortuneSystem.Controllers
             Regex walmart = new Regex("WAL-");
             IArte.ResultadoK = kohl.Matches(IArte.Tienda);
             IArte.ResultadoW = walmart.Matches(IArte.Tienda); 
-			IArte.fecha= DateTime.Today;
+			IArte.fecha= DateTime.Today;			
 			ObtenerEstadosPNL(IArte.StatusPNL, IArte);    
             if(IArte.IdImgArtePNL == 0)
             {
@@ -212,7 +219,7 @@ namespace FortuneSystem.Controllers
 
 			return View(artePNL);
         }
-		public ActionResult ActualizarImagenArt(/*int? id,*/ int idArte, string status, int idEspecialidad)
+		public ActionResult ActualizarImagenArt(/*int? id,*/ int idArte, string status, int idEspecialidad, string combos, string comentarios)
 		{
 			IMAGEN_ARTE IArte = db.ImagenArte.Find(idArte);
 			if (Request.Files.Count > 0)
@@ -251,7 +258,7 @@ namespace FortuneSystem.Controllers
 
 
 					}
-					ActualizarInfoImagenArte(idArte, status, idEspecialidad, IArte);
+					ActualizarInfoImagenArte(idArte, status, idEspecialidad, IArte, combos, comentarios);
 					TempData["imgArteOK"] = "The Art was modified correctly.";
 					return Json(new
 					{
@@ -271,7 +278,7 @@ namespace FortuneSystem.Controllers
 			}
 			else
 			{
-				ActualizarInfoImagenArte(idArte, status, idEspecialidad, IArte);
+				ActualizarInfoImagenArte(idArte, status, idEspecialidad, IArte, combos, comentarios);
 				TempData["imgArteOK"] = "The Art was modified correctly.";
 				return Json(new
 				{
@@ -527,38 +534,48 @@ namespace FortuneSystem.Controllers
 
 		public ActionResult BuscarConvertirImagenArte(int arteCodigo, string estilo, string color, int idSummary, int idEstilo)
 		{
-			//IMAGEN_ARTE_ESTILO arteEstilo = new IMAGEN_ARTE_ESTILO();
+			IMAGEN_ARTE_ESTILO arteEstilo = new IMAGEN_ARTE_ESTILO();
 			string descripcion = estilo.TrimEnd() + "_" + color.TrimEnd();
 			var arte = db.ImagenArte.Where(x => x.IdImgArte == arteCodigo).FirstOrDefault();
 			//var arteEstilo = db.ImagenArteEstilo.Where(x => x.IdSummary == idSummary).FirstOrDefault();
-			var arteEstilo = db.ImagenArteEstilo.Where(x => x.IdEstilo == idEstilo && x.Color == color).FirstOrDefault();
+			//var arteEstilo = db.ImagenArteEstilo.Where(x => x.IdEstilo == idEstilo && x.Color == color).FirstOrDefault();
 			if (arte != null)
 			{
 				int tam_var = arte.extensionArte.Length;
-				string nomEstilo = arte.extensionArte.Substring(0, tam_var - 4);
+				string nomEstilo = "";
+				if (tam_var != 0)
+				{
+					nomEstilo = arte.extensionArte.Substring(0, tam_var - 4);
+				}
+				
 				if (nomEstilo == descripcion && arte.extensionArte != null && arte.extensionArte != "")
 				{					
 					return RutaImagenArte(arte);
 				}
 				else
 				{
-					if(arteEstilo != null)
+					BuscarRutaImagenEstilo(descripcion, arteEstilo);
+					if (/*arteEstilo != null &&*/ arteEstilo.extensionArt != "" && arteEstilo.extensionArt != null)
 					{
 						int tam_var2 = arteEstilo.extensionArt.Length;
-						string nomEstiloArt = arteEstilo.extensionArt.Substring(0, tam_var2 - 4);
-						if (nomEstiloArt == descripcion && arteEstilo.extensionArt != null)
+						string nomEsdesctiloArt = arteEstilo.extensionArt.Substring(0, tam_var2 - 4);
+						if (descripcion == nomEsdesctiloArt && arteEstilo.extensionArt != null)
 						{
 							return RutaImagenArteEstilo(arteEstilo);
 						}
 						else
 						{
 							return RutaImagenArte(arte);
+
 						}
 					}
 					else
 					{
-						return RutaImagenArte(arte);				
+
+						return RutaImagenArte(arte);
 					}
+
+
 				}
 			}
 			else
@@ -750,17 +767,19 @@ namespace FortuneSystem.Controllers
 			}
 		}
 
-		private void BuscarRutaImagenEstilo(string descripcion, IMAGEN_ARTE_ESTILO arteEstilo)
+		public void BuscarRutaImagenEstilo(string descripcion, IMAGEN_ARTE_ESTILO arteEstilo)
 		{
 			int i = 0;
-			string sourceDirectory = Server.MapPath("/") + "/Content/imagenesArte/";
-			var files = Directory.EnumerateFiles(Server.MapPath("/") + "/Content/imagenesArte/", descripcion + ".*");
+			//string sourceDirectory = Server.MapPath("/") + "/Content/imagenesArte/";
+			//string sourceDirectory = Server.MapPath("~/Content/imagenesArte/") ;
+			string sourceDirectory2 = System.Web.HttpContext.Current.Server.MapPath("~/Content/imagenesArte/");
+			var files = Directory.EnumerateFiles(sourceDirectory2, descripcion + ".*");
 			//string extension;
 			foreach (string currentFile in files)
 			{
 				if (i == 0)
 				{
-					string fileName = currentFile.Substring(sourceDirectory.Length);
+					string fileName = currentFile.Substring(sourceDirectory2.Length);
 					//arteEstilo.extensionArt = fileName;
 					arteEstilo.extensionArt = fileName;
 					i++;
@@ -792,10 +811,12 @@ namespace FortuneSystem.Controllers
 			}
 		}
 
-		public ActionResult ConvertirImagenPNLEstilo(string nombreEstilo)
+		public ActionResult ConvertirImagenPNLEstilo(string nombreEstilo, string IdItem)
         {
 			int idEstilo= objDesc.ObtenerIdEstilo(nombreEstilo);
-            var arte = db.ImagenArtePnl.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
+			int IdItems = Convert.ToInt32(IdItem);
+
+			var arte = db.ImagenArtePnl.Where(x => x.IdEstilo == idEstilo && x.IdSummary == IdItems).FirstOrDefault();
             if(arte != null)
             {
                 if (arte.extensionPNL != null && arte.extensionPNL != "")
@@ -864,7 +885,7 @@ namespace FortuneSystem.Controllers
             return View(IArte);
         }
 
-        public ActionResult ActualizarImagenArtePNL(/*int? id,*/ int idArte,string status, int idEspecialidad)
+        public ActionResult ActualizarImagenArtePNL(/*int? id,*/ int idArte,string status, int idEspecialidad, string combos, string comentarios)
         {
             IMAGEN_ARTE IArte = db.ImagenArte.Find(idArte);
             if (Request.Files.Count > 0)
@@ -903,7 +924,7 @@ namespace FortuneSystem.Controllers
                         
 
                     }
-                    ActualizarInfoImagenArte(idArte, status, idEspecialidad, IArte);
+                    ActualizarInfoImagenArte(idArte, status, idEspecialidad, IArte, combos, comentarios);
                     TempData["imgArteOK"] = "The Art was modified correctly.";
                     return Json(new
                     {
@@ -923,7 +944,7 @@ namespace FortuneSystem.Controllers
             }
             else
             {
-                ActualizarInfoImagenArte(idArte, status, idEspecialidad, IArte);
+                ActualizarInfoImagenArte(idArte, status, idEspecialidad, IArte, combos, comentarios);
                 TempData["imgArteOK"] = "The Art was modified correctly.";
                 return Json(new
                 {
@@ -938,7 +959,7 @@ namespace FortuneSystem.Controllers
            //return View(IArte);
         }
 
-        public void ActualizarInfoImagenArte(int idArte, string status, int idEspecialidad, IMAGEN_ARTE IArte)
+        public void ActualizarInfoImagenArte(int idArte, string status, int idEspecialidad, IMAGEN_ARTE IArte, string combos, string comentarios)
         {
             
             if (status == "APPROVED")
@@ -960,6 +981,8 @@ namespace FortuneSystem.Controllers
                 IArte.StatusArte = 4;
             }
             IArte.fecha = DateTime.Today;
+			IArte.combos = combos;
+			IArte.comentarios = comentarios;			
             objArte.ActualizarImagen(IArte);
             List<int> listado = objArte.ListaEstilosPorImagenesArte(idArte).ToList();
             foreach (int id in listado)
@@ -1170,25 +1193,25 @@ namespace FortuneSystem.Controllers
         }
         
 
-        public JsonResult Lista_Tallas_Estilo()
+        public JsonResult Lista_Tallas_Estilo(int id)
         {
             IMAGEN_ARTE arte = new IMAGEN_ARTE();
             int idEstilo = Convert.ToInt32(Session["id"]);
             List<CatTallaItem> listaT = objItem.Lista_tallas_Estilo_Arte(idEstilo).ToList();
             arte.ListaTallas = listaT;
 
-            List<UPC> listaU = objItem.Lista_tallas_upc(idEstilo).ToList();
+            List<UPC> listaU = objItem.Lista_tallas_upc(id).ToList();
             var result = Json(new { listaTalla = listaT, listaUPC = listaU});
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult Lista_Tallas_Estilo_Arte_Pnl(int idEstilo)
+        public JsonResult Lista_Tallas_Estilo_Arte_Pnl(int id, int idEst)
         {
             IMAGEN_ARTE_PNL arte = new IMAGEN_ARTE_PNL();
-            List<CatTallaItem> listaT = objItem.Lista_tallas_Estilo_Arte(idEstilo).ToList();
+            List<CatTallaItem> listaT = objItem.Lista_tallas_Estilo_Arte(id).ToList();
             arte.ListaTallas = listaT;
 
-            List<UPC> listaU = objItem.Lista_tallas_upc(idEstilo).ToList();
+            List<UPC> listaU = objItem.Lista_tallas_upc(idEst).ToList();
             var result = Json(new { listaTalla = listaT, listaUPC = listaU });
             return Json(result, JsonRequestBehavior.AllowGet);
         }

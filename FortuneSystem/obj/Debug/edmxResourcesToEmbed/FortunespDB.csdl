@@ -21,6 +21,9 @@
     <Property Name="extensionArte" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="extensionPNL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="fecha" Type="DateTime" Precision="0" />
+    <Property Name="combos" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+    <Property Name="comentarios" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+    <Property Name="idUsuario" Type="Int32" />
   </EntityType>
   <EntityType Name="UPC">
     <Key>
@@ -30,6 +33,7 @@
     <Property Name="IdTalla" Type="Int32" />
     <Property Name="IdSummary" Type="Int32" />
     <Property Name="UPC1" Type="Int64" />
+    <Property Name="IdEstilo" Type="Int32" />
   </EntityType>
   <Association Name="FK__ARTE__IdImgArte__467D75B8">
     <End Role="IMAGEN_ARTE" Type="Self.IMAGEN_ARTE" Multiplicity="0..1" />

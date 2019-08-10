@@ -13,6 +13,9 @@
     <EntitySetMapping Name="IMAGEN_ARTE">
       <EntityTypeMapping TypeName="FortuneTestModel.IMAGEN_ARTE">
         <MappingFragment StoreEntitySet="IMAGEN_ARTE">
+          <ScalarProperty Name="idUsuario" ColumnName="idUsuario" />
+          <ScalarProperty Name="comentarios" ColumnName="comentarios" />
+          <ScalarProperty Name="combos" ColumnName="combos" />
           <ScalarProperty Name="fecha" ColumnName="fecha" />
           <ScalarProperty Name="extensionPNL" ColumnName="extensionPNL" />
           <ScalarProperty Name="extensionArte" ColumnName="extensionArte" />
@@ -26,6 +29,7 @@
     <EntitySetMapping Name="UPCs">
       <EntityTypeMapping TypeName="FortuneTestModel.UPC">
         <MappingFragment StoreEntitySet="UPC">
+          <ScalarProperty Name="IdEstilo" ColumnName="IdEstilo" />
           <ScalarProperty Name="IdUPC" ColumnName="IdUPC" />
           <ScalarProperty Name="IdTalla" ColumnName="IdTalla" />
           <ScalarProperty Name="IdSummary" ColumnName="IdSummary" />

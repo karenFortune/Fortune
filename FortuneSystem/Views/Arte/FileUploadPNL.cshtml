@@ -141,10 +141,17 @@
     });
 
     function obtenerListaTallas() {
-        $("#loading").css('display', 'inline');
-        var estiloId = $("#IdSummary").val();
-         var link = '@Url.Action("Lista_Tallas_Estilo_Arte_Pnl", "Arte", new { idEstilo = "valor" })';
-            link = link.replace("valor", estiloId);       
+		$("#loading").css('display', 'inline');
+		debugger
+		var id = $("#IdSummary").val();
+		var idStyle = $("#IdEstilo").val();
+		 var link = '@Url.Action("Lista_Tallas_Estilo_Arte_Pnl", "Arte", new { id = "valor" , idEst = "valorid"})';
+            link = link.replace("valor", id);
+			link = link.replace("valorid", idStyle);
+		
+      @*  var link = '@Url.Action("Lista_Tallas_Estilo_Arte_Pnl", "Arte", new { idSummary = "valor", idEstilo = "valorE"  })';
+		 link = link.replace("valor", IdSummary);
+		 link = link.replace("valorE", numEst); *@
                 $.ajax(link, {
                     method: 'GET',
                     dataType: "json",                  
@@ -198,10 +205,12 @@
         }
 
     function obtenerDetalleListaTallas() {
-        $("#loading").css('display', 'inline');
-                var estiloId = $("#IdSummary").val();
-         var link = '@Url.Action("Lista_Tallas_Estilo_Arte_Pnl", "Arte", new { idEstilo = "valor" })';
-            link = link.replace("valor", estiloId);    
+		$("#loading").css('display', 'inline');
+		var id = $("#IdSummary").val();
+		var idStyle = $("#IdEstilo").val();
+		var link = '@Url.Action("Lista_Tallas_Estilo_Arte_Pnl", "Arte", new { id = "valor" , idEst = "valorid"})';
+            link = link.replace("valor", id);
+			link = link.replace("valorid", idStyle);  
                 $.ajax(link, {
                     method: 'GET',
                     dataType: "json",
@@ -239,7 +248,7 @@
         debugger
         var btn = $("#botonUPC").css("visibility", "visible");
         if (btn.length != 0) {
-            $("#btnRegister").attr('disabled', 'disabled');
+            //$("#btnRegister").attr('disabled', 'disabled');
         }
 
         $('#nuevoUPC').on('click', function () {
@@ -289,11 +298,12 @@
             alert.set({ transition: 'zoom' });
             alert.set('modal', false);
         } else {
-            var id = $("#IdSummary").val();
+			var id = $("#IdEstilo").val();
+			var idSum = $("#IdSummary").val();
             $.ajax({
                 url: "/POSummary/Obtener_Lista_Tallas_UPC",
                 datatType: 'json',
-                data: JSON.stringify({ ListTalla: cadena, IdSummary : id }),
+                data: JSON.stringify({ ListTalla: cadena,  IdEstilo: id, IdSummary: idSum }),
                 cache: false,
                 type: 'POST',
                 contentType: 'application/json',
@@ -366,7 +376,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="container-fluid" style="padding-left:3em; padding-right:3em;">
+	<div class="container-fluid" style="padding-left:3em; padding-right:3em; overflow: auto;height: 600px;">
 		<div class="row">
 			<div class="form-group">
 				@Html.LabelFor(model => model.Tienda, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -382,7 +392,7 @@
 				<div class="col-sm-1">
 				</div>
 
-				@if (Model.ExtensionPNL == null || Model.ExtensionPNL == "")
+				@if (Model.extensionPNL == null || Model.extensionPNL == "")
 				{
 					<div class="col-sm-5">
 						@Html.LabelFor(model => model.imgPNL, htmlAttributes: new { @class = "control-label col-md-4" })
@@ -403,7 +413,7 @@
 					<div class="col-sm-5">
 						@Html.LabelFor(model => model.imgPNL, htmlAttributes: new { @class = "control-label col-md-4" })
 
-						<img id="imgSalida" width="200" height="200" src="@Url.Action("ConvertirImagenArtePNL", "Arte", new {extensionPnl = Model.ExtensionPNL})" />
+						<img id="imgSalida" width="200" height="200" src="@Url.Action("ConvertirImagenArtePNL", "Arte", new {extensionPnl = Model.extensionPNL})" />
 					</div>
 
 
@@ -454,7 +464,7 @@
 			</div>
 		}
 		<hr />
-		@if (Model.ExtensionPNL == null || Model.ExtensionPNL == "")
+		@if (Model.extensionPNL == null || Model.extensionPNL == "")
 		{
 			<div class="form-group">
 				<div class="col-md-offset-2 col-md-10" style=" margin-left: 40%;">

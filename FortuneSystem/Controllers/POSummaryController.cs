@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -50,7 +51,7 @@ namespace FortuneSystem.Controllers
             POSummary summary = new POSummary();
             ListaGenero(summary);
             ListaTela(summary);
-            ListaTipoCamiseta(summary);
+            ListaTipoCamiseta(summary);			
             return View();
         }
 
@@ -89,14 +90,18 @@ namespace FortuneSystem.Controllers
         }
 
         [HttpGet]
-        public ActionResult RegistrarNuevoEstiloPo()
+        public ActionResult RegistrarNuevoEstiloPo(int id)
         {
-            POSummary summary = new POSummary();
-            ListaGenero(summary);
+			CatClienteData objCliente = new CatClienteData();
+            POSummary summary = new POSummary();			
+			ListaGenero(summary);
             ListaTela(summary);
             ListaTipoCamiseta(summary);
             ListaEspecialidades(summary);
 			ListaTipoFormaPacking(summary);
+
+			summary.NumCliente = objCliente.ObtenerNumeroCliente(id);
+
 			//summary.PedidosId = IDPO;
 
 			if (summary == null)
@@ -147,7 +152,12 @@ namespace FortuneSystem.Controllers
 
 		}
 
-
+		public ActionResult ObtenerNumCliente(int id)
+		{
+			CatClienteData objCliente = new CatClienteData();
+			Session["numCliente"]= objCliente.ObtenerNumeroCliente(id);
+			return View();
+		}
 
 
 
@@ -165,14 +175,16 @@ namespace FortuneSystem.Controllers
                 //arte.extensionArte = "";
                 //arte.extensionPNL = "";
                 arte.IdEstilo = idEstilo;
-                objArte.AgregarArteImagen(arte);
+				arte.fecha = DateTime.Today;
+				objArte.AgregarArteImagen(arte);
                 arte = objArte.BuscarEstiloArteImagen(idEstilo);
                 objArte.AgregarArte(arte.IdImgArte, IdItems);
             }
             else
             {
                 arte = objArte.BuscarEstiloArteImagen(idEstilo);
-                objArte.AgregarArte(arte.IdImgArte, IdItems);
+				arte.fecha = DateTime.Today;
+				objArte.AgregarArte(arte.IdImgArte, IdItems);
             }
             Session["IdArte"]=arte.extensionArte;
 			/*var arteEstiloBuscar = db.ImagenArteEstilo.Where(x => x.IdEstilo == idEstilo).FirstOrDefault();
@@ -214,7 +226,8 @@ namespace FortuneSystem.Controllers
             {
                  arte.StatusPNL = 4;
                  arte.IdEstilo = idEstilo;
-                arte.IdSummary = idSummary;
+				arte.fecha = DateTime.Today;
+				arte.IdSummary = idSummary;
                 objArte.AgregarArtePnlImagen(arte);
                 arte = objArte.BuscarEstiloArtePnlImagen(idSummary);
                 //objArte.AgregarArte(arte.IdImgArtePnl, IdItems);
@@ -336,15 +349,17 @@ namespace FortuneSystem.Controllers
             ItemTalla tallaItem = new ItemTalla();
             List<string> tallas = ListTalla[0].Split('*').ToList();
             List<string> cantidad = ListTalla[1].Split('*').ToList();
-            List<string> extras = ListTalla[2].Split('*').ToList();
-            List<string> ejemplos = ListTalla[3].Split('*').ToList();
-            int i = 0;
+			List<string> cantidadPC = ListTalla[2].Split('*').ToList();
+			List<string> extras = ListTalla[3].Split('*').ToList();
+            List<string> ejemplos = ListTalla[4].Split('*').ToList();
+			
+			int i = 0;
             foreach (var item in tallas)
             {
                 i++; 
             }
 
-            i -=1;
+            i -=2;
            for(int v = 0; v < i; v++)
             {
                 tallaItem.Talla = tallas[v];
@@ -370,7 +385,14 @@ namespace FortuneSystem.Controllers
                 }
                 tallaItem.Ejemplos= Int32.Parse(ejemploT);
 
-                int IdItems = Convert.ToInt32(Session["IdItems"]);
+				string primeraCalidadT = cantidadPC[v];
+				if (primeraCalidadT == "")
+				{
+					primeraCalidadT = "0";
+				}
+				tallaItem.CantidadPCalidad = Int32.Parse(primeraCalidadT);
+
+				int IdItems = Convert.ToInt32(Session["IdItems"]);
                 int IdRevItems = Convert.ToInt32(Session["IdItemsRev"]);
                 if (IdItems != 0)
                 {
@@ -435,15 +457,17 @@ namespace FortuneSystem.Controllers
             ItemTalla tallaItem = new ItemTalla();
             List<string> tallas = ListTalla[0].Split('*').ToList();
             List<string> cantidad = ListTalla[1].Split('*').ToList();
-            List<string> extras = ListTalla[2].Split('*').ToList();
-            List<string> ejemplos = ListTalla[3].Split('*').ToList();
-            int i = 0;
+			List<string> cantidadPC = ListTalla[2].Split('*').ToList();
+			List<string> extras = ListTalla[3].Split('*').ToList();
+            List<string> ejemplos = ListTalla[4].Split('*').ToList();
+			
+			int i = 0;
             foreach (var item in tallas)
             {
                 i++;
             }
 
-            i -= 1;
+            i -= 2;
             for (int v = 0; v < i; v++)
             {
                 tallaItem.Talla = tallas[v];
@@ -469,15 +493,19 @@ namespace FortuneSystem.Controllers
                 }
                 tallaItem.Ejemplos = Int32.Parse(ejemploT);
 
-                int IdItems = Convert.ToInt32(Session["IdItemsNuevo"]);                
+				string primeraCalidadT = cantidadPC[v];
+				if (primeraCalidadT == "")
+				{
+					primeraCalidadT = "0";
+				}
+				tallaItem.CantidadPCalidad = Int32.Parse(primeraCalidadT);
+
+				int IdItems = Convert.ToInt32(Session["IdItemsNuevo"]);                
                 if (IdItems != 0)
                 {
                     tallaItem.IdSummary = IdItems;
-                }           
-
-
-
-                objTalla.RegistroTallas(tallaItem);
+                }
+				objTalla.RegistroTallas(tallaItem);
 
 
             }
@@ -571,20 +599,22 @@ namespace FortuneSystem.Controllers
             ItemTalla tallaItem = new ItemTalla();
             List<string> tallas = ListTalla[0].Split('*').ToList();
             List<string> cantidad = ListTalla[1].Split('*').ToList();
-            List<string> extras = ListTalla[2].Split('*').ToList();
-            List<string> ejemplos = ListTalla[3].Split('*').ToList();
-            int i = 0;
+			List<string> cantidadPC = ListTalla[2].Split('*').ToList();
+			List<string> extras = ListTalla[3].Split('*').ToList();
+            List<string> ejemplos = ListTalla[4].Split('*').ToList();
+					
+			int i = 0;
             foreach (var item in tallas)
             {
                 i++;
             }
 
-            i -=1;
+            i -=2;
             for (int v = 0; v < i; v++)
             {
                 tallaItem.Talla = tallas[v];
 
-                tallaItem.IdSummary = Int32.Parse(IdEstilo); ;
+                tallaItem.IdSummary = Int32.Parse(IdEstilo); 
 
                 string cantidadT = cantidad[v];
                 if (cantidadT == "")
@@ -606,10 +636,22 @@ namespace FortuneSystem.Controllers
                     ejemploT = "0";
                 }
                 tallaItem.Ejemplos = Int32.Parse(ejemploT);
-                tallaItem.IdTalla = objTalla.ObtenerIdTalla(tallaItem.Talla, tallaItem.IdSummary);
-                tallaItem.Id = objTalla.ObtenerIdTallaEstilo(tallaItem.Talla, tallaItem.IdSummary);
 
-                if (tallaItem.IdTalla == 0 && tallaItem.Id == 0)
+				string primeraCalidadT = cantidadPC[v];
+				if (primeraCalidadT == "")
+				{
+					primeraCalidadT = "0";
+				}
+				tallaItem.CantidadPCalidad = Int32.Parse(primeraCalidadT);
+
+				tallaItem.IdTalla = objTalla.ObtenerIdTalla(tallaItem.Talla, tallaItem.IdSummary);
+                tallaItem.Id = objTalla.ObtenerIdTallaEstilo(tallaItem.Talla, tallaItem.IdSummary);
+				/*Regex reg = new Regex("[0-9]"); //Expresión que solo acepta números.
+
+				bool b = reg.IsMatch(tallaItem.Talla); //En este caso obtendríamos false.
+
+				bool a = reg.IsMatch(tallaItem.Talla); //*/
+				if (tallaItem.IdTalla == 0 && tallaItem.Id == 0)
                 {
 
                     objTalla.RegistroTallas(tallaItem);
@@ -684,7 +726,7 @@ namespace FortuneSystem.Controllers
 
 
         [HttpPost]
-        public JsonResult Obtener_Lista_Tallas_UPC(List<string> ListTalla, int IdSummary)
+        public JsonResult Obtener_Lista_Tallas_UPC(List<string> ListTalla, int IdEstilo, int IdSummary)
         {
             
            UPC upcTalla = new UPC();
@@ -711,10 +753,12 @@ namespace FortuneSystem.Controllers
                 upcTalla.UPC1 = number;
 
 
-                upcTalla.IdSummary = IdSummary;
+                upcTalla.IdEstilo = IdEstilo;
+
+				upcTalla.IdSummary = IdSummary;
 
 
-                objTalla.RegistroTallasUPC(upcTalla);
+				objTalla.RegistroTallasUPC(upcTalla);
 
 
             }

@@ -23,7 +23,6 @@ namespace FortuneSystem
         public Nullable<int> IdSummary { get; set; }
 		public EstatusArteEst EstadosArteEst { get; set; }
 	}
-
 	public enum EstatusArteEst
 	{
 		APPROVED = 1,

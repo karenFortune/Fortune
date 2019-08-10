@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
     <title>@ViewBag.Title - FORTUNE</title>
 
     @Styles.Render("~/Content/css")
@@ -86,7 +86,7 @@
 				<li class="has-subnav"><a href="@Url.Action("Index", "roles")" id="opc"> <i class="glyphicon glyphicon-cog fa_menu"></i> <span class="nav-text">Roles</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "pedidos")" id="opc"> <i class="glyphicon  glyphicon-list-alt fa_menu"></i> <span class="nav-text">New PO</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "almacen")"> <i class="glyphicon glyphicon-download-alt fa_menu"></i> <span class="nav-text">Warehouse</span></a></li>
-				<li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="opc"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">PrintShop</span></a></li>
+				<li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="opc"> <i class=" fa_menu"><img src='@Url.Content("~/Content/img/screen_white.png")' id="flecha" title="Go Back" style="width:25px;height:25px; " /> </i><span class="nav-text">PrintShop</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "pnl")" id="opc"> <i class="fa fa-wpforms fa-lg fa_menu"></i> <span class="nav-text">PNL</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="opc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("CatalogoArte", "arte")" id="opc"> <i class="fa fa-paint-brush fa-lg fa_menu"></i> <span class="nav-text">Art</span></a></li>
@@ -96,6 +96,7 @@
 				@*<li class="has-subnav"><a href="@Url.Action("Index", "WIP")" id="opc"> <i class="fa fa-calendar fa-lg fa_menu"></i> <span class="nav-text">WIP</span></a></li>*@
 				<li class="has-subnav"><a href="@Url.Action("Index", "customerService")" id="opc"> <i class="fa fa-users fa-lg fa_menu"></i> <span class="nav-text">Customer Service</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("CreateArteEstilo", "arte")" id="opc"> <i class="fa fa-paint-brush fa-lg fa_menu"></i> <span class="nav-text">Art Style</span></a></li>
+				<li class="has-subnav"><a href="@Url.Action("IndexPack", "packing")" id="menuOpc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">PackingTrims</span></a></li>
 
 			}
 			else if ((int)Session["idCargo"] == 4)
@@ -104,7 +105,7 @@
 			}
 			else if ((int)Session["idCargo"] == 5)
 			{
-				<li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">PrintShop</span></a></li>
+				<li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc"> <i class=" fa_menu"><img src='@Url.Content("~/Content/img/screen_white.png")' id="flecha" title="Go Back" style="width:25px;height:25px; " /> </i> <span class="nav-text">PrintShop</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "pnl")" id="menuOpc"> <i class="fa fa-wpforms fa-lg fa_menu"></i> <span class="nav-text">PNL</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="menuOpc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
 			}
@@ -112,7 +113,7 @@
 			{
 				<li class="has-subnav"><a href="@Url.Action("Index", "catalogos")" id="opc"> <i class="glyphicon glyphicon-book fa_menu"></i> <span class="nav-text">Catalogs</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "pedidos")" id="opc"> <i class="glyphicon  glyphicon-list-alt fa_menu"></i> <span class="nav-text">New PO</span></a></li>
-				<li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">PrintShop</span></a></li>
+				<li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc"> <i class=" fa_menu"><img src='@Url.Content("~/Content/img/screen_white.png")' id="flecha" title="Go Back" style="width:25px;height:25px; " /> </i> <span class="nav-text">PrintShop</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "pnl")" id="menuOpc"> <i class="fa fa-wpforms fa-lg fa_menu"></i> <span class="nav-text">PNL</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "shipping")"> <i class="glyphicon glyphicon-envelope fa-lg fa_menu"></i> <span class="nav-text">Shipping</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="menuOpc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
@@ -126,14 +127,14 @@
 			}
 			else if ((int)Session["idCargo"] == 8)
 			{
-				<li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">PrintShop</span></a></li>
+				<li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc">  <i class=" fa_menu"><img src='@Url.Content("~/Content/img/screen_white.png")' id="flecha" title="Go Back" style="width:25px;height:25px; " /> </i> <span class="nav-text">PrintShop</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "pnl")" id="menuOpc"> <i class="fa fa-wpforms fa-lg fa_menu"></i> <span class="nav-text">PNL</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="menuOpc">  <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
 
 			}
 			else if ((int)Session["idCargo"] == 9)
 			{
-				<li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc"> <i class="glyphicon glyphicon-tint fa_menu"></i> <span class="nav-text">PrintShop</span></a></li>
+				<li class="has-subnav"><a href="@Url.Action("Index", "printshop")" id="menuOpc">  <i class=" fa_menu"><img src='@Url.Content("~/Content/img/screen_white.png")' id="flecha" title="Go Back" style="width:25px;height:25px; " /> </i> <span class="nav-text">PrintShop</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "pnl")" id="menuOpc"> <i class="fa fa-wpforms fa-lg fa_menu"></i> <span class="nav-text">PNL</span></a></li>
 				<li class="has-subnav"><a href="@Url.Action("Index", "packing")" id="menuOpc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
 			}
@@ -145,6 +146,16 @@
 			{
 
 				<li class="has-subnav"><a href="@Url.Action("Index", "customerService")" id="opc"> <i class="fa fa-users fa-lg fa_menu"></i> <span class="nav-text">Customer Service</span></a></li>
+			}
+			else if ((int)Session["idCargo"] == 10)
+			{
+				<li class="has-subnav"><a href="@Url.Action("IndexPack", "packing")" id="menuOpc"> <i class="fa fa-archive fa-lg fa_menu" aria-hidden="true"></i> <span class="nav-text">Packing</span></a></li>
+				<li class="has-subnav"><a href="@Url.Action("Index", "trims")" id="opc"> <i class="glyphicon glyphicon-tags fa-lg fa_menu"></i> <span class="nav-text">Trims</span></a></li>
+			}
+			else if ((int)Session["idCargo"] == 20)
+			{
+				<li class="has-subnav"><a href="@Url.Action("Index", "pedidos")" id="opc"> <i class="glyphicon  glyphicon-list-alt fa_menu"></i> <span class="nav-text">New PO</span></a></li>
+				<li class="has-subnav"><a href="@Url.Action("CreateArteEstilo", "arte")" id="opc"> <i class="fa fa-paint-brush fa-lg fa_menu"></i> <span class="nav-text">Art Style</span></a></li>
 			}
 			else
 			{
@@ -459,8 +470,18 @@
         });
 
         $("#selectPackingName").select2({
-        });
+		}); 
 
+		 $("#selectPackingNamePPK").select2({
+		});
+
+	    $("#selectPackingNameVariosPPK").select2({
+		});
+
+		 $("#selectPackingNameVariosPPKS").select2({
+		});
+		
+		
         $('#selectSucursal').select2({
             placeholder: "Select a factory"
         });

@@ -133,7 +133,10 @@
 
     function obtenerListaTallas() {
                 $("#loading").css('display', 'inline');
-                $.ajax('@Url.Action("Lista_Tallas_Estilo", "Arte")', {
+                var id = $("#IdEstilo").val();
+		var link = '@Url.Action("Lista_Tallas_Estilo", "Arte", new { id = "valor"})';
+            link = link.replace("valor", id);
+                $.ajax(link, {
                     method: 'GET',
                     dataType: "json",
                     success: function (jsonData) {
@@ -186,7 +189,10 @@
 
     function obtenerDetalleListaTallas() {
                 $("#loading").css('display', 'inline');
-                $.ajax('@Url.Action("Lista_Tallas_Estilo", "Arte")', {
+                var id = $("#IdEstilo").val();
+		var link = '@Url.Action("Lista_Tallas_Estilo", "Arte", new { id = "valor"})';
+            link = link.replace("valor", id);
+                $.ajax(link, {
                     method: 'GET',
                     dataType: "json",
                     success: function (jsonData) {
@@ -273,11 +279,12 @@
             alert.set({ transition: 'zoom' });
             alert.set('modal', false);
         } else {
-            var id = $("#CATARTE_IdEstilo").val();
+			var id = $("#CATARTE_IdEstilo").val();
+			var idSum = $("#IdSummary").val();
             $.ajax({
                 url: "/POSummary/Obtener_Lista_Tallas_UPC",
                 datatType: 'json',
-                data: JSON.stringify({ ListTalla: cadena, IdSummary : id }),
+                data: JSON.stringify({ ListTalla: cadena, IdEstilo: id, IdSummary: idSum }),
                 cache: false,
                 type: 'POST',
                 contentType: 'application/json',
@@ -370,7 +377,7 @@
 
                                 </div>
                             </div>
-                            <img id="imgSalida" width="70" height="70" src="@Url.Action("ConvertirImagenArtePNL", "Arte", new { extensionPnl = Model.ExtensionPNL })" />
+                            <img id="imgSalida" width="70" height="70" src="@Url.Action("ConvertirImagenArtePNL", "Arte", new { extensionPnl = Model.extensionPNL })" />
                         </div>
                         <div class="col-md-10">
                             <br />

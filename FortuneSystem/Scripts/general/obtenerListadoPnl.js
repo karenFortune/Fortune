@@ -4,19 +4,22 @@
     $("#div_tabla_pnl").css("visibility", "hidden");
 });
 
-function probar(id) {
+function probar() {
     $('#tabless tr').on('click', function (e) {
         $('#tabless tr').removeClass('highlighted');
         $(this).addClass('highlighted');
     });
     //obtener_tallas_item(id);
 }
-
+var cliente;
 $(document).on("dblclick", "#tabless tr", function () {
-    var row = this.rowIndex;
-    var numEstilo = $('#tabless tr:eq(' + row + ') td:eq(0)').html();
-    //var estilo = $('#tabless tr:eq(' + row + ') td:eq(2)').html();
-    obtener_tallas_item(numEstilo);
+	var row = this.rowIndex;
+	if (row !== 0) {
+		var numEstilo = $('#tabless tr:eq(' + row + ') td:eq(0)').html();
+		//var estilo = $('#tabless tr:eq(' + row + ') td:eq(2)').html();
+		obtener_tallas_item(numEstilo);
+	}
+
 });
 
 
@@ -66,7 +69,40 @@ function registrarBatchPNL() {
 
             $(el).children().css('border', '');
         }
-    });
+	});
+
+	$('#tablePnl').find('td.cMisP').each(function (i, el) {
+		var valor = $(el).children().val();
+		if (valor === '') {
+			error++;
+			$(el).children().css('border', '2px solid #e03f3f');
+
+		} else {
+			$(el).children().css('border', '');
+		}
+	});
+
+	$('#tablePnl').find('td.cDeft').each(function (i, el) {
+		var valor = $(el).children().val();
+		if (valor === '') {
+			error++;
+			$(el).children().css('border', '2px solid #e03f3f');
+
+		} else {
+			$(el).children().css('border', '');
+		}
+	});
+
+	$('#tablePnl').find('td.cRepa').each(function (i, el) {
+		var valor = $(el).children().val();
+		if (valor === '') {
+			error++;
+			$(el).children().css('border', '2px solid #e03f3f');
+
+		} else {
+			$(el).children().css('border', '');
+		}
+	});
 
     var turno = $('#PNL_Turnos option:selected').val();
     if (turno === "0") {
@@ -226,8 +262,13 @@ function buscar_estilos(ID) {
             var lista_estilo = jsonData.Data.listaItem;
 
             $.each(lista_estilo, function (key, item) {
-                html += '<tr  onclick="probar(' + item.IdItems + ')">';
-                html += '<td>' + item.IdItems + '</td>';
+                html += '<tr  onclick="probar()">';
+				html += '<td>' + item.IdItems + '</td>';
+				cliente = item.NumCliente;
+				if (item.NumCliente === "2" || item.NumCliente === 2) {
+					var poF = item.POFantasy === null ? "-" : item.POFantasy;
+					html += '<td>' + poF + '</td>';
+				} 
                 html += '<td>' + item.EstiloItem + '</td>';
                 html += '<td>' + item.ItemDescripcion.Descripcion + '</td>';
                 html += '<td>' + item.CatColores.CodigoColor + '</td>';
@@ -522,8 +563,9 @@ function obtener_tallas_item(IdEstilo) {
             $("#div_estilo").css("visibility", "visible");
             $("#div_tabla_pnl").css("visibility", "visible");
             $("#div_datos_staging").css("visibility", "visible");
-            $("#arte").css("visibility", "visible");
-            obtenerImagenPNL(estilos);
+			$("#arte").css("visibility", "visible");
+			var dt = $("#InfoSummary_IdItems").val();
+			obtenerImagenPNL(estilos,dt);
 			obtenerImagenArte(estilos, color);
             obtener_bacth_estilo_PNL(IdEstilo);
             if (sumaTotal !== 0) {
@@ -626,10 +668,10 @@ function obtener_bacth_estilo_PNL(IdEstilo) {
                 html += '<td>' + item.NombreMaquina + '</td>';
                 html += '<td>' + item.NombreUsrModif + '</td>';
                 html += '<td>' + item.Status + '</td>';	                
-
-				if (cargoUser === 5 || cargoUser === 1) {
-					html += '<td><a href="#" onclick="obtenerTallas_Batch_PNL(' + item.IdBatch + ',' + item.TipoTurno + ',' + item.Maquina + ',' + item.IdPnl + ',\'' + item.Status + '\');" class = "btn btn-default glyphicon glyphicon-search l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Details Bacth"></a></td>';
-
+				
+				if (cargoUser === 8 || cargoUser === 1) {
+					html += '<td><a href="#" onclick="obtenerTallas_Batch_PNL(' + item.IdBatch + ',' + item.TipoTurno + ',' + item.Maquina + ',' + item.IdPnl + ',\'' + item.Status + '\');" class = "btn edit_driver " Title = "Details Bacth"> <span class="glyphicon glyphicon-search l1s" aria-hidden="true" style="padding: 0px !important;"></span></a> ';
+					html += '<a href="#" onclick="event.preventDefault();ConfirmDeleteBatch(' + item.IdBatch + ',' + IdEstilo + ')" class = "btn btn-default glyphicon glyphicon-trash l1s" style = "color:black; padding:0px 5px 0px 5px;" Title = "Delete Bacth"></a></td>';
 				}
 				else {
 					html += '<td></td>'; 
@@ -684,8 +726,8 @@ function obtenerIdEstilo(IdEstilo) {
 
 }
 
-function obtenerImagenPNL(nombreEstilo) {
-    $('#imagenPNL').attr('src', '/Arte/ConvertirImagenPNLEstilo?nombreEstilo=' + nombreEstilo);
+function obtenerImagenPNL(nombreEstilo, dt) {
+	$('#imagenPNL').attr('src', '/Arte/ConvertirImagenPNLEstilo?nombreEstilo=' + nombreEstilo + '&IdItem=' + dt);  
 }
 
 function obtenerImagenArte(nombreEstilo, color) {
@@ -778,50 +820,50 @@ function obtenerTallas_Pnl(idEstilo) {
             html += '<th> Total </th>';
             html += '</tr><tr><td>Printed</td>';
             var cantidades = 0;
-
+			var contadorQty = 0;
             $.each(lista_estilo_Tallas, function (key, item) {
                 item.Printed = item.Talla;
                 item.Printed = 0;
-                html += '<td class="printed"><input type="text" id="cantidad" class="txt form-control print numeric" onChange="calcular_Printed()" value="' + item.Printed + '"/></td>';
-                cantidades += item.Printed;
+				html += '<td class="printed"><input type="text" id="cantidad' + contadorQty + '" class="txt form-control print numeric" onfocus="focusing(' + contadorQty +')"  onChange="calcular_Printed()" value="' + item.Printed + '"/></td>';
+				cantidades += item.Printed;
+				contadorQty++;
             });
             html += '<td><input type="text" id="totalP" class="form-control number "  value="' + cantidades + '" readonly/></td>';
             html += '</tr><tr><td>MisPrint</td>';
-            var misPrintCant = 0;
+			var misPrintCant = 0;
+			var contadorMP = 0;
             $.each(lista_estilo_Tallas, function (key, item) {
 
                 item.MisPrint = item.Talla;
                 item.MisPrint = 0;
-                html += '<td ><input type="text" id="misprint" class="txt form-control mp numeric" onChange="calcular_MisPrint()" value="' + item.MisPrint + '"/></td>';
+				html += '<td class="cMisP"><input type="text" id="misprint' + contadorMP + '" class="txt form-control mp numeric" onfocus="focusingMP(' + contadorMP +')" onChange="calcular_MisPrint()" value="' + item.MisPrint + '"/></td>';
+				misPrintCant += item.MisPrint;
+				contadorMP++;
 
-
-                misPrintCant += item.MisPrint;
             });
             html += '<td><input type="text" id="totalM" class="form-control number totalM" value="' + misPrintCant + '" readonly/></td>';
             html += '</tr><tr ><td class="dato">Defect</td>';
             var defectCant = 0;
-
+			var contadorD = 0;
             $.each(lista_estilo_Tallas, function (key, item) {
 
                 item.Defect = item.Talla;
                 item.Defect = 0;
-                html += '<td ><input type="text" id="defect" class="txt form-control def numeric " onChange="calcular_Defect()" value="' + item.Defect + '"/></td>';
-
-
-                defectCant += item.Defect;
+				html += '<td class="cDeft"><input type="text" id="defect' + contadorD + '" class="txt form-control def numeric " onfocus="focusingD(' + contadorD +')" onChange="calcular_Defect()" value="' + item.Defect + '"/></td>';
+				defectCant += item.Defect;
+				contadorD++;
             });
             html += '<td><input type="text" id="totalD" class="form-control number totalD" value="' + defectCant + '" readonly/></td>';
             html += '</tr><tr ><td class="dato">Repair</td>';
             var repairCant = 0;
-
+			var contadorR = 0;
             $.each(lista_estilo_Tallas, function (key, item) {
 
                 item.Repair = item.Talla;
                 item.Repair = 0;
-                html += '<td ><input type="text" id="repair" class="txt form-control rep numeric " onChange="calcular_Repair()" value="' + item.Repair + '"/></td>';
-
-
-                repairCant += item.Repair;
+				html += '<td class="cRepa"><input type="text" id="repair' + contadorR + '" class="txt form-control rep numeric "  onfocus="focusingR(' + contadorR +')" onChange="calcular_Repair()" value="' + item.Repair + '"/></td>';
+				repairCant += item.Repair;
+				contadorR++;
             });
             html += '<td><input type="text" id="totalR" class="form-control number totalR" value="' + repairCant + '" readonly/></td>';
             html += '</tr><tr ><td class="total">+/-</td>';
@@ -849,6 +891,44 @@ function obtenerTallas_Pnl(idEstilo) {
     });
 }
 
+function ConfirmDeleteBatch(idBatch, idEstilo) {
+	alertify.confirm("Are you sure you want to delete pallet ?", function (result) {
+		$.ajax({
+			url: '/PNL/EliminarBatch/',
+			data: "{'idBatch':'" + idBatch + "', 'idEstilo':'" + idEstilo + "'}",
+			dataType: 'json',
+			contentType: 'application/json',
+			type: 'post',
+			success: function () {
+				obtener_tallas_item(idEstilo);
+			}
+		});
+	});
+}
+
+function focusing(valor) {
+	if ($("#cantidad" + valor).val() === 0 || $("#cantidad" + valor).val() === "0") {
+		$("#cantidad" + valor).val('');
+	}
+}
+
+function focusingMP(valor) {
+	if ($("#misprint" + valor).val() === 0 || $("#misprint" + valor).val() === "0") {
+		$("#misprint" + valor).val('');
+	}
+}
+
+function focusingD(valor) {
+	if ($("#defect" + valor).val() === 0 || $("#defect" + valor).val() === "0") {
+		$("#defect" + valor).val('');
+	}
+}
+
+function focusingR(valor) {
+	if ($("#repair" + valor).val() === 0 || $("#repair" + valor).val() === "0") {
+		$("#repair" + valor).val('');
+	}
+}
 
 function obtenerTallas_Batch_PNL(idBatch, idTurno, idMaquina, idPrintShop, idStatus) {
     // var tempScrollTop = $(window).scrollTop(); 

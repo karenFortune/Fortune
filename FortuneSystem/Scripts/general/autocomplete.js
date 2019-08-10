@@ -20,28 +20,33 @@
                     }));
                 }
             });
-        },
-        select: function (event, ui) {
-            var estilo = ui.item.value;
+		},
+		select: function (event, ui) {
+			var estilo = ui.item.value;
             var nuevoEstilo = estilo.trim();
             var numero = validarEstilo(nuevoEstilo);  
 			var item = $("#ItemDescripcion_Descripcion").val(ui.item.descripcion);
 			$("#nuevoEstilo").removeClass("btn btn-danger");
 			$("#nuevoEstilo").addClass("btn btn-success"); 
             if (item !== "") {
-                $('#nuevoEstilo').attr('disabled', true);
+				$('#nuevoEstilo').attr('disabled', true);
+				$("#nuevoItem").prop("disabled", false);
             } else {
 				$('#nuevoEstilo').attr('disabled', false);
+				$("#nuevoItem").prop("disabled", false);
             }
         },
-        minLength: 1,
-        response: function (event, ui) {
+		minLength: 1,
+		autoSelect: true,
+		autoFocus: true,
+		response: function (event, ui) {			
             if (!ui.content.length) {               
                 var alert = alertify.alert("Message", 'No style results found.').set('label', 'Aceptar');
                 alert.set({ transition: 'zoom' });
 				alert.set('modal', false);
 				$("#nuevoEstilo").removeClass("btn btn-success");
 				$("#nuevoEstilo").addClass("btn btn-danger"); 
+				$("#nuevoItem").prop("disabled", true);
             } 
         }
     });
@@ -74,13 +79,17 @@
 			$("#nuevoColor").removeClass("btn btn-danger");
 			$("#nuevoColor").addClass("btn btn-success"); 
             if (color !== "") {
-                $('#nuevoColor').attr('disabled', true);
+				$('#nuevoColor').attr('disabled', true);
+				$("#nuevoItem").prop("disabled", false);
             } else {
-                $('#nuevoColor').attr('disabled', false);
+				$('#nuevoColor').attr('disabled', false);
+				$("#nuevoItem").prop("disabled", false);
             }
 
         },
-        minLength: 1,
+		minLength: 1,
+		autoSelect: true,
+		autoFocus: true,
         response: function (event, ui) {
             if (!ui.content.length) {
                 var alert = alertify.alert("Message", 'No color results found.').set('label', 'Aceptar');
@@ -88,6 +97,7 @@
 				alert.set('modal', false);
 				$("#nuevoColor").removeClass("btn btn-success");
 				$("#nuevoColor").addClass("btn btn-danger"); 
+				$("#nuevoItem").prop("disabled", true);
             }
         }
     });   

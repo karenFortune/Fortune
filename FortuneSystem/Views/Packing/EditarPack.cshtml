@@ -1,0 +1,50 @@
+﻿@model FortuneSystem.Models.Packing.PackingTypeSize
+@section scripts{
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+
+	<!-- DevExtreme themes -->
+	<link rel="stylesheet" type="text/css" href="~/Content/dx.common.css" />
+	<link rel="stylesheet" type="text/css" href="~/Content/dx.light.css" />
+
+
+	<!-- DevExtreme library -->
+	<script type="text/javascript" src="~/Scripts/jszip.min.js"></script>
+	<script type="text/javascript" src="~/Scripts/dx.all.js"></script>
+
+	<script src="~/Scripts/general/obtenerListadoPackingTrimsHT.js"></script>
+	<script src="~/Scripts/general/calculosPrintShop.js"></script>
+	<script src="~/Scripts/general/AgregarTallasPacking.js"></script>
+	<script src="~/Scripts/general/AgregarTallasPackingPPK.js"></script>
+	<script src="~/Scripts/general/agregarPallet.js"></script>
+	<script src="~/Scripts/general/actualizarPallet.js"></script>
+}
+<script type="text/javascript">
+
+</script>
+<style>
+</style>
+
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+	<div class="form-horizontal">
+		<div class="form-row" id="opcPackingEdit">
+			<div class="col-sm-5">
+				@Html.LabelFor(model => model.Packing.PackingTypeSize.TipoEmpaque, htmlAttributes: new { @class = "control-label " })
+				@Html.EnumDropDownListFor(model => model.Packing.PackingTypeSize.TipoEmpaque, "Select a type of packaging", new { @class = "form-control", id = "TipoEmp" })
+				@Html.ValidationMessageFor(model => model.Packing.PackingTypeSize.TipoEmpaque, "", new { @class = "text-danger" })
+			</div>
+			<div class="col-sm-4">
+				@Html.LabelFor(model => model.Packing.PackingTypeSize.NumberPO, htmlAttributes: new { @class = "control-label " })
+				@Html.EditorFor(model => model.Packing.PackingTypeSize.NumberPO, new { htmlAttributes = new { @class = "form-control", id = "numeroPOHT" } })
+				@Html.ValidationMessageFor(model => model.Packing.PackingTypeSize.NumberPO, "", new { @class = "text-danger" })
+			</div>
+		</div>
+	</div>
+
+
+}
+

@@ -26,10 +26,7 @@ namespace FortuneSystem.Controllers
 {
     public class PedidosController : Controller
     {
-		// GET: Pedido
-		readonly PedidosData objPedido = new PedidosData();
-		readonly CatClienteData objCliente = new CatClienteData();
-		readonly CatClienteFinalData objClienteFinal = new CatClienteFinalData();
+		// GET: Pedido		
 		readonly CatStatusData objEstados = new CatStatusData();
 		readonly CatGeneroData objGenero = new CatGeneroData();
 		readonly CatColoresData objColores = new CatColoresData();
@@ -53,7 +50,8 @@ namespace FortuneSystem.Controllers
 
         public ActionResult Index()
         {
-		    int cargo = Convert.ToInt32(Session["idCargo"]);
+			PedidosData objPedido = new PedidosData();
+			int cargo = Convert.ToInt32(Session["idCargo"]);
 			List<OrdenesCompra> listaPedidos;
 			if (cargo != 0)
 			{
@@ -126,6 +124,7 @@ namespace FortuneSystem.Controllers
 
         public ActionResult HistorialPedidos(int id)
         {
+			PedidosData objPedido = new PedidosData();
 			List<OrdenesCompra> listaPedidosRev = objPedido.ListaRevisionesPO(id).ToList();
 
             return View(listaPedidosRev);
@@ -172,7 +171,9 @@ namespace FortuneSystem.Controllers
         [HttpPost]
         public JsonResult Listado_Tallas_Estilos(int? id)
         {
-            List<ItemTalla> listaTallas = objTallas.ListadoTallasPorEstilos(id).ToList();
+			int numEstilo = objEst.ObtenerIdEstiloPorsummary(id);
+			string nomEstilo = objEst.ObtenerEstiloPorId(numEstilo);			
+			List<ItemTalla> listaTallas = objTallas.ListadoTallasDetallesPorEstilos(id).ToList();
             List<StagingD> listaTallasStaging = objTallas.ListaTallasStagingPorEstilo(id).ToList();        
             List<int> listaTallasTBatch = objPrint.ListaTotalTallasBatchEstilo(id).ToList();
             List<int> listaTallasPBatch = new List<int>();
@@ -187,13 +188,13 @@ namespace FortuneSystem.Controllers
                 listaTallasRBatch = objPrint.ListaTotalRepTallasBatchEstilo(id).ToList();
             }
 
-            string estilo = "";
-            foreach (var item in listaTallas)
+			string estilo = objEst.ObtenerNombreEstiloId(nomEstilo);
+		   /* foreach (var item in listaTallas)
             {
                 estilo = item.Estilo;
 
-            }
-            var result = Json(new
+            }*/
+			var result = Json(new
             {
                 listaTalla = listaTallas,
                 estilos = estilo,
@@ -207,8 +208,8 @@ namespace FortuneSystem.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public JsonResult Lista_Tallas_Estilo_PrintShop(int? id)
+		[HttpPost]
+		public JsonResult Lista_Tallas_Estilo_PrintShop(int? id)
         {
 			List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstiloPrint(id).ToList();
 			//List<ItemTalla> listaTallas = objTallas.ListadoTallasPorEstilos(id).ToList();
@@ -251,6 +252,20 @@ namespace FortuneSystem.Controllers
         }
 
 		[HttpPost]
+		public JsonResult Listado_Tallas_Estilo_Print(int? id)
+		{
+			List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstiloPrint(id).ToList();
+
+			var result = Json(new
+			{
+				listaTalla = listaTallas
+
+			});
+			return Json(result, JsonRequestBehavior.AllowGet);
+		}
+
+
+		[HttpPost]
 		public JsonResult Info_PrintShop_Grafica(int? id)
 		{
 			List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstiloPrint(id).ToList();
@@ -290,7 +305,8 @@ namespace FortuneSystem.Controllers
 		[HttpPost]
         public JsonResult Lista_Tallas_Estilo_Recibos(int? idSummary/*, int? idPedido, int? idEstilo*/)
         {
-            List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstiloRecibo(idSummary).ToList();
+			PedidosData objPedido = new PedidosData();
+			List<ItemTalla> listaTallas = objTallas.ListaTallasPorEstiloRecibo(idSummary).ToList();
             List<recibo> listaTallasRecibo = objPedido.ListaRecibos(idSummary).ToList();
             List<recibo> listaTRecibo = objPedido.ListaRecibos(idSummary).ToList(); 
             string estilo = "";
@@ -312,7 +328,8 @@ namespace FortuneSystem.Controllers
         [HttpPost]
         public JsonResult Lista_Trims(int? idSummary)
         {
-            List<Trim_requests> listadoTrims = objPedido.ObtenerInformacionTrims(idSummary).ToList();
+			PedidosData objPedido = new PedidosData();
+			List<Trim_requests> listadoTrims = objPedido.ObtenerInformacionTrims(idSummary).ToList();
 
             foreach (var item in listadoTrims)
             {             
@@ -337,7 +354,8 @@ namespace FortuneSystem.Controllers
         [HttpPost]
         public JsonResult Lista_Price_Tickets_Trims(int? idSummary)
         {
-            List<InfoPriceTickets> listadoTrims = objPedido.ObtenerInformacionPriceTicketsTrims(idSummary).ToList();
+			PedidosData objPedido = new PedidosData();
+			List<InfoPriceTickets> listadoTrims = objPedido.ObtenerInformacionPriceTicketsTrims(idSummary).ToList();
 
             foreach (var item in listadoTrims)
             {
@@ -625,11 +643,13 @@ namespace FortuneSystem.Controllers
         [HttpPost]
         public JsonResult RegistrarPO([Bind] OrdenesCompra ordenCompra,/* string po, string VPO, DateTime FechaCancel, DateTime FechaOrden, int Cliente, int Clientefinal, int TotalUnidades, int IdTipoOrden,*/ List<string> ListaMillPO)
         {
-            ListaEstados(ordenCompra);
+			PedidosData objPedido = new PedidosData();
+			ListaEstados(ordenCompra);
             int noEmpleado = Convert.ToInt32(Session["id_Empleado"]);
             ordenCompra.Usuario = noEmpleado;
+			Session["cliente"] = ordenCompra.Cliente;
 			List<OrdenesCompra> listaPedidos = objPedido.ListaOrdenCompra().ToList();
-			OrdenesCompra result = listaPedidos.Find(x => x.PO == ordenCompra.PO);
+			OrdenesCompra result = listaPedidos.Find(x => x.PO.TrimEnd() == ordenCompra.PO);
 			int duplicado = 0;
 			if (result == null)
 			{
@@ -650,6 +670,7 @@ namespace FortuneSystem.Controllers
 		[HttpPost]
 		public JsonResult Obtener_Lista_MillPO(List<string> ListaMillPO)
 		{
+			PedidosData objPedido = new PedidosData();
 			InfoMillPO datos = new InfoMillPO();
 			List<string> descMPO = ListaMillPO[0].Split('*').ToList();
 			int i = 0;
@@ -693,8 +714,10 @@ namespace FortuneSystem.Controllers
             {
                 return View();
             }
-
-            OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
+			CatClienteFinalData objClienteFinal = new CatClienteFinalData();
+			CatClienteData objCliente = new CatClienteData();
+			PedidosData objPedido = new PedidosData();
+			OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
             pedido.CatCliente = objCliente.ConsultarListaClientes(pedido.Cliente);
             pedido.CatClienteFinal = objClienteFinal.ConsultarListaClientesFinal(pedido.ClienteFinal);
             pedido.IdPedido = Convert.ToInt32(id);
@@ -713,8 +736,10 @@ namespace FortuneSystem.Controllers
             {
                 return View();
             }
-
-            OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
+			CatClienteFinalData objClienteFinal = new CatClienteFinalData();
+			CatClienteData objCliente = new CatClienteData();
+			PedidosData objPedido = new PedidosData();
+			OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
             pedido.CatCliente = objCliente.ConsultarListaClientes(pedido.Cliente);
             pedido.CatClienteFinal = objClienteFinal.ConsultarListaClientesFinal(pedido.ClienteFinal);
             pedido.IdPedido = Convert.ToInt32(id);
@@ -729,7 +754,8 @@ namespace FortuneSystem.Controllers
         [HttpGet]
         public int ObtenerPORevision(int? id)
         {
-            OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
+			PedidosData objPedido = new PedidosData();
+			OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
             SeleccionarClientes(pedido);
             SeleccionarClienteFinal(pedido);			
             /*int revisiones = objRevision.ObtenerNumeroRevisiones(id);
@@ -818,7 +844,8 @@ namespace FortuneSystem.Controllers
         [HttpGet]
         public ActionResult Revision(int? id)
         {
-            int idPedido = ObtenerPORevision(id);
+			PedidosData objPedido = new PedidosData();
+			int idPedido = ObtenerPORevision(id);
             Session["idPedidoRevision"] = idPedido;
             POSummary summary = new POSummary();
             ListaGenero(summary);
@@ -860,7 +887,8 @@ namespace FortuneSystem.Controllers
 
         public ActionResult CancelarPO(int id)
         {
-            objPedido.ActualizarEstadoPOCancelado(id);
+			PedidosData objPedido = new PedidosData();
+			objPedido.ActualizarEstadoPOCancelado(id);
             List<POSummary> listaItems = objItems.ListaItemsPorPO(id).ToList();
             foreach (var item in listaItems)
             {
@@ -875,7 +903,8 @@ namespace FortuneSystem.Controllers
         [HttpPost]
         public ActionResult CancelarStyle(int id, int IdPedido)
         {
-            objPedido.ActualizarEstadoStyleCancelado(id);
+			PedidosData objPedido = new PedidosData();
+			objPedido.ActualizarEstadoStyleCancelado(id);
             TempData["cancelarStylePO"] = "The Style was canceled correctly.";
             return Json(new
             {
@@ -987,8 +1016,8 @@ namespace FortuneSystem.Controllers
             {
                 return View();
             }
-
-            POSummary items = objItems.ConsultarListaEstilos(id);
+			CatClienteData objCliente = new CatClienteData();
+			POSummary items = objItems.ConsultarListaEstilos(id);
             ListaGenero(items);
             ListaTela(items);
             ListaTipoCamiseta(items);
@@ -998,15 +1027,46 @@ namespace FortuneSystem.Controllers
             items.ItemDescripcion = objEst.ConsultarListaItemDesc(items.IdItems);
             items.CatEspecialidades = objEspecialidad.ConsultarListaEspecialidad(items.IdEspecialidad);
 			items.CatTipoFormPack = objFormaPacking.ConsultarListatipoFormPack(items.IdTipoFormPack);
-            items.PedidosId = items.PedidosId;
-            SeleccionarGenero(items);
+            items.PedidosId = items.PedidosId;		
+			items.NumCliente = objCliente.ObtenerNumeroCliente(items.PedidosId);
+			SeleccionarGenero(items);
             SeleccionarTela(items);
             SeleccionarTipoCamiseta(items);
             SeleccionarTipoEspecialidad(items);
 			SeleccionarTipoFormaPack(items);
+			string[] separadas;
+
+			separadas = items.TipoImpresion.Split(',');
+
+			int i = 0;
+			foreach (var item in separadas)
+			{
+				i++;
+			}
+			int x = i - 1;
+			for (int v = 0; v < x; v++)
+			{
+				string dato = separadas[v];
+				if(dato == "Sleeve")
+				{
+					items.TipoImpSleeve = true;
+				}
+
+				if(dato == "Sleeve2")
+				{
+					items.TipoImpSleeve2 = true;
+				}
+
+				if (dato == "Back")
+				{
+					items.TipoImpBack = true;
+				}
+
+			}
 
 
-			if (items == null)
+
+				if (items == null)
             {
 
                 return View();
@@ -1055,8 +1115,10 @@ namespace FortuneSystem.Controllers
             {
                 return View();
             }
-
-            OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
+			CatClienteFinalData objClienteFinal = new CatClienteFinalData();
+			CatClienteData objCliente = new CatClienteData();
+			PedidosData objPedido = new PedidosData();
+			OrdenesCompra pedido = objPedido.ConsultarListaPO(id);
             pedido.FechaCancelada = String.Format("{0:MM/dd/yyyy}", pedido.FechaCancel);
             pedido.FechaOrdenFinal = String.Format("{0:MM/dd/yyyy}", pedido.FechaOrden);
             pedido.NombrePO=pedido.PO.TrimEnd(' ');
@@ -1080,6 +1142,7 @@ namespace FortuneSystem.Controllers
 
 		public JsonResult Lista_MillPO(int? id)
 		{
+			PedidosData objPedido = new PedidosData();
 			OrdenesCompra pedido = new OrdenesCompra();
 			List<InfoMillPO>  listaMPO = objPedido.ListaMillPOPedido(id).ToList();
 			pedido.ListaMillPO = listaMPO;
@@ -1103,7 +1166,8 @@ namespace FortuneSystem.Controllers
 
             if (pedido.IdPedido != 0)
             {
-                objPedido.ActualizarPedidos(pedido);
+				PedidosData objPedido = new PedidosData();
+				objPedido.ActualizarPedidos(pedido);
 				this.Obtener_Lista_MIllPO(ListaMPO, pedido.IdPedido);
 				TempData["itemEditar"] = "The purchase order was modified correctly.";
 				//return RedirectToAction("Index");
@@ -1127,6 +1191,7 @@ namespace FortuneSystem.Controllers
 		[HttpPost]
 		public void EliminarMillPO(string id)
 		{
+			PedidosData objPedido = new PedidosData();
 			int idMillpo = Convert.ToInt32(id);
 			objPedido.EliminarMillPO(idMillpo);
 		}
@@ -1134,6 +1199,7 @@ namespace FortuneSystem.Controllers
 		[HttpPost]
 		public void EliminarPacking(string id)
 		{
+			PedidosData objPedido = new PedidosData();
 			int idPacking = Convert.ToInt32(id);
 			objPedido.EliminarPackEstilo(idPacking);
 		}
@@ -1141,6 +1207,7 @@ namespace FortuneSystem.Controllers
 		[HttpPost]
 		public JsonResult Obtener_Lista_MIllPO(List<string> ListaMillpo, int idPedido)
 		{
+			PedidosData objPedido = new PedidosData();
 			InfoMillPO datoMPO = new InfoMillPO();
 			List<string> datosIds = ListaMillpo[0].Split('*').ToList();
 			List<string> descMPO = ListaMillpo[1].Split('*').ToList();
@@ -1186,6 +1253,7 @@ namespace FortuneSystem.Controllers
 
         public void SeleccionarClientes(OrdenesCompra pedido)
         {
+			CatClienteData objCliente = new CatClienteData();
 			List<CatCliente> listaClientes = objCliente.ListaClientes().ToList();
             pedido.CatCliente = objCliente.ConsultarListaClientes(pedido.Cliente);
             pedido.CatCliente.Customer = pedido.Cliente;
@@ -1196,6 +1264,7 @@ namespace FortuneSystem.Controllers
 
         public void SeleccionarClienteFinal(OrdenesCompra pedido)
         {
+			CatClienteFinalData objClienteFinal = new CatClienteFinalData();
 			List<CatClienteFinal> listaClientesFinal = objClienteFinal.ListaClientesFinal().ToList();
             pedido.CatClienteFinal = objClienteFinal.ConsultarListaClientesFinal(pedido.ClienteFinal);
             pedido.CatClienteFinal.CustomerFinal = pedido.ClienteFinal;
@@ -1247,6 +1316,8 @@ namespace FortuneSystem.Controllers
 
 		public void ListasClientes(OrdenesCompra pedido)
         {
+			CatClienteFinalData objClienteFinal = new CatClienteFinalData();
+			CatClienteData objCliente = new CatClienteData();
 			List<CatCliente> listaClientes = objCliente.ListaClientes().ToList();
 
             ViewBag.listCliente = new SelectList(listaClientes, "Customer", "Nombre", pedido.Cliente);
@@ -1265,7 +1336,9 @@ namespace FortuneSystem.Controllers
 
         public void ObtenerIdClientes(OrdenesCompra pedido)
         {
-            string cliente = Request.Form["listCliente"].ToString();
+			CatClienteFinalData objClienteFinal = new CatClienteFinalData();
+			CatClienteData objCliente = new CatClienteData();
+			string cliente = Request.Form["listCliente"].ToString();
             pedido.Cliente = Int32.Parse(cliente);
             pedido.CatCliente = objCliente.ConsultarListaClientes(pedido.Cliente);
 
@@ -1345,22 +1418,12 @@ namespace FortuneSystem.Controllers
                 }
 
             }
-        }
-        
+        }        
 
         public ActionResult ReportWIP()
 		{			
 			reporte.ObtenerReporteWIP();
 			return Json("0", JsonRequestBehavior.AllowGet);
 		}
-
-     
-
-
-
-
-
-
-
     }
 }

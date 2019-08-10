@@ -122,8 +122,11 @@
     });
 
     function obtenerListaTallas() {
-                $("#loading").css('display', 'inline');
-                $.ajax('@Url.Action("Lista_Tallas_Estilo", "Arte")', {
+		$("#loading").css('display', 'inline');
+	    var id = $("#IdEstilo").val();
+		var link = '@Url.Action("Lista_Tallas_Estilo", "Arte", new { id = "valor"})';
+            link = link.replace("valor", id);
+                $.ajax(link, {
                     method: 'GET',
                     dataType: "json",
                     success: function (jsonData) {
@@ -176,7 +179,10 @@
 
     function obtenerDetalleListaTallas() {
                 $("#loading").css('display', 'inline');
-                $.ajax('@Url.Action("Lista_Tallas_Estilo", "Arte")', {
+	    var id = $("#IdEstilo").val();
+		var link = '@Url.Action("Lista_Tallas_Estilo", "Arte", new { id = "valor"})';
+            link = link.replace("valor", id);
+                $.ajax(link, {
                     method: 'GET',
                     dataType: "json",
                     success: function (jsonData) {

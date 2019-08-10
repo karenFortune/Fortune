@@ -1,9 +1,12 @@
-﻿using FortuneSystem.Models.Catalogos;
+﻿using FortuneSystem.Models;
+using FortuneSystem.Models.Catalogos;
 using FortuneSystem.Models.Pedidos;
 using FortuneSystem.Models.PNL;
 using FortuneSystem.Models.PrintShop;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -213,5 +216,14 @@ namespace FortuneSystem.Controllers
             var result = Json(new { listaTallaBatch = listaTallas });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-    }
+
+		[HttpPost]
+		public ActionResult EliminarBatch(int idBatch, int idEstilo)
+		{
+			objPnl.EliminarInfoBatch(idBatch, idEstilo);
+			TempData["eliminarBatch"] = "The Pallet was delete correctly.";
+			return Json("0", JsonRequestBehavior.AllowGet);
+		}
+
+	}
 }

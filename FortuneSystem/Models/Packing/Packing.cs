@@ -15,9 +15,13 @@ namespace FortuneSystem.Models.Packing
         public int IdTalla { get; set; }
         [Display(Name = "BOX#")]
         public int CantBox { get; set; }
-        [Display(Name = "SHIFT")]
+		[Display(Name = "BOX#")]
+		public int CantBoxPPK { get; set; }
+		[Display(Name = "SHIFT")]
         public Turno Turnos { get; set; }
-        public int IdTurno { get; set; }
+		[Display(Name = "SHIFT")]
+		public Turno TurnosPPK { get; set; }
+		public int IdTurno { get; set; }
         public int TipoTurno { get; set; }
         public int Usuario { get; set; }
         public string NombreUsr { get; set; }
@@ -40,7 +44,13 @@ namespace FortuneSystem.Models.Packing
         [Display(Name = "MISSING CARTONS#")]
         public int TotalCartonesFaltPPK { get; set; }
 
-        public List<PackingM> Batch { get; set; }
+		[Display(Name = "TOTAL CARTONS#")]
+		public int TotalCartonsPPKS { get; set; }
+
+		[Display(Name = "MISSING CARTONS#")]
+		public int TotalCartonesFaltPPKS { get; set; }
+
+		public List<PackingM> Batch { get; set; }
 
         public List<PackingTypeSize> ListEmpaque { get; set; }
 
@@ -54,7 +64,9 @@ namespace FortuneSystem.Models.Packing
 		public int TotalBatch { get; set; }
 
 		public int SumaTotalBatch { get; set; }
-    }
+		public string NombreEmpaque { get; set; }
+	
+	}
 
     public enum Turno
     {

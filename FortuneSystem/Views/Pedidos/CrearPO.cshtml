@@ -120,9 +120,15 @@
 
 						} else if (num == "2") {
 							$("#loading").css('display', 'none');
-								$("#nuevoPO").prop("disabled", true);
-							deshabilitarFormPO();
-							$("#crearItems").css("visibility", "visible");
+						   $("#nuevoPO").prop("disabled", true);		
+						   $("#crearItems").css("visibility", "visible");
+						   	if (Cliente == "2") {
+								$("#POFantasy").prop("disabled", false);
+							} else {
+									  $("#POFantasy").prop("disabled", true);
+									  $("#POFantasy").val("N/A");
+							}
+							deshabilitarFormPO();							
 							alertify.set('notifier', 'position', 'top-right');
 							alertify.notify('The purchase order was correctly registered.', 'success', 5, null);
 						}

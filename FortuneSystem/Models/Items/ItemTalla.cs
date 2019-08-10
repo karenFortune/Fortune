@@ -23,6 +23,10 @@ namespace FortuneSystem.Models.Item
         public string DescripcionEstilo { get; set; }		
 		public double Porcentaje { get; set; }
 		public double Total { get; set; }
-		public string Color { get; set; }
+		public string Color { get; set; }	
+		public int CantidadPCalidad { get; set; }
+		public string NombreArte { get; set; }
+
+
 	}
 }

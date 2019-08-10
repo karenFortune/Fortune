@@ -533,6 +533,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\SessionExpireFilterAttribute.cs" />
     <Compile Include="ARTE.cs">
       <DependentUpon>FortunespDB.tt</DependentUpon>
     </Compile>
@@ -1478,6 +1479,8 @@
     <Content Include="Content\img\QR\recibo_99.jpg" />
     <Content Include="Content\img\QR\transferencia_13.jpg" />
     <Content Include="Content\img\QR\transferencia_17.jpg" />
+    <Content Include="Content\img\screen_white.png" />
+    <Content Include="Content\img\screen.ico" />
     <Content Include="Content\jquery.jqGrid\ellipsis-xbl.xml" />
     <Content Include="Content\jquery.jqGrid\ui.jqgrid.css" />
     <Content Include="Content\jsgrid-1.5.3\css\icons-2x.png" />
@@ -5742,6 +5745,7 @@
     <Content Include="Scripts\dx.viz.js" />
     <Content Include="Scripts\dx.web.debug.js" />
     <Content Include="Scripts\dx.web.js" />
+    <Content Include="Scripts\general\ActualizarEmpaques.js" />
     <Content Include="Scripts\general\actualizarPallet.js" />
     <Content Include="Scripts\general\agregarNuevoColoryEstilo.js" />
     <Content Include="Scripts\general\agregarPallet.js" />
@@ -5756,10 +5760,14 @@
     <Content Include="Scripts\general\desplazGeneral.js" />
     <Content Include="Scripts\general\obtenerListadoPacking.js" />
     <Content Include="Scripts\general\obtenerListadoPackingAssort.js" />
+    <Content Include="Scripts\general\obtenerListadoPackingAssortTrims.js" />
     <Content Include="Scripts\general\obtenerListadoPackingHT.js" />
+    <Content Include="Scripts\general\obtenerListadoPackingTrims.js" />
+    <Content Include="Scripts\general\obtenerListadoPackingTrimsHT.js" />
     <Content Include="Scripts\general\obtenerListadoPnl.js" />
     <Content Include="Scripts\general\obtenerListado.js" />
     <Content Include="Scripts\general\obtenerListaTallasPorGenero.js" />
+    <Content Include="Scripts\general\selectAllOnClick.js" />
     <Content Include="Scripts\globalize.js" />
     <Content Include="Scripts\globalize\currency.js" />
     <Content Include="Scripts\globalize\date.js" />
@@ -6045,6 +6053,9 @@
     <Content Include="Views\ItemDescripcion\Index.cshtml" />
     <Content Include="Views\Report\Imprimir_Reporte_PO.cshtml" />
     <Content Include="Views\Arte\CreateArteEstilo.cshtml" />
+    <Content Include="Views\Packing\DetallesTrims.cshtml" />
+    <Content Include="Views\Packing\IndexPack.cshtml" />
+    <Content Include="Views\Packing\EditarPack.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

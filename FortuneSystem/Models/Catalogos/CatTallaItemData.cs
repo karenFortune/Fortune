@@ -140,7 +140,7 @@ namespace FortuneSystem.Models.Catalogos
 
         }
 
-        public IEnumerable<UPC> Lista_tallas_upc(int? idSummary)
+        public IEnumerable<UPC> Lista_tallas_upc(int? idEstilo)
         {
             Conexion con = new Conexion();
             List<UPC> Lista = new List<UPC>();
@@ -152,7 +152,7 @@ namespace FortuneSystem.Models.Catalogos
                 com.Connection = con.AbrirConexion();
                 com.CommandText = "select S.TALLA, UPC from UPC U  " +
                     "INNER JOIN CAT_ITEM_SIZE S ON U.IdTalla=S.ID " +
-                    "where IdSummary='" + idSummary + "'  ORDER by cast(ORDEN AS int) ASC ";
+                    "where IdEstilo='" + idEstilo + "'  ORDER by cast(ORDEN AS int) ASC ";
                 leer = com.ExecuteReader();
                 while (leer.Read())
                 {
